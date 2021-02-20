@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "984932517689",
+    "project_id": "afetkurtar",
+    "storage_bucket": "afetkurtar.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:984932517689:android:d1bb807214c8d418c2cae8",
+        "android_client_info": {
+          "package_name": "com.example.afetkurtar"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "984932517689-q4cfi4bqg3lsebqecu331jqos7mirbqk.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.afetkurtar",
+            "certificate_hash": "b52991100d11dabe4a5fdaea15d7c57082e37884"
+          }
+        },
+        {
+          "client_id": "984932517689-26548cubtdd33uu95vqc4t3ciq1u2os0.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDwSofIprJPqGLKF_1ShXUAnLLylC7Zy_0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "984932517689-26548cubtdd33uu95vqc4t3ciq1u2os0.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
