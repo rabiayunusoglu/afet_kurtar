@@ -69,7 +69,6 @@ class Users{
     }
 
     function searchByMail($mail){
-        echo $mail;
         // select all query
         $query = "SELECT
                     userID, userType, userName, email, createTime

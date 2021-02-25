@@ -39,7 +39,7 @@ class Equipment{
     $query = "INSERT INTO
                 " . $this->table_name . "
             SET
-                equipmentID=:equipmentID, equipmentName=:equipmentName, equipmentImageURL=:equipmentImageURL";
+                equipmentName=:equipmentName, equipmentImageURL=:equipmentImageURL";
  
     // prepare query
     $stmt = $this->conn->prepare($query);
