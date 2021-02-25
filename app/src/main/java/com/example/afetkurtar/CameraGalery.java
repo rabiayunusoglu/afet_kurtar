@@ -134,10 +134,10 @@ public class CameraGalery extends AppCompatActivity {
     }
 
     public void ClickCameraBtn(View view) {
-        redirectActivity(this, CameraGalery.class);
+        redirectActivity(this, Emergency.class);
     }
 
     public void ClickGaleryBtn(View view) {
-        redirectActivity(this, CameraGalery.class);
+        redirectActivity(this, Emergency.class);
     }
 }
