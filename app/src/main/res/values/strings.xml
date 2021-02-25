@@ -1,3 +1,4 @@
 <resources>
-    <string name="app_name">AfetKurtar</string>
+
+    <string name="app_name" background="#FF6200EE" color="#FF6200EE">AfetKurtar </string>
 </resources>
