@@ -43,7 +43,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.sign_in_button:
-                Intent intent=new Intent(this,Emergency.class);
+                Intent intent=new Intent(this,Anasayfa.class);
                 startActivity(intent);
                 break;
            /* case R.id.button_sign_out:

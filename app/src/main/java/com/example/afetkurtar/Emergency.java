@@ -11,12 +11,14 @@ import android.view.View;
 
 public class Emergency extends AppCompatActivity {
     DrawerLayout drawerLayout;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_emergency);
         drawerLayout = findViewById(R.id.drawer_layout);
     }
+
     public void ClickMenu(View view) {
         //open drawer
         openDrawer(drawerLayout);
@@ -45,20 +47,19 @@ public class Emergency extends AppCompatActivity {
 
     public void ClickAnasayfa(View view) {
         //redirect activity to dashboard
-        redirectActivity(this,Anasayfa.class );
+        redirectActivity(this, Anasayfa.class);
     }
 
 
     public void ClickVolunter(View view) {
         //redirect activity to volunter
-        redirectActivity(this,Volunteer.class );
+        redirectActivity(this, Volunteer.class);
     }
 
     public void ClickEmergency(View view) {
         //redirect activity to emergency
-        redirectActivity(this,Emergency.class );
+        redirectActivity(this, Emergency.class);
     }
-
 
 
     public static void redirectActivity(Activity activity, Class aClass) {
