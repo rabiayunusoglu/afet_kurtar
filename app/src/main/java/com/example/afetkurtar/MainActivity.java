@@ -2,11 +2,18 @@ package com.example.afetkurtar;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.view.GravityCompat;
+import androidx.drawerlayout.widget.DrawerLayout;
 
+import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.View;
 import android.widget.TextView;
 
@@ -21,14 +28,19 @@ import com.google.android.gms.common.SignInButton;
 import com.example.afetkurtar.R;
 
 import java.io.Serializable;
+import java.net.URL;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
     int RC_SIGN_IN = 9001;
     GoogleSignInClient mGoogleSignInClient;
+    DrawerLayout drawerLayout;
+    DrawerLayout drawerLayout1;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        drawerLayout = findViewById(R.id.drawer_layout);
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestEmail()
                 .build();
@@ -36,14 +48,15 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         SignInButton signInButton = findViewById(R.id.sign_in_button);
         signInButton.setSize(SignInButton.SIZE_STANDARD);
         findViewById(R.id.sign_in_button).setOnClickListener(this);
-    }
 
+    }
 
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.sign_in_button:
-                signIn();
+                Intent b=new Intent(this, AnasayfaActivity.class);
+                startActivity(b);
                 break;
            /* case R.id.button_sign_out:
                 signOut();
@@ -51,11 +64,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             // ...*/
         }
     }
+
     private void signIn() {
         Intent signInIntent = mGoogleSignInClient.getSignInIntent();
         startActivityForResult(signInIntent, RC_SIGN_IN);
 
     }
+
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -68,6 +83,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             handleSignInResult(task);
         }
     }
+
     private void handleSignInResult(Task<GoogleSignInAccount> completedTask) {
         GoogleSignInAccount account = null;
         try {
@@ -79,22 +95,22 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             // The ApiException status code indicates the detailed failure reason.
             // Please refer to the GoogleSignInStatusCodes class reference for more information.
             Log.w("asd", "signInResult:failed code=" + e.getStatusCode());
-            updateUI(false,account);
+            updateUI(false, account);
         }
     }
-    private void updateUI(boolean isLogin, GoogleSignInAccount account){
-        if(isLogin){
+
+    private void updateUI(boolean isLogin, GoogleSignInAccount account) {
+        if (isLogin) {
 
             Intent intentLogin = new Intent(MainActivity.this, ScreenActivity.class);
             //Hesap bilgileri asagida extralara put yapiliyor.
-            intentLogin.putExtra("account",account);
+            intentLogin.putExtra("account", account);
 
             startActivity(intentLogin);
-        }
-        else
-        {
+        } else {
         }
     }
+
     private void signOut() {
         mGoogleSignInClient.signOut()
                 .addOnCompleteListener(this, new OnCompleteListener<Void>() {
@@ -104,4 +120,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     }
                 });
     }
+
+
 }

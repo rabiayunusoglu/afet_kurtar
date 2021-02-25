@@ -11,7 +11,11 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.AfetKurtar">
-        <activity android:name=".ScreenActivity"></activity>
+        <activity android:name=".Emergency" />
+        <activity android:name=".VolunteerParticipate" />
+        <activity android:name=".Dashboard" />
+        <activity android:name=".AnasayfaActivity" />
+        <activity android:name=".ScreenActivity" />
         <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
