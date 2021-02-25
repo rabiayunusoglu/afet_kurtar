@@ -1,3 +1,21 @@
+<?php
+    if(session_id() == ''){
+        header("location: https://afetkurtar.site/");
+    }
+
+    else if($_SESSION["userType"] == "authorizedUser.php"){
+        header("location: https://afetkurtar.site/volunteerUser.php");
+    }
+
+    else if($_SESSION["userType"] == "personnelUser.php"){
+        header("location: https://afetkurtar.site/personnelUser.php");
+    }
+
+    else if($_SESSION["userType"] != "volunteerUser.php"){
+        header("location: https://afetkurtar.site/");
+    }
+?>
+
 <!DOCTYPE html>
 <html>
     <head>
@@ -12,19 +30,8 @@
         <script src="https://apis.google.com/js/platform.js" async defer></script>
     </head>
     <body>
-          <div class="container main-container">
-              <div class="row">
-                  <div class="col-lg-4 col-md-2"></div>
-                  <div class="col-lg-4 col-md-8 login-box">
-                      <!-- <div class="col-lg-12 login-key">
-                          <i class="fa fa-key" aria-hidden="true"></i>
-                      </div> -->
-                      <div class="col-lg-12 login-title">
-                          AFET KURTAR
-                      </div>
-                      <div class="g-signin2" data-onsuccess="onSignIn" data-theme="dark" data-width="200" data-height="50"></div>
-                  </div>
-              </div>
+          <div><?php echo $_SESSION['userName'] ?></div>
+          <div><?php echo $_SESSION['userType'] ?></div>
 
         <script src="https://code.jquery.com/jquery-3.5.1.min.js" integrity="sha256-9/aliU8dGd2tb6OSsuzixeV4y/faTqgFtohetphbbj0=" crossorigin="anonymous"></script>
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/js/bootstrap.bundle.min.js" integrity="sha384-b5kHyXgcpbZJO/tY9Ul7kGkf1S0CWuKcCD38l8YkeH8z8QjE0GmW1gYU5S9FOnJ0" crossorigin="anonymous"></script>
