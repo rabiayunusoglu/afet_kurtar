@@ -9,7 +9,6 @@ import androidx.drawerlayout.widget.DrawerLayout;
 
 import android.Manifest;
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
@@ -19,11 +18,9 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.Toast;
 
-import java.sql.DriverManager;
-
-public class CameraGalery extends AppCompatActivity {
-    public static final int CAMERA_PERM_CODE = 101;
-    public static final int CAMERA_REQUEST_CODE = 102;
+public class Volunteer_Emergency extends AppCompatActivity {
+    private static final int CAMERA_PERM_CODE =101 ;
+    private static final int CAMERA_REQUEST_CODE =102 ;
     DrawerLayout drawerLayout;
     ImageView selectedImage;
     Button cameraBtn, galleryBtn;
@@ -31,58 +28,16 @@ public class CameraGalery extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_camera_galery);
+        setContentView(R.layout.activity_volunteer_emergency);
         drawerLayout = findViewById(R.id.drawer_layout);
         selectedImage = findViewById(R.id.imageView);
         cameraBtn = findViewById(R.id.CameraBtn);
         galleryBtn = findViewById(R.id.GaleryBtn);
-        cameraBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                askCameraPermissions();
-            }
-        });
-        galleryBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Toast.makeText(CameraGalery.this, "Galery Btn is Clicked.", Toast.LENGTH_SHORT).show();
-            }
-        });
     }
 
-    private void askCameraPermissions() {
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.CAMERA}, CAMERA_PERM_CODE);
-        } else {
-            openCamera();
-        }
-    }
-
-
-
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        if (requestCode == CAMERA_PERM_CODE) {
-            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED){
-                openCamera();
-            }
-            else{
-                Toast.makeText(this,"Camera Permissin is required to Use Camera.",Toast.LENGTH_SHORT).show();
-            }
-        }
-    }
-    private void openCamera() {
-        Intent camera=new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        startActivityForResult(camera,CAMERA_REQUEST_CODE);
-
-    }
     public void ClickMenu(View view) {
         //open drawer
         openDrawer(drawerLayout);
-    }
-
-    public void CameraGalery(View view) {
-        redirectActivity(this, CameraGalery.class);
     }
 
     static void openDrawer(DrawerLayout drawerLayout) {
@@ -108,18 +63,18 @@ public class CameraGalery extends AppCompatActivity {
 
     public void ClickAnasayfa(View view) {
         //redirect activity to dashboard
-        redirectActivity(this, Anasayfa.class);
+        redirectActivity(this, Volunteer_Anasayfa.class);
     }
 
 
     public void ClickVolunter(View view) {
         //redirect activity to volunter
-        redirectActivity(this, Volunteer.class);
+        redirectActivity(this, Volunteer_Participate.class);
     }
 
     public void ClickEmergency(View view) {
         //redirect activity to emergency
-        redirectActivity(this, Emergency.class);
+        redirectActivity(this, Volunteer_Emergency.class);
     }
 
 
@@ -133,11 +88,47 @@ public class CameraGalery extends AppCompatActivity {
 
     }
 
+
+
+    private void askCameraPermissions() {
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(Volunteer_Emergency.this, new String[]{Manifest.permission.CAMERA}, CAMERA_PERM_CODE);
+        } else {
+            openCamera();
+        }
+    }
+    private void openCamera() {
+        Intent camera=new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        startActivityForResult(camera,CAMERA_REQUEST_CODE);
+
+    }
     public void ClickCameraBtn(View view) {
-        redirectActivity(this, Emergency.class);
+
+        cameraBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                askCameraPermissions();
+            }
+        });
     }
 
     public void ClickGaleryBtn(View view) {
-        redirectActivity(this, Emergency.class);
+        galleryBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(Volunteer_Emergency.this,"Camera Permissin is required to Use Camera.",Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        if (requestCode == CAMERA_PERM_CODE) {
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED){
+                openCamera();
+            }
+            else{
+                Toast.makeText(this,"Camera Permissin is required to Use Camera.",Toast.LENGTH_SHORT).show();
+            }
+        }
     }
 }

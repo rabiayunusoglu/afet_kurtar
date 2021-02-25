@@ -5,10 +5,8 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Parcelable;
 import android.util.Log;
 import android.view.View;
-import android.widget.TextView;
 
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
@@ -18,9 +16,6 @@ import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.gms.common.SignInButton;
-import com.example.afetkurtar.R;
-
-import java.io.Serializable;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
     int RC_SIGN_IN = 9001;
@@ -43,7 +38,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.sign_in_button:
-                Intent intent=new Intent(this,Anasayfa.class);
+                Intent intent=new Intent(this, Volunteer_Anasayfa.class);
                 startActivity(intent);
                 break;
            /* case R.id.button_sign_out:

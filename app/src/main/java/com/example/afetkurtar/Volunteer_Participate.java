@@ -9,12 +9,12 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 
-public class Anasayfa extends AppCompatActivity {
-DrawerLayout drawerLayout;
+public class Volunteer_Participate extends AppCompatActivity {
+    DrawerLayout drawerLayout;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_anasayfa);
+        setContentView(R.layout.activity_volunteer_participate);
         drawerLayout = findViewById(R.id.drawer_layout);
     }
     public void ClickMenu(View view) {
@@ -45,18 +45,18 @@ DrawerLayout drawerLayout;
 
     public void ClickAnasayfa(View view) {
         //redirect activity to dashboard
-        redirectActivity(this,Anasayfa.class );
+        redirectActivity(this, Volunteer_Anasayfa.class );
     }
 
 
     public void ClickVolunter(View view) {
         //redirect activity to volunter
-        redirectActivity(this,Volunteer.class );
+        redirectActivity(this, Volunteer_Participate.class );
     }
 
     public void ClickEmergency(View view) {
         //redirect activity to emergency
-        redirectActivity(this,Emergency.class );
+        redirectActivity(this, Volunteer_Emergency.class );
     }
 
 
@@ -70,4 +70,5 @@ DrawerLayout drawerLayout;
         activity.startActivity(intent);
 
     }
+
 }
