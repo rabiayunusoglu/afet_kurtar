@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:id="@+id/drawer_layout"
-    tools:context=".Volunteer_Anasayfa">
+    tools:context=".Authorized_Anasayfa">
 
 
 
@@ -20,7 +20,7 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:text="Gönüllü Anasayfa"
+            android:text="Yönetici Anasayfa"
             android:textSize="50sp"
             android:textStyle="bold"
             android:gravity="center"/>

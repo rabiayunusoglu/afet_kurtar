@@ -3,9 +3,7 @@
     package="com.example.afetkurtar">
 
     <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.CAMERA">
-
-    </uses-permission>
+    <uses-permission android:name="android.permission.CAMERA" />
 
     <application
         android:allowBackup="true"
@@ -14,7 +12,9 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.AfetKurtar">
-        <activity android:name=".Volunteer_CameraGalery"></activity>
+        <activity android:name=".Authorized_Anasayfa"></activity>
+        <activity android:name=".Personel_Anasayfa" />
+        <activity android:name=".Volunteer_CameraGalery" />
         <activity android:name=".Volunteer_Participate" />
         <activity android:name=".Volunteer_Emergency" />
         <activity android:name=".Volunteer_Anasayfa" />
