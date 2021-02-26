@@ -14,13 +14,14 @@
         <include
             layout="@layout/activity_tool_bar">
         </include>
-        <TextView
+
+        <include layout="@layout/activity_tool_participate"></include>
+
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:text="Gönüllü Katılım Talebi"
-            android:textSize="50sp"
-            android:textStyle="bold"
-            android:gravity="center"/>
+            android:orientation="vertical"></LinearLayout>
+
     </LinearLayout>
     <RelativeLayout
         android:layout_width="300dp"
