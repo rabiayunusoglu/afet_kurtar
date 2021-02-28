@@ -15,13 +15,22 @@ $db = $database->getConnection();
 $users = new Users($db);
  
 // get keywords
-// $data = json_decode(file_get_contents("php://input"));
-// $mail = $data->email;
+$data = json_decode(file_get_contents("php://input"),true);
 
-$mail = $_POST['email'];
+
+//userID, userType, userName, email, createTime
+$users->userID = isset($data["userID"]) ? $data["userID"] : "";
+$users->userType = isset($data["userType"]) ? $data["userType"] : "";
+$users->userName = isset($data["userName"]) ? $data["userName"] : "";
+$users->email = isset($data["email"]) ? $data["email"] : "";
+$users->createTime = isset($data["createTime"]) ? $data["createTime"] : "";
+
+
+
+//$mail = $_POST['email'];
  
 // query users
-$stmt = $users->searchByMail($mail);
+$stmt = $users->search();
 $num = $stmt->rowCount();
  
 // check if more than 0 record found
@@ -67,12 +76,4 @@ else{
         array("message" => "no users found.")
     );
 }
-
-// function debug_to_console($data) {
-//     $output = $data;
-//     if (is_array($output))
-//         $output = implode(',', $output);
-
-//     echo "<script>console.log('Debug Objects: " . $output . "' );</script>";
-// }
 ?>

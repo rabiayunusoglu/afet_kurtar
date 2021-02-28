@@ -1,17 +1,18 @@
 <?php
+    session_start();
     if(session_id() == ''){
         header("location: https://afetkurtar.site/");
     }
 
-    else if($_SESSION["userType"] == "volunteerUser.php"){
+    else if($_SESSION["userType"] == "volunteerUser"){
         header("location: https://afetkurtar.site/volunteerUser.php");
     }
 
-    else if($_SESSION["userType"] == "personnelUser.php"){
+    else if($_SESSION["userType"] == "personnelUser"){
         header("location: https://afetkurtar.site/personnelUser.php");
     }
 
-    else if($_SESSION["userType"] != "authorizedUser.php"){
+    else if($_SESSION["userType"] != "authorizedUser"){
         header("location: https://afetkurtar.site/");
     }
 ?>

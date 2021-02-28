@@ -61,6 +61,37 @@ class Equipment{
  
     return false;
      
-}
+    }
+
+    function search(){
+        // select all query
+        $query = "SELECT
+                    equipmentID, equipmentName, equipmentImageURL
+                FROM
+                    " . $this->table_name . "
+                WHERE
+                    (equipmentID = :equipmentID OR :equipmentID = '') 
+                    AND (equipmentName = :equipmentName OR :equipmentName = '')
+                    AND (equipmentImageURL = :equipmentImageURL OR :equipmentImageURL = '')";
+     
+        // prepare query statement
+        $stmt = $this->conn->prepare($query);
+     
+
+        // sanitize
+        $this->equipmentID=htmlspecialchars(strip_tags($this->equipmentID));
+        $this->equipmentName=htmlspecialchars(strip_tags($this->equipmentName));
+        $this->equipmentImageURL=htmlspecialchars(strip_tags($this->equipmentImageURL));
+
+        // bind values
+        $stmt->bindParam(":equipmentID", $this->equipmentID);
+        $stmt->bindParam(":equipmentName", $this->equipmentName);
+        $stmt->bindParam(":equipmentImageURL", $this->equipmentImageURL);
+     
+        // execute query
+        $stmt->execute();
+     
+        return $stmt;
+    }
 }
 ?>

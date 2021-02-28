@@ -40,7 +40,7 @@ class Users{
         $query = "INSERT INTO
                     " . $this->table_name . "
                 SET
-                    userType=:userType, userName=:userName, email=:email, createTime=:createTime";
+                    userType=:userType, userName=:userName, email=:email";
      
         // prepare query
         $stmt = $this->conn->prepare($query);
@@ -49,14 +49,12 @@ class Users{
         $this->userType=htmlspecialchars(strip_tags($this->userType));
         $this->userName=htmlspecialchars(strip_tags($this->userName));
         $this->email=htmlspecialchars(strip_tags($this->email));
-        $this->createTime=htmlspecialchars(strip_tags($this->createTime));
     
      
         // bind values
         $stmt->bindParam(":userType", $this->userType);
         $stmt->bindParam(":userName", $this->userName);
         $stmt->bindParam(":email", $this->email);
-        $stmt->bindParam(":createTime", $this->createTime);
     
      
         // execute query
@@ -68,23 +66,37 @@ class Users{
          
     }
 
-    function searchByMail($mail){
+    function search(){
         // select all query
         $query = "SELECT
                     userID, userType, userName, email, createTime
                 FROM
                     " . $this->table_name . "
                 WHERE
-                    email = ? ";
+                    (userID = :userID OR :userID = '') 
+                    AND (userType = :userType OR :userType = '') 
+                    AND (userName = :userName OR :userName = '') 
+                    AND (email = :email OR :email = '') 
+                    AND (createTime = :createTime OR :createTime = '')";
      
         // prepare query statement
         $stmt = $this->conn->prepare($query);
      
+
         // sanitize
-        $mail=htmlspecialchars(strip_tags($mail));
+        $this->userID=htmlspecialchars(strip_tags($this->userID));
+        $this->userType=htmlspecialchars(strip_tags($this->userType));
+        $this->userName=htmlspecialchars(strip_tags($this->userName));
+        $this->email=htmlspecialchars(strip_tags($this->email));
+        $this->createTime=htmlspecialchars(strip_tags($this->createTime));
+    
      
-        // bind
-        $stmt->bindParam(1, $mail);
+        // bind values
+        $stmt->bindParam(":userID", $this->userID);
+        $stmt->bindParam(":userType", $this->userType);
+        $stmt->bindParam(":userName", $this->userName);
+        $stmt->bindParam(":email", $this->email);
+        $stmt->bindParam(":createTime", $this->createTime);
      
         // execute query
         $stmt->execute();

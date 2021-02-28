@@ -18,21 +18,19 @@ $db = $database->getConnection();
 $users = new Users($db);
  
 // get posted data
-$data = json_decode(file_get_contents("php://input"));
+$data = json_decode(file_get_contents("php://input"),true);
  
 // make sure data is not empty
 if(
     !empty($data->userType) &&
     !empty($data->userName) &&
-    !empty($data->email) &&
-    !empty($data->createTime)
+    !empty($data->email)
 ){
  
     // set user property values
     $users->userType = $data->userType;
     $users->userName = $data->userName;
     $users->email = $data->email;
-    $users->createTime = $data->createTime;
  
     // create the product
     if($users->create()){

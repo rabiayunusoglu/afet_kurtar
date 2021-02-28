@@ -67,5 +67,43 @@ class Team{
         return false;
          
     }
+
+    function search(){
+        // select all query
+        $query = "SELECT
+                    teamID, assignedSubpartID, [status], needManPower, needEquipment
+                FROM
+                    " . $this->table_name . "
+                WHERE
+                    (teamID = :teamID OR :teamID = '') 
+                    AND (assignedSubpartID = :assignedSubpartID OR :assignedSubpartID = '')
+                    AND ([status] = :status OR :status = '')
+                    AND (needManPower = :needManPower OR :needManPower = '')
+                    AND (needEquipment = :needEquipment OR :needEquipment = '')";
+     
+        // prepare query statement
+        $stmt = $this->conn->prepare($query);
+     
+
+        // sanitize
+        $this->teamID=htmlspecialchars(strip_tags($this->teamID));
+        $this->assignedSubpartID=htmlspecialchars(strip_tags($this->assignedSubpartID));
+        $this->status=htmlspecialchars(strip_tags($this->status));
+        $this->needManPower=htmlspecialchars(strip_tags($this->needManPower));
+        $this->needEquipment=htmlspecialchars(strip_tags($this->needEquipment));
+    
+     
+        // bind values
+        $stmt->bindParam(":teamID", $this->teamID);
+        $stmt->bindParam(":assignedSubpartID", $this->assignedSubpartID);
+        $stmt->bindParam(":status", $this->status);
+        $stmt->bindParam(":needManPower", $this->needManPower);
+        $stmt->bindParam(":needEquipment", $this->needEquipment);
+     
+        // execute query
+        $stmt->execute();
+     
+        return $stmt;
+    }
 }
 ?>

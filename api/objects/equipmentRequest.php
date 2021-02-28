@@ -61,6 +61,38 @@ class EquipmentRequest{
  
     return false;
      
-}
+    }
+
+    function search(){
+        // select all query
+        $query = "SELECT
+                    equipmentRequestID, quantity, teamRequestID
+                FROM
+                    " . $this->table_name . "
+                WHERE
+                    (equipmentRequestID = :equipmentRequestID OR :equipmentRequestID = '') 
+                    AND (quantity = :quantity OR :quantity = '')
+                    AND (teamRequestID = :teamRequestID OR :teamRequestID = '')";
+     
+        // prepare query statement
+        $stmt = $this->conn->prepare($query);
+     
+
+        // sanitize
+        $this->equipmentRequestID=htmlspecialchars(strip_tags($this->equipmentRequestID));
+        $this->equipmentName=htmlspecialchars(strip_tags($this->equipmentName));
+        $this->teamRequestID=htmlspecialchars(strip_tags($this->teamRequestID));
+
+    
+        // bind values
+        $stmt->bindParam(":equipmentRequestID", $this->equipmentRequestID);
+        $stmt->bindParam(":quantity", $this->quantity);
+        $stmt->bindParam(":teamRequestID", $this->teamRequestID);
+     
+        // execute query
+        $stmt->execute();
+     
+        return $stmt;
+    }
 }
 ?>

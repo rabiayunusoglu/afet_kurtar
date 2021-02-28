@@ -85,5 +85,61 @@ class VolunteerUser{
         return false;
          
     }
+
+    function search(){
+        // select all query
+        $query = "SELECT
+                    volunteerID, volunteerName, [role], assignedTeamID, latitude, longitude, [address], isExperienced, haveFirstAidCert, requestedSubpart, responseSubpart
+                FROM
+                    " . $this->table_name . "
+                WHERE
+                    (volunteerID = :volunteerID OR :volunteerID = '') 
+                    AND (volunteerName = :volunteerName OR :volunteerName = '')
+                    AND ([role] = :role OR :role = '')
+                    AND (assignedTeamID = :assignedTeamID OR :assignedTeamID = '')
+                    AND (latitude = :latitude OR :latitude = '')
+                    AND (longitude = :longitude OR :longitude = '')
+                    AND ([address] = :address OR :address = '')
+                    AND (isExperienced = :isExperienced OR :isExperienced = '')
+                    AND (haveFirstAidCert = :haveFirstAidCert OR :haveFirstAidCert = '')
+                    AND (requestedSubpart = :requestedSubpart OR :requestedSubpart = '')
+                    AND (responseSubpart = :responseSubpart OR :responseSubpart = '')";
+     
+        // prepare query statement
+        $stmt = $this->conn->prepare($query);
+     
+
+        // sanitize
+        $this->volunteerID=htmlspecialchars(strip_tags($this->volunteerID));
+        $this->volunteerName=htmlspecialchars(strip_tags($this->volunteerName));
+        $this->role=htmlspecialchars(strip_tags($this->role));
+        $this->assignedTeamID=htmlspecialchars(strip_tags($this->assignedTeamID));
+        $this->latitude=htmlspecialchars(strip_tags($this->latitude));
+        $this->longitude=htmlspecialchars(strip_tags($this->longitude));
+        $this->address=htmlspecialchars(strip_tags($this->address));
+        $this->isExperienced=htmlspecialchars(strip_tags($this->isExperienced));
+        $this->haveFirstAidCert=htmlspecialchars(strip_tags($this->haveFirstAidCert));
+        $this->requestedSubpart=htmlspecialchars(strip_tags($this->requestedSubpart));
+        $this->responseSubpart=htmlspecialchars(strip_tags($this->responseSubpart));
+    
+     
+        // bind values
+        $stmt->bindParam(":volunteerID", $this->volunteerID);
+        $stmt->bindParam(":volunteerName", $this->volunteerName);
+        $stmt->bindParam(":role", $this->role);
+        $stmt->bindParam(":assignedTeamID", $this->assignedTeamID);
+        $stmt->bindParam(":latitude", $this->latitude);
+        $stmt->bindParam(":longitude", $this->longitude);
+        $stmt->bindParam(":address", $this->address);
+        $stmt->bindParam(":isExperienced", $this->isExperienced);
+        $stmt->bindParam(":haveFirstAidCert", $this->haveFirstAidCert);
+        $stmt->bindParam(":requestedSubpart", $this->requestedSubpart);
+        $stmt->bindParam(":responseSubpart", $this->responseSubpart);
+     
+        // execute query
+        $stmt->execute();
+     
+        return $stmt;
+    }
 }
 ?>

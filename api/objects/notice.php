@@ -70,5 +70,46 @@ class Notice{
         return false;
          
     }
+
+    function search(){
+        // select all query
+        $query = "SELECT
+                    noticeID, [type], latitude, longitude, [message], imageURL
+                FROM
+                    " . $this->table_name . "
+                WHERE
+                    (noticeID = :noticeID OR :noticeID = '') 
+                    AND ([type] = :type OR :type = '')
+                    AND (latitude = :latitude OR :latitude = '')
+                    AND (longitude = :longitude OR :longitude = '')
+                    AND ([message] = :message OR :message = '')
+                    AND (imageURL = :imageURL OR :imageURL = '')";
+     
+        // prepare query statement
+        $stmt = $this->conn->prepare($query);
+     
+
+        // sanitize
+        $this->noticeID=htmlspecialchars(strip_tags($this->noticeID));
+        $this->type=htmlspecialchars(strip_tags($this->type));
+        $this->latitude=htmlspecialchars(strip_tags($this->latitude));
+        $this->longitude=htmlspecialchars(strip_tags($this->longitude));
+        $this->message=htmlspecialchars(strip_tags($this->message));
+        $this->imageURL=htmlspecialchars(strip_tags($this->imageURL));
+    
+     
+        // bind values
+        $stmt->bindParam(":noticeID", $this->noticeID);
+        $stmt->bindParam(":type", $this->type);
+        $stmt->bindParam(":latitude", $this->latitude);
+        $stmt->bindParam(":longitude", $this->longitude);
+        $stmt->bindParam(":message", $this->message);
+        $stmt->bindParam(":imageURL", $this->imageURL);
+     
+        // execute query
+        $stmt->execute();
+     
+        return $stmt;
+    }
 }
 ?>

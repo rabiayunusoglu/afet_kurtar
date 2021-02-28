@@ -76,5 +76,52 @@ class Subpart{
         return false;
          
     }
+
+    function search(){
+        // select all query
+        $query = "SELECT
+                    subpartID, disasterID, latitude, longitude, [address], missingPerson, rescuedPerson, isOpenForVolunteers
+                FROM
+                    " . $this->table_name . "
+                WHERE
+                    (subpartID = :subpartID OR :subpartID = '') 
+                    AND (disasterID = :disasterID OR :disasterID = '')
+                    AND (latitude = :latitude OR :latitude = '')
+                    AND (longitude = :longitude OR :longitude = '')
+                    AND ([address] = :address OR :address = '')
+                    AND (missingPerson = :missingPerson OR :missingPerson = '')
+                    AND (rescuedPerson = :rescuedPerson OR :rescuedPerson = '')
+                    AND (isOpenForVolunteers = :isOpenForVolunteers OR :isOpenForVolunteers = '')";
+     
+        // prepare query statement
+        $stmt = $this->conn->prepare($query);
+     
+
+        // sanitize
+        $this->subpartID=htmlspecialchars(strip_tags($this->subpartID));
+        $this->disasterID=htmlspecialchars(strip_tags($this->disasterID));
+        $this->latitude=htmlspecialchars(strip_tags($this->latitude));
+        $this->longitude=htmlspecialchars(strip_tags($this->longitude));
+        $this->address=htmlspecialchars(strip_tags($this->address));
+        $this->missingPerson=htmlspecialchars(strip_tags($this->missingPerson));
+        $this->rescuedPerson=htmlspecialchars(strip_tags($this->rescuedPerson));
+        $this->isOpenForVolunteers=htmlspecialchars(strip_tags($this->isOpenForVolunteers));
+    
+     
+        // bind values
+        $stmt->bindParam(":subpartID", $this->subpartID);
+        $stmt->bindParam(":disasterID", $this->disasterID);
+        $stmt->bindParam(":latitude", $this->latitude);
+        $stmt->bindParam(":longitude", $this->longitude);
+        $stmt->bindParam(":address", $this->address);
+        $stmt->bindParam(":missingPerson", $this->missingPerson);
+        $stmt->bindParam(":rescuedPerson", $this->rescuedPerson);
+        $stmt->bindParam(":isOpenForVolunteers", $this->isOpenForVolunteers);
+     
+        // execute query
+        $stmt->execute();
+     
+        return $stmt;
+    }
 }
 ?>

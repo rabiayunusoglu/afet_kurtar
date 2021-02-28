@@ -59,6 +59,35 @@ class AuthorizedUser{
  
     return false;
      
-}
+    }
+
+    function search(){
+        // select all query
+        $query = "SELECT
+                    authorizedID, institution, authorizedName
+                FROM
+                    " . $this->table_name . "
+                WHERE
+                    (authorizedID = :authorizedID OR :authorizedID = '') AND (institution = :institution OR :institution = '') AND (authorizedName = :authorizedName OR :authorizedName = '')";
+     
+        // prepare query statement
+        $stmt = $this->conn->prepare($query);
+     
+
+        // sanitize
+        $this->authorizedID=htmlspecialchars(strip_tags($this->authorizedID));
+        $this->institution=htmlspecialchars(strip_tags($this->institution));
+        $this->authorizedName=htmlspecialchars(strip_tags($this->authorizedName));
+    
+        // bind values
+        $stmt->bindParam(":authorizedID", $this->institution);
+        $stmt->bindParam(":institution", $this->institution);
+        $stmt->bindParam(":authorizedName", $this->authorizedName);
+     
+        // execute query
+        $stmt->execute();
+     
+        return $stmt;
+    }
 }
 ?>

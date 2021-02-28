@@ -74,6 +74,52 @@ class DisasterEvents{
  
     return false;
      
-}
+    }
+
+    function search(){
+        // select all query
+        $query = "SELECT
+                    disasterID, disasterType, emergencyLevel, latitudeStart, latitudeEnd, longitudeStart, longitudeEnd, disasterDate
+                FROM
+                    " . $this->table_name . "
+                WHERE
+                    (disasterID = :disasterID OR :disasterID = '') 
+                    AND (disasterType = :disasterType OR :disasterType = '')
+                    AND (emergencyLevel = :emergencyLevel OR :emergencyLevel = '') 
+                    AND (latitudeStart = :latitudeStart OR :latitudeStart = '')
+                    AND (latitudeEnd = :latitudeEnd OR :latitudeEnd = '') 
+                    AND (longitudeStart = :longitudeStart OR :longitudeStart = '')
+                    AND (longitudeEnd = :longitudeEnd OR :longitudeEnd = '') 
+                    AND (disasterDate = :disasterDate OR :disasterDate = '')";
+     
+        // prepare query statement
+        $stmt = $this->conn->prepare($query);
+     
+
+        // sanitize
+        $this->disasterID=htmlspecialchars(strip_tags($this->disasterID));
+        $this->disasterType=htmlspecialchars(strip_tags($this->disasterType));
+        $this->emergencyLevel=htmlspecialchars(strip_tags($this->emergencyLevel));
+        $this->latitudeStart=htmlspecialchars(strip_tags($this->latitudeStart));
+        $this->latitudeEnd=htmlspecialchars(strip_tags($this->latitudeEnd));
+        $this->longitudeStart=htmlspecialchars(strip_tags($this->longitudeStart));
+        $this->longitudeEnd=htmlspecialchars(strip_tags($this->longitudeEnd));
+        $this->disasterDate=htmlspecialchars(strip_tags($this->disasterDate));
+    
+        // bind values
+        $stmt->bindParam(":disasterID", $this->disasterType);
+        $stmt->bindParam(":disasterType", $this->disasterType);
+        $stmt->bindParam(":emergencyLevel", $this->emergencyLevel);
+        $stmt->bindParam(":latitudeStart", $this->latitudeStart);
+        $stmt->bindParam(":latitudeEnd", $this->latitudeEnd);
+        $stmt->bindParam(":longitudeStart", $this->longitudeStart);
+        $stmt->bindParam(":longitudeEnd", $this->longitudeEnd);
+        $stmt->bindParam(":disasterDate", $this->disasterDate);
+     
+        // execute query
+        $stmt->execute();
+     
+        return $stmt;
+    }
 }
 ?>

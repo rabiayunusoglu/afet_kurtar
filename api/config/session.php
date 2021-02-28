@@ -1,13 +1,17 @@
 <?php
 session_start();
-$data = json_decode(file_get_contents("php://input"));
+//$data = json_decode(file_get_contents("php://input"),true);
+//echo json_decode(file_get_contents("php://input"),true);
+//echo $_POST["userType"];
 
-$_SESSION["userType"] = $data->userType;
-$_SESSION["userID"] = $data->userID;
-$_SESSION["email"] = $data->email;
-$_SESSION["userName"] = $data->userName;
-$_SESSION["createTime"] = $data->createTime;
+$_SESSION["userType"] = $_POST["userType"];
+$_SESSION["userID"] = $_POST["userID"];
+$_SESSION["email"] = $_POST["email"];
+$_SESSION["userName"] = $_POST["userName"];
+$_SESSION["createTime"] = $_POST["createTime"];
 
 http_response_code(200);
+
+echo $_SESSION["userID"];
 
 ?>

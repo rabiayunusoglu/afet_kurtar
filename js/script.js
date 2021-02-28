@@ -10,22 +10,26 @@ function onSignIn(googleUser) {
     /* function: php ye post request atılacak email varsa kullanıcı bilgileri dönecek ve session phpye post atılacak session phpde session startlanacak ve usertype set edilecek. Usertype'ına göre user anasayfasına yönlendirecek ve diğer tüm sayfalarda user session var mı diye kontrol edilecek yoksa giriş sayfasına redirect edilecek.
      */
 
-    $.post("https://afetkurtar.site/api/users/searchByMail.php", { email: profile.getEmail() })
+    $.post("https://afetkurtar.site/api/users/search.php", JSON.stringify({ email: profile.getEmail() }))
         .done(function(data, status, xhr) {
-            console.log(data);
+            console.log("dat: " + data);
             console.log("data retrieved");
             if (xhr.status == 200) {
                 console.log("user is found");
-                $.post("https://afetkurtar.site/config/session.php", { data })
-                    .done(function() {
-                        if (data.userType == "authorizedUser") {
-                            document.location.href = "https://afetkurtar.site/authorizedUser.php";
-                        } else if (data.userType == "personnelUser") {
-                            document.location.href = "https://afetkurtar.site/personnelUser.php";
-                        } else {
-                            document.location.href = "https://afetkurtar.site/volunteerUser.php";
-                        }
-                    });
+                // var userData = data.records[0];
+                // $.post("https://afetkurtar.site/api/config/session.php", userData)
+                //     .done(function(data, status, xhr) {
+                //         console.log("data: " + data + "end");
+                //         console.log("status: " + status);
+                //         console.log("xhr: " + xhr.status);
+                //         if (userData.userType == "authorizedUser") {
+                //             document.location.href = "https://afetkurtar.site/authorizedUser.php";
+                //         } else if (userData.userType == "personnelUser") {
+                //             document.location.href = "https://afetkurtar.site/personnelUser.php";
+                //         } else {
+                //             document.location.href = "https://afetkurtar.site/volunteerUser.php";
+                //         }
+                //     });
             }
         })
         .fail(function(xhr) {
@@ -34,7 +38,8 @@ function onSignIn(googleUser) {
                 document.location.href = "https://afetkurtar.site/volunteerRegister.php";
             }
         })
-        .always(function() {
+        .always(function(data) {
+            console.log(data);
             console.log("finished");
         });
 }
