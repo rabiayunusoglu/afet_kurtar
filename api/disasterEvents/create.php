@@ -28,7 +28,8 @@ if(
     !empty($data->latitudeEnd) &&
     !empty($data->longitudeStart) &&
     !empty($data->longitudeEnd) &&
-    !empty($data->disasterDate)
+    !empty($data->disasterDate) &&
+    !empty($data->disasterBase)
 ){
  
     // set user property values
@@ -39,6 +40,7 @@ if(
     $disasterEvents->longitudeStart = $data->longitudeStart;
     $disasterEvents->longitudeEnd = $data->longitudeEnd;
     $disasterEvents->disasterDate = $data->disasterDate;
+    $disasterEvents->disasterBase = $data->disasterBase;
  
     // create the product
     if($disasterEvents->create()){

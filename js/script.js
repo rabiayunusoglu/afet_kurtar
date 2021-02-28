@@ -16,20 +16,20 @@ function onSignIn(googleUser) {
             console.log("data retrieved");
             if (xhr.status == 200) {
                 console.log("user is found");
-                // var userData = data.records[0];
-                // $.post("https://afetkurtar.site/api/config/session.php", userData)
-                //     .done(function(data, status, xhr) {
-                //         console.log("data: " + data + "end");
-                //         console.log("status: " + status);
-                //         console.log("xhr: " + xhr.status);
-                //         if (userData.userType == "authorizedUser") {
-                //             document.location.href = "https://afetkurtar.site/authorizedUser.php";
-                //         } else if (userData.userType == "personnelUser") {
-                //             document.location.href = "https://afetkurtar.site/personnelUser.php";
-                //         } else {
-                //             document.location.href = "https://afetkurtar.site/volunteerUser.php";
-                //         }
-                //     });
+                var userData = data.records[0];
+                $.post("https://afetkurtar.site/api/config/session.php", userData)
+                    .done(function(data, status, xhr) {
+                        console.log("data: " + data + "end");
+                        console.log("status: " + status);
+                        console.log("xhr: " + xhr.status);
+                        if (userData.userType == "authorizedUser") {
+                            document.location.href = "https://afetkurtar.site/authorizedUser.php";
+                        } else if (userData.userType == "personnelUser") {
+                            document.location.href = "https://afetkurtar.site/personnelUser.php";
+                        } else {
+                            document.location.href = "https://afetkurtar.site/volunteerUser.php";
+                        }
+                    });
             }
         })
         .fail(function(xhr) {
