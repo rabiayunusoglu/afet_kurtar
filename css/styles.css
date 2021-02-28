@@ -43,3 +43,16 @@ body {
 .main-container{
     margin-top: 50px;
 }
+
+.nav-item{
+    margin-right: 36px;
+}
+
+.navbar-nav{
+    margin-right: auto;
+    margin-left: auto;
+}
+
+#logout{
+    margin-right: 10px;
+}

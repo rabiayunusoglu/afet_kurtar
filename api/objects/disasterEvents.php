@@ -14,6 +14,7 @@ class DisasterEvents{
     public $longitudeStart;
     public $longitudeEnd;
     public $disasterDate;
+    public $disasterBase;
  
     // constructor with $db as database connection
     public function __construct($db){
@@ -24,7 +25,7 @@ class DisasterEvents{
  
         // select all query
         $query = "SELECT
-                    disasterID, disasterType, emergencyLevel, latitudeStart, latitudeEnd, longitudeStart, longitudeEnd, disasterDate
+                    disasterID, disasterType, emergencyLevel, latitudeStart, latitudeEnd, longitudeStart, longitudeEnd, disasterDate, disasterBase
                 FROM
                     " . $this->table_name . " ";
      
@@ -44,7 +45,7 @@ class DisasterEvents{
     $query = "INSERT INTO
                 " . $this->table_name . "
             SET
-                disasterType=:disasterType, emergencyLevel=:emergencyLevel, latitudeStart=:latitudeStart, latitudeEnd=:latitudeEnd, longitudeStart=:longitudeStart, longitudeEnd=:longitudeEnd, disasterDate=:disasterDate";
+                disasterType=:disasterType, emergencyLevel=:emergencyLevel, latitudeStart=:latitudeStart, latitudeEnd=:latitudeEnd, longitudeStart=:longitudeStart, longitudeEnd=:longitudeEnd, disasterDate=:disasterDate, disasterBase=:disasterBase";
  
     // prepare query
     $stmt = $this->conn->prepare($query);
@@ -66,6 +67,7 @@ class DisasterEvents{
     $stmt->bindParam(":longitudeStart", $this->longitudeStart);
     $stmt->bindParam(":longitudeEnd", $this->longitudeEnd);
     $stmt->bindParam(":disasterDate", $this->disasterDate);
+    $stmt->bindParam(":disasterBase", $this->disasterBase);
  
     // execute query
     if($stmt->execute()){
@@ -79,7 +81,7 @@ class DisasterEvents{
     function search(){
         // select all query
         $query = "SELECT
-                    disasterID, disasterType, emergencyLevel, latitudeStart, latitudeEnd, longitudeStart, longitudeEnd, disasterDate
+                    disasterID, disasterType, emergencyLevel, latitudeStart, latitudeEnd, longitudeStart, longitudeEnd, disasterDate, disasterBase
                 FROM
                     " . $this->table_name . "
                 WHERE
@@ -90,7 +92,8 @@ class DisasterEvents{
                     AND (latitudeEnd = :latitudeEnd OR :latitudeEnd = '') 
                     AND (longitudeStart = :longitudeStart OR :longitudeStart = '')
                     AND (longitudeEnd = :longitudeEnd OR :longitudeEnd = '') 
-                    AND (disasterDate = :disasterDate OR :disasterDate = '')";
+                    AND (disasterDate = :disasterDate OR :disasterDate = '')
+                    AND (disasterBase = :disasterBase OR :disasterBase = '')";
      
         // prepare query statement
         $stmt = $this->conn->prepare($query);
@@ -105,6 +108,7 @@ class DisasterEvents{
         $this->longitudeStart=htmlspecialchars(strip_tags($this->longitudeStart));
         $this->longitudeEnd=htmlspecialchars(strip_tags($this->longitudeEnd));
         $this->disasterDate=htmlspecialchars(strip_tags($this->disasterDate));
+        $this->disasterBase=htmlspecialchars(strip_tags($this->disasterBase));
     
         // bind values
         $stmt->bindParam(":disasterID", $this->disasterType);
@@ -115,6 +119,7 @@ class DisasterEvents{
         $stmt->bindParam(":longitudeStart", $this->longitudeStart);
         $stmt->bindParam(":longitudeEnd", $this->longitudeEnd);
         $stmt->bindParam(":disasterDate", $this->disasterDate);
+        $stmt->bindParam(":disasterBase", $this->disasterBase);
      
         // execute query
         $stmt->execute();
