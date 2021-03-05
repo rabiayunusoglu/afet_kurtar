@@ -22,25 +22,26 @@ $data = json_decode(file_get_contents("php://input"),true);
  
 // make sure data is not empty
 if(
-    !empty($data->disasterType) &&
-    !empty($data->emergencyLevel) &&
-    !empty($data->latitudeStart) &&
-    !empty($data->latitudeEnd) &&
-    !empty($data->longitudeStart) &&
-    !empty($data->longitudeEnd) &&
-    !empty($data->disasterDate) &&
-    !empty($data->disasterBase)
+    isset($data["disasterType"]) &&
+    isset($data["emergencyLevel"]) &&
+    isset($data["latitudeStart"]) &&
+    isset($data["latitudeEnd"]) &&
+    isset($data["longitudeStart"]) &&
+    isset($data["longitudeEnd"]) &&
+    isset($data["disasterDate"]) &&
+    isset($data["disasterBase"])
 ){
  
     // set user property values
-    $disasterEvents->disasterType = $data->disasterType;
-    $disasterEvents->emergencyLevel = $data->emergencyLevel;
-    $disasterEvents->latitudeStart = $data->latitudeStart;
-    $disasterEvents->latitudeEnd = $data->latitudeEnd;
-    $disasterEvents->longitudeStart = $data->longitudeStart;
-    $disasterEvents->longitudeEnd = $data->longitudeEnd;
-    $disasterEvents->disasterDate = $data->disasterDate;
-    $disasterEvents->disasterBase = $data->disasterBase;
+    $disasterEvents->disasterID = isset($data["disasterID"]) ? $data["disasterID"] : "";
+    $disasterEvents->disasterID = isset($data["disasterType"]) ? $data["disasterType"] : "";
+    $disasterEvents->emergencyLevel = isset($data["emergencyLevel"]) ? $data["emergencyLevel"] : "";
+    $disasterEvents->latitudeStart = isset($data["latitudeStart"]) ? $data["latitudeStart"] : "";
+    $disasterEvents->latitudeEnd = isset($data["latitudeEnd"]) ? $data["latitudeEnd"] : "";
+    $disasterEvents->longitudeStart = isset($data["longitudeStart"]) ? $data["longitudeStart"] : "";
+    $disasterEvents->longitudeEnd = isset($data["longitudeEnd"]) ? $data["longitudeEnd"] : "";
+    $disasterEvents->disasterDate = isset($data["disasterDate"]) ? $data["disasterDate"] : "";
+    $disasterEvents->disasterBase = isset($data["disasterBase"]) ? $data["disasterBase"] : "";
  
     // create the product
     if($disasterEvents->create()){

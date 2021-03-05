@@ -17,10 +17,9 @@ $authorizedUser = new AuthorizedUser($db);
 // get keywords
 $data = json_decode(file_get_contents("php://input"),true);
 
-
+$authorizedUser->authorizedID = isset($data["authorizedID"]) ? $data["authorizedID"] : "";
 $authorizedUser->authorizedName = isset($data["authorizedName"]) ? $data["authorizedName"] : "";
 $authorizedUser->institution = isset($data["institution"]) ? $data["institution"] : "";
-$authorizedUser->userName = isset($data["userName"]) ? $data["userName"] : "";
  
 // query authorizedUser
 $stmt = $authorizedUser->search();
@@ -45,7 +44,7 @@ if($num>0){
         $authorizedUser_item=array(
             "authorizedName" => $authorizedName,
             "institution" => $institution,
-            "userName" => $userName,
+            "authorizedID" => $authorizedID,
         );
  
         array_push($authorizedUser_arr["records"], $authorizedUser_item);

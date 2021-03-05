@@ -22,12 +22,14 @@ $data = json_decode(file_get_contents("php://input"));
  
 // make sure data is not empty
 if(
-    !empty($data->institution) &&
-    !empty($data->authorizedName)
+    isset($data["authorizedID"]) &&
+    isset($data["authorizedName"]) &&
+    isset($data["institution"])
 ){
  
-    $authorizedUser->institution = $data->institution;
-    $authorizedUser->authorizedName = $data->authorizedName;
+    $authorizedUser->authorizedID = isset($data["authorizedID"]) ? $data["authorizedID"] : "";
+    $authorizedUser->authorizedName = isset($data["authorizedName"]) ? $data["authorizedName"] : "";
+    $authorizedUser->institution = isset($data["institution"]) ? $data["institution"] : "";
  
     // create the product
     if($authorizedUser->create()){

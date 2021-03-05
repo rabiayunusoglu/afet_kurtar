@@ -22,13 +22,13 @@ $data = json_decode(file_get_contents("php://input"),true);
  
 // make sure data is not empty
 if(
-    !empty($data->equipmentName) &&
-    !empty($data->equipmentImageURL)
+    isset($data["equipmentName"]) &&
+    isset($data["equipmentImageURL"])
 ){
  
     // set user property values
-    $equipment->equipmentName = $data->equipmentName;
-    $equipment->equipmentImageURL = $data->equipmentImageURL;
+    $equipment->equipmentName = isset($data["equipmentName"]) ? $data["equipmentName"] : "";
+    $equipment->equipmentImageURL = isset($data["equipmentImageURL"]) ? $data["equipmentImageURL"] : "";
  
     // create the product
     if($equipment->create()){

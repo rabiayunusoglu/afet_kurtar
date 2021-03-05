@@ -22,17 +22,17 @@ $data = json_decode(file_get_contents("php://input"),true);
  
 // make sure data is not empty
 if(
-    !empty($data->assignedSubpartID) &&
-    !empty($data->status) &&
-    !empty($data->needManPower) &&
-    !empty($data->needEquipment)
+    isset($data["assignedSubpartID"]) &&
+    isset($data["status"]) &&
+    isset($data["needManPower"]) &&
+    isset($data["needEquipment"])
 ){
  
     // set user property values
-    $team->assignedSubpartID = $data->assignedSubpartID;
-    $team->status = $data->status;
-    $team->needManPower = $data->needManPower;
-    $team->needEquipment = $data->needEquipment;
+    $team->assignedSubpartID = isset($data["assignedSubpartID"]) ? $data["assignedSubpartID"] : "";
+    $team->status = isset($data["status"]) ? $data["status"] : "";
+    $team->needManPower = isset($data["needManPower"]) ? $data["needManPower"] : "";
+    $team->needEquipment = isset($data["needEquipment"]) ? $data["needEquipment"] : "";
  
     // create the product
     if($team->create()){

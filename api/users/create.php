@@ -22,15 +22,15 @@ $data = json_decode(file_get_contents("php://input"),true);
  
 // make sure data is not empty
 if(
-    !empty($data->userType) &&
-    !empty($data->userName) &&
-    !empty($data->email)
+    isset($data["userType"]) &&
+    isset($data["userName"]) &&
+    isset($data["email"])
 ){
  
     // set user property values
-    $users->userType = $data->userType;
-    $users->userName = $data->userName;
-    $users->email = $data->email;
+    $users->userType = isset($data["userType"]) ? $data["userType"] : "";
+    $users->userName = isset($data["userName"]) ? $data["userName"] : "";
+    $users->email = isset($data["email"]) ? $data["email"] : "";
  
     // create the product
     if($users->create()){

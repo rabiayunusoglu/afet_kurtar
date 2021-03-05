@@ -21,6 +21,7 @@ $volunteerUser->volunteerID = isset($data["volunteerID"]) ? $data["volunteerID"]
 $volunteerUser->volunteerName = isset($data["volunteerName"]) ? $data["volunteerName"] : "";
 $volunteerUser->address = isset($data["address"]) ? $data["address"] : "";
 $volunteerUser->isExperienced = isset($data["isExperienced"]) ? $data["isExperienced"] : "";
+$volunteerUser->isExperienced = isset($data["haveFirstAidCert"]) ? $data["haveFirstAidCert"] : "";
 $volunteerUser->requestedSubpart = isset($data["requestedSubpart"]) ? $data["requestedSubpart"] : "";
 $volunteerUser->responseSubpart = isset($data["responseSubpart"]) ? $data["responseSubpart"] : "";
 $volunteerUser->assignedTeamID = isset($data["assignedTeamID"]) ? $data["assignedTeamID"] : "";

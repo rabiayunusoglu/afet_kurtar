@@ -22,23 +22,23 @@ $data = json_decode(file_get_contents("php://input"),true);
  
 // make sure data is not empty
 if(
-    !empty($data->disasterID) &&
-    !empty($data->latitude) &&
-    !empty($data->longitude) &&
-    !empty($data->address) &&
-    !empty($data->missingPerson) &&
-    !empty($data->rescuedPerson) &&
-    !empty($data->isOpenForVolunteers)
+    isset($data["disasterID"]) &&
+    isset($data["latitude"]) &&
+    isset($data["longitude"]) &&
+    isset($data["address"]) &&
+    isset($data["missingPerson"]) &&
+    isset($data["rescuedPerson"]) &&
+    isset($data["isOpenForVolunteers"])
 ){
  
     // set user property values
-    $subpart->disasterID = $data->disasterID;
-    $subpart->latitude = $data->latitude;
-    $subpart->longitude = $data->longitude;
-    $subpart->address = $data->address;
-    $subpart->missingPerson = $data->missingPerson;
-    $subpart->rescuedPerson = $data->rescuedPerson;
-    $subpart->isOpenForVolunteers = $data->isOpenForVolunteers;
+    $subpart->disasterID = isset($data["disasterID"]) ? $data["disasterID"] : "";
+    $subpart->latitude = isset($data["latitude"]) ? $data["latitude"] : "";
+    $subpart->longitude = isset($data["longitude"]) ? $data["longitude"] : "";
+    $subpart->address = isset($data["address"]) ? $data["address"] : "";
+    $subpart->missingPerson = isset($data["missingPerson"]) ? $data["missingPerson"] : "";
+    $subpart->rescuedPerson = isset($data["rescuedPerson"]) ? $data["rescuedPerson"] : "";
+    $subpart->isOpenForVolunteers = isset($data["isOpenForVolunteers"]) ? $data["isOpenForVolunteers"] : "";
  
     // create the product
     if($subpart->create()){

@@ -18,7 +18,7 @@ $equipmentRequest = new EquipmentRequest($db);
 $data = json_decode(file_get_contents("php://input"),true);
 
 $equipmentRequest->equipmentRequestID = isset($data["equipmentRequestID"]) ? $data["equipmentRequestID"] : "";
-$equipmentRequest->equipmentRequestName = isset($data["equipmentRequestName"]) ? $data["equipmentRequestName"] : "";
+$equipmentRequest->quantity = isset($data["quantity"]) ? $data["quantity"] : "";
 $equipmentRequest->teamRequestID = isset($data["teamRequestID"]) ? $data["teamRequestID"] : "";
 
 
@@ -44,7 +44,7 @@ if($num>0){
  
         $equipmentRequest_item=array(
             "equipmentRequestID" => $equipmentRequestID,
-            "equipmentRequestName" => $equipmentRequestName,
+            "quantity" => $quantity,
             "teamRequestID" => $teamRequestID,
         );
  

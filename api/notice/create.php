@@ -22,19 +22,20 @@ $data = json_decode(file_get_contents("php://input"),true);
  
 // make sure data is not empty
 if(
-    !empty($data->type) &&
-    !empty($data->latitude) &&
-    !empty($data->longitude) &&
-    !empty($data->message) &&
-    !empty($data->imageURL)
+    isset($data["type"]) &&
+    isset($data["latitude"]) &&
+    isset($data["longitude"]) &&
+    isset($data["message"]) &&
+    isset($data["imageURL"])
 ){
  
     // set user property values
-    $notice->type = $data->type;
-    $notice->latitude = $data->latitude;
-    $notice->longitude = $data->longitude;
-    $notice->message = $data->message;
-    $notice->imageURL = $data->imageURL;
+    $notice->noticeID = isset($data["noticeID"]) ? $data["noticeID"] : "";
+    $notice->type = isset($data["type"]) ? $data["type"] : "";
+    $notice->latitude = isset($data["latitude"]) ? $data["latitude"] : "";
+    $notice->longitude = isset($data["longitude"]) ? $data["longitude"] : "";
+    $notice->message = isset($data["message"]) ? $data["message"] : "";
+    $notice->imageURL = isset($data["imageURL"]) ? $data["imageURL"] : "";
  
     // create the product
     if($notice->create()){

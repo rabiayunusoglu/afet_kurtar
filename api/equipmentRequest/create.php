@@ -22,13 +22,13 @@ $data = json_decode(file_get_contents("php://input"),true);
  
 // make sure data is not empty
 if(
-    !empty($data->quantity) &&
-    !empty($data->teamRequestID)
+    isset($data["quantity"]) &&
+    isset($data["teamRequestID"])
 ){
  
     // set user property values
-    $equipmentRequest->equipmentRequestName = $data->quantity;
-    $equipmentRequest->teamRequestID = $data->teamRequestID;
+    $equipmentRequest->quantity = isset($data["quantity"]) ? $data["quantity"] : "";
+    $equipmentRequest->teamRequestID = isset($data["teamRequestID"]) ? $data["teamRequestID"] : "";
  
     // create the product
     if($equipmentRequest->create()){

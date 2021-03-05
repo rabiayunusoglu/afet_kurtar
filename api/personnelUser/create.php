@@ -22,21 +22,23 @@ $data = json_decode(file_get_contents("php://input"),true);
  
 // make sure data is not empty
 if(
-    !empty($data->institution) &&
-    !empty($data->latitude) &&
-    !empty($data->longitude) &&
-    !empty($data->personnelName) &&
-    !empty($data->personnelRole) &&
-    !empty($data->teamID)
+    isset($data["personnelID"]) &&
+    isset($data["institution"]) &&
+    isset($data["latitude"]) &&
+    isset($data["longitude"]) &&
+    isset($data["personnelName"]) &&
+    isset($data["personnelRole"]) &&
+    isset($data["teamID"])
 ){
  
     // set user property values
-    $personnelUser->institution = $data->institution;
-    $personnelUser->latitude = $data->latitude;
-    $personnelUser->longitude = $data->longitude;
-    $personnelUser->personnelName = $data->personnelName;
-    $personnelUser->personnelRole = $data->personnelRole;
-    $personnelUser->teamID = $data->teamID;
+    $personnelUser->personnelID = isset($data["personnelID"]) ? $data["personnelID"] : "";
+    $personnelUser->institution = isset($data["institution"]) ? $data["institution"] : "";
+    $personnelUser->latitude = isset($data["latitude"]) ? $data["latitude"] : "";
+    $personnelUser->longitude = isset($data["longitude"]) ? $data["longitude"] : "";
+    $personnelUser->personnelName = isset($data["personnelName"]) ? $data["personnelName"] : "";
+    $personnelUser->personnelRole = isset($data["personnelRole"]) ? $data["personnelRole"] : "";
+    $personnelUser->teamID = isset($data["teamID"]) ? $data["teamID"] : "";
  
     // create the product
     if($personnelUser->create()){

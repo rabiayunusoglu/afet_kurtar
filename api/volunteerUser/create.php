@@ -22,29 +22,31 @@ $data = json_decode(file_get_contents("php://input"),true);
  
 // make sure data is not empty
 if(
-    !empty($data->volunteerName) &&
-    !empty($data->address) &&
-    !empty($data->isExperienced) &&
-    !empty($data->haveFirstAidCert) &&
-    !empty($data->requestedSubpart) &&
-    !empty($data->responseSubpart) &&
-    !empty($data->assignedTeamID) &&
-    !empty($data->role) &&
-    !empty($data->latitude) &&
-    !empty($data->longitude)
+    isset($data["volunteerID"]) &&
+    isset($data["volunteerName"]) &&
+    isset($data["address"]) &&
+    isset($data["isExperienced"]) &&
+    isset($data["haveFirstAidCert"]) &&
+    isset($data["requestedSubpart"]) &&
+    isset($data["responseSubpart"]) &&
+    isset($data["assignedTeamID"]) &&
+    isset($data["role"]) &&
+    isset($data["latitude"]) &&
+    isset($data["longitude"])
 ){
  
     // set user property values
-    $volunteerUser->volunteerName = $data->volunteerName;
-    $volunteerUser->address = $data->address;
-    $volunteerUser->isExperienced = $data->isExperienced;
-    $volunteerUser->haveFirstAidCert = $data->haveFirstAidCert;
-    $volunteerUser->requestedSubpart = $data->requestedSubpart;
-    $volunteerUser->responseSubpart = $data->responseSubpart;
-    $volunteerUser->assignedTeamID = $data->assignedTeamID;
-    $volunteerUser->role = $data->role;
-    $volunteerUser->latitude = $data->latitude;
-    $volunteerUser->longitude = $data->longitude;
+    $volunteerUser->volunteerID = isset($data["volunteerID"]) ? $data["volunteerID"] : "";
+    $volunteerUser->volunteerName = isset($data["volunteerName"]) ? $data["volunteerName"] : "";
+    $volunteerUser->address = isset($data["address"]) ? $data["address"] : "";
+    $volunteerUser->isExperienced = isset($data["isExperienced"]) ? $data["isExperienced"] : "";
+    $volunteerUser->isExperienced = isset($data["haveFirstAidCert"]) ? $data["haveFirstAidCert"] : "";
+    $volunteerUser->requestedSubpart = isset($data["requestedSubpart"]) ? $data["requestedSubpart"] : "";
+    $volunteerUser->responseSubpart = isset($data["responseSubpart"]) ? $data["responseSubpart"] : "";
+    $volunteerUser->assignedTeamID = isset($data["assignedTeamID"]) ? $data["assignedTeamID"] : "";
+    $volunteerUser->role = isset($data["role"]) ? $data["role"] : "";
+    $volunteerUser->latitude = isset($data["latitude"]) ? $data["latitude"] : "";
+    $volunteerUser->longitude = isset($data["longitude"]) ? $data["longitude"] : "";
  
     // create the product
     if($volunteerUser->create()){
