@@ -9,12 +9,12 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 
-public class Volunteer_Anasayfa extends AppCompatActivity {
-DrawerLayout drawerLayout;
+public class Volunteer_ParticipateRequest extends AppCompatActivity {
+    DrawerLayout drawerLayout;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_volunteer_participate_form);
+        setContentView(R.layout.activity_volunteer_participate_request);
         drawerLayout = findViewById(R.id.drawer_layout);
     }
     public void ClickMenu(View view) {
@@ -58,6 +58,7 @@ DrawerLayout drawerLayout;
         //redirect activity to emergency
         redirectActivity(this, Volunteer_Emergency.class );
     }
+
     public void ClickForm(View view) {
         //redirect activity to emergency
         redirectActivity(this, Volunteer_ParticipateForm.class );
@@ -72,4 +73,5 @@ DrawerLayout drawerLayout;
         activity.startActivity(intent);
 
     }
+
 }

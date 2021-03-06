@@ -9,12 +9,12 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 
-public class Volunteer_Participate extends AppCompatActivity {
+public class Volunteer_ParticipateForm extends AppCompatActivity {
     DrawerLayout drawerLayout;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_volunteer_participate);
+        setContentView(R.layout.activity_volunteer_participate_form);
         drawerLayout = findViewById(R.id.drawer_layout);
     }
     public void ClickMenu(View view) {
@@ -51,14 +51,17 @@ public class Volunteer_Participate extends AppCompatActivity {
 
     public void ClickVolunter(View view) {
         //redirect activity to volunter
-        redirectActivity(this, Volunteer_Participate.class );
+        redirectActivity(this, Volunteer_ParticipateRequest.class );
     }
 
     public void ClickEmergency(View view) {
         //redirect activity to emergency
         redirectActivity(this, Volunteer_Emergency.class );
     }
-
+    public void ClickForm(View view) {
+        //redirect activity to emergency
+        redirectActivity(this, Volunteer_ParticipateForm.class );
+    }
 
 
     public static void redirectActivity(Activity activity, Class aClass) {
@@ -70,5 +73,4 @@ public class Volunteer_Participate extends AppCompatActivity {
         activity.startActivity(intent);
 
     }
-
 }

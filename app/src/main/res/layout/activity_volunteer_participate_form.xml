@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:id="@+id/drawer_layout"
-    tools:context=".Volunteer_Participate">
+    tools:context=".Volunteer_ParticipateForm">
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -14,8 +14,15 @@
         <include
             layout="@layout/activity_tool_bar">
         </include>
-
-        <include layout="@layout/activity_tool_participate"></include>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="Gönüllü Katılım Formu"
+            android:textColor="#050505"
+            android:textSize="15sp"
+            android:textStyle="bold" />
+        <include layout="@layout/activity_tool_participate_form"></include>
 
         <LinearLayout
             android:layout_width="match_parent"

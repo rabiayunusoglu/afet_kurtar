@@ -30,7 +30,6 @@ import android.content.ContentResolver;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
@@ -90,10 +89,13 @@ public class Volunteer_CameraGalery extends AppCompatActivity {
         redirectActivity(this, Volunteer_Anasayfa.class);
     }
 
-
+    public void ClickForm(View view) {
+        //redirect activity to emergency
+        redirectActivity(this, Volunteer_ParticipateForm.class );
+    }
     public void ClickVolunter(View view) {
         //redirect activity to volunter
-        redirectActivity(this, Volunteer_Participate.class);
+        redirectActivity(this, Volunteer_ParticipateRequest.class);
     }
 
     public void ClickEmergency(View view) {

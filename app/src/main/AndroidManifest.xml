@@ -14,10 +14,11 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.AfetKurtar">
-        <activity android:name=".Authorized_Anasayfa"></activity>
+        <activity android:name=".Volunteer_ParticipateForm"></activity>
+        <activity android:name=".Authorized_Anasayfa" />
         <activity android:name=".Personel_Anasayfa" />
         <activity android:name=".Volunteer_CameraGalery" />
-        <activity android:name=".Volunteer_Participate" />
+        <activity android:name=".Volunteer_ParticipateRequest" />
         <activity android:name=".Volunteer_Emergency" />
         <activity android:name=".Volunteer_Anasayfa" />
         <activity android:name=".ScreenActivity" />
@@ -28,6 +29,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
         <provider
             android:name="androidx.core.content.FileProvider"
             android:authorities="com.example.android.fileprovider"
@@ -35,7 +37,7 @@
             android:grantUriPermissions="true">
             <meta-data
                 android:name="android.support.FILE_PROVIDER_PATHS"
-                android:resource="@xml/file_paths"></meta-data>
+                android:resource="@xml/file_paths" />
         </provider>
     </application>
 
