@@ -24,11 +24,8 @@ $data = json_decode(file_get_contents("php://input"),true);
 if(
     isset($data["personnelID"]) &&
     isset($data["institution"]) &&
-    isset($data["latitude"]) &&
-    isset($data["longitude"]) &&
     isset($data["personnelName"]) &&
-    isset($data["personnelRole"]) &&
-    isset($data["teamID"])
+    isset($data["personnelRole"])
 ){
  
     // set user property values

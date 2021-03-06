@@ -56,3 +56,24 @@ body {
 #logout{
     margin-right: 10px;
 }
+
+#registerBtn{
+    margin-top: 20px;
+    margin-right: auto;
+    margin-left: auto;
+    margin-bottom: 30px;
+}
+
+.form-box{
+    margin-top: 75px;
+    height: auto;
+    background: #1A2226;
+    text-align: center;
+    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16), 0 3px 6px rgba(0, 0, 0, 0.23);
+    border-radius: 10px;
+    padding-top: 30px;
+}
+
+.form-group{
+    margin-bottom: 20px;
+}

@@ -43,3 +43,65 @@ function onSignIn(googleUser) {
             console.log("finished");
         });
 }
+
+function registerPersonnel(){
+
+    var email = document.getElementById("personnelEmail").value.trim();
+    var username = document.getElementById("personnelUsername").value.trim();
+    var role = document.getElementById("personnelRole").value.trim();
+    var institution = document.getElementById("personnelInstitution").value.trim();
+
+    if(email == ''){
+        alert("Email adresi boş bırakılamaz.");
+        return false;
+    }
+
+    else if(username == ''){
+        alert("Ad soyad boş bırakılamaz.");
+        return false;
+    }
+
+    else if(role == ''){
+        alert("Personel rolü boş bırakılamaz.");
+        return false;
+    }
+
+    else if(institution == ''){
+        alert("Çalıştığı kurum boş bırakılamaz.");
+        return false;
+    }
+
+
+    $.post("https://afetkurtar.site/api/users/create.php", JSON.stringify({ userType: 'personnelUser', userName: username, email: email }))
+        .done(function(data, status, xhr) {
+            
+            if (xhr.status == 201) {
+                
+                $.post("https://afetkurtar.site/api/personnelUser/create.php", 
+                JSON.stringify({ institution: institution, personnelName: username, personnelRole: role , personnelID: "0"}))
+                    .done(function(data, status, xhr) {
+                        if(xhr.status == 201){
+                            window.alert("Personel kaydı başarıyla gerçekleştirildi.");
+                            document.getElementById('personnelForm').reset();
+                        }
+                        else{
+                            window.alert("Personel kaydı esnasında bir hata ile karşılaşıldı");
+                            document.getElementById('personnelForm').reset();
+                        }
+                    });
+
+                    document.getElementById('personnelForm').reset();
+                }
+
+            else{
+                window.alert("Kullanıcı kaydı esnasında bir hata ile karşılaşıldı");
+                document.getElementById('personnelForm').reset();
+            }
+        })
+        .fail(function(xhr) {
+            window.alert("Kullanıcı kaydı esnasında bir hata ile karşılaşıldı");
+            document.getElementById('personnelForm').reset();
+        });
+
+
+}
