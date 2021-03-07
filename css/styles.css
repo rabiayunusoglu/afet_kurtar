@@ -77,3 +77,7 @@ body {
 .form-group{
     margin-bottom: 20px;
 }
+
+.td-element{
+    vertical-align: middle;
+}

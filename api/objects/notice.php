@@ -22,7 +22,7 @@ class Notice{
  
         // select all query
         $query = "SELECT
-                    noticeID, [type], latitude, longitude, [message], imageURL
+                    noticeID, `type`, latitude, longitude, `message`, imageURL
                 FROM
                     " . $this->table_name . " ";
      
@@ -74,15 +74,15 @@ class Notice{
     function search(){
         // select all query
         $query = "SELECT
-                    noticeID, [type], latitude, longitude, [message], imageURL
+                    noticeID, `type`, latitude, longitude, `message`, imageURL
                 FROM
                     " . $this->table_name . "
                 WHERE
                     (noticeID = :noticeID OR :noticeID = '') 
-                    AND ([type] = :type OR :type = '')
+                    AND (`type` = :type OR :type = '')
                     AND (latitude = :latitude OR :latitude = '')
                     AND (longitude = :longitude OR :longitude = '')
-                    AND ([message] = :message OR :message = '')
+                    AND (`message` = :message OR :message = '')
                     AND (imageURL = :imageURL OR :imageURL = '')";
      
         // prepare query statement

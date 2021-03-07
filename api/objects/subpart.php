@@ -24,7 +24,7 @@ class Subpart{
  
         // select all query
         $query = "SELECT
-                    subpartID, disasterID, latitude, longitude, [address], missingPerson, rescuedPerson, isOpenForVolunteers
+                    subpartID, disasterID, latitude, longitude, `address`, missingPerson, rescuedPerson, isOpenForVolunteers
                 FROM
                     " . $this->table_name . " ";
      
@@ -80,7 +80,7 @@ class Subpart{
     function search(){
         // select all query
         $query = "SELECT
-                    subpartID, disasterID, latitude, longitude, [address], missingPerson, rescuedPerson, isOpenForVolunteers
+                    subpartID, disasterID, latitude, longitude, `address`, missingPerson, rescuedPerson, isOpenForVolunteers
                 FROM
                     " . $this->table_name . "
                 WHERE
@@ -88,7 +88,7 @@ class Subpart{
                     AND (disasterID = :disasterID OR :disasterID = '')
                     AND (latitude = :latitude OR :latitude = '')
                     AND (longitude = :longitude OR :longitude = '')
-                    AND ([address] = :address OR :address = '')
+                    AND (`address` = :address OR :address = '')
                     AND (missingPerson = :missingPerson OR :missingPerson = '')
                     AND (rescuedPerson = :rescuedPerson OR :rescuedPerson = '')
                     AND (isOpenForVolunteers = :isOpenForVolunteers OR :isOpenForVolunteers = '')";

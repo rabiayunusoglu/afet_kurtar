@@ -21,7 +21,7 @@ class Team{
  
         // select all query
         $query = "SELECT
-                    teamID, assignedSubpartID, [status], needManPower, needEquipment
+                    teamID, assignedSubpartID, `status`, needManPower, needEquipment
                 FROM
                     " . $this->table_name . " ";
      
@@ -71,13 +71,13 @@ class Team{
     function search(){
         // select all query
         $query = "SELECT
-                    teamID, assignedSubpartID, [status], needManPower, needEquipment
+                    teamID, assignedSubpartID, `status`, needManPower, needEquipment
                 FROM
                     " . $this->table_name . "
                 WHERE
                     (teamID = :teamID OR :teamID = '') 
                     AND (assignedSubpartID = :assignedSubpartID OR :assignedSubpartID = '')
-                    AND ([status] = :status OR :status = '')
+                    AND (`status` = :status OR :status = '')
                     AND (needManPower = :needManPower OR :needManPower = '')
                     AND (needEquipment = :needEquipment OR :needEquipment = '')";
      

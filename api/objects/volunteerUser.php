@@ -24,10 +24,10 @@ class VolunteerUser{
     }
 
     function read(){
- 
+        // , `role`, assignedTeamID, latitude, longitude, `address`, isExperienced, haveFirstAidCert, requestedSubpart, responseSubpart
         // select all query
         $query = "SELECT
-                    volunteerID, volunteerName, [role], assignedTeamID, latitude, longitude, [address], isExperienced, haveFirstAidCert, requestedSubpart, responseSubpart
+                    volunteerID, volunteerName, `role`, assignedTeamID, latitude, longitude, `address`, isExperienced, haveFirstAidCert, requestedSubpart, responseSubpart
                 FROM
                     " . $this->table_name . " ";
      
@@ -46,7 +46,7 @@ class VolunteerUser{
         $query = "INSERT INTO
                     " . $this->table_name . "
                 SET
-                    volunteerName=:volunteerName, role=:role, assignedTeamID=:assignedTeamID, latitude=:latitude, longitude=:longitude, address=:address, isExperienced=:isExperienced, haveFirstAidCert=:haveFirstAidCert, requestedSubpart=:requestedSubpart, responseSubpart=:responseSubpart";
+                    volunteerName=:volunteerName, `role`=:role, assignedTeamID=:assignedTeamID, latitude=:latitude, longitude=:longitude, `address`=:address, isExperienced=:isExperienced, haveFirstAidCert=:haveFirstAidCert, requestedSubpart=:requestedSubpart, responseSubpart=:responseSubpart";
      
         // prepare query
         $stmt = $this->conn->prepare($query);
@@ -89,17 +89,17 @@ class VolunteerUser{
     function search(){
         // select all query
         $query = "SELECT
-                    volunteerID, volunteerName, [role], assignedTeamID, latitude, longitude, [address], isExperienced, haveFirstAidCert, requestedSubpart, responseSubpart
+                    volunteerID, volunteerName, `role`, assignedTeamID, latitude, longitude, `address`, isExperienced, haveFirstAidCert, requestedSubpart, responseSubpart
                 FROM
                     " . $this->table_name . "
                 WHERE
                     (volunteerID = :volunteerID OR :volunteerID = '') 
                     AND (volunteerName = :volunteerName OR :volunteerName = '')
-                    AND ([role] = :role OR :role = '')
+                    AND (`role` = :role OR :role = '')
                     AND (assignedTeamID = :assignedTeamID OR :assignedTeamID = '')
                     AND (latitude = :latitude OR :latitude = '')
                     AND (longitude = :longitude OR :longitude = '')
-                    AND ([address] = :address OR :address = '')
+                    AND (`address` = :address OR :address = '')
                     AND (isExperienced = :isExperienced OR :isExperienced = '')
                     AND (haveFirstAidCert = :haveFirstAidCert OR :haveFirstAidCert = '')
                     AND (requestedSubpart = :requestedSubpart OR :requestedSubpart = '')
