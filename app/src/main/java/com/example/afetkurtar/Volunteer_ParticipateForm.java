@@ -16,6 +16,8 @@ public class Volunteer_ParticipateForm extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_volunteer_participate_form);
         drawerLayout = findViewById(R.id.drawer_layout);
+
+
     }
     public void ClickMenu(View view) {
         //open drawer

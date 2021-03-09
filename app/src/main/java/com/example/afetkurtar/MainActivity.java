@@ -2,12 +2,18 @@ package com.example.afetkurtar;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.constraintlayout.widget.ConstraintLayout;
 
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.TextView;
 
+import com.android.volley.RequestQueue;
+import com.android.volley.toolbox.JsonArrayRequest;
+
+import com.android.volley.toolbox.Volley;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
@@ -16,6 +22,13 @@ import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.gms.common.SignInButton;
+import com.android.volley.Request;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonObjectRequest;
+
+import org.json.JSONArray;
+import org.json.JSONObject;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
     int RC_SIGN_IN = 9001;
@@ -31,6 +44,76 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         SignInButton signInButton = findViewById(R.id.sign_in_button);
         signInButton.setSize(SignInButton.SIZE_STANDARD);
         findViewById(R.id.sign_in_button).setOnClickListener(this);
+
+        String url = "https://afetkurtar.site/api/volunteerUser/read.php";
+
+        // jsonArray icin RESP API ile cekme (Test Edilemedi SSL Bekleniyor)
+        /*
+        JsonArrayRequest jsonArrayRequest = new JsonArrayRequest(
+                Request.Method.GET,
+                url, null,
+                new Response.Listener<JSONArray>() {
+                    @Override
+                    public void onResponse(JSONArray response) {
+                        // Do something with response
+                        //mTextView.setText(response.toString());
+
+                        // Process the JSON
+                        try{
+                            // Loop through the array elements
+                            TextView text = findViewById(R.id.textView2);
+                            text.setText("Hello   " + response.getString(0));
+                            text.setText(a.toString());
+
+                        }catch (Exception e){
+                            e.printStackTrace();
+                        }
+                    }
+                },
+                new Response.ErrorListener(){
+                    @Override
+                    public void onErrorResponse(VolleyError error){
+                        // Do something when error occurred
+                        TextView text = findViewById(R.id.textView2);
+                        text.setText("Hello ");
+                    }
+                }
+        );
+        */
+
+        //Rest API ile get operasyonu (SSL Hatası veriyor, SSL bekleniyor)
+
+        RequestQueue queue = Volley.newRequestQueue(this);
+
+        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest
+                (Request.Method.GET, url, null, new Response.Listener<JSONObject>() {
+
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        try {
+                            TextView text = findViewById(R.id.textView2);
+                            text.setText("Hello   " + response.toString());
+                            //    textView.setText("Response: " + response.toString());
+                        }catch (Exception e){
+
+                            TextView text = findViewById(R.id.textView2);
+                            text.setText("HATA");
+                        }
+                    }
+                }, new Response.ErrorListener() {
+
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        // TODO: Handle error
+                        System.out.println(error);
+                        TextView text = findViewById(R.id.textView2);
+                       // text.setText( "HATA");
+                    }
+                });
+        queue.add(jsonObjectRequest);
+        TextView text = findViewById(R.id.textView3);
+        text.setText(" Deneme");
+
     }
 
 
@@ -38,8 +121,18 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.sign_in_button:
-                Intent intent=new Intent(this, Volunteer_Anasayfa.class);
-                startActivity(intent);
+                /*
+                Burada Sunucuya sorgu ile login olan kisinin hangi yetkiye sahip oldugunu bulup
+                ona göre yonlendirme yapılacak.
+                 */
+               signIn();
+               // signIn ile asagidaki update UI kısmında oluyor (startActivity)
+
+              //  Intent intent=new Intent(this, Volunteer_Anasayfa.class);
+              //  startActivity(intent);
+
+
+
                 break;
            /* case R.id.button_sign_out:
                 signOut();
@@ -81,10 +174,16 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private void updateUI(boolean isLogin, GoogleSignInAccount account){
         if(isLogin){
 
-            Intent intentLogin = new Intent(MainActivity.this, ScreenActivity.class);
-            //Hesap bilgileri asagida extralara put yapiliyor.
-            intentLogin.putExtra("account",account);
+            // Updake kisi yetkisine gore olacak
 
+            /*
+            Google Account information, AccountInformation Classı altında, Application extend edilerek global variable olarak atandı
+            Asagidaki sekilde herhangi bir activity uzerinden cagirilabilir
+            GoogleSignInAccount account = ((AccountInformation) this.getApplication()).getAccount();
+             */
+            ((AccountInformation) this.getApplication()).setAccount(account);
+
+            Intent intentLogin = new Intent(MainActivity.this, Volunteer_Anasayfa.class);
             startActivity(intentLogin);
         }
         else

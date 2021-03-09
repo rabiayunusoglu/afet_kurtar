@@ -8,14 +8,49 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Button;
+import android.widget.TextView;
+
+import com.google.android.gms.auth.api.signin.GoogleSignIn;
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
+import com.google.android.gms.auth.api.signin.GoogleSignInClient;
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
+
 
 public class Volunteer_Anasayfa extends AppCompatActivity {
 DrawerLayout drawerLayout;
+GoogleSignInClient mGoogleSignInClient;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_volunteer_participate_form);
         drawerLayout = findViewById(R.id.drawer_layout);
+
+        GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                .requestEmail()
+                .build();
+
+        mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
+        Button but = findViewById(R.id.button_sign_out);
+
+        // Giris yapilan kullanici Account. Parcable ile main den screen activity e getirildi.
+        GoogleSignInAccount account = ((AccountInformation) this.getApplication()).getAccount();
+
+        /*
+         * Asagidaki Kısımda Ad ve Soyad Kısmı dolduruluyor.
+         * Istenmezse comment'e alınabilir
+         */
+        TextView name = findViewById(R.id.multiAutoCompleteTextView);
+        TextView surname = findViewById(R.id.multiAutoCompleteTextView5);
+        String k = account.getDisplayName();
+        //String l = account.getEmail();
+        name.setText(account.getGivenName());
+        surname.setText(account.getFamilyName());
+
+
+
+
+
     }
     public void ClickMenu(View view) {
         //open drawer
