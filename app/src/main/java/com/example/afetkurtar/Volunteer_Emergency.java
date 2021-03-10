@@ -28,8 +28,13 @@ import android.webkit.MimeTypeMap;
 import android.content.ContentResolver;
 
 
+import com.google.android.gms.auth.api.signin.GoogleSignIn;
+import com.google.android.gms.auth.api.signin.GoogleSignInClient;
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
@@ -48,6 +53,7 @@ public class Volunteer_Emergency extends AppCompatActivity {
     Button cameraBtn,galleryBtn;
     String currentPhotoPath;
     StorageReference storageReference;
+    GoogleSignInClient mGoogleSignInClient;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -56,6 +62,20 @@ public class Volunteer_Emergency extends AppCompatActivity {
         selectedImage = findViewById(R.id.imageView);
         cameraBtn = findViewById(R.id.CameraBtn);
         galleryBtn = findViewById(R.id.GaleryBtn);
+
+        GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                .requestEmail()
+                .build();
+        mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
+    }
+
+    private void signOut() {
+        mGoogleSignInClient.signOut()
+                .addOnCompleteListener(this, new OnCompleteListener<Void>() {
+                    public void onComplete(@NonNull Task<Void> task) {
+                        System.out.println("Cikis basarili");
+                    }
+                });
     }
 
     public void ClickMenu(View view) {
@@ -102,7 +122,11 @@ public class Volunteer_Emergency extends AppCompatActivity {
         //redirect activity to emergency
         redirectActivity(this, Volunteer_Emergency.class);
     }
-
+    public void ClickExit(View view) {
+        //redirect activity to main screen
+        signOut();
+        redirectActivity(this, MainActivity.class );
+    }
 
     public static void redirectActivity(Activity activity, Class aClass) {
         //initialize intent

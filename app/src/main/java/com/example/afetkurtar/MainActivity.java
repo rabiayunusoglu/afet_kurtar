@@ -91,13 +91,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     @Override
                     public void onResponse(JSONObject response) {
                         try {
-                            TextView text = findViewById(R.id.textView2);
-                            text.setText("Hello   " + response.toString());
-                            //    textView.setText("Response: " + response.toString());
+                            System.out.println(response.toString());
                         }catch (Exception e){
-
-                            TextView text = findViewById(R.id.textView2);
-                            text.setText("HATA");
+                            System.out.println(e.getStackTrace());
                         }
                     }
                 }, new Response.ErrorListener() {
@@ -106,13 +102,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     public void onErrorResponse(VolleyError error) {
                         // TODO: Handle error
                         System.out.println(error);
-                        TextView text = findViewById(R.id.textView2);
-                       // text.setText( "HATA");
                     }
                 });
         queue.add(jsonObjectRequest);
-        TextView text = findViewById(R.id.textView3);
-        text.setText(" Deneme");
 
     }
 
@@ -127,11 +119,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                  */
                signIn();
                // signIn ile asagidaki update UI kısmında oluyor (startActivity)
-
-              //  Intent intent=new Intent(this, Volunteer_Anasayfa.class);
-              //  startActivity(intent);
-
-
 
                 break;
            /* case R.id.button_sign_out:
@@ -175,13 +162,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         if(isLogin){
 
             // Updake kisi yetkisine gore olacak
-
-            /*
-            Google Account information, AccountInformation Classı altında, Application extend edilerek global variable olarak atandı
-            Asagidaki sekilde herhangi bir activity uzerinden cagirilabilir
-            GoogleSignInAccount account = ((AccountInformation) this.getApplication()).getAccount();
-             */
-            ((AccountInformation) this.getApplication()).setAccount(account);
 
             Intent intentLogin = new Intent(MainActivity.this, Volunteer_Anasayfa.class);
             startActivity(intentLogin);

@@ -1,5 +1,6 @@
 package com.example.afetkurtar;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
@@ -15,6 +16,8 @@ import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 
 
 public class Volunteer_Anasayfa extends AppCompatActivity {
@@ -26,15 +29,14 @@ GoogleSignInClient mGoogleSignInClient;
         setContentView(R.layout.activity_volunteer_participate_form);
         drawerLayout = findViewById(R.id.drawer_layout);
 
+
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestEmail()
                 .build();
-
         mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
-        Button but = findViewById(R.id.button_sign_out);
 
-        // Giris yapilan kullanici Account. Parcable ile main den screen activity e getirildi.
-        GoogleSignInAccount account = ((AccountInformation) this.getApplication()).getAccount();
+
+        GoogleSignInAccount account = GoogleSignIn.getLastSignedInAccount(this);
 
         /*
          * Asagidaki Kısımda Ad ve Soyad Kısmı dolduruluyor.
@@ -43,14 +45,20 @@ GoogleSignInClient mGoogleSignInClient;
         TextView name = findViewById(R.id.multiAutoCompleteTextView);
         TextView surname = findViewById(R.id.multiAutoCompleteTextView5);
         String k = account.getDisplayName();
-        //String l = account.getEmail();
         name.setText(account.getGivenName());
         surname.setText(account.getFamilyName());
 
 
 
 
-
+    }
+    private void signOut() {
+        mGoogleSignInClient.signOut()
+                .addOnCompleteListener(this, new OnCompleteListener<Void>() {
+                    public void onComplete(@NonNull Task<Void> task) {
+                    System.out.println("Cikis basarili");
+                    }
+                });
     }
     public void ClickMenu(View view) {
         //open drawer
@@ -96,6 +104,11 @@ GoogleSignInClient mGoogleSignInClient;
     public void ClickForm(View view) {
         //redirect activity to emergency
         redirectActivity(this, Volunteer_ParticipateForm.class );
+    }
+    public void ClickExit(View view) {
+        //redirect activity to main screen
+        signOut();
+        redirectActivity(this, MainActivity.class );
     }
 
     public static void redirectActivity(Activity activity, Class aClass) {

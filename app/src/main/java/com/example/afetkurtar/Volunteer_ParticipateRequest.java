@@ -1,5 +1,6 @@
 package com.example.afetkurtar;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
@@ -9,14 +10,35 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 
+import com.google.android.gms.auth.api.signin.GoogleSignIn;
+import com.google.android.gms.auth.api.signin.GoogleSignInClient;
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+
 public class Volunteer_ParticipateRequest extends AppCompatActivity {
     DrawerLayout drawerLayout;
+    GoogleSignInClient mGoogleSignInClient;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_volunteer_participate_request);
         drawerLayout = findViewById(R.id.drawer_layout);
+
+        GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                .requestEmail()
+                .build();
+        mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
     }
+    private void signOut() {
+        mGoogleSignInClient.signOut()
+                .addOnCompleteListener(this, new OnCompleteListener<Void>() {
+                    public void onComplete(@NonNull Task<Void> task) {
+                        System.out.println("Cikis basarili");
+                    }
+                });
+    }
+
     public void ClickMenu(View view) {
         //open drawer
         openDrawer(drawerLayout);
@@ -62,6 +84,11 @@ public class Volunteer_ParticipateRequest extends AppCompatActivity {
     public void ClickForm(View view) {
         //redirect activity to emergency
         redirectActivity(this, Volunteer_ParticipateForm.class );
+    }
+    public void ClickExit(View view) {
+        //redirect activity to main screen
+        signOut();
+        redirectActivity(this, MainActivity.class );
     }
 
     public static void redirectActivity(Activity activity, Class aClass) {
