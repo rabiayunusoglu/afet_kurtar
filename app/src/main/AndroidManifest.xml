@@ -11,15 +11,14 @@
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
     <application
-
-
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.AfetKurtar">
-        <activity android:name=".Volunteer_ParticipateForm"></activity>
+        <activity android:name=".Personel_Progress"></activity>
+        <activity android:name=".Volunteer_ParticipateForm" />
         <activity android:name=".Authorized_Anasayfa" />
         <activity android:name=".Personel_Anasayfa" />
         <activity android:name=".Volunteer_CameraGalery" />
@@ -28,8 +27,6 @@
         <activity android:name=".Volunteer_Anasayfa" />
         <activity android:name=".ScreenActivity" />
         <activity android:name=".MainActivity">
-
-
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
