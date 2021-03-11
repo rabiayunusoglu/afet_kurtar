@@ -22,9 +22,10 @@ $data = json_decode(file_get_contents("php://input"),true);
  
 // make sure data is not empty
 if(
-    isset($data["userType"]) &&
-    isset($data["userName"]) &&
-    isset($data["email"])
+    // isset($data["userType"]) &&
+    // isset($data["userName"]) &&
+    // isset($data["email"])
+    true
 ){
  
     // set user property values

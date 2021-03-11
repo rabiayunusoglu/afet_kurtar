@@ -22,17 +22,18 @@ $data = json_decode(file_get_contents("php://input"),true);
  
 // make sure data is not empty
 if(
-    isset($data["volunteerID"]) &&
-    isset($data["volunteerName"]) &&
-    isset($data["address"]) &&
-    isset($data["isExperienced"]) &&
-    isset($data["haveFirstAidCert"]) &&
-    isset($data["requestedSubpart"]) &&
-    isset($data["responseSubpart"]) &&
-    isset($data["assignedTeamID"]) &&
-    isset($data["role"]) &&
-    isset($data["latitude"]) &&
-    isset($data["longitude"])
+    // isset($data["volunteerID"]) &&
+    // isset($data["volunteerName"]) &&
+    // isset($data["address"]) &&
+    // isset($data["isExperienced"]) &&
+    // isset($data["haveFirstAidCert"]) &&
+    // isset($data["requestedSubpart"]) &&
+    // isset($data["responseSubpart"]) &&
+    // isset($data["assignedTeamID"]) &&
+    // isset($data["role"]) &&
+    // isset($data["latitude"]) &&
+    // isset($data["longitude"])
+    true
 ){
  
     // set user property values

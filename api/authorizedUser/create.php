@@ -22,9 +22,10 @@ $data = json_decode(file_get_contents("php://input"));
  
 // make sure data is not empty
 if(
-    isset($data["authorizedID"]) &&
-    isset($data["authorizedName"]) &&
-    isset($data["institution"])
+    // isset($data["authorizedID"]) &&
+    // isset($data["authorizedName"]) &&
+    // isset($data["institution"])
+    true
 ){
  
     $authorizedUser->authorizedID = isset($data["authorizedID"]) ? $data["authorizedID"] : "";

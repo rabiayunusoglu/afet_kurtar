@@ -22,11 +22,12 @@ $data = json_decode(file_get_contents("php://input"),true);
  
 // make sure data is not empty
 if(
-    isset($data["type"]) &&
-    isset($data["latitude"]) &&
-    isset($data["longitude"]) &&
-    isset($data["message"]) &&
-    isset($data["imageURL"])
+    // isset($data["type"]) &&
+    // isset($data["latitude"]) &&
+    // isset($data["longitude"]) &&
+    // isset($data["message"]) &&
+    // isset($data["imageURL"])
+    true
 ){
  
     // set user property values

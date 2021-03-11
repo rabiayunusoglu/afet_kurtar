@@ -22,13 +22,14 @@ $data = json_decode(file_get_contents("php://input"),true);
  
 // make sure data is not empty
 if(
-    isset($data["disasterID"]) &&
-    isset($data["latitude"]) &&
-    isset($data["longitude"]) &&
-    isset($data["address"]) &&
-    isset($data["missingPerson"]) &&
-    isset($data["rescuedPerson"]) &&
-    isset($data["isOpenForVolunteers"])
+    // isset($data["disasterID"]) &&
+    // isset($data["latitude"]) &&
+    // isset($data["longitude"]) &&
+    // isset($data["address"]) &&
+    // isset($data["missingPerson"]) &&
+    // isset($data["rescuedPerson"]) &&
+    // isset($data["isOpenForVolunteers"])
+    true
 ){
  
     // set user property values

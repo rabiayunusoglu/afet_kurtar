@@ -22,14 +22,15 @@ $data = json_decode(file_get_contents("php://input"),true);
  
 // make sure data is not empty
 if(
-    isset($data["disasterType"]) &&
-    isset($data["emergencyLevel"]) &&
-    isset($data["latitudeStart"]) &&
-    isset($data["latitudeEnd"]) &&
-    isset($data["longitudeStart"]) &&
-    isset($data["longitudeEnd"]) &&
-    isset($data["disasterDate"]) &&
-    isset($data["disasterBase"])
+    // isset($data["disasterType"]) &&
+    // isset($data["emergencyLevel"]) &&
+    // isset($data["latitudeStart"]) &&
+    // isset($data["latitudeEnd"]) &&
+    // isset($data["longitudeStart"]) &&
+    // isset($data["longitudeEnd"]) &&
+    // isset($data["disasterDate"]) &&
+    // isset($data["disasterBase"])
+    true
 ){
  
     // set user property values

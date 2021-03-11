@@ -22,8 +22,9 @@ $data = json_decode(file_get_contents("php://input"),true);
  
 // make sure data is not empty
 if(
-    isset($data["equipmentName"]) &&
-    isset($data["equipmentImageURL"])
+    // isset($data["equipmentName"]) &&
+    // isset($data["equipmentImageURL"])
+    true
 ){
  
     // set user property values

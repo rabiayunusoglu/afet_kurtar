@@ -22,10 +22,11 @@ $data = json_decode(file_get_contents("php://input"),true);
  
 // make sure data is not empty
 if(
-    isset($data["assignedSubpartID"]) &&
-    isset($data["status"]) &&
-    isset($data["needManPower"]) &&
-    isset($data["needEquipment"])
+    // isset($data["assignedSubpartID"]) &&
+    // isset($data["status"]) &&
+    // isset($data["needManPower"]) &&
+    // isset($data["needEquipment"])
+    true
 ){
  
     // set user property values
