@@ -23,7 +23,7 @@
             android:textSize="15sp"
             android:textStyle="bold" />
 
-
+        <include layout="@layout/activity_tool_anasayfa"></include>
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"

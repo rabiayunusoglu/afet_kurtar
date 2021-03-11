@@ -72,7 +72,7 @@ public class Volunteer_ParticipateForm extends AppCompatActivity {
     }
 
 
-    public void ClickVolunter(View view) {
+    public void ClickParticipateRequest(View view) {
         //redirect activity to volunter
         redirectActivity(this, Volunteer_ParticipateRequest.class );
     }
@@ -81,7 +81,7 @@ public class Volunteer_ParticipateForm extends AppCompatActivity {
         //redirect activity to emergency
         redirectActivity(this, Volunteer_Emergency.class );
     }
-    public void ClickForm(View view) {
+    public void ClickParticipateForm(View view) {
         //redirect activity to emergency
         redirectActivity(this, Volunteer_ParticipateForm.class );
     }
