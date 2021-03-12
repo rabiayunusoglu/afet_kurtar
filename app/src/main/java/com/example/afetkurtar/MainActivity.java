@@ -85,7 +85,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 */
     }
 
-    private void cheackUser(GoogleSignInAccount account){
+    private void checkUser(GoogleSignInAccount account){
         String url = "https://afetkurtar.site/api/users/search.php";
 
         Map<String, String>  params = new HashMap<String, String> ();
@@ -105,7 +105,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     @Override
                     public void onErrorResponse(VolleyError error) {
                         addUser(account);
-
                     }
                 });
         queue.add(request);
@@ -193,7 +192,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         if(isLogin){
 
 
-            cheackUser(account);
+            checkUser(account);
             if(userCreatedSuccessfully) {
                 // Yetkiye gore yonlendirmeler burada yapilcak ********************
 
