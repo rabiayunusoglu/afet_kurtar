@@ -106,7 +106,9 @@ public class Volunteer_CameraGalery extends AppCompatActivity {
         //redirect activity to dashboard
         redirectActivity(this, Volunteer_Anasayfa.class);
     }
-
+    public void ClickRegisterInfo(){
+        redirectActivity(this,Volunteer_RegisterInfo.class);
+    }
     public void ClickParticipateForm(View view) {
         //redirect activity to emergency
         redirectActivity(this, Volunteer_ParticipateForm.class );

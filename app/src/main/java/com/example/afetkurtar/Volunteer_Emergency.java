@@ -82,7 +82,9 @@ public class Volunteer_Emergency extends AppCompatActivity {
         //open drawer
         openDrawer(drawerLayout);
     }
-
+    public void ClickRegisterInfo(){
+        redirectActivity(this,Volunteer_RegisterInfo.class);
+    }
     static void openDrawer(DrawerLayout drawerLayout) {
         //Open drawer Layout
         drawerLayout.openDrawer(GravityCompat.START);

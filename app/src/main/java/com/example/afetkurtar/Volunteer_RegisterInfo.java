@@ -9,52 +9,30 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.Button;
-import android.widget.TextView;
 
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
-import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 
+public class Volunteer_RegisterInfo extends AppCompatActivity {
 
-public class Volunteer_Anasayfa extends AppCompatActivity {
     DrawerLayout drawerLayout;
     GoogleSignInClient mGoogleSignInClient;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_volunteer_anasayfa);
+        setContentView(R.layout.activity_volunteer__register_info);
         drawerLayout = findViewById(R.id.drawer_layout);
 
-
-        /*GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+        GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestEmail()
                 .build();
         mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
-
-
-        GoogleSignInAccount account = GoogleSignIn.getLastSignedInAccount(this);
-
-        /*
-         * Asagidaki Kısımda Ad ve Soyad Kısmı dolduruluyor.
-         * Istenmezse comment'e alınabilir
-         */
-        /*TextView name = findViewById(R.id.multiAutoCompleteTextView);
-        TextView surname = findViewById(R.id.multiAutoCompleteTextView5);
-        String k = account.getDisplayName();
-        name.setText(account.getGivenName());
-        surname.setText(account.getFamilyName());*/
-
-
-
-
     }
-    public void ClickRegisterInfo(){
-        redirectActivity(this,Volunteer_RegisterInfo.class);
-    }
+
     private void signOut() {
         mGoogleSignInClient.signOut()
                 .addOnCompleteListener(this, new OnCompleteListener<Void>() {
@@ -63,6 +41,7 @@ public class Volunteer_Anasayfa extends AppCompatActivity {
                     }
                 });
     }
+
     public void ClickMenu(View view) {
         //open drawer
         openDrawer(drawerLayout);
@@ -77,7 +56,9 @@ public class Volunteer_Anasayfa extends AppCompatActivity {
         //Close drawer
         closeDrawer(drawerLayout);
     }
-
+    public void ClickRegisterInfo(){
+        redirectActivity(this,Volunteer_RegisterInfo.class);
+    }
     public static void closeDrawer(DrawerLayout drawerLayout) {
         //Close drawer layout
         //check condition

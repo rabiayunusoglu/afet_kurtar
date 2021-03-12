@@ -64,7 +64,9 @@ public class Volunteer_ParticipateRequest extends AppCompatActivity {
         }
     }
 
-
+    public void ClickRegisterInfo(){
+        redirectActivity(this,Volunteer_RegisterInfo.class);
+    }
     public void ClickAnasayfa(View view) {
         //redirect activity to dashboard
         redirectActivity(this, Volunteer_Anasayfa.class );

@@ -4,6 +4,8 @@
     package="com.example.afetkurtar">
 
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
     <uses-permission android:name="android.permission.CAMERA" />
@@ -17,6 +19,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.AfetKurtar">
+        <activity android:name=".Volunteer_RegisterInfo"></activity>
         <activity android:name=".Volunteer_Anasayfa" />
         <activity android:name=".Volunteer_ParticipateForm" />
         <activity android:name=".Authorized_Anasayfa" />
