@@ -29,7 +29,6 @@ public class Volunteer_Anasayfa extends AppCompatActivity {
         setContentView(R.layout.activity_volunteer_anasayfa);
         drawerLayout = findViewById(R.id.drawer_layout);
 
-
         /*GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestEmail()
                 .build();
