@@ -53,6 +53,9 @@ public class Volunteer_Anasayfa extends AppCompatActivity {
 
 
     }
+    public void ClickRegisterInfo(){
+        redirectActivity(this,Volunteer_RegisterInfo.class);
+    }
     private void signOut() {
         mGoogleSignInClient.signOut()
                 .addOnCompleteListener(this, new OnCompleteListener<Void>() {
@@ -114,6 +117,10 @@ public class Volunteer_Anasayfa extends AppCompatActivity {
     public void ClickPersonel(View view) {
         //redirect activity to main screen
         redirectActivity(this, Personel_Progress.class );
+    }
+    public void ClickAfetBolgesi(View view) {
+        //redirect activity to main screen
+        redirectActivity(this, Afet_Bolgesi.class );
     }
 
     public static void redirectActivity(Activity activity, Class aClass) {

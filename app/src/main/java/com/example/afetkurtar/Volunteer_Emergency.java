@@ -82,7 +82,9 @@ public class Volunteer_Emergency extends AppCompatActivity {
         //open drawer
         openDrawer(drawerLayout);
     }
-
+    public void ClickRegisterInfo(){
+        redirectActivity(this,Volunteer_RegisterInfo.class);
+    }
     static void openDrawer(DrawerLayout drawerLayout) {
         //Open drawer Layout
         drawerLayout.openDrawer(GravityCompat.START);
@@ -130,6 +132,10 @@ public class Volunteer_Emergency extends AppCompatActivity {
     public void ClickPersonel(View view) {
         //redirect activity to main screen
         redirectActivity(this, Personel_Progress.class );
+    }
+    public void ClickAfetBolgesi(View view) {
+        //redirect activity to main screen
+        redirectActivity(this, Afet_Bolgesi.class );
     }
 
     public static void redirectActivity(Activity activity, Class aClass) {

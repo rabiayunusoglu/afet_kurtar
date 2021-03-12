@@ -16,13 +16,15 @@ import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 
-public class Volunteer_ParticipateRequest extends AppCompatActivity {
+public class Volunteer_RegisterInfo extends AppCompatActivity {
+
     DrawerLayout drawerLayout;
     GoogleSignInClient mGoogleSignInClient;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_volunteer_participate_request);
+        setContentView(R.layout.activity_volunteer__register_info);
         drawerLayout = findViewById(R.id.drawer_layout);
 
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
@@ -30,6 +32,7 @@ public class Volunteer_ParticipateRequest extends AppCompatActivity {
                 .build();
         mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
     }
+
     private void signOut() {
         mGoogleSignInClient.signOut()
                 .addOnCompleteListener(this, new OnCompleteListener<Void>() {
@@ -53,7 +56,9 @@ public class Volunteer_ParticipateRequest extends AppCompatActivity {
         //Close drawer
         closeDrawer(drawerLayout);
     }
-
+    public void ClickRegisterInfo(){
+        redirectActivity(this,Volunteer_RegisterInfo.class);
+    }
     public static void closeDrawer(DrawerLayout drawerLayout) {
         //Close drawer layout
         //check condition
@@ -64,9 +69,7 @@ public class Volunteer_ParticipateRequest extends AppCompatActivity {
         }
     }
 
-    public void ClickRegisterInfo(){
-        redirectActivity(this,Volunteer_RegisterInfo.class);
-    }
+
     public void ClickAnasayfa(View view) {
         //redirect activity to dashboard
         redirectActivity(this, Volunteer_Anasayfa.class );
@@ -75,14 +78,13 @@ public class Volunteer_ParticipateRequest extends AppCompatActivity {
 
     public void ClickParticipateRequest(View view) {
         //redirect activity to volunter
-        redirectActivity(this, Volunteer_ParticipateRequest.class);
+        redirectActivity(this, Volunteer_ParticipateRequest.class );
     }
 
     public void ClickEmergency(View view) {
         //redirect activity to emergency
         redirectActivity(this, Volunteer_Emergency.class );
     }
-
     public void ClickParticipateForm(View view) {
         //redirect activity to emergency
         redirectActivity(this, Volunteer_ParticipateForm.class );
@@ -110,5 +112,4 @@ public class Volunteer_ParticipateRequest extends AppCompatActivity {
         activity.startActivity(intent);
 
     }
-
 }

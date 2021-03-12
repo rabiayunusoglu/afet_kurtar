@@ -106,7 +106,9 @@ public class Volunteer_CameraGalery extends AppCompatActivity {
         //redirect activity to dashboard
         redirectActivity(this, Volunteer_Anasayfa.class);
     }
-
+    public void ClickRegisterInfo(){
+        redirectActivity(this,Volunteer_RegisterInfo.class);
+    }
     public void ClickParticipateForm(View view) {
         //redirect activity to emergency
         redirectActivity(this, Volunteer_ParticipateForm.class );
@@ -128,6 +130,10 @@ public class Volunteer_CameraGalery extends AppCompatActivity {
     public void ClickPersonel(View view) {
         //redirect activity to main screen
         redirectActivity(this, Personel_Progress.class );
+    }
+    public void ClickAfetBolgesi(View view) {
+        //redirect activity to main screen
+        redirectActivity(this, Afet_Bolgesi.class );
     }
 
     public static void redirectActivity(Activity activity, Class aClass) {
