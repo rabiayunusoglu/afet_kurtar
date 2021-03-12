@@ -21,16 +21,16 @@ import com.google.android.gms.tasks.Task;
 
 
 public class Volunteer_Anasayfa extends AppCompatActivity {
-DrawerLayout drawerLayout;
-GoogleSignInClient mGoogleSignInClient;
+    DrawerLayout drawerLayout;
+    GoogleSignInClient mGoogleSignInClient;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_volunteer_participate_form);
+        setContentView(R.layout.activity_volunteer_anasayfa);
         drawerLayout = findViewById(R.id.drawer_layout);
 
 
-        GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+        /*GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestEmail()
                 .build();
         mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
@@ -42,11 +42,11 @@ GoogleSignInClient mGoogleSignInClient;
          * Asagidaki Kısımda Ad ve Soyad Kısmı dolduruluyor.
          * Istenmezse comment'e alınabilir
          */
-        TextView name = findViewById(R.id.multiAutoCompleteTextView);
+        /*TextView name = findViewById(R.id.multiAutoCompleteTextView);
         TextView surname = findViewById(R.id.multiAutoCompleteTextView5);
         String k = account.getDisplayName();
         name.setText(account.getGivenName());
-        surname.setText(account.getFamilyName());
+        surname.setText(account.getFamilyName());*/
 
 
 
@@ -56,7 +56,7 @@ GoogleSignInClient mGoogleSignInClient;
         mGoogleSignInClient.signOut()
                 .addOnCompleteListener(this, new OnCompleteListener<Void>() {
                     public void onComplete(@NonNull Task<Void> task) {
-                    System.out.println("Cikis basarili");
+                        System.out.println("Cikis basarili");
                     }
                 });
     }
@@ -92,7 +92,7 @@ GoogleSignInClient mGoogleSignInClient;
     }
 
 
-    public void ClickVolunter(View view) {
+    public void ClickParticipateRequest(View view) {
         //redirect activity to volunter
         redirectActivity(this, Volunteer_ParticipateRequest.class );
     }
@@ -101,7 +101,7 @@ GoogleSignInClient mGoogleSignInClient;
         //redirect activity to emergency
         redirectActivity(this, Volunteer_Emergency.class );
     }
-    public void ClickForm(View view) {
+    public void ClickParticipateForm(View view) {
         //redirect activity to emergency
         redirectActivity(this, Volunteer_ParticipateForm.class );
     }

@@ -17,14 +17,15 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.AfetKurtar">
+
         <activity android:name=".Personel_Progress"></activity>
+        <activity android:name=".Volunteer_Anasayfa" />
         <activity android:name=".Volunteer_ParticipateForm" />
         <activity android:name=".Authorized_Anasayfa" />
         <activity android:name=".Personel_Anasayfa" />
         <activity android:name=".Volunteer_CameraGalery" />
         <activity android:name=".Volunteer_ParticipateRequest" />
         <activity android:name=".Volunteer_Emergency" />
-        <activity android:name=".Volunteer_Anasayfa" />
         <activity android:name=".ScreenActivity" />
         <activity android:name=".MainActivity">
             <intent-filter>

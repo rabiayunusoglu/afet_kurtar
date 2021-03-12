@@ -107,11 +107,11 @@ public class Volunteer_CameraGalery extends AppCompatActivity {
         redirectActivity(this, Volunteer_Anasayfa.class);
     }
 
-    public void ClickForm(View view) {
+    public void ClickParticipateForm(View view) {
         //redirect activity to emergency
         redirectActivity(this, Volunteer_ParticipateForm.class );
     }
-    public void ClickVolunter(View view) {
+    public void ClickParticipateRequest(View view) {
         //redirect activity to volunter
         redirectActivity(this, Volunteer_ParticipateRequest.class);
     }
