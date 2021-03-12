@@ -38,6 +38,8 @@ public class Volunteer_Anasayfa extends AppCompatActivity {
 
         GoogleSignInAccount account = GoogleSignIn.getLastSignedInAccount(this);
 
+        //System.out.println(account.getId());
+
         /*
          * Asagidaki Kısımda Ad ve Soyad Kısmı dolduruluyor.
          * Istenmezse comment'e alınabilir
