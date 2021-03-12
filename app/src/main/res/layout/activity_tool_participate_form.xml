@@ -173,7 +173,7 @@
 
 
         <RadioGroup
-            android:id="@+id/groupfistaid"
+            android:id="@+id/groupexperienced"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
@@ -191,7 +191,7 @@
                 android:layout_height="29dp"
                 android:layout_marginStart="5dp"
                 android:layout_marginLeft="5dp"
-                android:text="   Daha önce arama kurtarma olayına katıldınız mı?"
+                android:text="  Daha önce arama kurtarma olayına katıldınız mı?"
                 android:textColor="@color/black"
                 android:textSize="17sp" />
 
@@ -224,7 +224,8 @@
 
 
         <RadioGroup
-            android:id="@+id/groupexperienced"
+
+            android:id="@+id/groupfistaid"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
@@ -240,9 +241,9 @@
                 android:id="@+id/name4"
                 android:layout_width="393dp"
                 android:layout_height="29dp"
-                android:layout_marginStart="16dp"
-                android:layout_marginLeft="16dp"
-                android:text="   İlk yardım eğitimi aldınız mı?"
+                android:layout_marginStart="5dp"
+                android:layout_marginLeft="5dp"
+                android:text="    İlk yardım eğitimi aldınız mı?"
                 android:textColor="@color/black"
                 android:textSize="17sp" />
 
