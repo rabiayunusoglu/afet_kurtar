@@ -19,7 +19,11 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.AfetKurtar">
+
         <activity android:name=".Volunteer_RegisterInfo"></activity>
+
+
+        <activity android:name=".Personel_Progress"></activity>
         <activity android:name=".Volunteer_Anasayfa" />
         <activity android:name=".Volunteer_ParticipateForm" />
         <activity android:name=".Authorized_Anasayfa" />

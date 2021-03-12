@@ -10,9 +10,11 @@ import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
+import com.android.volley.AuthFailureError;
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.JsonArrayRequest;
 
+import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
@@ -28,11 +30,17 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
     int RC_SIGN_IN = 9001;
     GoogleSignInClient mGoogleSignInClient;
+    RequestQueue queue;
+    Boolean userCreatedSuccessfully = true;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -45,53 +53,22 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         signInButton.setSize(SignInButton.SIZE_STANDARD);
         findViewById(R.id.sign_in_button).setOnClickListener(this);
 
+
+
         String url = "https://afetkurtar.site/api/volunteerUser/read.php";
-
-        // jsonArray icin RESP API ile cekme (Test Edilemedi SSL Bekleniyor)
-        /*
-        JsonArrayRequest jsonArrayRequest = new JsonArrayRequest(
-                Request.Method.GET,
-                url, null,
-                new Response.Listener<JSONArray>() {
-                    @Override
-                    public void onResponse(JSONArray response) {
-                        // Do something with response
-                        //mTextView.setText(response.toString());
-
-                        // Process the JSON
-                        try{
-                            // Loop through the array elements
-                            TextView text = findViewById(R.id.textView2);
-                            text.setText("Hello   " + response.getString(0));
-                            text.setText(a.toString());
-
-                        }catch (Exception e){
-                            e.printStackTrace();
-                        }
-                    }
-                },
-                new Response.ErrorListener(){
-                    @Override
-                    public void onErrorResponse(VolleyError error){
-                        // Do something when error occurred
-                        TextView text = findViewById(R.id.textView2);
-                        text.setText("Hello ");
-                    }
-                }
-        );
-        */
 
         //Rest API ile get operasyonu (SSL Hatası veriyor, SSL bekleniyor)
 
-        RequestQueue queue = Volley.newRequestQueue(this);
-
+        queue = Volley.newRequestQueue(this);
+        //GET Ornegi
+    /*
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest
                 (Request.Method.GET, url, null, new Response.Listener<JSONObject>() {
 
                     @Override
                     public void onResponse(JSONObject response) {
                         try {
-                            System.out.println(response.toString());
+                       //     System.out.println(response.toString());
                         }catch (Exception e){
                             System.out.println(e.getStackTrace());
                         }
@@ -105,9 +82,62 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     }
                 });
         queue.add(jsonObjectRequest);
-
+*/
     }
 
+    private void cheackUser(GoogleSignInAccount account){
+        String url = "https://afetkurtar.site/api/users/search.php";
+
+        Map<String, String>  params = new HashMap<String, String> ();
+        params.put("email", account.getEmail());
+
+        JsonObjectRequest  request = new JsonObjectRequest(
+                Request.Method.POST, // the request method
+                url, // the URL
+                new JSONObject(params), // the parameters for the php
+                new Response.Listener<JSONObject>() { // the response listener
+                    @Override
+                    public void onResponse(JSONObject response){
+                        System.out.println(response.toString());
+                    }
+                },
+                new Response.ErrorListener() { // the error listener
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        addUser(account);
+
+                    }
+                });
+        queue.add(request);
+    }
+    public void addUser(GoogleSignInAccount account){
+        String url = "https://afetkurtar.site/api/users/create.php";
+
+        Map<String, String>  params = new HashMap<String, String> ();
+        params.put("userType","volunteerUser");
+        params.put("userName",account.getDisplayName());
+        params.put("email", account.getEmail());
+
+        JsonObjectRequest  request = new JsonObjectRequest(
+                Request.Method.POST, // the request method
+                url, // the URL
+                new JSONObject(params), // the parameters for the php
+                new Response.Listener<JSONObject>() { // the response listener
+                    @Override
+                    public void onResponse(JSONObject response){
+                        System.out.println(response.toString());
+
+                    }
+                },
+                new Response.ErrorListener() { // the error listener
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        System.out.println(error.getStackTrace());
+                        userCreatedSuccessfully = false;
+                    }
+                });
+        queue.add(request);
+    }
 
     @Override
     public void onClick(View v) {
@@ -117,6 +147,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 Burada Sunucuya sorgu ile login olan kisinin hangi yetkiye sahip oldugunu bulup
                 ona göre yonlendirme yapılacak.
                  */
+
                signIn();
                // signIn ile asagidaki update UI kısmında oluyor (startActivity)
 
@@ -161,10 +192,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private void updateUI(boolean isLogin, GoogleSignInAccount account){
         if(isLogin){
 
-            // Updake kisi yetkisine gore olacak
 
-            Intent intentLogin = new Intent(MainActivity.this, Volunteer_Anasayfa.class);
-            startActivity(intentLogin);
+            cheackUser(account);
+            if(userCreatedSuccessfully) {
+                // Yetkiye gore yonlendirmeler burada yapilcak ********************
+
+                Intent intentLogin = new Intent(MainActivity.this, Volunteer_Anasayfa.class);
+                startActivity(intentLogin);
+            }
         }
         else
         {

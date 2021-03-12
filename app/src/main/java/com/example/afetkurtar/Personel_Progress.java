@@ -10,52 +10,81 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
-import android.widget.TextView;
+import android.widget.EditText;
 
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
-import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 
-
-public class Volunteer_Anasayfa extends AppCompatActivity {
+public class Personel_Progress extends AppCompatActivity {
     DrawerLayout drawerLayout;
     GoogleSignInClient mGoogleSignInClient;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_volunteer_anasayfa);
+        setContentView(R.layout.activity_personel__progress);
+
+        findViewById(R.id.UpdateButton).setOnClickListener(this::onClick);
+
+
         drawerLayout = findViewById(R.id.drawer_layout);
 
-        /*GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+        GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestEmail()
                 .build();
         mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
 
+    }
 
-        GoogleSignInAccount account = GoogleSignIn.getLastSignedInAccount(this);
+    public void HandleUpdate(){
+        String progress = null;
+        int equipment = 0, manPower = 0;
+        boolean p = true,e = true,m = true;
+        try {
+            EditText prog = findViewById(R.id.updateProgress);
+            progress = prog.getText().toString();
+        }catch (Exception ex){
+            p = false;
+        }
+        try {
+            EditText equip = findViewById(R.id.updateEquipment);
+            equipment = Integer.parseInt(equip.getText().toString());
+        }catch (Exception ex){
+            e = false;
+        }
+        try {
+            EditText manPow = findViewById(R.id.updateManpower);
+            manPower = Integer.parseInt(manPow.getText().toString());
+        } catch (Exception ex){
+            m = false;
+        }
 
-        //System.out.println(account.getId());
-
-        /*
-         * Asagidaki Kısımda Ad ve Soyad Kısmı dolduruluyor.
-         * Istenmezse comment'e alınabilir
-         */
-        /*TextView name = findViewById(R.id.multiAutoCompleteTextView);
-        TextView surname = findViewById(R.id.multiAutoCompleteTextView5);
-        String k = account.getDisplayName();
-        name.setText(account.getGivenName());
-        surname.setText(account.getFamilyName());*/
-
-
+        if(p == true){
+            System.out.println(progress);
+        }
+        if(e == true){
+            System.out.println(equipment);
+        }
+        if(m == true){
+            System.out.println(manPower);
+        }
 
 
     }
-    public void ClickRegisterInfo(){
-        redirectActivity(this,Volunteer_RegisterInfo.class);
+
+
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.UpdateButton:
+                HandleUpdate();
+
+                break;
+
+        }
     }
+
     private void signOut() {
         mGoogleSignInClient.signOut()
                 .addOnCompleteListener(this, new OnCompleteListener<Void>() {
