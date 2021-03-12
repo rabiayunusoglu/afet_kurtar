@@ -147,6 +147,10 @@ public class Personel_Progress extends AppCompatActivity {
         //redirect activity to main screen
         redirectActivity(this, Personel_Progress.class );
     }
+    public void ClickAfetBolgesi(View view) {
+        //redirect activity to main screen
+        redirectActivity(this, Afet_Bolgesi.class );
+    }
 
     public static void redirectActivity(Activity activity, Class aClass) {
         //initialize intent

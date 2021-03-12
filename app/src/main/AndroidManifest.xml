@@ -20,10 +20,20 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.AfetKurtar">
 
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="AIzaSyDwSofIprJPqGLKF_1ShXUAnLLylC7Zy_0" />
+
+        <meta-data
+            android:name="com.google.android.gms.version"
+            android:value="@integer/google_play_services_version" />
+
         <activity android:name=".Volunteer_RegisterInfo"></activity>
 
 
-        <activity android:name=".Personel_Progress"></activity>
+        <activity android:name=".Personel_Progress"/>
+        <activity android:name=".MapActivity"/>
+        <activity android:name=".Afet_Bolgesi"/>
         <activity android:name=".Volunteer_Anasayfa" />
         <activity android:name=".Volunteer_ParticipateForm" />
         <activity android:name=".Authorized_Anasayfa" />
@@ -33,6 +43,7 @@
         <activity android:name=".Volunteer_Emergency" />
         <activity android:name=".ScreenActivity" />
         <activity android:name=".MainActivity">
+
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
