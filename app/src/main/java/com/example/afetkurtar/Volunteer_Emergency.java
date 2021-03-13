@@ -18,19 +18,31 @@ import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
+import android.os.Looper;
 import android.provider.MediaStore;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
 import android.webkit.MimeTypeMap;
 import android.content.ContentResolver;
 
 
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.Volley;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
+import com.google.android.gms.location.LocationCallback;
+import com.google.android.gms.location.LocationRequest;
+import com.google.android.gms.location.LocationResult;
+import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -39,6 +51,9 @@ import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
@@ -46,28 +61,105 @@ import java.util.Date;
 
 public class Volunteer_Emergency extends AppCompatActivity {
     DrawerLayout drawerLayout;
+    RequestQueue queue;
     public static final int CAMERA_PERM_CODE = 101;
+    private static final int REQUEST_CODE_LOCATION_PERMISSION = 1;
     public static final int CAMERA_REQUEST_CODE = 102;
     public static final int GALLERY_REQUEST_CODE = 105;
+    Double latitude, longtitude;
     ImageView selectedImage;
-    Button cameraBtn,galleryBtn;
+    Button cameraBtn,galleryBtn,submitBtn;
     String currentPhotoPath;
+    String photoUrl="";
+    private EditText message,type;
     StorageReference storageReference;
     GoogleSignInClient mGoogleSignInClient;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        String url = "https://afetkurtar.site/api/notice/create.php";
         setContentView(R.layout.activity_volunteer_emergency);
+        if (ContextCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(Volunteer_Emergency.this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, REQUEST_CODE_LOCATION_PERMISSION);
+
+        } else {
+
+            getCurrentLocation();
+        }
         drawerLayout = findViewById(R.id.drawer_layout);
-        selectedImage = findViewById(R.id.imageView);
-        cameraBtn = findViewById(R.id.CameraBtn);
-        galleryBtn = findViewById(R.id.GaleryBtn);
 
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestEmail()
                 .build();
         mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
+        selectedImage = findViewById(R.id.imageView);
+        cameraBtn = findViewById(R.id.CameraBtn);
+        galleryBtn = findViewById(R.id.GaleryBtn);
+
+        message=(EditText) findViewById(R.id.message_disaster);
+        type=(EditText)findViewById(R.id.type_disaster);
+
+        submitBtn=findViewById(R.id.submit);
+        queue = Volley.newRequestQueue(this);
+        submitBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                JSONObject obj = new JSONObject();
+                try {
+
+                    obj.put("type", type.getText().toString());
+                    obj.put("latitude", latitude);
+                    obj.put("longitude", longtitude);
+                    obj.put("message",message.getText().toString() );
+                    obj.put("imageURL", photoUrl);
+
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                JsonObjectRequest request = new JsonObjectRequest(Request.Method.POST, url, obj, new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        System.out.println(response.toString());
+                    }
+                }, new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        System.out.println(error);
+                    }
+                });
+                queue.add(request);
+
+            }
+        });
+
     }
+
+
+    private void getCurrentLocation() {
+
+        LocationRequest locationRequest = new LocationRequest();
+        locationRequest.setInterval(10000);
+        locationRequest.setFastestInterval(3000);
+        locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            return;
+        }
+        LocationServices.getFusedLocationProviderClient(Volunteer_Emergency.this).requestLocationUpdates(locationRequest, new LocationCallback() {
+            @Override
+            public void onLocationResult(@NonNull LocationResult locationResult) {
+                super.onLocationResult(locationResult);
+                LocationServices.getFusedLocationProviderClient(Volunteer_Emergency.this).removeLocationUpdates(this);
+                if (locationResult != null && locationResult.getLocations().size() > 0) {
+                    int latestlocationIndex = locationResult.getLocations().size() - 1;
+                    latitude = locationResult.getLocations().get(latestlocationIndex).getLatitude();
+                    longtitude = locationResult.getLocations().get(latestlocationIndex).getLongitude();
+                }
+
+            }
+        }, Looper.getMainLooper());
+
+    }
+
 
     private void signOut() {
         mGoogleSignInClient.signOut()
@@ -183,12 +275,21 @@ public class Volunteer_Emergency extends AppCompatActivity {
     }
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         if (requestCode == CAMERA_PERM_CODE) {
             if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED){
                 openCamera();
             }
             else{
                 Toast.makeText(this,"Camera Permissin is required to Use Camera.",Toast.LENGTH_SHORT).show();
+            }
+        }
+
+        if (requestCode == REQUEST_CODE_LOCATION_PERMISSION && grantResults.length > 0) {
+            if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                getCurrentLocation();
+            } else {
+                Toast.makeText(this, "permission denied!", Toast.LENGTH_SHORT).show();
             }
         }
     }
@@ -200,7 +301,6 @@ public class Volunteer_Emergency extends AppCompatActivity {
             if (resultCode == Activity.RESULT_OK) {
                 Bitmap image= (Bitmap) data.getExtras().get("data");
                 selectedImage.setImageBitmap(image);
-
             }
 
         }

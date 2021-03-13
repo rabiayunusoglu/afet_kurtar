@@ -18,20 +18,6 @@
         app:layout_constraintVertical_bias="0.146"
         app:srcCompat="@mipmap/ic_banner_foreground" />
 
-    <Spinner
-        android:id="@+id/afetListSpinner"
-        android:layout_width="338dp"
-        android:layout_height="63dp"
-        android:background="#E8EAF6"
-        android:scrollbarTrackHorizontal="@drawable/ic_dashboard"
-        android:spinnerMode="dropdown"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.547"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.492" />
-
     <TextView
         android:id="@+id/textView"
         android:layout_width="338dp"
@@ -72,4 +58,17 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.063" />
+
+    <Spinner
+        android:id="@+id/spinnerAfet"
+        android:layout_width="339dp"
+        android:layout_height="47dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.545"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.499" />
+
+
 </androidx.constraintlayout.widget.ConstraintLayout>
