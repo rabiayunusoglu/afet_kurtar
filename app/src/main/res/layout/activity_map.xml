@@ -9,7 +9,31 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:id="@+id/map"
-        tools:context=".MapsActivity"
+        tools:context=".MapActivity"
         android:name="com.google.android.gms.maps.SupportMapFragment" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:id="@+id/lineer"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true">
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/git_lokasyon"
+            android:layout_weight="1"
+            />
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Bul"
+            android:id="@+id/btn_git"
+            />
+
+
+
+    </LinearLayout>
 
 </RelativeLayout>

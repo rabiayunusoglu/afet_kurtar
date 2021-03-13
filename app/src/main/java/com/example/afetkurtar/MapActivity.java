@@ -2,8 +2,13 @@ package com.example.afetkurtar;
 
 import android.Manifest;
 import android.content.pm.PackageManager;
+import android.location.Address;
+import android.location.Geocoder;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -12,9 +17,15 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
+import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MarkerOptions;
+
+import java.io.IOException;
+import java.util.List;
 
 public class MapActivity extends AppCompatActivity implements OnMapReadyCallback {
     private static final String TAG = "MapActivity";
@@ -26,6 +37,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     //variables
     private Boolean mLocationPermissionsGranted = false;
     private GoogleMap mMap;
+    private Geocoder geocoder;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -33,6 +45,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         setContentView(R.layout.activity_map);
 
         getLocationPermission();
+        geocoder = new Geocoder(MapActivity.this);
     }
 
     private void initMap(){
@@ -53,9 +66,13 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
             if(ContextCompat.checkSelfPermission(this.getApplicationContext(),
                     COURSE_LOCATION)== PackageManager.PERMISSION_GRANTED){
                 mLocationPermissionsGranted = true;
+                System.out.println("permissions true !???!");
+               initMap(); // not sure !!!
             }else{
                 ActivityCompat.requestPermissions(this, permissions,LOCATION_PERMISSION_REQUEST_CODE);
             }
+        }else{
+            ActivityCompat.requestPermissions(this, permissions,LOCATION_PERMISSION_REQUEST_CODE);
         }
     }
 
@@ -87,5 +104,52 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         Toast.makeText(this, "map is ready", Toast.LENGTH_SHORT).show();
         Log.d(TAG,"onMapReady: map is ready here");
         mMap = googleMap;
+
+
+
+        Button btngit = (Button) findViewById(R.id.btn_git);
+        Log.d(TAG,"test0: test0");
+        btngit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mMap.clear();
+                System.out.println("test1");
+                EditText editlokasyon = (EditText)findViewById(R.id.git_lokasyon);
+                String location = editlokasyon.getText().toString();
+                if(location != null && !location.equals("")){
+                    System.out.println("test2");
+
+                    List<Address> addressList = null;
+                    //geocoder = new Geocoder(MapActivity.this);
+
+                    try{
+                        System.out.println("test3");
+                        addressList=geocoder.getFromLocationName(location,1);
+
+                    }catch(IOException e){
+                        System.out.println("test4");
+                        e.printStackTrace();
+                    }
+                    try{
+                        if(addressList.size() > 0){
+                            Address address = addressList.get(0);
+                            LatLng latLng = new LatLng(address.getLatitude(), address.getLongitude());
+                            System.out.println("test5");
+                            mMap.addMarker(new MarkerOptions().position(latLng).title("Burası"+ location));
+                            mMap.animateCamera(CameraUpdateFactory.newLatLng(latLng));
+                        }else{
+                            Log.d(TAG,"onMapReady: can not find this area!");
+                        }
+                    }catch(Exception e){
+                        e.printStackTrace();
+                    }
+
+
+
+
+
+                }
+            }
+        });
     }
 }

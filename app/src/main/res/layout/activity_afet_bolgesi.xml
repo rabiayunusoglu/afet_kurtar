@@ -9,7 +9,7 @@
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Map"
+        android:text="Harita"
         android:id="@+id/btnMap"
         tools:ignore="MissingConstraints" />
 
