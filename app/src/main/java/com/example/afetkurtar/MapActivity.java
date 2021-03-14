@@ -6,6 +6,7 @@ import android.location.Address;
 import android.location.Geocoder;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -19,9 +20,11 @@ import androidx.core.content.ContextCompat;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 import java.io.IOException;
@@ -105,37 +108,30 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         Log.d(TAG,"onMapReady: map is ready here");
         mMap = googleMap;
 
-
-
         Button btngit = (Button) findViewById(R.id.btn_git);
         Log.d(TAG,"test0: test0");
         btngit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 mMap.clear();
-                System.out.println("test1");
                 EditText editlokasyon = (EditText)findViewById(R.id.git_lokasyon);
                 String location = editlokasyon.getText().toString();
                 if(location != null && !location.equals("")){
-                    System.out.println("test2");
 
                     List<Address> addressList = null;
                     //geocoder = new Geocoder(MapActivity.this);
 
                     try{
-                        System.out.println("test3");
                         addressList=geocoder.getFromLocationName(location,1);
 
                     }catch(IOException e){
-                        System.out.println("test4");
                         e.printStackTrace();
                     }
                     try{
                         if(addressList.size() > 0){
                             Address address = addressList.get(0);
                             LatLng latLng = new LatLng(address.getLatitude(), address.getLongitude());
-                            System.out.println("test5");
-                            mMap.addMarker(new MarkerOptions().position(latLng).title("Burası"+ location));
+                            Marker marker = mMap.addMarker(new MarkerOptions().position(latLng).title("Burası "+ location).draggable(true));
                             mMap.animateCamera(CameraUpdateFactory.newLatLng(latLng));
                         }else{
                             Log.d(TAG,"onMapReady: can not find this area!");
@@ -144,12 +140,28 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
                         e.printStackTrace();
                     }
 
-
-
-
-
                 }
             }
         });
-    }
+
+        mMap.setOnMapClickListener(new GoogleMap.OnMapClickListener()
+        {
+            @Override
+            public void onMapClick(LatLng arg0)
+            {
+                mMap.clear();
+                LatLng latLng = arg0;
+                System.out.println("map clicked");
+                System.out.println("longitude : " + latLng.longitude);
+                System.out.println("latitude : " + latLng.latitude);
+                Marker marker = mMap.addMarker(new MarkerOptions().position(latLng).title("Another marker").draggable(true));
+                mMap.animateCamera(CameraUpdateFactory.newLatLng(latLng));
+            }
+        });
+
+    }//onMapReady
+
+
+
+
 }
