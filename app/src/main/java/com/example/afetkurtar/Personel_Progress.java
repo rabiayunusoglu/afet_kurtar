@@ -1,16 +1,20 @@
 package com.example.afetkurtar;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.Button;
+import android.widget.ArrayAdapter;
 import android.widget.EditText;
+import android.widget.Spinner;
+
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -25,17 +29,23 @@ import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.ArrayList;
 
-public class Personel_Progress extends AppCompatActivity {
+
+public class Personel_Progress extends AppCompatActivity  {
     DrawerLayout drawerLayout;
     GoogleSignInClient mGoogleSignInClient;
     GoogleSignInAccount account;
     RequestQueue queue;
+    Spinner spinner;
+    ArrayAdapter adapter;
+    ArrayList<String> list2 = new ArrayList<String>();
+    String TeamID = "0";
+    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         /*
@@ -46,7 +56,15 @@ public class Personel_Progress extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_personel__progress);
 
+        queue = Volley.newRequestQueue(this);
+
+        findViewById(R.id.textHata).setVisibility(View.INVISIBLE);
+
+        spinner = (Spinner) findViewById(R.id.listOfEquipment);
+        setEquipmentToSpinner();
+
         findViewById(R.id.UpdateButton).setOnClickListener(this::onClick);
+        findViewById(R.id.HistoryButton).setOnClickListener(this::onClick);
 
         drawerLayout = findViewById(R.id.drawer_layout);
 
@@ -55,32 +73,61 @@ public class Personel_Progress extends AppCompatActivity {
                 .build();
         mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
         account = GoogleSignIn.getLastSignedInAccount(this);
-        queue = Volley.newRequestQueue(this);
+
+        getTeamID();
     }
-    JSONObject tmp;
 
-    private void jsonRequest(String url,JSONObject params){
-        //String url = "https://afetkurtar.site/api/users/search.php";
-        //JSONObject tmp;
+    JSONObject Equip;
+    public void handleResponse(JSONObject a){
+        ArrayList<String> list = new ArrayList<String>();
+        try {
+            //    System.out.println(response.toString());
+            String cevap = a.getString("records");
+            cevap = cevap.substring(1,cevap.length()-1);
 
-        JsonObjectRequest request = new JsonObjectRequest(
-                Request.Method.POST, // the request method
-                url, // the URL
-                params, // the parameters for the php
-                new Response.Listener<JSONObject>() { // the response listener
+            while(cevap.indexOf(",{") >-1){
+                list.add(cevap.substring(0,cevap.indexOf(",{")));
+                cevap = cevap.substring(cevap.indexOf(",{")+1);
+            }
+            list.add(cevap);
+            for(String x:list){
+                try {
+                    JSONObject tmp = new JSONObject(x);
+                    list2.add(tmp.getString("equipmentName"));
+                }catch (Exception e){
+                    // e.printStackTrace();
+                }
+            }
+            adapter = new ArrayAdapter<String>(getApplicationContext(),  android.R.layout.simple_spinner_dropdown_item, list2);
+            adapter.setDropDownViewResource( android.R.layout.simple_spinner_dropdown_item);
+            spinner.setAdapter(adapter);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
+    public void setEquipmentToSpinner(){
+        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest
+                (Request.Method.GET, "https://afetkurtar.site/api/equipment/read.php", null, new Response.Listener<JSONObject>() {
+
                     @Override
-                    public void onResponse(JSONObject response){
-                        tmp = response;
+                    public void onResponse(JSONObject response) {
+                        try {
+                          //  System.out.println(response.toString());
+                            handleResponse(response);
+                        }catch (Exception e){
+                        e.printStackTrace();
+                        }
                     }
-                },
-                new Response.ErrorListener() { // the error listener
+                }, new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
-                      //  addUser(account);
+                        // TODO: Handle error
+                        System.out.println(error);
                     }
                 });
-        queue.add(request);
-
+        queue.add(jsonObjectRequest);
     }
     /*
     public void create(int subID, String status, int manpow, int equip) {
@@ -100,23 +147,49 @@ public class Personel_Progress extends AppCompatActivity {
 
     }
      */
-
-    public int getTeamID(){
+    public void getTeamID(){
         String id = account.getId();
+    //    id = "3";
         JSONObject obj = new JSONObject();
         try {
             obj.put("personnelID", id);
         }catch (Exception e){
             System.out.println(e);
-        }
-        jsonRequest("https://afetkurtar.site/api/personnelUser/search.php",obj);
-        String cevap = tmp.toString();
-        String k = cevap.substring(cevap.indexOf(id));
-        k = k.substring(k.indexOf(':')+2,k.indexOf(',')-1);
-        return Integer.parseInt(k);
+        }String cevap;
+        JsonObjectRequest request = new JsonObjectRequest(
+                Request.Method.POST, // the request method
+                "https://afetkurtar.site/api/personnelUser/search.php", // the URL
+                obj, // the parameters for the php
+                new Response.Listener<JSONObject>() { // the response listener
+                    @Override
+                    public void onResponse(JSONObject response){
+                        try {
+                            try {
+
+                                String cevap = response.getString("records");
+                                cevap = cevap.substring(1,cevap.length()-1);
+                                JSONObject tmp = new JSONObject(cevap);
+                                cevap = tmp.getString("personnelID");
+                                TeamID = cevap;
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    }
+                },
+                new Response.ErrorListener() { // the error listener
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        //  addUser(account);
+                    }
+                });
+        queue.add(request);
     }
+
     public void update(JSONObject obj){
-        int id = getTeamID();
+
      // jsonRequest("https://afetkurtar.site/api/personnelUser/update.php",obj);
         /*
          *
@@ -127,11 +200,9 @@ public class Personel_Progress extends AppCompatActivity {
     }
 
     public void HandleUpdate(){
+        System.out.println(((Spinner)findViewById(R.id.listOfEquipment)).getSelectedItem().toString());
+        System.out.println(TeamID);
 
-        /*
-         * 
-         *
-         */
 
         String progress = null;
         int equipment = 0, manPower = 0;
@@ -173,6 +244,12 @@ public class Personel_Progress extends AppCompatActivity {
         switch (v.getId()) {
             case R.id.UpdateButton:
                 HandleUpdate();
+
+                break;
+            case R.id.HistoryButton:
+                Intent intent = new Intent(this, Personel_Progress_History.class);
+                intent.putExtra("Team_id", TeamID);
+                startActivity(intent);
 
                 break;
 
@@ -255,4 +332,6 @@ public class Personel_Progress extends AppCompatActivity {
         activity.startActivity(intent);
 
     }
+
+
 }

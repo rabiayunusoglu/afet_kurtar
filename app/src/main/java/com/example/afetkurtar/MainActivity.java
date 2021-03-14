@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.RequestQueue;
@@ -57,8 +58,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         String url = "https://afetkurtar.site/api/volunteerUser/read.php";
 
-        //Rest API ile get operasyonu (SSL Hatası veriyor, SSL bekleniyor)
-
         queue = Volley.newRequestQueue(this);
         //GET Ornegi
     /*
@@ -99,6 +98,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     @Override
                     public void onResponse(JSONObject response){
                         System.out.println(response.toString());
+                        Intent intentLogin = new Intent(MainActivity.this, Volunteer_Anasayfa.class);
+                        startActivity(intentLogin);
                     }
                 },
                 new Response.ErrorListener() { // the error listener
@@ -125,14 +126,15 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     @Override
                     public void onResponse(JSONObject response){
                         System.out.println(response.toString());
-
+                        Intent intentLogin = new Intent(MainActivity.this, Volunteer_Anasayfa.class);
+                        startActivity(intentLogin);
                     }
                 },
                 new Response.ErrorListener() { // the error listener
                     @Override
                     public void onErrorResponse(VolleyError error) {
                         System.out.println(error.getStackTrace());
-                        userCreatedSuccessfully = false;
+
                     }
                 });
         queue.add(request);
@@ -190,18 +192,16 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
     private void updateUI(boolean isLogin, GoogleSignInAccount account){
         if(isLogin){
-
-
             checkUser(account);
-            if(userCreatedSuccessfully) {
+          //  if(userCreatedSuccessfully) {
                 // Yetkiye gore yonlendirmeler burada yapilcak ********************
-
-                Intent intentLogin = new Intent(MainActivity.this, Volunteer_Anasayfa.class);
-                startActivity(intentLogin);
-            }
+          //      Intent intentLogin = new Intent(MainActivity.this, Volunteer_Anasayfa.class);
+          //      startActivity(intentLogin);
+          //  }
         }
         else
         {
+            Toast.makeText(this, "Giris Hatası", Toast.LENGTH_SHORT).show();
         }
     }
     private void signOut() {
