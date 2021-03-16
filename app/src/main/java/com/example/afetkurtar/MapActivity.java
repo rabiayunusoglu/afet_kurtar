@@ -13,6 +13,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -57,9 +58,13 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     private Boolean mLocationPermissionsGranted = false;
     private GoogleMap mMap;
     private Geocoder geocoder;
+    private Marker mMarker;
 
     //markers
     private ArrayList<Marker>markers;
+
+    //widgets
+    private ImageView mInfo;
 
     //arrays from database data
     ArrayList<String> markerInfoArray;
@@ -72,6 +77,8 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_map);
+
+        mInfo = (ImageView) findViewById(R.id.place_info);
 
         //init markers array on create
         markers = new ArrayList<Marker>();
@@ -164,7 +171,8 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
                         if(addressList.size() > 0){
                             Address address = addressList.get(0);
                             LatLng latLng = new LatLng(address.getLatitude(), address.getLongitude());
-                            Marker marker = mMap.addMarker(new MarkerOptions().position(latLng).title("Burası "+ location).draggable(true));
+                            mMarker = mMap.addMarker(new MarkerOptions().position(latLng).title("Burası "+ location).draggable(true));
+                            mMap.setInfoWindowAdapter(new CustomInfoWindowAdapter(MapActivity.this));
                             mMap.animateCamera(CameraUpdateFactory.newLatLng(latLng));
                         }else{
                             Log.d(TAG,"onMapReady: can not find this area!");
@@ -187,8 +195,9 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
                 System.out.println("map clicked");
                 System.out.println("longitude : " + latLng.longitude);
                 System.out.println("latitude : " + latLng.latitude);
-                Marker marker = mMap.addMarker(new MarkerOptions().position(latLng).title("Another marker")
-                        .snippet("coordinates(" + latLng.latitude + ", " + latLng.longitude + ") \n" + "someInformation").draggable(true));
+                mMarker = mMap.addMarker(new MarkerOptions().position(latLng).title("Another marker")
+                        .snippet("coordinates(" + latLng.latitude + ", " + latLng.longitude + ") \n" + "someInformation\n").draggable(true));
+                mMap.setInfoWindowAdapter(new CustomInfoWindowAdapter(MapActivity.this));
                 mMap.animateCamera(CameraUpdateFactory.newLatLng(latLng));
             }
         });
@@ -198,8 +207,27 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         btnGeri.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view){
-                Intent intent = new Intent(MapActivity.this, Afet_Bolgesi.class);
-                startActivity(intent);
+                //Intent intent = new Intent(MapActivity.this, Afet_Bolgesi.class);
+                //startActivity(intent);
+                finish();
+            }
+        });
+
+        mInfo.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.d(TAG, "onClick : clicked place info");
+                try{
+                    if(mMarker.isInfoWindowShown()){
+                        Log.d(TAG, "onClick: place info: Some Info");
+                        mMarker.hideInfoWindow();
+                    }else{
+                        mMarker.showInfoWindow();
+                    }
+
+                }catch(NullPointerException e){
+                    Log.d(TAG, "onClick: NullPointerException: " + e.getMessage());
+                }
             }
         });
 
@@ -261,8 +289,9 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
 
 
             LatLng latLng = new LatLng(markerLatitude, markerLongitude);
-            Marker marker = mMap.addMarker(new MarkerOptions().position(latLng).title(markerTitle).snippet(markerInfo));
-            markers.add(marker);
+            mMarker = mMap.addMarker(new MarkerOptions().position(latLng).title(markerTitle).snippet(markerInfo));
+            mMap.setInfoWindowAdapter(new CustomInfoWindowAdapter(MapActivity.this));
+            markers.add(mMarker);
 
             // burada orta noktaya yakin nokta bulunup camera oraya focus olsa mantklı
 
