@@ -7,7 +7,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -23,44 +22,37 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 
-public class Personel_Progress_History extends AppCompatActivity {
-    String TeamID;
+public class Authorized_Notification extends AppCompatActivity {
     RequestQueue queue;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_personel__progress__history);
-        Button but = findViewById(R.id.gonderbutton);
-        //  lin = findViewById(R.id.LinearLay);
-        but.setOnClickListener(this::onClick);
-        findViewById(R.id.history_geri_button).setOnClickListener(this::onClick);
+        setContentView(R.layout.activity_authorized__notification);
         queue = Volley.newRequestQueue(this);
+        findViewById(R.id.auth_geri_button).setOnClickListener(this::onClick);
 
-        Bundle bundle = getIntent().getExtras();
-        TeamID = bundle.getString("Team_id");
-
-        getData(TeamID);
-
+        getData("");
     }
-    public void getData(String ID){
+    public void getData(String ID) {
         JSONObject obj = new JSONObject();
         try {
-            obj.put("teamID",ID); //DEGISECEK
+            obj.put("teamID", ID);
         } catch (JSONException e) {
             e.printStackTrace();
         }
-
         // ASAGISI DEGISECEK -- TEST AMACLI YAPILDI
 
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest
-                (Request.Method.GET, "https://afetkurtar.site/api/users/search.php", null, new Response.Listener<JSONObject>() {
+                (Request.Method.POST, "https://afetkurtar.site/api/notice/search.php", obj, new Response.Listener<JSONObject>() {
 
                     @Override
                     public void onResponse(JSONObject response) {
                         try {
-                          //  System.out.println(response.toString());
+                            //  System.out.println(response.toString());
                             addtext(response);
-                        }catch (Exception e){
+                        } catch (Exception e) {
                             e.printStackTrace();
                         }
                     }
@@ -75,64 +67,82 @@ public class Personel_Progress_History extends AppCompatActivity {
     }
 
     static int k = 0;
+    static ArrayList<JSONObject> list2 = new ArrayList<JSONObject>();
     public void addtext(JSONObject obj) {
         String cevap = "";
         ArrayList<String> list = new ArrayList<String>();
-        ArrayList<String> list2 = new ArrayList<String>();
+
         try {
             //    System.out.println(response.toString());
             cevap = obj.getString("records");
-            cevap = cevap.substring(1,cevap.length()-1);
+            cevap = cevap.substring(1, cevap.length() - 1);
 
-            while(cevap.indexOf(",{") >-1){
-                list.add(cevap.substring(0,cevap.indexOf(",{")));
-                cevap = cevap.substring(cevap.indexOf(",{")+1);
+            while (cevap.indexOf(",{") > -1) {
+                list.add(cevap.substring(0, cevap.indexOf(",{")));
+                cevap = cevap.substring(cevap.indexOf(",{") + 1);
             }
             list.add(cevap);
-            for(int x = list.size()-1; x>=0;x--){
+            for (int x = list.size() - 1; x >= 0; x--) {
                 try {
                     JSONObject tmp = new JSONObject(list.get(x));
 
-                    list2.add(tmp.getString("userID")); // DEGISECEK
-                }catch (Exception e){
+                    list2.add(tmp);
+                } catch (Exception e) {
                     // e.printStackTrace();
                 }
             }
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
 
 
-        for(String x:list2){
+        for (JSONObject x : list2) {
             LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             View view = inflater.inflate(R.layout.activity_personel_history_addlayout, null);
-            LinearLayout scroll = findViewById(R.id.layoutScroll);
-            TextView linear = (TextView) view.findViewById(R.id.HistoryText);
-            linear.setText(x +" " + k);
+            LinearLayout scroll = findViewById(R.id.auth_lay_scroll);
+            TextView linear = (TextView) view.findViewById(R.id.HistoryText); // personel_history ile ayni addlayout'u kullaniyor
+            try {
+                linear.setText("ID: "+ x.getString("noticeID"));
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
             linear.setOnClickListener(this::onClick);
             k++;
             scroll.addView(view);
         }
+
     }
 
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.HistoryText:
-                /*
-                Burada Sunucuya sorgu ile login olan kisinin hangi yetkiye sahip oldugunu bulup
-                ona göre yonlendirme yapılacak.
-                 */
+
                 TextView linear = (TextView) v.findViewById(R.id.HistoryText);
-                System.out.println(linear.getText());
-                // signIn ile asagidaki update UI kısmında oluyor (startActivity)
+                String tmp = (String) linear.getText();
+                tmp = tmp.substring(tmp.indexOf(" ")+1);
+
+
+
+                Intent asd = new Intent(this, Notification_Details.class);
+                JSONObject json = new JSONObject();
+                for (JSONObject x : list2) {
+                    try {
+                        if(x.getString("noticeID").equals(tmp.trim())){
+                          json = x;
+                        }
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+
+                }
+
+                asd.putExtra("json",json.toString());
+                startActivity(asd);
+
 
                 break;
-
-            case R.id.history_geri_button:
+            case R.id.auth_geri_button:
                 finish();
-                break;
-            case R.id.gonderbutton:
-               // addtext();
                 break;
         }
 

@@ -16,7 +16,6 @@
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
-
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -33,15 +32,15 @@
             android:name="com.google.android.geo.API_KEY"
             android:value="${MAPS_API_KEY}" />
 
-        <uses-library android:name="com.google.android.maps"/>
+        <uses-library android:name="com.google.android.maps" />
 
-        <activity android:name=".Volunteer_RegisterInfo"></activity>
-
-
-        <activity android:name=".Personel_Progress"/>
-        <activity android:name=".MapActivity"/>
-        <activity android:name=".Afet_Bolgesi"/>
-        <activity android:name=".Personel_Progress_History"/>
+        <activity android:name=".Volunteer_RegisterInfo" />
+        <activity android:name=".Personel_Progress" />
+        <activity android:name=".MapActivity" />
+        <activity android:name=".Notification_Details"/>
+        <activity android:name=".Authorized_Notification" />
+        <activity android:name=".Afet_Bolgesi" />
+        <activity android:name=".Personel_Progress_History" />
         <activity android:name=".Volunteer_Anasayfa" />
         <activity android:name=".Volunteer_ParticipateForm" />
         <activity android:name=".Authorized_Anasayfa" />
