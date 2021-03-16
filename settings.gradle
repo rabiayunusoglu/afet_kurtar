@@ -1,2 +1,3 @@
+include ':simpleftp'
 include ':app'
 rootProject.name = "AfetKurtar"

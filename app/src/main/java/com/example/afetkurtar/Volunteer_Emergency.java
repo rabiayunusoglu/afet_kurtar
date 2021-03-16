@@ -12,8 +12,10 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
@@ -54,10 +56,21 @@ import com.google.firebase.storage.UploadTask;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.FileReader;
 import java.io.IOException;
+import java.io.OutputStream;
+import java.io.Reader;
+import java.net.Socket;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+
+import org.jibble.simpleftp.*;
+
 
 public class Volunteer_Emergency extends AppCompatActivity {
     DrawerLayout drawerLayout;
@@ -68,12 +81,14 @@ public class Volunteer_Emergency extends AppCompatActivity {
     public static final int GALLERY_REQUEST_CODE = 105;
     Double latitude, longtitude;
     ImageView selectedImage;
-    Button cameraBtn,galleryBtn,submitBtn;
+    Button cameraBtn, galleryBtn, submitBtn;
     String currentPhotoPath;
-    String photoUrl="";
-    private EditText message,type;
+    String photoUrl = "";
+    OutputStream outputstrema;
+    private EditText message, type;
     StorageReference storageReference;
     GoogleSignInClient mGoogleSignInClient;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -96,10 +111,10 @@ public class Volunteer_Emergency extends AppCompatActivity {
         cameraBtn = findViewById(R.id.CameraBtn);
         galleryBtn = findViewById(R.id.GaleryBtn);
 
-        message=(EditText) findViewById(R.id.message_disaster);
-        type=(EditText)findViewById(R.id.type_disaster);
+        message = (EditText) findViewById(R.id.message_disaster);
+        type = (EditText) findViewById(R.id.type_disaster);
 
-        submitBtn=findViewById(R.id.submit);
+        submitBtn = findViewById(R.id.submit);
         queue = Volley.newRequestQueue(this);
         submitBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -110,7 +125,7 @@ public class Volunteer_Emergency extends AppCompatActivity {
                     obj.put("type", type.getText().toString());
                     obj.put("latitude", latitude);
                     obj.put("longitude", longtitude);
-                    obj.put("message",message.getText().toString() );
+                    obj.put("message", message.getText().toString());
                     obj.put("imageURL", photoUrl);
 
                 } catch (JSONException e) {
@@ -128,6 +143,29 @@ public class Volunteer_Emergency extends AppCompatActivity {
                     }
                 });
                 queue.add(request);
+
+                try {
+
+                    SimpleFTP ftp = new SimpleFTP();
+
+                    // Connect to an FTP server on port 21.
+
+                    ftp.connect("ftp.afetkurtar.site", 21, "u0025294", "BlinkyPinky12");
+
+                    // Set binary mode.
+                    ftp.bin();
+
+                    // Change to a new working directory on the FTP server.
+                    ftp.cwd("imgs");
+
+                    // Upload some files.
+                    ftp.stor(new File(photoUrl));
+
+                    // Quit from the FTP server.
+                    ftp.disconnect();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
 
             }
         });
@@ -174,9 +212,11 @@ public class Volunteer_Emergency extends AppCompatActivity {
         //open drawer
         openDrawer(drawerLayout);
     }
-    public void ClickRegisterInfo(){
-        redirectActivity(this,Volunteer_RegisterInfo.class);
+
+    public void ClickRegisterInfo() {
+        redirectActivity(this, Volunteer_RegisterInfo.class);
     }
+
     static void openDrawer(DrawerLayout drawerLayout) {
         //Open drawer Layout
         drawerLayout.openDrawer(GravityCompat.START);
@@ -205,8 +245,9 @@ public class Volunteer_Emergency extends AppCompatActivity {
 
     public void ClickParticipateForm(View view) {
         //redirect activity to emergency
-        redirectActivity(this, Volunteer_ParticipateForm.class );
+        redirectActivity(this, Volunteer_ParticipateForm.class);
     }
+
     public void ClickParticipateRequest(View view) {
         //redirect activity to volunter
         redirectActivity(this, Volunteer_ParticipateRequest.class);
@@ -216,18 +257,21 @@ public class Volunteer_Emergency extends AppCompatActivity {
         //redirect activity to emergency
         redirectActivity(this, Volunteer_Emergency.class);
     }
+
     public void ClickExit(View view) {
         //redirect activity to main screen
         signOut();
-        redirectActivity(this, MainActivity.class );
+        redirectActivity(this, MainActivity.class);
     }
+
     public void ClickPersonel(View view) {
         //redirect activity to main screen
-        redirectActivity(this, Personel_Progress.class );
+        redirectActivity(this, Personel_Progress.class);
     }
+
     public void ClickAfetBolgesi(View view) {
         //redirect activity to main screen
-        redirectActivity(this, Afet_Bolgesi.class );
+        redirectActivity(this, Afet_Bolgesi.class);
     }
 
     public static void redirectActivity(Activity activity, Class aClass) {
@@ -239,9 +283,10 @@ public class Volunteer_Emergency extends AppCompatActivity {
         activity.startActivity(intent);
 
     }
+
     private void openCamera() {
-        Intent camera=new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        startActivityForResult(camera,CAMERA_REQUEST_CODE);
+        Intent camera = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        startActivityForResult(camera, CAMERA_REQUEST_CODE);
 
     }
 
@@ -268,20 +313,20 @@ public class Volunteer_Emergency extends AppCompatActivity {
         galleryBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent gallery = new Intent(Intent.ACTION_PICK,MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                Intent gallery = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
                 startActivityForResult(gallery, GALLERY_REQUEST_CODE);
             }
         });
     }
+
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         if (requestCode == CAMERA_PERM_CODE) {
-            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED){
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 openCamera();
-            }
-            else{
-                Toast.makeText(this,"Camera Permissin is required to Use Camera.",Toast.LENGTH_SHORT).show();
+            } else {
+                Toast.makeText(this, "Camera Permissin is required to Use Camera.", Toast.LENGTH_SHORT).show();
             }
         }
 
@@ -293,14 +338,34 @@ public class Volunteer_Emergency extends AppCompatActivity {
             }
         }
     }
-
     @SuppressLint("MissingSuperCall")
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         if (requestCode == CAMERA_REQUEST_CODE) {
             if (resultCode == Activity.RESULT_OK) {
-                Bitmap image= (Bitmap) data.getExtras().get("data");
-                selectedImage.setImageBitmap(image);
+                Bitmap photo = (Bitmap) data.getExtras().get("data");
+                selectedImage.setImageBitmap(photo);
+
+
+
+                // CALL THIS METHOD TO GET THE URI FROM THE BITMAP
+                Uri tempUri = getImageUri(getApplicationContext(), photo);
+
+                // CALL THIS METHOD TO GET THE ACTUAL PATH
+                File finalFile = new File(getRealPathFromURI(tempUri));
+
+                try {
+                    SaveImage(photo,finalFile.getName());
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+
+
+
+
+
+
+
             }
 
         }
@@ -319,6 +384,49 @@ public class Volunteer_Emergency extends AppCompatActivity {
 
         }
 
+    }
+    private void SaveImage(Bitmap finalBitmap,String filename) throws IOException {
+        File root = android.os.Environment.getExternalStorageDirectory();
+        File dir = new File(root.getAbsolutePath() + "/path");
+        dir.mkdirs();
+        File file = new File(dir, ".jpg");
+        photoUrl=file.getAbsolutePath();
+        Reader pr;
+        String line = "";
+        try {
+            pr = new FileReader(file);
+            int data = pr.read();
+            while (data != -1) {
+                line += (char) data;
+                data = pr.read();
+            }
+            pr.close();
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+//do stuff with line
+    }
+    public Uri getImageUri(Context inContext, Bitmap inImage) {
+        ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+        inImage.compress(Bitmap.CompressFormat.JPEG, 100, bytes);
+        String path = MediaStore.Images.Media.insertImage(inContext.getContentResolver(), inImage, "Rabia", null);
+        return Uri.parse(path);
+    }
+
+    public String getRealPathFromURI(Uri uri) {
+        String path = "";
+        if (getContentResolver() != null) {
+            Cursor cursor = getContentResolver().query(uri, null, null, null, null);
+            if (cursor != null) {
+                cursor.moveToFirst();
+                int idx = cursor.getColumnIndex(MediaStore.Images.ImageColumns.DATA);
+                path = cursor.getString(idx);
+                cursor.close();
+            }
+        }
+        return path;
     }
     private void uploadImageToFirebase(String name, Uri contentUri) {
         final StorageReference image = storageReference.child("pictures/" + name);
@@ -342,12 +450,12 @@ public class Volunteer_Emergency extends AppCompatActivity {
         });
 
     }
+
     private String getFileExt(Uri contentUri) {
         ContentResolver c = getContentResolver();
         MimeTypeMap mime = MimeTypeMap.getSingleton();
         return mime.getExtensionFromMimeType(c.getType(contentUri));
     }
-
 
 
     private File createImageFile() throws IOException {
