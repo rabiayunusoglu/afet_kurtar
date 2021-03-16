@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".Notification_Details">
+
+    <Button
+        android:id="@+id/Notification_geri_button"
+        android:text="Geri"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+
+    </Button>
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="MESAJ :"
+        android:textSize="25sp">
+    </TextView>
+
+
+    <TextView
+        android:id="@+id/notification_mesaj"
+        android:layout_width="match_parent"
+        android:layout_height="100dp"
+        android:scrollbars = "vertical"
+        android:text="No Text Available"
+        >
+
+    </TextView>
+    <LinearLayout
+        android:id="@+id/LayoutNotification"
+        android:layout_width="match_parent"
+        android:layout_height="300dp"
+        android:layout_weight="0"
+        android:paddingLeft="16dp"
+        android:paddingRight="16dp"
+        tools:ignore="MissingConstraints">
+
+        <ImageView
+            android:id="@+id/Notification_image"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:src="@drawable/no_image" />
+    </LinearLayout>
+    <LinearLayout
+        android:layout_weight="1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        tools:ignore="MissingConstraints">
+
+        <fragment xmlns:android="http://schemas.android.com/apk/res/android"
+            xmlns:tools="http://schemas.android.com/tools"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/notification_map"
+            android:layout_weight="1"
+            android:name="com.google.android.gms.maps.SupportMapFragment" />
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="KONUM"
+            android:textSize="10sp"
+            android:gravity="center"
+            android:layout_weight="0">
+        </TextView>
+
+    </LinearLayout>
+
+
+
+</LinearLayout>
