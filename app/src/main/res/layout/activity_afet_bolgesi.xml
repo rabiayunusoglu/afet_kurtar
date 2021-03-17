@@ -6,11 +6,33 @@
     android:layout_height="match_parent"
     tools:context=".Afet_Bolgesi">
 
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Harita"
-        android:id="@+id/btnMap"
-        tools:ignore="MissingConstraints" />
+    <RelativeLayout
+        android:id="@+id/buttons"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="0"
+        android:paddingLeft="16dp"
+        android:paddingRight="16dp"
+        tools:ignore="MissingConstraints">
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="   Harita   "
+            android:layout_marginTop="12dp"
+            android:textColor="#fff"
+            android:background="#66ff"
+            android:id="@+id/btnMap"
+            tools:ignore="MissingConstraints" />
+
+        <Button
+            android:id="@+id/btnCreateDisaster"
+            android:layout_width="wrap_content"
+            android:layout_marginTop="72dp"
+            android:background="#66ff"
+            android:layout_height="wrap_content"
+            android:text="Afet Bilgi" />
+
+    </RelativeLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

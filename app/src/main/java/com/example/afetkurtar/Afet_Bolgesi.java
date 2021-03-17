@@ -36,6 +36,16 @@ public class Afet_Bolgesi extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+
+
+        Button btnCreateDis = (Button) findViewById(R.id.btnCreateDisaster);
+        btnCreateDis.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View view){
+                Intent intent = new Intent(Afet_Bolgesi.this, Create_Disaster_Event_On_Map.class);
+                startActivity(intent);
+            }
+        });
     }
 
     public boolean isServicesOk(){
