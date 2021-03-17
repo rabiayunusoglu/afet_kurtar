@@ -14,7 +14,13 @@
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
     <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission
+        android:name="android.permission.WRITE_EXTERNAL_STORAGE"
+        android:maxSdkVersion="18" />
+
+    <uses-feature
+        android:name="android.hardware.Camera"
+        android:required="true"></uses-feature>
 
     <application
         android:allowBackup="true"
@@ -23,7 +29,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.AfetKurtar">
-
+        <activity android:name=".DisplayImage"></activity>
 
         <meta-data
             android:name="com.google.android.gms.version"
@@ -37,7 +43,7 @@
         <activity android:name=".Volunteer_RegisterInfo" />
         <activity android:name=".Personel_Progress" />
         <activity android:name=".MapActivity" />
-        <activity android:name=".Notification_Details"/>
+        <activity android:name=".Notification_Details" />
         <activity android:name=".Authorized_Notification" />
         <activity android:name=".Afet_Bolgesi" />
         <activity android:name=".Personel_Progress_History" />
