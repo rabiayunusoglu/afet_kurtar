@@ -1,0 +1,258 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".Create_Disaster_Event_On_Map">
+
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Afet Bilgileri:"
+        android:paddingLeft="12dp"
+        android:textSize="25sp">
+    </TextView>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Afet ID:"
+        android:paddingLeft="16dp"
+        android:textSize="10sp">
+    </TextView>
+
+    <LinearLayout
+        android:id="@+id/AfetIDLayout"
+        android:layout_width="match_parent"
+        android:layout_height="34dp"
+        android:layout_weight="0"
+        android:paddingLeft="16dp"
+        android:paddingRight="16dp"
+        tools:ignore="MissingConstraints">
+
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/afet_id"
+            android:textSize="12dp"
+            android:layout_weight="1"
+            />
+    </LinearLayout>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Afet Adress:"
+        android:paddingLeft="16dp"
+        android:textSize="10sp">
+    </TextView>
+
+    <LinearLayout
+        android:id="@+id/AfetAdressLayout"
+        android:layout_width="match_parent"
+        android:layout_height="34dp"
+        android:layout_weight="0"
+        android:paddingLeft="16dp"
+        android:paddingRight="16dp"
+        tools:ignore="MissingConstraints">
+
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/afet_address"
+            android:textSize="12dp"
+            android:layout_weight="1"
+            />
+    </LinearLayout>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Afet Latitude:"
+        android:paddingLeft="16dp"
+        android:textSize="10sp">
+    </TextView>
+
+    <LinearLayout
+        android:id="@+id/AfetLatitudeLayout"
+        android:layout_width="match_parent"
+        android:layout_height="34dp"
+        android:layout_weight="0"
+        android:paddingLeft="16dp"
+        android:paddingRight="16dp"
+        tools:ignore="MissingConstraints">
+
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/afet_latitude"
+            android:textSize="12dp"
+            android:layout_weight="1"
+            />
+    </LinearLayout>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Afet Longitude:"
+        android:paddingLeft="16dp"
+        android:textSize="10sp">
+    </TextView>
+
+    <LinearLayout
+        android:id="@+id/AfetLongitudeLayout"
+        android:layout_width="match_parent"
+        android:layout_height="34dp"
+        android:layout_weight="0"
+        android:paddingLeft="16dp"
+        android:paddingRight="16dp"
+        tools:ignore="MissingConstraints">
+
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/afet_longitude"
+            android:textSize="12dp"
+            android:layout_weight="1"
+            />
+    </LinearLayout>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Missing Person:"
+        android:paddingLeft="16dp"
+        android:textSize="10sp">
+    </TextView>
+
+    <LinearLayout
+        android:id="@+id/AfetMissingPersonLayout"
+        android:layout_width="match_parent"
+        android:layout_height="34dp"
+        android:layout_weight="0"
+        android:paddingLeft="16dp"
+        android:paddingRight="16dp"
+        tools:ignore="MissingConstraints">
+
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/afet_missing_person"
+            android:textSize="12dp"
+            android:layout_weight="1"
+            />
+    </LinearLayout>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Rescued Person:"
+        android:paddingLeft="16dp"
+        android:textSize="10sp">
+    </TextView>
+
+    <LinearLayout
+        android:id="@+id/AfetRescuedPersonLayout"
+        android:layout_width="match_parent"
+        android:layout_height="34dp"
+        android:layout_weight="0"
+        android:paddingLeft="16dp"
+        android:paddingRight="16dp"
+        tools:ignore="MissingConstraints">
+
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/afet_rescued_person"
+            android:textSize="12dp"
+            android:layout_weight="1"
+            />
+    </LinearLayout>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Is Open For Volunteers:"
+        android:paddingLeft="16dp"
+        android:textSize="10sp">
+    </TextView>
+
+    <LinearLayout
+        android:id="@+id/AfetIsOpenForVolunteersLayout"
+        android:layout_width="match_parent"
+        android:layout_height="34dp"
+        android:layout_weight="0"
+        android:paddingLeft="16dp"
+        android:paddingRight="16dp"
+        tools:ignore="MissingConstraints">
+
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/afet_isOpenForVolunteers"
+            android:textSize="12dp"
+            android:layout_weight="1"
+            />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/AfetBilgiOlusturLayout"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:layout_weight="0"
+        android:paddingLeft="16dp"
+        android:paddingRight="16dp"
+        tools:ignore="MissingConstraints">
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Create"
+            android:textColor="#000"
+            android:background="#1212"
+            android:id="@+id/btn_createDisaster"
+
+            >
+            </Button>
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Coordinates "
+            android:id="@+id/coordinateText"
+            android:textColor="#000"
+            android:paddingLeft="10dp"
+            android:textSize="20sp">
+        </TextView>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_weight="1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        tools:ignore="MissingConstraints">
+
+        <fragment xmlns:android="http://schemas.android.com/apk/res/android"
+            xmlns:tools="http://schemas.android.com/tools"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/create_disaster_event_map"
+            android:layout_weight="1"
+            android:name="com.google.android.gms.maps.SupportMapFragment" />
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="KONUM"
+            android:textSize="10sp"
+            android:gravity="center"
+            android:layout_weight="0">
+        </TextView>
+
+    </LinearLayout>
+
+
+
+</LinearLayout>

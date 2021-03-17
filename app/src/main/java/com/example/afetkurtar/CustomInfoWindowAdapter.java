@@ -22,15 +22,19 @@ public class CustomInfoWindowAdapter implements GoogleMap.InfoWindowAdapter{
         String title = marker.getTitle();
         TextView tvTitle = (TextView) view.findViewById(R.id.title);
 
-        if(!title.equals("")){
-            tvTitle.setText(title);
-        }
+        try{
+            if(!title.equals("")){
+                tvTitle.setText(title);
+            }
 
-        String snippet = marker.getSnippet();
-        TextView tvSnippet = (TextView) view.findViewById(R.id.snippet);
+            String snippet = marker.getSnippet();
+            TextView tvSnippet = (TextView) view.findViewById(R.id.snippet);
 
-        if(!snippet.equals("")){
-            tvSnippet.setText(snippet);
+            if(!snippet.equals("")){
+                tvSnippet.setText(snippet);
+            }
+        }catch(NullPointerException e){
+            e.getMessage();
         }
 
     }
