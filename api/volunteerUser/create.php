@@ -1,10 +1,10 @@
 <?php
 // required headers
 header("Access-Control-Allow-Origin: *");
-header("Content-disasterID: application/json; charset=UTF-8");
+header("Content-Type: application/json; charset=UTF-8");
 header("Access-Control-Allow-Methods: POST");
 header("Access-Control-Max-Age: 3600");
-header("Access-Control-Allow-Headers: Content-disasterID, Access-Control-Allow-Headers, Authorization, X-Requested-With");
+header("Access-Control-Allow-Headers: Content-Type, Access-Control-Allow-Headers, Authorization, X-Requested-With");
  
 // get database connection
 include_once '../config/database.php';
@@ -48,6 +48,9 @@ if(
     $volunteerUser->role = isset($data["role"]) ? $data["role"] : "";
     $volunteerUser->latitude = isset($data["latitude"]) ? $data["latitude"] : "";
     $volunteerUser->longitude = isset($data["longitude"]) ? $data["longitude"] : "";
+    $volunteerUser->role = isset($data["locationTime"]) ? $data["locationTime"] : "";
+    $volunteerUser->latitude = isset($data["tc"]) ? $data["tc"] : "";
+    $volunteerUser->longitude = isset($data["birthDate"]) ? $data["birthDate"] : "";
  
     // create the product
     if($volunteerUser->create()){

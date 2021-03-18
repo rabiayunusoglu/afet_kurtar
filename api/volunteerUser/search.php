@@ -28,6 +28,9 @@ $volunteerUser->assignedTeamID = isset($data["assignedTeamID"]) ? $data["assigne
 $volunteerUser->role = isset($data["role"]) ? $data["role"] : "";
 $volunteerUser->latitude = isset($data["latitude"]) ? $data["latitude"] : "";
 $volunteerUser->longitude = isset($data["longitude"]) ? $data["longitude"] : "";
+$volunteerUser->role = isset($data["locationTime"]) ? $data["locationTime"] : "";
+$volunteerUser->latitude = isset($data["tc"]) ? $data["tc"] : "";
+$volunteerUser->longitude = isset($data["birthDate"]) ? $data["birthDate"] : "";
 
 // query volunteerUser
 $stmt = $volunteerUser->search();
@@ -61,6 +64,9 @@ if($num>0){
             "role" => $role,
             "latitude" => $latitude,
             "longitude" => $longitude,
+            "locationTime" => $locationTime,
+            "tc" => $tc,
+            "birthDate" => $birthDate,
         );
  
         array_push($volunteerUser_arr["records"], $volunteerUser_item);

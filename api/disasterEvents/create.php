@@ -43,6 +43,7 @@ if(
     $disasterEvents->longitudeEnd = isset($data["longitudeEnd"]) ? $data["longitudeEnd"] : "";
     $disasterEvents->disasterDate = isset($data["disasterDate"]) ? $data["disasterDate"] : "";
     $disasterEvents->disasterBase = isset($data["disasterBase"]) ? $data["disasterBase"] : "";
+    $disasterEvents->disasterName = isset($data["disasterName"]) ? $data["disasterName"] : "";
  
     // create the product
     if($disasterEvents->create()){

@@ -42,7 +42,10 @@ if($num>0){
             "address" => $address,
             "missingPerson" => $missingPerson,
             "rescuedPerson" => $rescuedPerson,
-            "isOpenForVolunteers" => $isOpenForVolunteers
+            "isOpenForVolunteers" => $isOpenForVolunteers,
+            "subpartName" => $subpartName,
+            "status" => $status,
+            "emergencyLevel" => $emergencyLevel,
         );
  
         array_push($subpart_arr["records"], $subpart_item);

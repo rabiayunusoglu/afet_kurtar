@@ -15,6 +15,7 @@ class DisasterEvents{
     public $longitudeEnd;
     public $disasterDate;
     public $disasterBase;
+    public $disasterName;
  
     // constructor with $db as database connection
     public function __construct($db){
@@ -25,7 +26,7 @@ class DisasterEvents{
  
         // select all query
         $query = "SELECT
-                    disasterID, disasterType, emergencyLevel, latitudeStart, latitudeEnd, longitudeStart, longitudeEnd, disasterDate, disasterBase
+                    disasterID, disasterType, emergencyLevel, latitudeStart, latitudeEnd, longitudeStart, longitudeEnd, disasterDate, disasterBase, disasterName
                 FROM
                     " . $this->table_name . " ";
      
@@ -45,7 +46,7 @@ class DisasterEvents{
     $query = "INSERT INTO
                 " . $this->table_name . "
             SET
-                disasterType=:disasterType, emergencyLevel=:emergencyLevel, latitudeStart=:latitudeStart, latitudeEnd=:latitudeEnd, longitudeStart=:longitudeStart, longitudeEnd=:longitudeEnd, disasterDate=:disasterDate, disasterBase=:disasterBase";
+                disasterType=:disasterType, emergencyLevel=:emergencyLevel, latitudeStart=:latitudeStart, latitudeEnd=:latitudeEnd, longitudeStart=:longitudeStart, longitudeEnd=:longitudeEnd, disasterDate=:disasterDate, disasterBase=:disasterBase, disasterName=:disasterName";
  
     // prepare query
     $stmt = $this->conn->prepare($query);
@@ -58,6 +59,7 @@ class DisasterEvents{
     $this->longitudeStart=htmlspecialchars(strip_tags($this->longitudeStart));
     $this->longitudeEnd=htmlspecialchars(strip_tags($this->longitudeEnd));
     $this->disasterDate=htmlspecialchars(strip_tags($this->disasterDate));
+    $this->disasterName=htmlspecialchars(strip_tags($this->disasterName));
  
     // bind values
     $stmt->bindParam(":disasterType", $this->disasterType);
@@ -68,6 +70,8 @@ class DisasterEvents{
     $stmt->bindParam(":longitudeEnd", $this->longitudeEnd);
     $stmt->bindParam(":disasterDate", $this->disasterDate);
     $stmt->bindParam(":disasterBase", $this->disasterBase);
+    $stmt->bindParam(":disasterName", $this->disasterName);
+
  
     // execute query
     if($stmt->execute()){
@@ -81,7 +85,7 @@ class DisasterEvents{
     function search(){
         // select all query
         $query = "SELECT
-                    disasterID, disasterType, emergencyLevel, latitudeStart, latitudeEnd, longitudeStart, longitudeEnd, disasterDate, disasterBase
+                    disasterID, disasterType, emergencyLevel, latitudeStart, latitudeEnd, longitudeStart, longitudeEnd, disasterDate, disasterBase, disasterName
                 FROM
                     " . $this->table_name . "
                 WHERE
@@ -93,7 +97,8 @@ class DisasterEvents{
                     AND (longitudeStart = :longitudeStart OR :longitudeStart = '')
                     AND (longitudeEnd = :longitudeEnd OR :longitudeEnd = '') 
                     AND (disasterDate = :disasterDate OR :disasterDate = '')
-                    AND (disasterBase = :disasterBase OR :disasterBase = '')";
+                    AND (disasterBase = :disasterBase OR :disasterBase = '')
+                    AND (disasterName = :disasterName OR :disasterName = '')";
      
         // prepare query statement
         $stmt = $this->conn->prepare($query);
@@ -109,6 +114,7 @@ class DisasterEvents{
         $this->longitudeEnd=htmlspecialchars(strip_tags($this->longitudeEnd));
         $this->disasterDate=htmlspecialchars(strip_tags($this->disasterDate));
         $this->disasterBase=htmlspecialchars(strip_tags($this->disasterBase));
+        $this->disasterName=htmlspecialchars(strip_tags($this->disasterName));
     
         // bind values
         $stmt->bindParam(":disasterID", $this->disasterType);
@@ -120,6 +126,8 @@ class DisasterEvents{
         $stmt->bindParam(":longitudeEnd", $this->longitudeEnd);
         $stmt->bindParam(":disasterDate", $this->disasterDate);
         $stmt->bindParam(":disasterBase", $this->disasterBase);
+        $stmt->bindParam(":disasterName", $this->disasterName);
+
      
         // execute query
         $stmt->execute();

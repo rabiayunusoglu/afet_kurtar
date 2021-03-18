@@ -10,12 +10,12 @@ header("Access-Control-Allow-Headers: Content-Type, Access-Control-Allow-Headers
 include_once '../config/database.php';
  
 // instantiate product object
-include_once '../objects/equipmentRequest.php';
+include_once '../objects/status.php';
  
 $database = new Database();
 $db = $database->getConnection();
  
-$equipmentRequest = new EquipmentRequest($db);
+$status = new Status($db);
  
 // get posted data
 $data = json_decode(file_get_contents("php://input"),true);
@@ -28,17 +28,17 @@ if(
 ){
  
     // set user property values
-    $equipmentRequest->quantity = isset($data["quantity"]) ? $data["quantity"] : "";
-    $equipmentRequest->teamRequestID = isset($data["teamRequestID"]) ? $data["teamRequestID"] : "";
+    $status->statusMessage = isset($data["statusMessage"]) ? $data["statusMessage"] : "";
+    $status->teamID = isset($data["teamID"]) ? $data["teamID"] : "";
  
     // create the product
-    if($equipmentRequest->create()){
+    if($status->create()){
  
         // set response code - 201 created
         http_response_code(201);
  
         // tell the user
-        echo json_encode(array("message" => "equipmentRequest was created."));
+        echo json_encode(array("message" => "status was created."));
     }
  
     // if unable to create the product, tell the user
@@ -48,7 +48,7 @@ if(
         http_response_code(503);
  
         // tell the user
-        echo json_encode(array("message" => "Unable to create equipmentRequest."));
+        echo json_encode(array("message" => "Unable to create status."));
     }
 }
  
@@ -59,6 +59,6 @@ else{
     http_response_code(400);
  
     // tell the user
-    echo json_encode(array("message" => "Unable to create equipmentRequest. Data is incomplete."));
+    echo json_encode(array("message" => "Unable to create status. Data is incomplete."));
 }
 ?>

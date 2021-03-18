@@ -44,7 +44,10 @@ if($num>0){
             "assignedTeamID" => $assignedTeamID,
             "role" => $role,
             "latitude" => $latitude,
-            "longitude" => $longitude
+            "longitude" => $longitude,
+            "locationTime" => $locationTime,
+            "tc" => $tc,
+            "birthDate" => $birthDate,
         );
  
         array_push($volunteerUser_arr["records"], $volunteerUser_item);

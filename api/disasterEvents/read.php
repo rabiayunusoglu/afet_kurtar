@@ -7,25 +7,25 @@ header("Content-Type: application/json; charset=UTF-8");
 
 // include database and object files
 include_once '../config/database.php';
-include_once '../objects/authorizedUser.php';
+include_once '../objects/disasterEvents.php';
  
 // instantiate database and table object
 $database = new Database();
 $db = $database->getConnection();
  
 // initialize object
-$authorizedUser = new AuthorizedUser($db);
+$disasterEvents = new DisasterEvents($db);
 
 
-$stmt = $authorizedUser->read();
+$stmt = $disasterEvents->read();
 $num = $stmt->rowCount();
  
 
 if($num>0){
  
 
-    $authorizedUser_arr=array();
-    $authorizedUser_arr["records"]=array();
+    $disasterEvents_arr=array();
+    $disasterEvents_arr["records"]=array();
  
  
     while ($row = $stmt->fetch(PDO::FETCH_ASSOC)){
@@ -34,19 +34,26 @@ if($num>0){
         // just $name only
         extract($row);
  
-        $authorizedUser_item=array(
-            "authorizedID" => $authorizedID,
-            "institution" => $institution,
-            "authorizedName" => $authorizedName
+        $disasterEvents_item=array(
+            "disasterID" => $disasterID,
+            "disasterType" => $disasterType,
+            "emergencyLevel" => $emergencyLevel,
+            "latitudeStart" => $latitudeStart,
+            "latitudeEnd" => $latitudeEnd,
+            "longitudeStart" => $longitudeStart,
+            "longitudeEnd" => $longitudeEnd,
+            "disasterDate" => $disasterDate,
+            "disasterBase" => $disasterBase,
+            "disasterName" => $disasterName,
         );
  
-        array_push($authorizedUser_arr["records"], $authorizedUser_item);
+        array_push($disasterEvents_arr["records"], $disasterEvents_item);
     }
  
     // set response code - 200 OK
     http_response_code(200);
  
-    echo json_encode($authorizedUser_arr);
+    echo json_encode($disasterEvents_arr);
 }
 
 else{

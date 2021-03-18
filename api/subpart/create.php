@@ -1,10 +1,10 @@
 <?php
 // required headers
 header("Access-Control-Allow-Origin: *");
-header("Content-disasterID: application/json; charset=UTF-8");
+header("Content-Type: application/json; charset=UTF-8");
 header("Access-Control-Allow-Methods: POST");
 header("Access-Control-Max-Age: 3600");
-header("Access-Control-Allow-Headers: Content-disasterID, Access-Control-Allow-Headers, Authorization, X-Requested-With");
+header("Access-Control-Allow-Headers: Content-Type, Access-Control-Allow-Headers, Authorization, X-Requested-With");
  
 // get database connection
 include_once '../config/database.php';
@@ -40,6 +40,9 @@ if(
     $subpart->missingPerson = isset($data["missingPerson"]) ? $data["missingPerson"] : "";
     $subpart->rescuedPerson = isset($data["rescuedPerson"]) ? $data["rescuedPerson"] : "";
     $subpart->isOpenForVolunteers = isset($data["isOpenForVolunteers"]) ? $data["isOpenForVolunteers"] : "";
+    $subpart->subpartName = isset($data["subpartName"]) ? $data["subpartName"] : "";
+    $subpart->status = isset($data["status"]) ? $data["status"] : "";
+    $subpart->emergencyLevel = isset($data["emergencyLevel"]) ? $data["emergencyLevel"] : "";
  
     // create the product
     if($subpart->create()){

@@ -41,7 +41,8 @@ if($num>0){
             "longitude" => $longitude,
             "personnelName" => $personnelName,
             "personnelRole" => $personnelRole,
-            "teamID" => $teamID
+            "teamID" => $teamID,
+            "locationTime" => $locationTime,
         );
  
         array_push($personnelUser_arr["records"], $personnelUser_item);

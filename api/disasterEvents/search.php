@@ -26,6 +26,7 @@ $disasterEvents->longitudeStart = isset($data["longitudeStart"]) ? $data["longit
 $disasterEvents->longitudeEnd = isset($data["longitudeEnd"]) ? $data["longitudeEnd"] : "";
 $disasterEvents->disasterDate = isset($data["disasterDate"]) ? $data["disasterDate"] : "";
 $disasterEvents->disasterBase = isset($data["disasterBase"]) ? $data["disasterBase"] : "";
+$disasterEvents->disasterName = isset($data["disasterName"]) ? $data["disasterName"] : "";
 
 // query disasterEvents
 $stmt = $disasterEvents->search();
@@ -56,7 +57,8 @@ if($num>0){
             "longitudeStart" => $longitudeStart,
             "longitudeEnd" => $longitudeEnd,
             "disasterDate" => $disasterDate,
-            "disasterBase" => $disasterBase
+            "disasterBase" => $disasterBase,
+            "disasterName" => $disasterName,
         );
  
         array_push($disasterEvents_arr["records"], $disasterEvents_item);

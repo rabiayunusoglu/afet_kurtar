@@ -1,10 +1,10 @@
 <?php
 // required headers
 header("Access-Control-Allow-Origin: *");
-header("Content-institution: application/json; charset=UTF-8");
+header("Content-Type: application/json; charset=UTF-8");
 header("Access-Control-Allow-Methods: POST");
 header("Access-Control-Max-Age: 3600");
-header("Access-Control-Allow-Headers: Content-institution, Access-Control-Allow-Headers, Authorization, X-Requested-With");
+header("Access-Control-Allow-Headers: Content-Type, Access-Control-Allow-Headers, Authorization, X-Requested-With");
  
 // get database connection
 include_once '../config/database.php';
@@ -37,6 +37,7 @@ if(
     $personnelUser->personnelName = isset($data["personnelName"]) ? $data["personnelName"] : "";
     $personnelUser->personnelRole = isset($data["personnelRole"]) ? $data["personnelRole"] : "";
     $personnelUser->teamID = isset($data["teamID"]) ? $data["teamID"] : "";
+    $personnelUser->locationTime = isset($data["locationTime"]) ? $data["locationTime"] : "";
  
     // create the product
     if($personnelUser->create()){

@@ -14,6 +14,9 @@ class Subpart{
     public $missingPerson;
     public $rescuedPerson;
     public $isOpenForVolunteers;
+    public $subpartName;
+    public $status;
+    public $emergencyLevel;
  
     // constructor with $db as database connection
     public function __construct($db){
@@ -24,7 +27,7 @@ class Subpart{
  
         // select all query
         $query = "SELECT
-                    subpartID, disasterID, latitude, longitude, `address`, missingPerson, rescuedPerson, isOpenForVolunteers
+                    subpartID, disasterID, latitude, longitude, `address`, missingPerson, rescuedPerson, isOpenForVolunteers, subpartName, `status`, emergencyLevel
                 FROM
                     " . $this->table_name . " ";
      
@@ -43,7 +46,7 @@ class Subpart{
         $query = "INSERT INTO
                     " . $this->table_name . "
                 SET
-                    disasterID=:disasterID, latitude=:latitude, longitude=:longitude, address=:address, missingPerson=:missingPerson, rescuedPerson=:rescuedPerson, isOpenForVolunteers=:isOpenForVolunteers";
+                    disasterID=:disasterID, latitude=:latitude, longitude=:longitude, address=:address, missingPerson=:missingPerson, rescuedPerson=:rescuedPerson, isOpenForVolunteers=:isOpenForVolunteers, subpartName=:subpartName, `status`=:status, emergencyLevel=:emergencyLevel";
      
         // prepare query
         $stmt = $this->conn->prepare($query);
@@ -56,7 +59,9 @@ class Subpart{
         $this->missingPerson=htmlspecialchars(strip_tags($this->missingPerson));
         $this->rescuedPerson=htmlspecialchars(strip_tags($this->rescuedPerson));
         $this->isOpenForVolunteers=htmlspecialchars(strip_tags($this->isOpenForVolunteers));
-    
+        $this->subpartName=htmlspecialchars(strip_tags($this->subpartName));
+        $this->status=htmlspecialchars(strip_tags($this->status));
+        $this->emergencyLevel=htmlspecialchars(strip_tags($this->emergencyLevel));
      
         // bind values
         $stmt->bindParam(":disasterID", $this->disasterID);
@@ -66,7 +71,9 @@ class Subpart{
         $stmt->bindParam(":missingPerson", $this->missingPerson);
         $stmt->bindParam(":rescuedPerson", $this->rescuedPerson);
         $stmt->bindParam(":isOpenForVolunteers", $this->isOpenForVolunteers);
-    
+        $stmt->bindParam(":subpartName", $this->subpartName);
+        $stmt->bindParam(":status", $this->status);
+        $stmt->bindParam(":emergencyLevel", $this->emergencyLevel);
      
         // execute query
         if($stmt->execute()){
@@ -80,7 +87,7 @@ class Subpart{
     function search(){
         // select all query
         $query = "SELECT
-                    subpartID, disasterID, latitude, longitude, `address`, missingPerson, rescuedPerson, isOpenForVolunteers
+                    subpartID, disasterID, latitude, longitude, `address`, missingPerson, rescuedPerson, isOpenForVolunteers, subpartName, `status`, emergencyLevel
                 FROM
                     " . $this->table_name . "
                 WHERE
@@ -91,7 +98,10 @@ class Subpart{
                     AND (`address` = :address OR :address = '')
                     AND (missingPerson = :missingPerson OR :missingPerson = '')
                     AND (rescuedPerson = :rescuedPerson OR :rescuedPerson = '')
-                    AND (isOpenForVolunteers = :isOpenForVolunteers OR :isOpenForVolunteers = '')";
+                    AND (isOpenForVolunteers = :isOpenForVolunteers OR :isOpenForVolunteers = '')
+                    AND (subpartName = :subpartName OR :subpartName = '')
+                    AND (`status` = :status OR :status = '')
+                    AND (emergencyLevel = :emergencyLevel OR :emergencyLevel = '')";
      
         // prepare query statement
         $stmt = $this->conn->prepare($query);
@@ -106,6 +116,9 @@ class Subpart{
         $this->missingPerson=htmlspecialchars(strip_tags($this->missingPerson));
         $this->rescuedPerson=htmlspecialchars(strip_tags($this->rescuedPerson));
         $this->isOpenForVolunteers=htmlspecialchars(strip_tags($this->isOpenForVolunteers));
+        $this->subpartName=htmlspecialchars(strip_tags($this->subpartName));
+        $this->status=htmlspecialchars(strip_tags($this->status));
+        $this->emergencyLevel=htmlspecialchars(strip_tags($this->emergencyLevel));
     
      
         // bind values
@@ -117,6 +130,9 @@ class Subpart{
         $stmt->bindParam(":missingPerson", $this->missingPerson);
         $stmt->bindParam(":rescuedPerson", $this->rescuedPerson);
         $stmt->bindParam(":isOpenForVolunteers", $this->isOpenForVolunteers);
+        $stmt->bindParam(":subpartName", $this->subpartName);
+        $stmt->bindParam(":status", $this->status);
+        $stmt->bindParam(":emergencyLevel", $this->emergencyLevel);
      
         // execute query
         $stmt->execute();

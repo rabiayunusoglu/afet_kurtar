@@ -25,6 +25,9 @@ $subpart->address = isset($data["address"]) ? $data["address"] : "";
 $subpart->missingPerson = isset($data["missingPerson"]) ? $data["missingPerson"] : "";
 $subpart->rescuedPerson = isset($data["rescuedPerson"]) ? $data["rescuedPerson"] : "";
 $subpart->isOpenForVolunteers = isset($data["isOpenForVolunteers"]) ? $data["isOpenForVolunteers"] : "";
+$subpart->subpartName = isset($data["subpartName"]) ? $data["subpartName"] : "";
+$subpart->status = isset($data["status"]) ? $data["status"] : "";
+$subpart->emergencyLevel = isset($data["emergencyLevel"]) ? $data["emergencyLevel"] : "";
 
 // query subpart
 $stmt = $subpart->search();
@@ -55,6 +58,9 @@ if($num>0){
             "missingPerson" => $missingPerson,
             "rescuedPerson" => $rescuedPerson,
             "isOpenForVolunteers" => $isOpenForVolunteers,
+            "subpartName" => $subpartName,
+            "status" => $status,
+            "emergencyLevel" => $emergencyLevel,
         );
  
         array_push($subpart_arr["records"], $subpart_item);

@@ -17,6 +17,9 @@ class VolunteerUser{
     public $haveFirstAidCert;
     public $requestedSubpart;
     public $responseSubpart;
+    public $locationTime;
+    public $tc;
+    public $birthDate;
  
     // constructor with $db as database connection
     public function __construct($db){
@@ -24,10 +27,9 @@ class VolunteerUser{
     }
 
     function read(){
-        // , `role`, assignedTeamID, latitude, longitude, `address`, isExperienced, haveFirstAidCert, requestedSubpart, responseSubpart
         // select all query
         $query = "SELECT
-                    volunteerID, volunteerName, `role`, assignedTeamID, latitude, longitude, `address`, isExperienced, haveFirstAidCert, requestedSubpart, responseSubpart
+                    volunteerID, volunteerName, `role`, assignedTeamID, latitude, longitude, `address`, isExperienced, haveFirstAidCert, requestedSubpart, responseSubpart, locationTime, tc, birthDate
                 FROM
                     " . $this->table_name . " ";
      
@@ -63,6 +65,9 @@ class VolunteerUser{
         $this->haveFirstAidCert=htmlspecialchars(strip_tags($this->haveFirstAidCert));
         $this->requestedSubpart=htmlspecialchars(strip_tags($this->requestedSubpart));
         $this->responseSubpart=htmlspecialchars(strip_tags($this->responseSubpart));
+        $this->locationTime=htmlspecialchars(strip_tags($this->locationTime));
+        $this->tc=htmlspecialchars(strip_tags($this->tc));
+        $this->birthDate=htmlspecialchars(strip_tags($this->birthDate));
     
      
         // bind values
@@ -77,6 +82,9 @@ class VolunteerUser{
         $stmt->bindParam(":haveFirstAidCert", $this->haveFirstAidCert);
         $stmt->bindParam(":requestedSubpart", $this->requestedSubpart);
         $stmt->bindParam(":responseSubpart", $this->responseSubpart);
+        $stmt->bindParam(":locationTime", $this->locationTime);
+        $stmt->bindParam(":tc", $this->tc);
+        $stmt->bindParam(":birthDate", $this->birthDate);
     
      
         // execute query
@@ -91,7 +99,7 @@ class VolunteerUser{
     function search(){
         // select all query
         $query = "SELECT
-                    volunteerID, volunteerName, `role`, assignedTeamID, latitude, longitude, `address`, isExperienced, haveFirstAidCert, requestedSubpart, responseSubpart
+                    volunteerID, volunteerName, `role`, assignedTeamID, latitude, longitude, `address`, isExperienced, haveFirstAidCert, requestedSubpart, responseSubpart, locationTime, tc, birthDate
                 FROM
                     " . $this->table_name . "
                 WHERE
@@ -105,7 +113,10 @@ class VolunteerUser{
                     AND (isExperienced = :isExperienced OR :isExperienced = '')
                     AND (haveFirstAidCert = :haveFirstAidCert OR :haveFirstAidCert = '')
                     AND (requestedSubpart = :requestedSubpart OR :requestedSubpart = '')
-                    AND (responseSubpart = :responseSubpart OR :responseSubpart = '')";
+                    AND (responseSubpart = :responseSubpart OR :responseSubpart = '')
+                    AND (locationTime = :locationTime OR :locationTime = '')
+                    AND (tc = :tc OR :tc = '')
+                    AND (birthDate = :birthDate OR :birthDate = '')";
      
         // prepare query statement
         $stmt = $this->conn->prepare($query);
@@ -123,6 +134,9 @@ class VolunteerUser{
         $this->haveFirstAidCert=htmlspecialchars(strip_tags($this->haveFirstAidCert));
         $this->requestedSubpart=htmlspecialchars(strip_tags($this->requestedSubpart));
         $this->responseSubpart=htmlspecialchars(strip_tags($this->responseSubpart));
+        $this->locationTime=htmlspecialchars(strip_tags($this->locationTime));
+        $this->tc=htmlspecialchars(strip_tags($this->tc));
+        $this->birthDate=htmlspecialchars(strip_tags($this->birthDate));
     
      
         // bind values
@@ -137,6 +151,9 @@ class VolunteerUser{
         $stmt->bindParam(":haveFirstAidCert", $this->haveFirstAidCert);
         $stmt->bindParam(":requestedSubpart", $this->requestedSubpart);
         $stmt->bindParam(":responseSubpart", $this->responseSubpart);
+        $stmt->bindParam(":locationTime", $this->locationTime);
+        $stmt->bindParam(":tc", $this->tc);
+        $stmt->bindParam(":birthDate", $this->birthDate);
      
         // execute query
         $stmt->execute();

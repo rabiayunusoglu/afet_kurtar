@@ -13,6 +13,7 @@ class PersonnelUser{
     public $personnelName;
     public $personnelRole;
     public $teamID;
+    public $locationTime;
     
     // constructor with $db as database connection
     public function __construct($db){
@@ -23,7 +24,7 @@ class PersonnelUser{
  
         // select all query
         $query = "SELECT
-                    personnelID, institution, latitude, longitude, personnelName, personnelRole, teamID
+                    personnelID, institution, latitude, longitude, personnelName, personnelRole, teamID, locationTime
                 FROM
                     " . $this->table_name . " ";
      
@@ -42,7 +43,7 @@ class PersonnelUser{
         $query = "INSERT INTO
                     " . $this->table_name . "
                 SET
-                personnelID=:personnelID, institution=:institution, latitude=:latitude, longitude=:longitude, personnelName=:personnelName, personnelRole=:personnelRole, teamID=:teamID";
+                personnelID=:personnelID, institution=:institution, latitude=:latitude, longitude=:longitude, personnelName=:personnelName, personnelRole=:personnelRole, teamID=:teamID, locationTime=:locationTime";
      
         // prepare query
         $stmt = $this->conn->prepare($query);
@@ -55,6 +56,7 @@ class PersonnelUser{
         $this->personnelName=htmlspecialchars(strip_tags($this->personnelName));
         $this->personnelRole=htmlspecialchars(strip_tags($this->personnelRole));
         $this->teamID=htmlspecialchars(strip_tags($this->teamID));
+        $this->locationTime=htmlspecialchars(strip_tags($this->locationTime));
     
      
         // bind values
@@ -65,6 +67,7 @@ class PersonnelUser{
         $stmt->bindParam(":personnelName", $this->personnelName);
         $stmt->bindParam(":personnelRole", $this->personnelRole);
         $stmt->bindParam(":teamID", $this->teamID);
+        $stmt->bindParam(":locationTime", $this->locationTime);
     
      
         // execute query
@@ -79,7 +82,7 @@ class PersonnelUser{
     function search(){
         // select all query
         $query = "SELECT
-                    personnelID, institution, latitude, longitude, personnelName, personnelRole, teamID
+                    personnelID, institution, latitude, longitude, personnelName, personnelRole, teamID, locationTime
                 FROM
                     " . $this->table_name . "
                 WHERE
@@ -89,7 +92,8 @@ class PersonnelUser{
                     AND (longitude = :longitude OR :longitude = '')
                     AND (personnelName = :personnelName OR :personnelName = '')
                     AND (personnelRole = :personnelRole OR :personnelRole = '')
-                    AND (teamID = :teamID OR :teamID = '')";
+                    AND (teamID = :teamID OR :teamID = '')
+                    AND (locationTime = :locationTime OR :locationTime = '')";
      
         // prepare query statement
         $stmt = $this->conn->prepare($query);
@@ -103,6 +107,7 @@ class PersonnelUser{
         $this->personnelName=htmlspecialchars(strip_tags($this->personnelName));
         $this->personnelRole=htmlspecialchars(strip_tags($this->personnelRole));
         $this->teamID=htmlspecialchars(strip_tags($this->teamID));
+        $this->locationTime=htmlspecialchars(strip_tags($this->locationTime));
     
      
         // bind values
@@ -113,6 +118,7 @@ class PersonnelUser{
         $stmt->bindParam(":personnelName", $this->personnelName);
         $stmt->bindParam(":personnelRole", $this->personnelRole);
         $stmt->bindParam(":teamID", $this->teamID);
+        $stmt->bindParam(":locationTime", $this->locationTime);
      
         // execute query
         $stmt->execute();

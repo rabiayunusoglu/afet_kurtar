@@ -24,6 +24,7 @@ $personnelUser->longitude = isset($data["longitude"]) ? $data["longitude"] : "";
 $personnelUser->personnelName = isset($data["personnelName"]) ? $data["personnelName"] : "";
 $personnelUser->personnelRole = isset($data["personnelRole"]) ? $data["personnelRole"] : "";
 $personnelUser->teamID = isset($data["teamID"]) ? $data["teamID"] : "";
+$personnelUser->locationTime = isset($data["locationTime"]) ? $data["locationTime"] : "";
 
 // query personnelUser
 $stmt = $personnelUser->search();
@@ -53,6 +54,7 @@ if($num>0){
             "personnelName" => $personnelName,
             "personnelRole" => $personnelRole,
             "teamID" => $teamID,
+            "locationTime" => $locationTime,
         );
  
         array_push($personnelUser_arr["records"], $personnelUser_item);
