@@ -35,12 +35,23 @@ if(
  
     // create the product
     if($users->create()){
- 
+
+        $stmt = $users->search();
+
+        $insertedUserID = 0;
+        while ($row = $stmt->fetch(PDO::FETCH_ASSOC)){
+            // extract row
+            // this will make $row['name'] to
+            // just $name only
+            extract($row);
+            $insertedUserID = $userID;
+        }
+        
         // set response code - 201 created
         http_response_code(201);
  
         // tell the user
-        echo json_encode(array("message" => "users was created."));
+        echo json_encode(array("message" => "users was created.", "id" => $insertedUserID));
     }
  
     // if unable to create the product, tell the user

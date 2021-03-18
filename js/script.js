@@ -44,29 +44,23 @@ function onSignIn(googleUser) {
         });
 }
 
-function registerPersonnel(){
+function registerPersonnel() {
 
     var email = document.getElementById("personnelEmail").value.trim();
     var username = document.getElementById("personnelUsername").value.trim();
     var role = document.getElementById("personnelRole").value.trim();
     var institution = document.getElementById("personnelInstitution").value.trim();
 
-    if(email == ''){
+    if (email == '') {
         alert("Email adresi boş bırakılamaz.");
         return false;
-    }
-
-    else if(username == ''){
+    } else if (username == '') {
         alert("Ad soyad boş bırakılamaz.");
         return false;
-    }
-
-    else if(role == ''){
+    } else if (role == '') {
         alert("Personel rolü boş bırakılamaz.");
         return false;
-    }
-
-    else if(institution == ''){
+    } else if (institution == '') {
         alert("Çalıştığı kurum boş bırakılamaz.");
         return false;
     }
@@ -74,33 +68,34 @@ function registerPersonnel(){
 
     $.post("https://afetkurtar.site/api/users/create.php", JSON.stringify({ userType: 'personnelUser', userName: username, email: email }))
         .done(function(data, status, xhr) {
-            
+            window.alert("data:" + data);
+
             if (xhr.status == 201) {
-                
-                $.post("https://afetkurtar.site/api/personnelUser/create.php", 
-                JSON.stringify({ institution: institution, personnelName: username, personnelRole: role , personnelID: "0"}))
-                    .done(function(data, status, xhr) {
-                        if(xhr.status == 201){
-                            window.alert("Personel kaydı başarıyla gerçekleştirildi.");
-                            document.getElementById('personnelForm').reset();
-                        }
-                        else{
-                            window.alert("Personel kaydı esnasında bir hata ile karşılaşıldı");
-                            document.getElementById('personnelForm').reset();
-                        }
-                    });
 
-                    document.getElementById('personnelForm').reset();
-                }
+                // $.post("https://afetkurtar.site/api/personnelUser/create.php",
+                //         JSON.stringify({ institution: institution, personnelName: username, personnelRole: role, personnelID: data.id }))
+                //     .done(function(data, status, xhr) {
+                //         if (xhr.status == 201) {
+                //             window.alert("Personel kaydı başarıyla gerçekleştirildi.");
+                //             //document.getElementById('personnelForm').reset();
+                //         } else {
+                //             window.alert("Personel kaydı esnasında bir hata ile karşılaşıldı x");
+                //             //document.getElementById('personnelForm').reset();
+                //         }
+                //     });
 
-            else{
-                window.alert("Kullanıcı kaydı esnasında bir hata ile karşılaşıldı");
-                document.getElementById('personnelForm').reset();
+                //document.getElementById('personnelForm').reset();
+            } else {
+                window.alert("Kullanıcı kaydı esnasında bir hata ile karşılaşıldı y");
+                //document.getElementById('personnelForm').reset();
             }
         })
-        .fail(function(xhr) {
-            window.alert("Kullanıcı kaydı esnasında bir hata ile karşılaşıldı");
-            document.getElementById('personnelForm').reset();
+        .fail(function(data, xhr) {
+            window.alert("dataf:" + data.message);
+            //window.alert("Kullanıcı kaydı esnasında bir hata ile karşılaşıldı z");
+            console.log("xhr:" + xhr.status);
+            window.alert("xhr:" + xhr.status);
+            //document.getElementById('personnelForm').reset();
         });
 
 

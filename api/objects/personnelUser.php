@@ -42,12 +42,13 @@ class PersonnelUser{
         $query = "INSERT INTO
                     " . $this->table_name . "
                 SET
-                    institution=:institution, latitude=:latitude, longitude=:longitude, personnelName=:personnelName, personnelRole=:personnelRole, teamID=:teamID";
+                personnelID=:personnelID, institution=:institution, latitude=:latitude, longitude=:longitude, personnelName=:personnelName, personnelRole=:personnelRole, teamID=:teamID";
      
         // prepare query
         $stmt = $this->conn->prepare($query);
      
         // sanitize
+        $this->personnelID=htmlspecialchars(strip_tags($this->personnelID));
         $this->institution=htmlspecialchars(strip_tags($this->institution));
         $this->latitude=htmlspecialchars(strip_tags($this->latitude));
         $this->longitude=htmlspecialchars(strip_tags($this->longitude));
@@ -57,6 +58,7 @@ class PersonnelUser{
     
      
         // bind values
+        $stmt->bindParam(":personnelID", $this->personnelID);
         $stmt->bindParam(":institution", $this->institution);
         $stmt->bindParam(":latitude", $this->latitude);
         $stmt->bindParam(":longitude", $this->longitude);

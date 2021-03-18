@@ -46,12 +46,13 @@ class VolunteerUser{
         $query = "INSERT INTO
                     " . $this->table_name . "
                 SET
-                    volunteerName=:volunteerName, `role`=:role, assignedTeamID=:assignedTeamID, latitude=:latitude, longitude=:longitude, `address`=:address, isExperienced=:isExperienced, haveFirstAidCert=:haveFirstAidCert, requestedSubpart=:requestedSubpart, responseSubpart=:responseSubpart";
+                volunteerID:=volunteerID, volunteerName=:volunteerName, `role`=:role, assignedTeamID=:assignedTeamID, latitude=:latitude, longitude=:longitude, `address`=:address, isExperienced=:isExperienced, haveFirstAidCert=:haveFirstAidCert, requestedSubpart=:requestedSubpart, responseSubpart=:responseSubpart";
      
         // prepare query
         $stmt = $this->conn->prepare($query);
      
         // sanitize
+        $this->volunteerID=htmlspecialchars(strip_tags($this->volunteerID));
         $this->volunteerName=htmlspecialchars(strip_tags($this->volunteerName));
         $this->role=htmlspecialchars(strip_tags($this->role));
         $this->assignedTeamID=htmlspecialchars(strip_tags($this->assignedTeamID));
@@ -65,6 +66,7 @@ class VolunteerUser{
     
      
         // bind values
+        $stmt->bindParam(":volunteerID", $this->volunteerID);
         $stmt->bindParam(":volunteerName", $this->volunteerName);
         $stmt->bindParam(":role", $this->role);
         $stmt->bindParam(":assignedTeamID", $this->assignedTeamID);

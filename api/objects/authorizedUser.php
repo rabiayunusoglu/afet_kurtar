@@ -39,16 +39,18 @@ class AuthorizedUser{
     $query = "INSERT INTO
                 " . $this->table_name . "
             SET
-                institution=:institution, authorizedName=:authorizedName";
+                authorizedID:=authorizedID, institution=:institution, authorizedName=:authorizedName";
  
     // prepare query
     $stmt = $this->conn->prepare($query);
  
     // sanitize
+    $this->authorizedID=htmlspecialchars(strip_tags($this->authorizedID));
     $this->institution=htmlspecialchars(strip_tags($this->institution));
     $this->authorizedName=htmlspecialchars(strip_tags($this->authorizedName));
  
     // bind values
+    $stmt->bindParam(":authorizedID", $this->authorizedID);
     $stmt->bindParam(":institution", $this->institution);
     $stmt->bindParam(":authorizedName", $this->authorizedName);
  
@@ -80,7 +82,7 @@ class AuthorizedUser{
         $this->authorizedName=htmlspecialchars(strip_tags($this->authorizedName));
     
         // bind values
-        $stmt->bindParam(":authorizedID", $this->institution);
+        $stmt->bindParam(":authorizedID", $this->authorizedID);
         $stmt->bindParam(":institution", $this->institution);
         $stmt->bindParam(":authorizedName", $this->authorizedName);
      
