@@ -29,7 +29,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.AfetKurtar">
-        <activity android:name=".DisplayImage"></activity>
+
 
         <meta-data
             android:name="com.google.android.gms.version"
