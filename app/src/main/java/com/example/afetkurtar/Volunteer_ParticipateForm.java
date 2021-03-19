@@ -44,8 +44,14 @@ import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 
 public class Volunteer_ParticipateForm extends AppCompatActivity {
@@ -55,9 +61,11 @@ public class Volunteer_ParticipateForm extends AppCompatActivity {
     private RadioButton experience, firstAid;
     DrawerLayout drawerLayout;
     String url = "https://afetkurtar.site/api/volunteerUser/create.php";
-    private EditText ad, soyad, adres;
+    private EditText ad, soyad, adres, tc, dateBirth;
     private Button btn_gonder;
     Double latitude, longtitude;
+    int tcNo;
+    Date birthDate;
     private static boolean answerExperienced = false, answerFirstAid = false, controlmessage = false;
     GoogleSignInClient mGoogleSignInClient;
 
@@ -85,6 +93,11 @@ public class Volunteer_ParticipateForm extends AppCompatActivity {
         ad = (EditText) findViewById(R.id.participate_ad);
         soyad = (EditText) findViewById(R.id.participate_soyad);
         adres = (EditText) findViewById(R.id.participate_addres);
+        tc = (EditText) findViewById(R.id.participate_tc);
+        dateBirth = (EditText) findViewById(R.id.participate_date);
+
+        DateFormat df = new SimpleDateFormat("dd.MM.yyyy");
+
 
         radioGroupExperience = findViewById(R.id.groupexperienced);
         radioGroupFirstAid = findViewById(R.id.groupfistaid);
@@ -95,6 +108,7 @@ public class Volunteer_ParticipateForm extends AppCompatActivity {
             public void onClick(View v) {
 
 
+                // tcNo = Integer.parseInt(String.valueOf(tc));
                 int radioId = radioGroupExperience.getCheckedRadioButtonId();
                 experience = findViewById(radioId);
 
@@ -113,12 +127,20 @@ public class Volunteer_ParticipateForm extends AppCompatActivity {
 
                 JSONObject obj = new JSONObject();
                 try {
+                    obj.put("volunteerID",2);
                     obj.put("volunteerName", ad.getText().toString() + " " + soyad.getText().toString());
-                    obj.put("address", adres.getText().toString());
+                   /* obj.put("address", adres.getText().toString());
                     obj.put("isExperienced", answerExperienced);
                     obj.put("haveFirstAidCert", answerFirstAid);
+                    obj.put("requestedSubpart",null);
+                    obj.put("responseSubpart",null);
+                    obj.put("assignedTeamID",null);
+                    obj.put("role",null);
                     obj.put("latitude", latitude);
                     obj.put("longitude", longtitude);
+                    obj.put("locationTime",null);
+                    obj.put("tc", null);
+                    obj.put("birthDate", null);*/
 
                 } catch (JSONException e) {
                     e.printStackTrace();

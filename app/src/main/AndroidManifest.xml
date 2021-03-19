@@ -20,7 +20,7 @@
 
     <uses-feature
         android:name="android.hardware.Camera"
-        android:required="true"></uses-feature>
+        android:required="true" />
 
     <application
         android:allowBackup="true"
@@ -29,7 +29,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.AfetKurtar">
-
+        <activity android:name=".Personel_Register"></activity>
 
         <meta-data
             android:name="com.google.android.gms.version"

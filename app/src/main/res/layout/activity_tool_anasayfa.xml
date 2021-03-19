@@ -41,7 +41,7 @@
                     android:onClick="ClickParticipateRequest"
                     android:contentDescription="@string/app_name"
                     android:padding="8dp"
-                    android:src="@drawable/note"></ImageView>
+                    android:src="@drawable/personel_kaydi"></ImageView>
 
                 <TextView
                     android:layout_width="match_parent"
@@ -75,7 +75,7 @@
                     android:onClick="ClickEmergency"
                     android:contentDescription="@string/app_name"
                     android:padding="8dp"
-                    android:src="@drawable/ihbar"></ImageView>
+                    android:src="@drawable/notice"></ImageView>
 
                 <TextView
                     android:layout_width="match_parent"
@@ -109,7 +109,7 @@
                     android:onClick="ClickParticipateForm"
                     android:contentDescription="@string/app_name"
                     android:padding="8dp"
-                    android:src="@drawable/info"></ImageView>
+                    android:src="@drawable/info2"></ImageView>
 
                 <TextView
                     android:layout_width="match_parent"
@@ -142,7 +142,7 @@
                     android:onClick="ClickExit"
                     android:contentDescription="@string/app_name"
                     android:padding="8dp"
-                    android:src="@drawable/logout"></ImageView>
+                    android:src="@drawable/out"></ImageView>
 
                 <TextView
                     android:layout_width="match_parent"
