@@ -48,7 +48,7 @@ class VolunteerUser{
         $query = "INSERT INTO
                     " . $this->table_name . "
                 SET
-                volunteerID:=volunteerID, volunteerName=:volunteerName, `role`=:role, assignedTeamID=:assignedTeamID, latitude=:latitude, longitude=:longitude, `address`=:address, isExperienced=:isExperienced, haveFirstAidCert=:haveFirstAidCert, requestedSubpart=:requestedSubpart, responseSubpart=:responseSubpart";
+                volunteerID=:volunteerID, volunteerName=:volunteerName, `role`=:role, assignedTeamID=:assignedTeamID, latitude=:latitude, longitude=:longitude, `address`=:address, isExperienced=:isExperienced, haveFirstAidCert=:haveFirstAidCert, requestedSubpart=:requestedSubpart, responseSubpart=:responseSubpart, locationTime=:locationTime, tc=:tc, birthDate=:birthDate";
      
         // prepare query
         $stmt = $this->conn->prepare($query);

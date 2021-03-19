@@ -39,7 +39,7 @@ class AuthorizedUser{
     $query = "INSERT INTO
                 " . $this->table_name . "
             SET
-                authorizedID:=authorizedID, institution=:institution, authorizedName=:authorizedName";
+                authorizedID=:authorizedID, institution=:institution, authorizedName=:authorizedName";
  
     // prepare query
     $stmt = $this->conn->prepare($query);
