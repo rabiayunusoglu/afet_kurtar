@@ -41,7 +41,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     int RC_SIGN_IN = 9001;
     GoogleSignInClient mGoogleSignInClient;
     RequestQueue queue;
-    Boolean userCreatedSuccessfully = true;
+    public static JSONObject userInfo;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -56,32 +56,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
 
 
-        String url = "https://afetkurtar.site/api/volunteerUser/read.php";
+
 
         queue = Volley.newRequestQueue(this);
-        //GET Ornegi
-    /*
-        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest
-                (Request.Method.GET, url, null, new Response.Listener<JSONObject>() {
 
-                    @Override
-                    public void onResponse(JSONObject response) {
-                        try {
-                       //     System.out.println(response.toString());
-                        }catch (Exception e){
-                            System.out.println(e.getStackTrace());
-                        }
-                    }
-                }, new Response.ErrorListener() {
-
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        // TODO: Handle error
-                        System.out.println(error);
-                    }
-                });
-        queue.add(jsonObjectRequest);
-*/
     }
 
     private void checkUser(GoogleSignInAccount account){
@@ -97,9 +75,33 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 new Response.Listener<JSONObject>() { // the response listener
                     @Override
                     public void onResponse(JSONObject response){
-                        System.out.println("response dönüyor");
-                        System.out.println(response.toString());
-                        Intent intentLogin = new Intent(MainActivity.this, Volunteer_Anasayfa.class);
+                      //  System.out.println("response dönüyor");
+                       // System.out.println(response.toString());
+
+
+                        String type = "";
+                        try {
+                            String cevap = response.getString("records");
+                            cevap = cevap.substring(1, cevap.length() - 1);
+                            JSONObject tmpJson = new JSONObject(cevap);
+                            userInfo = new JSONObject(cevap);
+                            type = tmpJson.getString("userType");
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                        // ****************************************************************************************** TEST ICIN USER TYPE AYARLAMA YERI
+                        type = "authorizedUser";
+                        // ****************************************************************************************** TEST ICIN USER TYPE AYARLAMA YERI
+                        Intent intentLogin;
+                        if(type.equals("authorizedUser")){
+                            intentLogin = new Intent(MainActivity.this, Authorized_Anasayfa.class);
+                        }
+                        else if(type.equals("personnelUser")){
+                            intentLogin = new Intent(MainActivity.this, Personel_Anasayfa.class);
+                        }
+                        else{
+                            intentLogin = new Intent(MainActivity.this, Volunteer_Anasayfa.class);
+                        }
                         startActivity(intentLogin);
                     }
                 },
@@ -127,6 +129,17 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     @Override
                     public void onResponse(JSONObject response){
                         System.out.println(response.toString());
+                        //
+                        // PARTICIPATE FORM'A YONENDIRILECEK, SONRA ANA SAYFAYA YONLENDIRILECEK
+                        //
+                        try {
+                            String cevap = response.getString("records");
+                            cevap = cevap.substring(1, cevap.length() - 1);
+                            userInfo = new JSONObject(cevap);
+
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
                         Intent intentLogin = new Intent(MainActivity.this, Volunteer_Anasayfa.class);
                         startActivity(intentLogin);
                     }
@@ -145,19 +158,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.sign_in_button:
-                /*
-                Burada Sunucuya sorgu ile login olan kisinin hangi yetkiye sahip oldugunu bulup
-                ona göre yonlendirme yapılacak.
-                 */
 
                signIn();
-               // signIn ile asagidaki update UI kısmında oluyor (startActivity)
+                break;
 
-                break;
-           /* case R.id.button_sign_out:
-                signOut();
-                break;
-            // ...*/
         }
     }
     private void signIn() {
