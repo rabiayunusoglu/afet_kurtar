@@ -8,11 +8,14 @@
     <include
         layout="@layout/activity_tool_bar">
     </include>
+
     <Button
+        android:textColor="@color/black"
         android:id="@+id/auth_geri_button"
-        android:text="Geri"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:text="Geri"
+        app:backgroundTint="#BFBFBF"
         tools:ignore="MissingConstraints">
 
     </Button>
@@ -21,7 +24,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_marginTop="60dp"
-        android:background="@android:color/darker_gray"
+        android:background="@color/white"
         tools:ignore="MissingConstraints"
         app:layout_constraintTop_toBottomOf="@id/history_geri_button">
 

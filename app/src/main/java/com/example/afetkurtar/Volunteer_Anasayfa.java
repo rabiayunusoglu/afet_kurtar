@@ -122,10 +122,7 @@ public class Volunteer_Anasayfa extends AppCompatActivity {
         //redirect activity to main screen
         redirectActivity(this, Afet_Bolgesi.class );
     }
-    public void ClickAuthNotifications(View view) {
-        //redirect activity to main screen
-        redirectActivity(this, Authorized_Notification.class );
-    }
+
 
     public static void redirectActivity(Activity activity, Class aClass) {
         //initialize intent

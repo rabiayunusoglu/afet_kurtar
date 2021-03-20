@@ -52,6 +52,20 @@ public class Create_Disaster_Event_On_Map extends AppCompatActivity implements O
 
         //init textView for Coordinates
         tvCoordinatesText = (TextView) findViewById(R.id.coordinateText);
+        /*
+         Onceden belirtilen kordinatları almak icin asagidaki islemi ekledim
+         */
+        Bundle bundle = getIntent().getExtras();
+        String message = bundle.getString("json");
+        try {
+            data = new JSONObject(message);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        /*
+         NOT : data.getstring("latitude") veya "longitude" ile bu sayfaya gönderilmis olan
+         veriden kordinatini alıyosun.
+         */
 
         //create Map
         initMap();

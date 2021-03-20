@@ -5,7 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:id="@+id/drawer_layout"
+    android:id="@+id/auth_drawer_layout"
     tools:context=".Authorized_Anasayfa">
     <LinearLayout
         android:layout_width="match_parent"
@@ -36,6 +36,6 @@
         android:layout_gravity="start"
         android:background="@color/white">
         <include
-            layout="@layout/activitiy_nav_drawer"/>
+            layout="@layout/activity_authorized_nav_drawer"/>
     </RelativeLayout>
 </androidx.drawerlayout.widget.DrawerLayout>

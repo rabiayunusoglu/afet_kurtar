@@ -33,6 +33,8 @@ public class Authorized_Notification extends AppCompatActivity {
         queue = Volley.newRequestQueue(this);
         findViewById(R.id.auth_geri_button).setOnClickListener(this::onClick);
 
+
+        list2 = new ArrayList<JSONObject>();
         getData("");
     }
     public void getData(String ID) {
@@ -67,7 +69,7 @@ public class Authorized_Notification extends AppCompatActivity {
     }
 
     static int k = 0;
-    static ArrayList<JSONObject> list2 = new ArrayList<JSONObject>();
+    ArrayList<JSONObject> list2 = new ArrayList<JSONObject>();
     public void addtext(JSONObject obj) {
         String cevap = "";
         ArrayList<String> list = new ArrayList<String>();

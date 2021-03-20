@@ -40,7 +40,7 @@
                     android:layout_height="match_parent"
                     android:layout_margin="8dp"
                     android:contentDescription="@string/app_name"
-                    android:onClick="ClickParticipateRequest"
+                    android:onClick="ClickAuthorizeActiveDisaster"
                     android:padding="8dp"
                     android:src="@drawable/aktif_afetler"></ImageView>
 
@@ -48,6 +48,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="37dp"
                     android:layout_gravity="center"
+                    android:onClick="ClickAuthorizeActiveDisaster"
                     android:text="         Aktif Afetler"
                     android:textColor="@color/black"
                     android:textSize="15sp"
@@ -76,12 +77,13 @@
                     android:layout_height="119dp"
                     android:layout_margin="8dp"
                     android:contentDescription="@string/app_name"
-                    android:onClick="ClickEmergency"
+                    android:onClick="ClickAuthorizedPersonelRegistration"
                     android:padding="8dp"
                     android:src="@drawable/personel_kaydi"></ImageView>
 
                 <TextView
                     android:layout_width="match_parent"
+                    android:onClick="ClickAuthorizedPersonelRegistration"
                     android:layout_height="37dp"
                     android:layout_gravity="center"
                     android:text="       Personel Kaydı"
@@ -109,12 +111,13 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_margin="8dp"
-                    android:onClick="ClickParticipateForm"
+                    android:onClick="ClickAuthorizedNotice"
                     android:contentDescription="@string/app_name"
                     android:padding="8dp"
                     android:src="@drawable/notice"></ImageView>
 
                 <TextView
+                    android:onClick="ClickAuthorizedNotice"
                     android:layout_width="match_parent"
                     android:layout_height="37dp"
                     android:layout_gravity="center"
@@ -142,7 +145,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_margin="8dp"
-                    android:onClick="ClickExit"
+                    android:onClick="ClickAuthrizedVolunteerRequest"
                     android:contentDescription="@string/app_name"
                     android:padding="8dp"
                     android:src="@drawable/request"></ImageView>
@@ -150,6 +153,7 @@
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="37dp"
+                    android:onClick="ClickAuthrizedVolunteerRequest"
                     android:layout_gravity="center"
                     android:text="       Gönüllü İstekleri"
                     android:textColor="@color/black"
@@ -175,7 +179,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_margin="8dp"
-                    android:onClick="ClickParticipateForm"
+                    android:onClick="ClickAuthorizedMessage"
                     android:contentDescription="@string/app_name"
                     android:padding="8dp"
                     android:src="@drawable/message"></ImageView>
@@ -183,6 +187,7 @@
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="37dp"
+                    android:onClick="ClickAuthorizedMessage"
                     android:layout_gravity="center"
                     android:text="           Mesaj Kutusu"
                     android:textColor="@color/black"
@@ -208,7 +213,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_margin="8dp"
-                    android:onClick="ClickExit"
+                    android:onClick="ClickAuthorizedExit"
                     android:contentDescription="@string/app_name"
                     android:padding="8dp"
                     android:src="@drawable/out"></ImageView>
@@ -217,6 +222,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="37dp"
                     android:layout_gravity="center"
+                    android:onClick="ClickAuthorizedExit"
                     android:text="               Çıkış"
                     android:textColor="@color/black"
                     android:textSize="15sp"
