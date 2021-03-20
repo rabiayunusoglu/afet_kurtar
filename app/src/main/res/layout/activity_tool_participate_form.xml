@@ -31,7 +31,9 @@
         app:layout_constraintHorizontal_bias="0.897"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.387" />
+        app:layout_constraintVertical_bias="0.387"
+        android:maxLength="11"
+        android:hint="TC kimlik numaranızı giriniz..." />
 
     <TextView
         android:id="@+id/name6"
@@ -70,7 +72,8 @@
         app:layout_constraintHorizontal_bias="0.905"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.885" />
+        app:layout_constraintVertical_bias="0.885"
+        android:hint="Adresinizi giriniz..." />
 
     <TextView
         android:id="@+id/adres"
@@ -95,12 +98,14 @@
         app:layout_constraintHorizontal_bias="0.898"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.325" />
+        app:layout_constraintVertical_bias="0.325"
+        android:hint="Soyadınızı giriniz..." />
 
     <MultiAutoCompleteTextView
         android:id="@+id/participate_ad"
         android:layout_width="263dp"
         android:layout_height="43dp"
+        android:hint="Adınızı giriniz..."
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.898"
@@ -159,7 +164,9 @@
         app:layout_constraintHorizontal_bias="0.904"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.444" />
+        android:maxLength="11"
+        app:layout_constraintVertical_bias="0.444"
+        android:hint="0000-00-00" />
 
     <androidx.appcompat.widget.LinearLayoutCompat
         android:layout_width="410dp"

@@ -1,6 +1,7 @@
 package com.example.afetkurtar;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 
 import androidx.core.app.ActivityCompat;
@@ -15,6 +16,7 @@ import android.app.Activity;
 import android.content.Intent;
 
 import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Bundle;
 
 import android.os.Looper;
@@ -51,6 +53,9 @@ import org.json.JSONObject;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Date;
 
 
@@ -61,11 +66,14 @@ public class Volunteer_ParticipateForm extends AppCompatActivity {
     private RadioButton experience, firstAid;
     DrawerLayout drawerLayout;
     String url = "https://afetkurtar.site/api/volunteerUser/create.php";
-    private EditText ad, soyad, adres, tc, dateBirth;
+    private static EditText ad;
+    private static EditText soyad;
+    private EditText adres;
+    private EditText tc;
+    long locationTime;
+    private static EditText dateBirth;
     private Button btn_gonder;
     Double latitude, longtitude;
-    int tcNo;
-    Date birthDate;
     private static boolean answerExperienced = false, answerFirstAid = false, controlmessage = false;
     GoogleSignInClient mGoogleSignInClient;
 
@@ -96,76 +104,137 @@ public class Volunteer_ParticipateForm extends AppCompatActivity {
         tc = (EditText) findViewById(R.id.participate_tc);
         dateBirth = (EditText) findViewById(R.id.participate_date);
 
-        DateFormat df = new SimpleDateFormat("dd.MM.yyyy");
-
 
         radioGroupExperience = findViewById(R.id.groupexperienced);
         radioGroupFirstAid = findViewById(R.id.groupfistaid);
 
         btn_gonder = (Button) findViewById(R.id.participate_btn);
         btn_gonder.setOnClickListener(new View.OnClickListener() {
+            @RequiresApi(api = Build.VERSION_CODES.O)
             @Override
             public void onClick(View v) {
 
-
-                // tcNo = Integer.parseInt(String.valueOf(tc));
-                int radioId = radioGroupExperience.getCheckedRadioButtonId();
-                experience = findViewById(radioId);
-
-                if (experience.getText().toString().equals("EVET")) {
-                    answerExperienced = true;
-                } else {
-                    answerExperienced = false;
-                }
-                int radioId1 = radioGroupFirstAid.getCheckedRadioButtonId();
-                firstAid = findViewById(radioId1);
-                if (firstAid.getText().toString().equals("EVET")) {
-                    answerFirstAid = true;
-                } else {
-                    answerFirstAid = false;
-                }
-
-                JSONObject obj = new JSONObject();
                 try {
-                    obj.put("volunteerID",2);
-                    obj.put("volunteerName", ad.getText().toString() + " " + soyad.getText().toString());
-                   /* obj.put("address", adres.getText().toString());
-                    obj.put("isExperienced", answerExperienced);
-                    obj.put("haveFirstAidCert", answerFirstAid);
-                    obj.put("requestedSubpart",null);
-                    obj.put("responseSubpart",null);
-                    obj.put("assignedTeamID",null);
-                    obj.put("role",null);
-                    obj.put("latitude", latitude);
-                    obj.put("longitude", longtitude);
-                    obj.put("locationTime",null);
-                    obj.put("tc", null);
-                    obj.put("birthDate", null);*/
+                    //Get current date time
+                    LocalDateTime now = LocalDateTime.now();
+                    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+                    String formatDateTime = now.format(formatter);
 
-                } catch (JSONException e) {
-                    e.printStackTrace();
+                    //Get isExperienced havefirstAid
+                    int radioId = radioGroupExperience.getCheckedRadioButtonId();
+                    experience = findViewById(radioId);
+                    int radioId1 = radioGroupFirstAid.getCheckedRadioButtonId();
+                    firstAid = findViewById(radioId1);
+
+                    if (ad.length() == 0 || soyad.length() == 0 || controlName() == false || tc.getText().toString().length() != 11 || experience == null || firstAid == null || adres.length() == 0 || dateBirth.getText().length() != 10 || dateBirth.getText().toString().substring(0, 4).contains("-") || dateBirth.getText().toString().contains(".") || dateBirth.getText().toString().contains("/") || controlAge() == false) {
+                        throw new Exception("ALLAHIMMMMMMM YAERDIM ET");
+                    }
+                    //control experinece and first aid
+                    if (experience.getText().toString().equals("EVET")) {
+                        answerExperienced = true;
+                    } else {
+                        answerExperienced = false;
+                    }
+                    if (firstAid.getText().toString().equals("EVET")) {
+                        answerFirstAid = true;
+                    } else {
+                        answerFirstAid = false;
+                    }
+                    JSONObject obj = new JSONObject();
+                    try {
+                        obj.put("volunteerID",52);
+                        obj.put("volunteerName", ad.getText().toString() + " " + soyad.getText().toString());
+                        obj.put("address", adres.getText().toString());
+                        obj.put("isExperienced", answerExperienced);
+                        obj.put("haveFirstAidCert", answerFirstAid);
+                        obj.put("latitude", latitude);
+                        obj.put("longitude", longtitude);
+                        obj.put("locationTime", formatDateTime);
+                        obj.put("tc", tc.getText().toString());
+                        obj.put("birthDate", dateBirth.getText().toString());
+
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                    JsonObjectRequest request = new JsonObjectRequest(Request.Method.POST, url, obj, new Response.Listener<JSONObject>() {
+                        @Override
+                        public void onResponse(JSONObject response) {
+                            System.out.println(response.toString());
+                        }
+                    }, new Response.ErrorListener() {
+                        @Override
+                        public void onErrorResponse(VolleyError error) {
+                            System.out.println(error);
+                        }
+                    });
+                    queue.add(request);
+                    Toast.makeText(Volunteer_ParticipateForm.this, "Kaydınız Başarıyla Gerçekleşti :)", Toast.LENGTH_SHORT).show();
+                    redirectActivity(Volunteer_ParticipateForm.this, Volunteer_Anasayfa.class);
+                } catch (Exception e) {
+                    System.out.println("*******************" + controlmessage);
+                    if (ad.length() == 0 || soyad.length() == 0)
+                        Toast.makeText(Volunteer_ParticipateForm.this, "Adınız ve soyadınız boş bırakılamaz!", Toast.LENGTH_SHORT).show();
+                    else if (controlName() == false) {
+                        Toast.makeText(Volunteer_ParticipateForm.this, "Lütfen adınızı ve soyadınızı doğru şekilde giriniz!", Toast.LENGTH_SHORT).show();
+                    } else if (tc.getText().toString().length() != 11)
+                        Toast.makeText(Volunteer_ParticipateForm.this, "TC numaranızı doğru girdiğinizden emin olunuz!", Toast.LENGTH_SHORT).show();
+                    else if (dateBirth == null)
+                        Toast.makeText(Volunteer_ParticipateForm.this, "Doğum Tarihi kısmı boş bırakılamaz!", Toast.LENGTH_SHORT).show();
+                    else if (dateBirth.getText().length() != 10 || dateBirth.getText().toString().contains(".") || dateBirth.getText().toString().contains("/") || dateBirth.getText().toString().substring(0, 4).contains("-"))
+                        Toast.makeText(Volunteer_ParticipateForm.this, "Doğum Tarihi kısmı yyyy-mm-dd formatında giriniz!", Toast.LENGTH_SHORT).show();
+                    else if (experience == null)
+                        Toast.makeText(Volunteer_ParticipateForm.this, "Daha önce arama kurtarma olayına katılma sorgusu boş bırakılamaz!", Toast.LENGTH_SHORT).show();
+                    else if (firstAid == null)
+                        Toast.makeText(Volunteer_ParticipateForm.this, "İlk yardımı eğitimi sorgusu boş bırakılamaz!", Toast.LENGTH_SHORT).show();
+                    else if (adres.length() == 0)
+                        Toast.makeText(Volunteer_ParticipateForm.this, "Adres boş bırakılamaz!", Toast.LENGTH_SHORT).show();
+                    else if (controlAge() == false) {
+                        Toast.makeText(Volunteer_ParticipateForm.this, "18 yaş altındaki vatandaşlar gönüllü olamaz!", Toast.LENGTH_SHORT).show();
+                    } else
+                        Toast.makeText(Volunteer_ParticipateForm.this, "Tekrar Deneyiniz..", Toast.LENGTH_LONG).show();
+                    System.out.println(e.toString());
                 }
-                JsonObjectRequest request = new JsonObjectRequest(Request.Method.POST, url, obj, new Response.Listener<JSONObject>() {
-                    @Override
-                    public void onResponse(JSONObject response) {
-                        System.out.println(response.toString());
-                    }
-                }, new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        System.out.println(error);
-                    }
-                });
-                queue.add(request);
-
             }
         });
 
     }
 
+    private boolean controlName() {
+        String name = ad.getText().toString() + soyad.getText().toString();
+        for (int i = 0; i < name.length(); i++) {
+            if (name.charAt(i) == 231 || name.charAt(i) == 305 || name.charAt(i) == 287 || name.charAt(i) == 246 || name.charAt(i) == 351 || name.charAt(i) == 252 || name.charAt(i) == 199 || name.charAt(i) == 304 || name.charAt(i) == 286 || name.charAt(i) == 214 || name.charAt(i) == 350 || name.charAt(i) == 220 ||
+                    (name.charAt(i) >= 65 && name.charAt(i) <= 90) ||
+                    (name.charAt(i) >= 97 && name.charAt(i) <= 122)) {
+
+            } else
+                return false;
+        }
+        return true;
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.O)
+    public boolean controlAge() {
+        LocalDate now = LocalDate.now();
+        int year = now.getYear();
+        int byear = Integer.parseInt(dateBirth.getText().toString().substring(0, 4));
+        int bmounth = Integer.parseInt(dateBirth.getText().toString().substring(5, 7));
+        int bday = Integer.parseInt(dateBirth.getText().toString().substring(8));
+
+        int y = year - byear;
+
+        if (y > 18)
+            return true;
+        else if (y == 18) {
+            if (bmounth <= now.getMonthValue()) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+      //  super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         if (requestCode == REQUEST_CODE_LOCATION_PERMISSION && grantResults.length > 0) {
             if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 getCurrentLocation();
@@ -193,6 +262,7 @@ public class Volunteer_ParticipateForm extends AppCompatActivity {
                     int latestlocationIndex = locationResult.getLocations().size() - 1;
                     latitude = locationResult.getLocations().get(latestlocationIndex).getLatitude();
                     longtitude = locationResult.getLocations().get(latestlocationIndex).getLongitude();
+                    locationTime = locationResult.getLastLocation().getTime();
                 }
 
             }

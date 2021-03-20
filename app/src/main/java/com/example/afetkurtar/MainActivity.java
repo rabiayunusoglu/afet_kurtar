@@ -76,7 +76,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     @Override
                     public void onResponse(JSONObject response){
                       //  System.out.println("response dönüyor");
-                       // System.out.println(response.toString());
+                       System.out.println(response.toString());
 
 
                         String type = "";
@@ -90,7 +90,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                             e.printStackTrace();
                         }
                         // ****************************************************************************************** TEST ICIN USER TYPE AYARLAMA YERI
-                        type = "authorizedUser";
+                     //   type = "volunteerUser";
                         // ****************************************************************************************** TEST ICIN USER TYPE AYARLAMA YERI
                         Intent intentLogin;
                         if(type.equals("authorizedUser")){
