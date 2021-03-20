@@ -6,32 +6,65 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     tools:context=".Notification_Details">
-
-    <Button
-        android:id="@+id/Notification_geri_button"
-        android:text="Geri"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content">
-
-    </Button>
-    <TextView
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="MESAJ :"
-        android:textSize="25sp">
-    </TextView>
+        android:orientation="horizontal"
+        android:layout_gravity="center_horizontal">
+
+        <Button
+            android:textColor="@color/black"
+            android:id="@+id/Notification_geri_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="left"
+            android:layout_weight="1"
+            android:text="Geri"
+            app:backgroundTint="#BFBFBF">
+
+        </Button>
+        <Space
+            android:layout_width="150dp"
+            android:layout_height="8dp"
+            android:layout_weight="1" >
+        </Space>
+
+        <Button
+            android:textColor="@color/black"
+            android:id="@+id/Create_new_Disaster"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="right"
+            android:layout_weight="1"
+            android:text="Yeni Afet Oluştur"
+            app:backgroundTint="#BFBFBF">
+
+        </Button>
+    </LinearLayout>
+
 
 
     <TextView
+        android:background="@drawable/notification_layout_background"
         android:id="@+id/notification_mesaj"
         android:layout_width="match_parent"
-        android:layout_height="100dp"
+        android:layout_height="130dp"
         android:scrollbars = "vertical"
         android:text="No Text Available"
+        android:textSize="18sp"
+        android:paddingLeft="30dp"
+        android:paddingRight="30dp"
+        android:textColor="@color/black"
         >
 
     </TextView>
+    <Space
+        android:layout_width="0dp"
+        android:layout_height="8dp"
+        android:layout_weight="0" >
+    </Space>
     <LinearLayout
+        android:background="@drawable/notification_layout_background"
         android:id="@+id/LayoutNotification"
         android:layout_width="match_parent"
         android:layout_height="300dp"
@@ -46,7 +79,13 @@
             android:layout_height="match_parent"
             android:src="@drawable/no_image" />
     </LinearLayout>
+    <Space
+        android:layout_width="0dp"
+        android:layout_height="8dp"
+        android:layout_weight="0" >
+    </Space>
     <LinearLayout
+
         android:layout_weight="1"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

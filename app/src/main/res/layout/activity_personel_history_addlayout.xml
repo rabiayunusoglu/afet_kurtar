@@ -14,14 +14,18 @@
         android:id="@+id/HistoryText"
         android:layout_width="match_parent"
         android:layout_height="37dp"
+        android:textColor="@color/black"
+        android:textSize="20dp"
         android:layout_weight="1"
-        android:background="#CBD7FD">
+        android:background="@drawable/text_round_background"
+        android:paddingLeft="30dp"
+        android:paddingRight="30dp">
 
     </TextView>
 
     <Space
         android:layout_width="0dp"
-        android:layout_height="5dp"
+        android:layout_height="8dp"
         android:layout_weight="1" >
     </Space>
 

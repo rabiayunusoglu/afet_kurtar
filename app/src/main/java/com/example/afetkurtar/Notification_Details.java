@@ -46,6 +46,7 @@ public class Notification_Details extends AppCompatActivity implements OnMapRead
         setContentView(R.layout.activity_notification__details);
         queue = Volley.newRequestQueue(this);
         findViewById(R.id.Notification_geri_button).setOnClickListener(this::onClick);
+        findViewById(R.id.Create_new_Disaster).setOnClickListener(this::onClick);
 
         Bundle bundle = getIntent().getExtras();
         String message = bundle.getString("json");
@@ -54,7 +55,7 @@ public class Notification_Details extends AppCompatActivity implements OnMapRead
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        System.out.println(data.toString());
+       // System.out.println(data.toString());
 
         try {
             readImage(data.getString("imageURL"));
@@ -116,6 +117,12 @@ public class Notification_Details extends AppCompatActivity implements OnMapRead
               //  Intent intent = new Intent(this, Authorized_Notification.class); //DEGISECEK
               //  startActivity(intent);
                 finish();
+                break;
+            case R.id.Create_new_Disaster:
+                  Intent intent = new Intent(this, Create_Disaster_Event_On_Map.class);
+                  intent.putExtra("json", data.toString());
+                  startActivity(intent);
+                //  finish();
                 break;
     }
 }
