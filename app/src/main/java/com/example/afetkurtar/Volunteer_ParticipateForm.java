@@ -142,7 +142,7 @@ public class Volunteer_ParticipateForm extends AppCompatActivity {
                     }
                     JSONObject obj = new JSONObject();
                     try {
-                        obj.put("volunteerID",52);
+                        obj.put("volunteerID",MainActivity.userInfo.get("userID"));
                         obj.put("volunteerName", ad.getText().toString() + " " + soyad.getText().toString());
                         obj.put("address", adres.getText().toString());
                         obj.put("isExperienced", answerExperienced);
