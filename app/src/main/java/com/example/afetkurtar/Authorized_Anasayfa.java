@@ -6,7 +6,6 @@ import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 
 import android.app.Activity;
-import android.app.Notification;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -16,9 +15,6 @@ import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
-
-import org.json.JSONException;
-import org.json.JSONObject;
 
 public class Authorized_Anasayfa extends AppCompatActivity {
     DrawerLayout drawerLayout;
@@ -34,10 +30,6 @@ public class Authorized_Anasayfa extends AppCompatActivity {
                 .requestEmail()
                 .build();
         mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
-
-
-
-
 
     }
 
@@ -95,7 +87,7 @@ public class Authorized_Anasayfa extends AppCompatActivity {
     }
     // PERSONEL KAYIT
     public void ClickAuthorizedPersonelRegistration(View view) {
-        redirectActivity(this, Personel_Register.class);
+        redirectActivity(this, Authorized_PersonelRegister.class);
     }
     // GONULLU ISTEKLERI
     public void ClickAuthrizedVolunteerRequest(View view) {

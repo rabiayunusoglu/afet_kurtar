@@ -90,7 +90,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                             e.printStackTrace();
                         }
                         // ****************************************************************************************** TEST ICIN USER TYPE AYARLAMA YERI
-                     //   type = "volunteerUser";
+                        type = "authorizedUser";
                         // ****************************************************************************************** TEST ICIN USER TYPE AYARLAMA YERI
                         Intent intentLogin;
                         if(type.equals("authorizedUser")){
