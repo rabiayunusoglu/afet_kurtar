@@ -93,7 +93,7 @@ public class Authorized_PersonelRegister extends AppCompatActivity {
                         throw new Exception("");
                     JSONObject obj = new JSONObject();
                     try {
-                        obj.put("personnelID", 7);
+                        obj.put("personnelID", MainActivity.userInfo.get("userID"));
                         obj.put("personnelName", name.getText().toString());
                         obj.put("personnelEmail", email.getText().toString());
                         obj.put("personnelRole", rol.getText().toString());
