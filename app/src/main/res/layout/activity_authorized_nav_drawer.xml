@@ -34,7 +34,7 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:gravity="center_vertical"
-        android:onClick="ClickAnasayfa">
+        android:onClick="ClickAuthAnasayfa">
         <TextView
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -60,7 +60,7 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:gravity="center_vertical"
-        android:onClick="ClickParticipateRequest">
+        android:onClick="ClickAuthorizeActiveDisaster">
         <TextView
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -85,7 +85,7 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:gravity="center_vertical"
-        android:onClick="ClickEmergency">
+        android:onClick="ClickAuthorizedPersonelRegistration">
         <TextView
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -110,7 +110,7 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:gravity="center_vertical"
-        android:onClick="ClickParticipateForm">
+        android:onClick="ClickAuthorizedNotice">
         <TextView
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -136,7 +136,7 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:gravity="center_vertical"
-        android:onClick="ClickPersonel">
+        android:onClick="ClickAuthrizedVolunteerRequest">
         <TextView
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -162,7 +162,7 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:gravity="center_vertical"
-        android:onClick="ClickAfetBolgesi">
+        android:onClick="ClickAuthorizedMessage">
         <TextView
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -189,7 +189,7 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:gravity="center_vertical"
-        android:onClick="ClickExit">
+        android:onClick="ClickAuthorizedExit">
         <TextView
             android:layout_width="0dp"
             android:layout_height="wrap_content"
