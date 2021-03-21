@@ -30,6 +30,7 @@ $volunteerUser->latitude = isset($data["latitude"]) ? $data["latitude"] : "";
 $volunteerUser->longitude = isset($data["longitude"]) ? $data["longitude"] : "";
 $volunteerUser->locationTime = isset($data["locationTime"]) ? $data["locationTime"] : "";
 $volunteerUser->tc = isset($data["tc"]) ? $data["tc"] : "";
+$volunteerUser->tel = isset($data["tel"]) ? $data["tel"] : "";
 $volunteerUser->birthDate = isset($data["birthDate"]) ? $data["birthDate"] : "";
 
 // query volunteerUser
@@ -66,6 +67,7 @@ if($num>0){
             "longitude" => $longitude,
             "locationTime" => $locationTime,
             "tc" => $tc,
+"tel" => $tel,
             "birthDate" => $birthDate,
         );
  

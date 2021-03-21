@@ -44,6 +44,7 @@ if($num>0){
             "rescuedPerson" => $rescuedPerson,
             "isOpenForVolunteers" => $isOpenForVolunteers,
             "subpartName" => $subpartName,
+            "disasterName" => $disasterName,
             "status" => $status,
             "emergencyLevel" => $emergencyLevel,
         );

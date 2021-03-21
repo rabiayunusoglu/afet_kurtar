@@ -105,5 +105,38 @@ class Team{
      
         return $stmt;
     }
+    function update(){
+  
+    // update query
+    $query = "UPDATE
+                " . $this->table_name . "
+            SET
+				status=:status,
+				needManPower=:needManPower
+            WHERE
+                teamID = :teamID";
+  
+    // prepare query statement
+    $stmt = $this->conn->prepare($query);
+  
+    // sanitize
+    $this->teamID=htmlspecialchars(strip_tags($this->teamID));
+    $this->status=htmlspecialchars(strip_tags($this->status));
+    $this->needManPower=htmlspecialchars(strip_tags($this->needManPower));
+
+  
+    // bind new values
+    $stmt->bindParam(':status', $this->status);
+    $stmt->bindParam(':needManPower', $this->needManPower);
+    $stmt->bindParam(':teamID', $this->teamID);
+ 
+  
+    // execute the query
+    if($stmt->execute()){
+        return true;
+    }
+  
+    return false;
+}
 }
 ?>

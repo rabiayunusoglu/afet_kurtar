@@ -19,6 +19,7 @@ class VolunteerUser{
     public $responseSubpart;
     public $locationTime;
     public $tc;
+    public $tel;
     public $birthDate;
  
     // constructor with $db as database connection
@@ -29,7 +30,7 @@ class VolunteerUser{
     function read(){
         // select all query
         $query = "SELECT
-                    volunteerID, volunteerName, `role`, assignedTeamID, latitude, longitude, `address`, isExperienced, haveFirstAidCert, requestedSubpart, responseSubpart, locationTime, tc, birthDate
+                    volunteerID, volunteerName, `role`, assignedTeamID, latitude, longitude, `address`, isExperienced, haveFirstAidCert, requestedSubpart, responseSubpart, locationTime, tc,tel, birthDate
                 FROM
                     " . $this->table_name . " ";
      
@@ -48,7 +49,7 @@ class VolunteerUser{
         $query = "INSERT INTO
                     " . $this->table_name . "
                 SET
-                volunteerID=:volunteerID, volunteerName=:volunteerName, `role`=:role, assignedTeamID=:assignedTeamID, latitude=:latitude, longitude=:longitude, `address`=:address, isExperienced=:isExperienced, haveFirstAidCert=:haveFirstAidCert, requestedSubpart=:requestedSubpart, responseSubpart=:responseSubpart, locationTime=:locationTime, tc=:tc, birthDate=:birthDate";
+                volunteerID=:volunteerID, volunteerName=:volunteerName, `role`=:role, assignedTeamID=:assignedTeamID, latitude=:latitude, longitude=:longitude, `address`=:address, isExperienced=:isExperienced, haveFirstAidCert=:haveFirstAidCert, requestedSubpart=:requestedSubpart, responseSubpart=:responseSubpart, locationTime=:locationTime, tc=:tc,tel=:tel, birthDate=:birthDate";
      
         // prepare query
         $stmt = $this->conn->prepare($query);
@@ -67,6 +68,7 @@ class VolunteerUser{
         $this->responseSubpart=htmlspecialchars(strip_tags($this->responseSubpart));
         $this->locationTime=htmlspecialchars(strip_tags($this->locationTime));
         $this->tc=htmlspecialchars(strip_tags($this->tc));
+	$this->tel=htmlspecialchars(strip_tags($this->tel));
         $this->birthDate=htmlspecialchars(strip_tags($this->birthDate));
     
      
@@ -84,6 +86,7 @@ class VolunteerUser{
         $stmt->bindParam(":responseSubpart", $this->responseSubpart);
         $stmt->bindParam(":locationTime", $this->locationTime);
         $stmt->bindParam(":tc", $this->tc);
+     $stmt->bindParam(":tel", $this->tel);
         $stmt->bindParam(":birthDate", $this->birthDate);
     
      
@@ -99,7 +102,7 @@ class VolunteerUser{
     function search(){
         // select all query
         $query = "SELECT
-                    volunteerID, volunteerName, `role`, assignedTeamID, latitude, longitude, `address`, isExperienced, haveFirstAidCert, requestedSubpart, responseSubpart, locationTime, tc, birthDate
+                    volunteerID, volunteerName, `role`, assignedTeamID, latitude, longitude, `address`, isExperienced, haveFirstAidCert, requestedSubpart, responseSubpart, locationTime, tc,tel, birthDate
                 FROM
                     " . $this->table_name . "
                 WHERE
@@ -116,6 +119,7 @@ class VolunteerUser{
                     AND (responseSubpart = :responseSubpart OR :responseSubpart = '')
                     AND (locationTime = :locationTime OR :locationTime = '')
                     AND (tc = :tc OR :tc = '')
+AND (tel = :tel OR :tel = '')
                     AND (birthDate = :birthDate OR :birthDate = '')";
      
         // prepare query statement
@@ -136,6 +140,7 @@ class VolunteerUser{
         $this->responseSubpart=htmlspecialchars(strip_tags($this->responseSubpart));
         $this->locationTime=htmlspecialchars(strip_tags($this->locationTime));
         $this->tc=htmlspecialchars(strip_tags($this->tc));
+$this->tel=htmlspecialchars(strip_tags($this->tel));
         $this->birthDate=htmlspecialchars(strip_tags($this->birthDate));
     
      
@@ -153,6 +158,7 @@ class VolunteerUser{
         $stmt->bindParam(":responseSubpart", $this->responseSubpart);
         $stmt->bindParam(":locationTime", $this->locationTime);
         $stmt->bindParam(":tc", $this->tc);
+$stmt->bindParam(":tel", $this->tel);
         $stmt->bindParam(":birthDate", $this->birthDate);
      
         // execute query
@@ -160,5 +166,63 @@ class VolunteerUser{
      
         return $stmt;
     }
+// update the volunteeruser
+function update(){
+  
+    // update query
+    $query = "UPDATE
+                " . $this->table_name . "
+             SET
+                volunteerName=:volunteerName, `role`=:role, assignedTeamID=:assignedTeamID, latitude=:latitude, longitude=:longitude, `address`=:address, isExperienced=:isExperienced, haveFirstAidCert=:haveFirstAidCert, requestedSubpart=:requestedSubpart, responseSubpart=:responseSubpart, locationTime=:locationTime, tc=:tc, tel=:tel, birthDate=:birthDate
+            WHERE
+                volunteerID=:volunteerID";
+  
+    // prepare query statement
+    $stmt = $this->conn->prepare($query);
+  
+    
+        // sanitize
+        $this->volunteerID=htmlspecialchars(strip_tags($this->volunteerID));
+        $this->volunteerName=htmlspecialchars(strip_tags($this->volunteerName));
+        $this->role=htmlspecialchars(strip_tags($this->role));
+        $this->assignedTeamID=htmlspecialchars(strip_tags($this->assignedTeamID));
+        $this->latitude=htmlspecialchars(strip_tags($this->latitude));
+        $this->longitude=htmlspecialchars(strip_tags($this->longitude));
+        $this->address=htmlspecialchars(strip_tags($this->address));
+        $this->isExperienced=htmlspecialchars(strip_tags($this->isExperienced));
+        $this->haveFirstAidCert=htmlspecialchars(strip_tags($this->haveFirstAidCert));
+        $this->requestedSubpart=htmlspecialchars(strip_tags($this->requestedSubpart));
+        $this->responseSubpart=htmlspecialchars(strip_tags($this->responseSubpart));
+        $this->locationTime=htmlspecialchars(strip_tags($this->locationTime));
+        $this->tc=htmlspecialchars(strip_tags($this->tc));
+$this->tel=htmlspecialchars(strip_tags($this->tel));
+        $this->birthDate=htmlspecialchars(strip_tags($this->birthDate));
+    
+     
+        // bind values
+        $stmt->bindParam(":volunteerID", $this->volunteerID);
+        $stmt->bindParam(":volunteerName", $this->volunteerName);
+        $stmt->bindParam(":role", $this->role);
+        $stmt->bindParam(":assignedTeamID", $this->assignedTeamID);
+        $stmt->bindParam(":latitude", $this->latitude);
+        $stmt->bindParam(":longitude", $this->longitude);
+        $stmt->bindParam(":address", $this->address);
+        $stmt->bindParam(":isExperienced", $this->isExperienced);
+        $stmt->bindParam(":haveFirstAidCert", $this->haveFirstAidCert);
+        $stmt->bindParam(":requestedSubpart", $this->requestedSubpart);
+        $stmt->bindParam(":responseSubpart", $this->responseSubpart);
+        $stmt->bindParam(":locationTime", $this->locationTime);
+        $stmt->bindParam(":tc", $this->tc);
+$stmt->bindParam(":tel", $this->tel);
+        $stmt->bindParam(":birthDate", $this->birthDate);
+    
+     
+        // execute query
+        if($stmt->execute()){
+            return true;
+        }
+     
+        return false;
+	}
 }
 ?>

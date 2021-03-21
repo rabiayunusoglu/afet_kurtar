@@ -29,13 +29,13 @@ if(
     // isset($data["imageURL"])
     true
 ){
- 
+
+
     // set user property values
-    $notice->noticeID = isset($data["noticeID"]) ? $data["noticeID"] : "";
     $notice->type = isset($data["type"]) ? $data["type"] : "";
-    $notice->latitude = isset($data["latitude"]) ? $data["latitude"] : "";
-    $notice->longitude = isset($data["longitude"]) ? $data["longitude"] : "";
     $notice->message = isset($data["message"]) ? $data["message"] : "";
+    $notice->latitude = isset($data["latitude"]) ? $data["latitude"] : "";;
+    $notice->longitude = isset($data["longitude"]) ? $data["longitude"] : "";;
     $notice->imageURL = isset($data["imageURL"]) ? $data["imageURL"] : "";
  
     // create the product
@@ -68,4 +68,5 @@ else{
     // tell the user
     echo json_encode(array("message" => "Unable to create notice. Data is incomplete."));
 }
+
 ?>

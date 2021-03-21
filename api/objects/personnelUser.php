@@ -11,6 +11,7 @@ class PersonnelUser{
     public $latitude;
     public $longitude;
     public $personnelName;
+    public $personnelEmail;
     public $personnelRole;
     public $teamID;
     public $locationTime;
@@ -24,7 +25,7 @@ class PersonnelUser{
  
         // select all query
         $query = "SELECT
-                    personnelID, institution, latitude, longitude, personnelName, personnelRole, teamID, locationTime
+                    personnelID, institution, latitude, longitude, personnelName,personnelEmail, personnelRole, teamID, locationTime
                 FROM
                     " . $this->table_name . " ";
      
@@ -43,7 +44,7 @@ class PersonnelUser{
         $query = "INSERT INTO
                     " . $this->table_name . "
                 SET
-                personnelID=:personnelID, institution=:institution, latitude=:latitude, longitude=:longitude, personnelName=:personnelName, personnelRole=:personnelRole, teamID=:teamID, locationTime=:locationTime";
+                personnelID=:personnelID, institution=:institution, latitude=:latitude, longitude=:longitude, personnelName=:personnelName,personnelEmail=:personnelEmail, personnelRole=:personnelRole, teamID=:teamID, locationTime=:locationTime";
      
         // prepare query
         $stmt = $this->conn->prepare($query);
@@ -54,6 +55,7 @@ class PersonnelUser{
         $this->latitude=htmlspecialchars(strip_tags($this->latitude));
         $this->longitude=htmlspecialchars(strip_tags($this->longitude));
         $this->personnelName=htmlspecialchars(strip_tags($this->personnelName));
+	$this->personnelEmail=htmlspecialchars(strip_tags($this->personnelEmail));
         $this->personnelRole=htmlspecialchars(strip_tags($this->personnelRole));
         $this->teamID=htmlspecialchars(strip_tags($this->teamID));
         $this->locationTime=htmlspecialchars(strip_tags($this->locationTime));
@@ -65,6 +67,7 @@ class PersonnelUser{
         $stmt->bindParam(":latitude", $this->latitude);
         $stmt->bindParam(":longitude", $this->longitude);
         $stmt->bindParam(":personnelName", $this->personnelName);
+	$stmt->bindParam(":personnelEmail", $this->personnelEmail);
         $stmt->bindParam(":personnelRole", $this->personnelRole);
         $stmt->bindParam(":teamID", $this->teamID);
         $stmt->bindParam(":locationTime", $this->locationTime);
@@ -82,7 +85,7 @@ class PersonnelUser{
     function search(){
         // select all query
         $query = "SELECT
-                    personnelID, institution, latitude, longitude, personnelName, personnelRole, teamID, locationTime
+                    personnelID, institution, latitude, longitude, personnelName,personnelEmail, personnelRole, teamID, locationTime
                 FROM
                     " . $this->table_name . "
                 WHERE
@@ -91,6 +94,7 @@ class PersonnelUser{
                     AND (latitude = :latitude OR :latitude = '')
                     AND (longitude = :longitude OR :longitude = '')
                     AND (personnelName = :personnelName OR :personnelName = '')
+AND (personnelEmail = :personnelEmail OR :personnelEmail = '')
                     AND (personnelRole = :personnelRole OR :personnelRole = '')
                     AND (teamID = :teamID OR :teamID = '')
                     AND (locationTime = :locationTime OR :locationTime = '')";
@@ -105,6 +109,7 @@ class PersonnelUser{
         $this->latitude=htmlspecialchars(strip_tags($this->latitude));
         $this->longitude=htmlspecialchars(strip_tags($this->longitude));
         $this->personnelName=htmlspecialchars(strip_tags($this->personnelName));
+$this->personnelEmail=htmlspecialchars(strip_tags($this->personnelEmail));
         $this->personnelRole=htmlspecialchars(strip_tags($this->personnelRole));
         $this->teamID=htmlspecialchars(strip_tags($this->teamID));
         $this->locationTime=htmlspecialchars(strip_tags($this->locationTime));
@@ -116,6 +121,7 @@ class PersonnelUser{
         $stmt->bindParam(":latitude", $this->latitude);
         $stmt->bindParam(":longitude", $this->longitude);
         $stmt->bindParam(":personnelName", $this->personnelName);
+$stmt->bindParam(":personnelEmail", $this->personnelEmail);
         $stmt->bindParam(":personnelRole", $this->personnelRole);
         $stmt->bindParam(":teamID", $this->teamID);
         $stmt->bindParam(":locationTime", $this->locationTime);

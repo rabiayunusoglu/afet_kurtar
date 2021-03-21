@@ -51,6 +51,7 @@ if(
     $volunteerUser->longitude = isset($data["longitude"]) ? $data["longitude"] : null;
     $volunteerUser->locationTime = isset($data["locationTime"]) ? $data["locationTime"] : null;
     $volunteerUser->tc = isset($data["tc"]) ? $data["tc"] : null;
+$volunteerUser->tel = isset($data["tel"]) ? $data["tel"] : null;
     $volunteerUser->birthDate = isset($data["birthDate"]) ? $data["birthDate"] : null;
  
     // create the product

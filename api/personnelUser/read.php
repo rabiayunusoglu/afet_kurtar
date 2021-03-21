@@ -36,12 +36,13 @@ if($num>0){
  
         $personnelUser_item=array(
             "personnelID" => $personnelID,
-            "institution" => $institution,
+	    "personnelName" => $personnelName,
+            "personnelEmail" => $personnelEmail,
+	    "personnelRole" => $personnelRole,
+	    "teamID" => $teamID,
             "latitude" => $latitude,
             "longitude" => $longitude,
-            "personnelName" => $personnelName,
-            "personnelRole" => $personnelRole,
-            "teamID" => $teamID,
+            "institution" => $institution,
             "locationTime" => $locationTime,
         );
  

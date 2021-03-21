@@ -2,11 +2,11 @@
 session_start();
 if (session_id() == '') {
     header("location: https://afetkurtar.site/");
-} else if ($_SESSION["userType"] == "volunteerUser") {
-    header("location: https://afetkurtar.site/volunteerUser.php");
+} else if ($_SESSION["userType"] == "authorizedUser") {
+    header("location: https://afetkurtar.site/authorizedUser.php");
 } else if ($_SESSION["userType"] == "personnelUser") {
     header("location: https://afetkurtar.site/personnelUser.php");
-} else if ($_SESSION["userType"] != "authorizedUser") {
+} else if ($_SESSION["userType"] != "volunteerUser") {
     header("location: https://afetkurtar.site/");
 }
 ?>
@@ -37,19 +37,10 @@ if (session_id() == '') {
                 <div class="collapse navbar-collapse" id="navbarSupportedContent">
                     <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                         <li class="nav-item">
-                            <a class="nav-link" aria-current="page" href="/authorizedUser.php">Aktif Afetler</a>
+                            <a class="nav-link active" aria-current="page" href="/volunteerUser.php">Afet Arama Kurtarma Katılım İsteği</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link active" href="/personelKaydi.php">Personel Kaydı</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="/ihbarlar.php">İhbarlar</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="gonulluIstekleri.php">Gönüllü İstekleri</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="/mesajKutusu.php">Mesaj Kutusu</a>
+                            <a class="nav-link" href="/gonulluIhbarlar.php">İhbarda Bulun</a>
                         </li>
                     </ul>
                 </div>
@@ -62,24 +53,30 @@ if (session_id() == '') {
         <div class="row">
             <div class="col-lg-4 col-md-2"></div>
             <div class="col-lg-4 col-md-8 form-box">
-                <form onsubmit="return false;" id="personnelForm">
+                <form onsubmit="return false;" id="noticeForm">
                     <div class="form-group">
-                        <label for="personnelEmail" style="font-size: 20px; font-weight:bold; color: #ECF0F5">Personel Emaili</label>
-                        <input type="email" class="form-control" id="personnelEmail" aria-describedby="emailHelp" placeholder="Personelin email adresini giriniz...">
+                        <label for="noticeType" style="font-size: 20px; font-weight:bold; color: #ECF0F5">Afet İhbar Türü</label>
+                        <select name= "noticeType" class="form-control" id="noticeType">
+                            <option>Deprem</option>
+                            <option>Yangın</option>
+                            <option>Sel</option>
+                            <option>Heyelan</option>
+                            <option>Çığ</option>
+                        </select>
+                    </div>
+                    <div class="form-group" action="" method="post" enctype="multipart/form-data">
+                        <label for="noticeAddress" style="font-size: 20px; font-weight:bold; color: #ECF0F5">Afet İhbar Konumu</label>
+                        <input type="text" name= "noticeAddress" class="form-control" id="noticeAddress" placeholder="Afet adresini giriniz..." required>
                     </div>
                     <div class="form-group">
-                        <label for="personnelUsername" style="font-size: 20px; font-weight:bold; color: #ECF0F5">Personel Adı Soyadı</label>
-                        <input type="text" class="form-control" id="personnelUsername" placeholder="Personelin adı soyadını giriniz...">
+                        <label for="noticeMessage" style="font-size: 20px; font-weight:bold; color: #ECF0F5">İhbar Mesajı</label>
+                        <input type="text" name= "noticeMessage" class="form-control" id="noticeMessage" placeholder="İhbar mesajını giriniz..." required>
                     </div>
                     <div class="form-group">
-                        <label for="personnelInstitution" style="font-size: 20px; font-weight:bold; color: #ECF0F5">Personel Kurumu</label>
-                        <input type="text" class="form-control" id="personnelInstitution" placeholder="Personelin çalıştığı kurumu giriniz...">
+                        <label for="noticeImage" style="font-size: 20px; font-weight:bold; color: #ECF0F5">İhbar Fotoğrafı</label>
+                        <input type="file" name= "noticeImage" class="form-control" id="noticeImage" placeholder="İhbar fotoğrafını yükleyiniz..." required>
                     </div>
-                    <div class="form-group">
-                        <label for="personnelRole" style="font-size: 20px; font-weight:bold; color: #ECF0F5">Personel Kurumdaki Rolü</label>
-                        <input type="text" class="form-control" id="personnelRole" placeholder="Personelin kurumdaki rolünü giriniz...">
-                    </div>
-                    <input type="button" onclick="registerPersonnel()" class="btn btn-primary" id="registerBtn">Kaydı Gerçekleştir</button>
+                    <input type="submit" onclick="sendNotice()" class="btn btn-primary" id="registerBtn">İhbarı Gönder</button>
                 </form>
             </div>
         </div>

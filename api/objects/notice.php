@@ -111,5 +111,26 @@ class Notice{
      
         return $stmt;
     }
+    function delete(){
+  
+    // delete query
+    $query = "DELETE FROM " . $this->table_name . " WHERE noticeID = :noticeID";
+  
+    // prepare query
+    $stmt = $this->conn->prepare($query);
+  
+    // sanitize
+	$this->noticeID=htmlspecialchars(strip_tags($this->noticeID));
+  
+    // bind id of record to delete
+    $stmt->bindParam(":noticeID", $this->noticeID);
+  
+    // execute query
+    if($stmt->execute()){
+        return true;
+    }
+  
+    return false;
+}
 }
 ?>

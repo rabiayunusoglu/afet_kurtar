@@ -18,13 +18,14 @@ $personnelUser = new PersonnelUser($db);
 $data = json_decode(file_get_contents("php://input"),true);
 
 $personnelUser->personnelID = isset($data["personnelID"]) ? $data["personnelID"] : "";
-$personnelUser->institution = isset($data["institution"]) ? $data["institution"] : "";
-$personnelUser->latitude = isset($data["latitude"]) ? $data["latitude"] : "";
-$personnelUser->longitude = isset($data["longitude"]) ? $data["longitude"] : "";
 $personnelUser->personnelName = isset($data["personnelName"]) ? $data["personnelName"] : "";
+$personnelUser->personnelEmail = isset($data["personnelEmail"]) ? $data["personnelEmail"]: "";
 $personnelUser->personnelRole = isset($data["personnelRole"]) ? $data["personnelRole"] : "";
-$personnelUser->teamID = isset($data["teamID"]) ? $data["teamID"] : "";
-$personnelUser->locationTime = isset($data["locationTime"]) ? $data["locationTime"] : "";
+$personnelUser->teamID = isset($data["teamID"]) ? $data["teamID"] : null;
+$personnelUser->latitude = isset($data["latitude"]) ? $data["latitude"] : null;
+$personnelUser->longitude = isset($data["longitude"]) ? $data["longitude"] : null;
+$personnelUser->institution = isset($data["institution"]) ? $data["institution"] : "";
+$personnelUser->locationTime = isset($data["locationTime"]) ? $data["locationTime"] : null;
 
 // query personnelUser
 $stmt = $personnelUser->search();
@@ -47,13 +48,14 @@ if($num>0){
         extract($row);
  
         $personnelUser_item=array(
-            "personnelID" => $personnelID,
-            "institution" => $institution,
+             "personnelID" => $personnelID,
+	    "personnelName" => $personnelName,
+            "personnelEmail" => $personnelEmail,
+	    "personnelRole" => $personnelRole,
+	    "teamID" => $teamID,
             "latitude" => $latitude,
             "longitude" => $longitude,
-            "personnelName" => $personnelName,
-            "personnelRole" => $personnelRole,
-            "teamID" => $teamID,
+            "institution" => $institution,
             "locationTime" => $locationTime,
         );
  

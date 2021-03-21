@@ -31,13 +31,14 @@ if(
  
     // set user property values
     $personnelUser->personnelID = isset($data["personnelID"]) ? $data["personnelID"] : "";
-    $personnelUser->institution = isset($data["institution"]) ? $data["institution"] : "";
-    $personnelUser->latitude = isset($data["latitude"]) ? $data["latitude"] : "";
-    $personnelUser->longitude = isset($data["longitude"]) ? $data["longitude"] : "";
     $personnelUser->personnelName = isset($data["personnelName"]) ? $data["personnelName"] : "";
+    $personnelUser->personnelEmail = isset($data["personnelEmail"]) ? $data["personnelEmail"]: "";
     $personnelUser->personnelRole = isset($data["personnelRole"]) ? $data["personnelRole"] : "";
-    $personnelUser->teamID = isset($data["teamID"]) ? $data["teamID"] : "";
-    $personnelUser->locationTime = isset($data["locationTime"]) ? $data["locationTime"] : "";
+    $personnelUser->teamID = isset($data["teamID"]) ? $data["teamID"] : null;
+    $personnelUser->latitude = isset($data["latitude"]) ? $data["latitude"] : null;
+    $personnelUser->longitude = isset($data["longitude"]) ? $data["longitude"] : null;
+    $personnelUser->institution = isset($data["institution"]) ? $data["institution"] : "";
+    $personnelUser->locationTime = isset($data["locationTime"]) ? $data["locationTime"] : null;
  
     // create the product
     if($personnelUser->create()){

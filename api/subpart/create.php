@@ -41,6 +41,7 @@ if(
     $subpart->rescuedPerson = isset($data["rescuedPerson"]) ? $data["rescuedPerson"] : "";
     $subpart->isOpenForVolunteers = isset($data["isOpenForVolunteers"]) ? $data["isOpenForVolunteers"] : "";
     $subpart->subpartName = isset($data["subpartName"]) ? $data["subpartName"] : "";
+    $subpart->disasterName = isset($data["disasterName"]) ? $data["disasterName"] : "";
     $subpart->status = isset($data["status"]) ? $data["status"] : "";
     $subpart->emergencyLevel = isset($data["emergencyLevel"]) ? $data["emergencyLevel"] : "";
  
