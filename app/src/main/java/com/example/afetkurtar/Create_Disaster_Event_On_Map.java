@@ -43,12 +43,25 @@ public class Create_Disaster_Event_On_Map extends AppCompatActivity implements O
 
     private TextView tvCoordinatesText;
 
+    //textVariables
+    EditText editAfetId;
+    EditText editAfetAddress;
+    EditText editAfetLatitude;
+    EditText editAfetLongitude;
+    EditText editAfetMissingPerson;
+    EditText editAfetRescuedPerson;
+    EditText editIsOpenForVolunteers;
+
+    //marker OnClick Method
+    Marker clickMarker;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_disaster_event);
         queue = Volley.newRequestQueue(this);
         findViewById(R.id.btn_createDisaster).setOnClickListener(this::onClick);
+        findViewById(R.id.btn_resetButton).setOnClickListener(this::onClick);
 
         //init textView for Coordinates
         tvCoordinatesText = (TextView) findViewById(R.id.coordinateText);
@@ -96,6 +109,14 @@ public class Create_Disaster_Event_On_Map extends AppCompatActivity implements O
     }//onMapReady end
 
     public void calculateCoordinates(LatLng myLatlng){
+        try{
+            if(!clickMarker.equals(null)){
+                clickMarker.remove();
+            }
+        }catch (Exception e){
+            e.getMessage();
+        }
+
         double tmpLatitude = myLatlng.latitude;
         double tmpLongitude = myLatlng.longitude;
 
@@ -112,8 +133,15 @@ public class Create_Disaster_Event_On_Map extends AppCompatActivity implements O
         }catch(Exception e){
             e.getMessage();
         }
+        ((EditText)(findViewById(R.id.afet_latitude))).setText(tmpLatitudeString);
+        ((EditText)(findViewById(R.id.afet_longitude))).setText(tmpLongitudeString);
 
         tvCoordinatesText.setText("(" + tmpLatitude + ", " + tmpLongitude + ")");
+        LatLng latLng = new LatLng(tmpLatitude,tmpLongitude);
+
+        clickMarker = mMap.addMarker(new MarkerOptions().position(latLng));
+        mMap.setInfoWindowAdapter(new CustomInfoWindowAdapter(Create_Disaster_Event_On_Map.this));
+        mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng,10));
     }
 
     public void onClick(View v) {
@@ -121,20 +149,22 @@ public class Create_Disaster_Event_On_Map extends AppCompatActivity implements O
             case R.id.btn_createDisaster:
                 getEditTextData();
                 break;
+
+            case R.id.btn_resetButton:
+                reset();
+                break;
         }
     }
     public void getEditTextData(){
         try {
-            mMap.clear(); //reset map
-
-
-            EditText editAfetId = (EditText)findViewById(R.id.afet_id);
-            EditText editAfetAddress = (EditText)findViewById(R.id.afet_address);
-            EditText editAfetLatitude = (EditText)findViewById(R.id.afet_latitude);
-            EditText editAfetLongitude = (EditText)findViewById(R.id.afet_longitude);
-            EditText editAfetMissingPerson = (EditText)findViewById(R.id.afet_missing_person);
-            EditText editAfetRescuedPerson = (EditText)findViewById(R.id.afet_rescued_person);
-            EditText editIsOpenForVolunteers = (EditText)findViewById(R.id.afet_isOpenForVolunteers);
+            //mMap.clear(); //reset map
+             editAfetId = (EditText)findViewById(R.id.afet_id);
+             editAfetAddress = (EditText)findViewById(R.id.afet_address);
+             editAfetLatitude = (EditText)findViewById(R.id.afet_latitude);
+             editAfetLongitude = (EditText)findViewById(R.id.afet_longitude);
+             editAfetMissingPerson = (EditText)findViewById(R.id.afet_missing_person);
+             editAfetRescuedPerson = (EditText)findViewById(R.id.afet_rescued_person);
+             editIsOpenForVolunteers = (EditText)findViewById(R.id.afet_isOpenForVolunteers);
 
             /*
             System.out.println("editAfetId : " + editAfetId.getText().toString());
@@ -147,13 +177,17 @@ public class Create_Disaster_Event_On_Map extends AppCompatActivity implements O
              */
 
             //Dikkat!!! burada bos input kontrolu olursa diye kontrol ekle sonra
-            disasterID = editAfetId.getText().toString();
-            address = editAfetAddress.getText().toString();
-            latitude = Double.parseDouble(editAfetLatitude.getText().toString());
-            longitude = Double.parseDouble(editAfetLongitude.getText().toString());
-            missingPerson = Integer.parseInt(editAfetMissingPerson.getText().toString());
-            rescuedPerson = Integer.parseInt(editAfetRescuedPerson.getText().toString());
-            isOpenForVolunteers = editIsOpenForVolunteers.getText().toString();
+            try{
+                disasterID = editAfetId.getText().toString();
+                address = editAfetAddress.getText().toString();
+                latitude = Double.parseDouble(editAfetLatitude.getText().toString());
+                longitude = Double.parseDouble(editAfetLongitude.getText().toString());
+                missingPerson = Integer.parseInt(editAfetMissingPerson.getText().toString());
+                rescuedPerson = Integer.parseInt(editAfetRescuedPerson.getText().toString());
+                isOpenForVolunteers = editIsOpenForVolunteers.getText().toString();
+            }catch (Exception e){
+                e.getMessage();
+            }
 
             LatLng latLng = null;
             try {
@@ -167,6 +201,7 @@ public class Create_Disaster_Event_On_Map extends AppCompatActivity implements O
                         );
                 mMap.setInfoWindowAdapter(new CustomInfoWindowAdapter(Create_Disaster_Event_On_Map.this));
                 mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng,10));
+                //Dikkat!!! burada bellki bilgi olusturulup database e gönderildikten sonra ekrandaki coordinat hesaplama tekrar yaptırılabilir.
 
 
                 // Dikkat !!! burada database e girilen verileri gönderme methodu eklenicek burada kaldın
@@ -186,5 +221,21 @@ public class Create_Disaster_Event_On_Map extends AppCompatActivity implements O
         geocoder = new Geocoder(this);
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.create_disaster_event_map);
         mapFragment.getMapAsync(Create_Disaster_Event_On_Map.this) ;
+    }
+    public void reset(){
+        try{
+            System.out.println("reset denemesi");
+            mMap.clear();
+            ((EditText)(findViewById(R.id.afet_id))).setText("");
+            ((EditText)(findViewById(R.id.afet_address))).setText("");
+            ((EditText)(findViewById(R.id.afet_latitude))).setText("");
+            ((EditText)(findViewById(R.id.afet_longitude))).setText("");
+            ((EditText)(findViewById(R.id.afet_missing_person))).setText("");
+            ((EditText)(findViewById(R.id.afet_rescued_person))).setText("");
+            ((EditText)(findViewById(R.id.afet_isOpenForVolunteers))).setText("");
+        }catch (Exception e){
+            e.getMessage();
+        }
+
     }
 }//class end
