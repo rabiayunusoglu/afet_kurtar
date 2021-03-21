@@ -41,7 +41,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     int RC_SIGN_IN = 9001;
     GoogleSignInClient mGoogleSignInClient;
     RequestQueue queue;
+    public static int userID;
     public static JSONObject userInfo;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -55,28 +57,25 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         findViewById(R.id.sign_in_button).setOnClickListener(this);
 
 
-
-
-
         queue = Volley.newRequestQueue(this);
 
     }
 
-    private void checkUser(GoogleSignInAccount account){
+    private void checkUser(GoogleSignInAccount account) {
         String url = "https://afetkurtar.site/api/users/search.php";
 
-        Map<String, String>  params = new HashMap<String, String> ();
+        Map<String, String> params = new HashMap<String, String>();
         params.put("email", account.getEmail());
 
-        JsonObjectRequest  request = new JsonObjectRequest(
+        JsonObjectRequest request = new JsonObjectRequest(
                 Request.Method.POST, // the request method
                 url, // the URL
                 new JSONObject(params), // the parameters for the php
                 new Response.Listener<JSONObject>() { // the response listener
                     @Override
-                    public void onResponse(JSONObject response){
-                      //  System.out.println("response dönüyor");
-                       System.out.println(response.toString());
+                    public void onResponse(JSONObject response) {
+                        //  System.out.println("response dönüyor");
+                        System.out.println(response.toString());
 
 
                         String type = "";
@@ -85,21 +84,20 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                             cevap = cevap.substring(1, cevap.length() - 1);
                             JSONObject tmpJson = new JSONObject(cevap);
                             userInfo = new JSONObject(cevap);
+                            userID=Integer.parseInt(userInfo.getString("userID"));
                             type = tmpJson.getString("userType");
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
                         // ****************************************************************************************** TEST ICIN USER TYPE AYARLAMA YERI
-                        type = "volunteerUser";
+                        type = "authorizedUser";
                         // ****************************************************************************************** TEST ICIN USER TYPE AYARLAMA YERI
                         Intent intentLogin;
-                        if(type.equals("authorizedUser")){
+                        if (type.equals("authorizedUser")) {
                             intentLogin = new Intent(MainActivity.this, Authorized_Anasayfa.class);
-                        }
-                        else if(type.equals("personnelUser")){
+                        } else if (type.equals("personnelUser")) {
                             intentLogin = new Intent(MainActivity.this, Personel_Anasayfa.class);
-                        }
-                        else{
+                        } else {
                             intentLogin = new Intent(MainActivity.this, Volunteer_Anasayfa.class);
                         }
                         startActivity(intentLogin);
@@ -113,34 +111,27 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 });
         queue.add(request);
     }
-    public void addUser(GoogleSignInAccount account){
+
+    public void addUser(GoogleSignInAccount account) {
         String url = "https://afetkurtar.site/api/users/create.php";
 
-        Map<String, String>  params = new HashMap<String, String> ();
-        params.put("userType","volunteerUser");
-        params.put("userName",account.getDisplayName());
+        Map<String, String> params = new HashMap<String, String>();
+        params.put("userType", "volunteerUser");
+        params.put("userName", account.getDisplayName());
         params.put("email", account.getEmail());
 
-        JsonObjectRequest  request = new JsonObjectRequest(
+        JsonObjectRequest request = new JsonObjectRequest(
                 Request.Method.POST, // the request method
                 url, // the URL
                 new JSONObject(params), // the parameters for the php
                 new Response.Listener<JSONObject>() { // the response listener
                     @Override
-                    public void onResponse(JSONObject response){
+                    public void onResponse(JSONObject response) {
                         System.out.println(response.toString());
-                        //
-                        // PARTICIPATE FORM'A YONENDIRILECEK, SONRA ANA SAYFAYA YONLENDIRILECEK
-                        //
-                        try {
-                            String cevap = response.getString("records");
-                            cevap = cevap.substring(1, cevap.length() - 1);
-                            userInfo = new JSONObject(cevap);
-
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
-                        Intent intentLogin = new Intent(MainActivity.this, Volunteer_Anasayfa.class);
+                        String cevap = response.toString().substring(0, response.toString().lastIndexOf("\""));
+                        cevap = cevap.substring(cevap.toString().lastIndexOf("\"") + 1);
+                        userID = Integer.parseInt(cevap);
+                        Intent intentLogin = new Intent(MainActivity.this, Volunteer_ParticipateForm.class);
                         startActivity(intentLogin);
                     }
                 },
@@ -159,16 +150,18 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         switch (v.getId()) {
             case R.id.sign_in_button:
 
-               signIn();
+                signIn();
                 break;
 
         }
     }
+
     private void signIn() {
         Intent signInIntent = mGoogleSignInClient.getSignInIntent();
         startActivityForResult(signInIntent, RC_SIGN_IN);
 
     }
+
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -181,6 +174,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             handleSignInResult(task);
         }
     }
+
     private void handleSignInResult(Task<GoogleSignInAccount> completedTask) {
         GoogleSignInAccount account = null;
         try {
@@ -192,23 +186,23 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             // The ApiException status code indicates the detailed failure reason.
             // Please refer to the GoogleSignInStatusCodes class reference for more information.
             Log.w("asd", "signInResult:failed code=" + e.getStatusCode());
-            updateUI(false,account);
+            updateUI(false, account);
         }
     }
-    private void updateUI(boolean isLogin, GoogleSignInAccount account){
-        if(isLogin){
+
+    private void updateUI(boolean isLogin, GoogleSignInAccount account) {
+        if (isLogin) {
             checkUser(account);
-          //  if(userCreatedSuccessfully) {
-                // Yetkiye gore yonlendirmeler burada yapilcak ********************
-          //      Intent intentLogin = new Intent(MainActivity.this, Volunteer_Anasayfa.class);
-          //      startActivity(intentLogin);
-          //  }
-        }
-        else
-        {
+            //  if(userCreatedSuccessfully) {
+            // Yetkiye gore yonlendirmeler burada yapilcak ********************
+            //      Intent intentLogin = new Intent(MainActivity.this, Volunteer_Anasayfa.class);
+            //      startActivity(intentLogin);
+            //  }
+        } else {
             Toast.makeText(this, "Giris Hatası", Toast.LENGTH_SHORT).show();
         }
     }
+
     private void signOut() {
         mGoogleSignInClient.signOut()
                 .addOnCompleteListener(this, new OnCompleteListener<Void>() {

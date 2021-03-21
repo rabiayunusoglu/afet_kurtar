@@ -27,6 +27,7 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.location.LocationCallback;
@@ -41,6 +42,8 @@ import org.json.JSONObject;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.HashMap;
+import java.util.Map;
 
 public class Authorized_PersonelRegister extends AppCompatActivity {
     RequestQueue queue;
@@ -52,6 +55,7 @@ public class Authorized_PersonelRegister extends AppCompatActivity {
     private EditText email, name, kurum, rol;
     Button register;
     long locationTime;
+    static int perID;
     private static boolean controlmessage = false;
 
     @Override
@@ -84,6 +88,7 @@ public class Authorized_PersonelRegister extends AppCompatActivity {
             @RequiresApi(api = Build.VERSION_CODES.O)
             @Override
             public void onClick(View v) {
+                addUser();
                 try {
                     //Get current date time
                     LocalDateTime now = LocalDateTime.now();
@@ -93,7 +98,7 @@ public class Authorized_PersonelRegister extends AppCompatActivity {
                         throw new Exception("");
                     JSONObject obj = new JSONObject();
                     try {
-                        obj.put("personnelID", 8);
+                        obj.put("personnelID", perID);
                         obj.put("personnelName", name.getText().toString());
                         obj.put("personnelEmail", email.getText().toString());
                         obj.put("personnelRole", rol.getText().toString());
@@ -108,7 +113,7 @@ public class Authorized_PersonelRegister extends AppCompatActivity {
                     JsonObjectRequest request = new JsonObjectRequest(Request.Method.POST, url, obj, new Response.Listener<JSONObject>() {
                         @Override
                         public void onResponse(JSONObject response) {
-                            System.out.println("RESPONSE:********************" + response.toString());
+                            System.out.println( response.toString());
                         }
                     }, new Response.ErrorListener() {
                         @Override
@@ -129,12 +134,46 @@ public class Authorized_PersonelRegister extends AppCompatActivity {
                     else if (rol.length() == 0)
                         Toast.makeText(Authorized_PersonelRegister.this, "Personel rolünü girmelisiniz!", Toast.LENGTH_SHORT).show();
                 }
-
-
             }
         });
 
 
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.O)
+    public void addUser() {
+        String url = "https://afetkurtar.site/api/users/create.php";
+        LocalDateTime now = LocalDateTime.now();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        String formatDateTime = now.format(formatter);
+        Map<String, String> params = new HashMap<String, String>();
+        params.put("userType", "personnelUser");
+        params.put("userName", name.getText().toString());
+        params.put("email", email.getText().toString());
+        params.put("createTime", formatDateTime);
+        JsonObjectRequest request = new JsonObjectRequest(
+                Request.Method.POST, // the request method
+                url, // the URL
+                new JSONObject(params), // the parameters for the php
+                new Response.Listener<JSONObject>() { // the response listener
+
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        System.out.println(response.toString());
+                        String cevap = response.toString().substring(0, response.toString().lastIndexOf("\""));
+                        cevap = cevap.substring(cevap.toString().lastIndexOf("\"") + 1);
+                        perID = Integer.parseInt(cevap);
+
+                    }
+                },
+                new Response.ErrorListener() { // the error listener
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        System.out.println(error.getStackTrace());
+
+                    }
+                });
+        queue.add(request);
     }
 
     private void getCurrentLocation() {
