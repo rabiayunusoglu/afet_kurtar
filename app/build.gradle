@@ -4,6 +4,9 @@ plugins {
 }
 
 android {
+
+        useLibrary 'org.apache.http.legacy'
+
     compileSdkVersion 30
     buildToolsVersion "30.0.3"
 
@@ -41,6 +44,8 @@ dependencies {
     implementation 'com.google.firebase:firebase-storage:19.2.1'
     implementation 'com.google.android.gms:play-services-location:18.0.0'
     implementation 'com.google.android.gms:play-services-maps:17.0.0'
+    compile "org.apache.httpcomponents:httpmime:4.2.3"
+    compile 'org.apache.httpcomponents:httpcore:4.4.1'
     implementation project(path: ':simpleftp')
 
 
