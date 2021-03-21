@@ -69,12 +69,9 @@ public class Volunteer_ParticipateRequest extends AppCompatActivity {
 
             @Override
             public void onClick(View v) {
-                setContentView(R.layout.activity_volunteer__participate_request2);
-                EditText e = findViewById(R.id.editAfet);
-               e.append(afetBolgesi);
-                e.setFocusable(false);
-                e.setFocusableInTouchMode(false);
+               // setContentView(R.layout.activity_volunteer__participate_request2);
 
+redirectActivity(Volunteer_ParticipateRequest.this,Volunteer_ParticipateRequest2.class);
             }
         });
 
@@ -120,7 +117,7 @@ public class Volunteer_ParticipateRequest extends AppCompatActivity {
                             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                                 afetBolgesi = adapterAfet.getItem(position).toString();
                                 index = position;
-                                Toast.makeText(getApplicationContext(), afetBolgesi, Toast.LENGTH_LONG).show();
+                                Toast.makeText(getApplicationContext(), afetBolgesi, Toast.LENGTH_SHORT).show();
                             }
 
                             @Override

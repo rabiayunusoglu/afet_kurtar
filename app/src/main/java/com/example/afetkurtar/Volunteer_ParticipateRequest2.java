@@ -14,7 +14,6 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.Request;
@@ -24,6 +23,7 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -33,24 +33,33 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 public class Volunteer_ParticipateRequest2 extends AppCompatActivity {
 
     ArrayList<String> arrayListSubpart = new ArrayList<>();
+    ArrayList<Integer> arrayListSubpartID = new ArrayList<Integer>();
     ArrayAdapter<String> adapterSubpart;
-    Button submit;
+    Button submits;
+    public static JSONObject volInfo;
     String urlSubpart = "https://afetkurtar.site/api/subpart/search.php";
-    String url1="https://afetkurtar.site/api/volunteerUser/update.php";
+    String url1 = "https://afetkurtar.site/api/volunteerUser/update.php";
     DrawerLayout drawerLayout;
-    RequestQueue queue;
+    RequestQueue queuev,queue,queuecheck;
+    static EditText afet;
     Spinner subpartSpinner;
-    int index=0;
-    static  String responceStringSubpart = "",data="";
+    int index = 0;
+    static int dataSupartID=0;
+    static String responceStringSubpart = "", dataSupartName = "";
     GoogleSignInClient mGoogleSignInClient;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        queuev = Volley.newRequestQueue(this);
         queue = Volley.newRequestQueue(this);
+        queuecheck = Volley.newRequestQueue(this);
         setContentView(R.layout.activity_volunteer__participate_request2);
         drawerLayout = findViewById(R.id.drawer_layout);
 
@@ -59,22 +68,104 @@ public class Volunteer_ParticipateRequest2 extends AppCompatActivity {
                 .build();
         mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
 
-        subpartSpinner = (Spinner) findViewById(R.id.spinnersubpart);
-
+        subpartSpinner = (Spinner) findViewById(R.id.spinnersubpartnew);
+        afet =(EditText) findViewById(R.id.editAfet);
+        afet.setText(Volunteer_ParticipateRequest.afetBolgesi);
+        afet.setFocusableInTouchMode(false);
         loadSpinnerDataSubpart(urlSubpart);
-
-        submit=findViewById(R.id.gdrBtn);
-        submit.setOnClickListener(new View.OnClickListener() {
+        try {
+            checkUser();
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        submits = findViewById(R.id.gdrBtn);
+        submits.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                System.out.println("data******************************************************"+data);
-                System.out.println(arrayListSubpart.toString());
+
+               try{
+                   JSONObject obj = new JSONObject();
+                   try {
+                       obj.put("volunteerID",volInfo.get("volunteerID"));
+                       obj.put("volunteerName", volInfo.get("volunteerName"));
+                       obj.put("address", volInfo.get("address"));
+                       obj.put("isExperienced",  volInfo.get("isExperienced"));
+                       obj.put("haveFirstAidCert",  volInfo.get("haveFirstAidCert"));
+                       obj.put("requestedSubpart",  dataSupartID);
+                       obj.put("latitude",  volInfo.get("latitude"));
+                       obj.put("longitude",  volInfo.get("longitude"));
+                       obj.put("locationTime",  volInfo.get("locationTime"));
+                       obj.put("tc", volInfo.get("tc"));
+                       obj.put("birthDate", volInfo.get("birthDate"));
+                   } catch (JSONException e) {
+                       e.printStackTrace();
+                   }
+
+                   JsonObjectRequest request = new JsonObjectRequest(
+                           Request.Method.POST, // the request method
+                           url1, // the URL
+                           obj, // the parameters for the php
+                           new Response.Listener<JSONObject>() { // the response listener
+                               @Override
+                               public void onResponse(JSONObject response) {
+                                   System.out.println(response.toString());
+                               }
+                           },
+                           new Response.ErrorListener() { // the error listener
+                               @Override
+                               public void onErrorResponse(VolleyError error) {
+                                   System.out.println(error);
+                               }
+                           });
+                   queuev.add(request);
+                   Toast.makeText(Volunteer_ParticipateRequest2.this, "Kaydınız Başarıyla Gerçekleşti :)", Toast.LENGTH_SHORT).show();
+                   redirectActivity(Volunteer_ParticipateRequest2.this,Volunteer_Anasayfa.class);
+               }catch (Exception e){
+                   Toast.makeText(Volunteer_ParticipateRequest2.this, "Tekrar Deneyiniz...", Toast.LENGTH_SHORT).show();
+                   redirectActivity(Volunteer_ParticipateRequest2.this,Volunteer_ParticipateRequest2.class);
+               }
             }
         });
 
 
     }
+    private void checkUser() throws JSONException {
+        String url = "https://afetkurtar.site/api/volunteerUser/search.php";
 
+        Map<String, Integer> params = new HashMap<String, Integer>();
+        params.put("volunteerID", Integer.parseInt((String) MainActivity.userInfo.get("userID")));
+
+        JsonObjectRequest  request = new JsonObjectRequest(
+                Request.Method.POST, // the request method
+                url, // the URL
+                new JSONObject(params), // the parameters for the php
+                new Response.Listener<JSONObject>() { // the response listener
+                    @Override
+                    public void onResponse(JSONObject response){
+                        //  System.out.println("response dönüyor");
+                        System.out.println(response.toString());
+
+
+                        String type = "";
+                        try {
+                            String cevap = response.getString("records");
+                            cevap = cevap.substring(1, cevap.length() - 1);
+                            JSONObject tmpJson = new JSONObject(cevap);
+                             volInfo= new JSONObject(cevap);
+                            type = tmpJson.getString("userType");
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                },
+                new Response.ErrorListener() { // the error listener
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        System.out.println(error);
+                    }
+                });
+        queuecheck.add(request);
+    }
 
 
     private void loadSpinnerDataSubpart(String url) {
@@ -82,7 +173,7 @@ public class Volunteer_ParticipateRequest2 extends AppCompatActivity {
         try {
 
             obj.put("isOpenForVolunteers", 1);
-            obj.put("disasterName", "Antalya Bölgesi Deprem");
+            obj.put("disasterName", afet.getText().toString());
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -100,18 +191,25 @@ public class Volunteer_ParticipateRequest2 extends AppCompatActivity {
                         while (responceStringSubpart.indexOf("}") > 1) {
                             if (responceStringSubpart.contains("{")) {
                                 String subpart = responceStringSubpart.substring(responceStringSubpart.indexOf("{"), responceStringSubpart.indexOf("}") + 1);
+                                String subpartID = responceStringSubpart.substring(responceStringSubpart.indexOf("{"), responceStringSubpart.indexOf("}") + 1);
                                 if (responceStringSubpart.contains("},"))
                                     responceStringSubpart = responceStringSubpart.substring(responceStringSubpart.indexOf("}") + 2);
                                 else {
                                     responceStringSubpart = responceStringSubpart.substring(responceStringSubpart.indexOf("}") + 1);
                                 }
                                 String value = "\"subpartName\":\"";
+                                String valueID="\"subpartID\":\"";
                                 String flag = "\"";
                                 String result = "";
+                                int resultID=0;
                                 subpart = subpart.substring(subpart.indexOf(value) + value.length());
                                 result = subpart.substring(0, subpart.indexOf(flag));
                                 subpart = subpart.substring(subpart.indexOf("},") + 1);
                                 arrayListSubpart.add(result);
+                                subpartID = subpartID.substring(subpartID.indexOf(valueID) + valueID.length());
+                                resultID = Integer.parseInt(subpartID.substring(0, subpartID.indexOf(flag)));
+                                subpartID= subpartID.substring(subpartID.indexOf("},") + 1);
+                                arrayListSubpartID.add(resultID);
                             }
 
                         }
@@ -122,10 +220,12 @@ public class Volunteer_ParticipateRequest2 extends AppCompatActivity {
 
                             @Override
                             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                                data = adapterSubpart.getItem(position).toString();
-                                index=position;
-                                Toast.makeText(getApplicationContext(), data, Toast.LENGTH_LONG).show();
+                                dataSupartName = adapterSubpart.getItem(position).toString();
+                                index = position;
+                                dataSupartID=arrayListSubpartID.get(index);
+                                Toast.makeText(getApplicationContext(), dataSupartName, Toast.LENGTH_SHORT).show();
                             }
+
                             @Override
                             public void onNothingSelected(AdapterView<?> parent) {
 
@@ -142,7 +242,6 @@ public class Volunteer_ParticipateRequest2 extends AppCompatActivity {
                 });
         queue.add(request);
     }
-
 
 
     private void signOut() {
@@ -193,9 +292,10 @@ public class Volunteer_ParticipateRequest2 extends AppCompatActivity {
         //redirect activity to volunter
         redirectActivity(this, Volunteer_ParticipateRequest.class);
     }
+
     public void ClickAfetBölgesiGonder(View view) {
         //redirect activity to volunter
-        redirectActivity(this, Volunteer_ParticipateRequest.class);
+        redirectActivity(this, Volunteer_ParticipateRequest2.class);
     }
 
     public void ClickEmergency(View view) {
