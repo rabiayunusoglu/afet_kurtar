@@ -29,7 +29,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.AfetKurtar">
-        <activity android:name=".Authorized_PersonelRegister"></activity>
+        <activity android:name=".Volunteer_ParticipateRequest2"></activity>
+        <activity android:name=".Authorized_PersonelRegister" />
 
         <meta-data
             android:name="com.google.android.gms.version"

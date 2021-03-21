@@ -34,24 +34,24 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 
-public class Volunteer_ParticipateRequest extends AppCompatActivity {
-    ArrayList<String> arrayListAfet = new ArrayList<>();
-    ArrayAdapter<String> adapterAfet;
+public class Volunteer_ParticipateRequest2 extends AppCompatActivity {
+
+    ArrayList<String> arrayListSubpart = new ArrayList<>();
+    ArrayAdapter<String> adapterSubpart;
     Button submit;
-    String urlAfet = "https://afetkurtar.site/api/disasterEvents/search.php";
-    String url1 = "https://afetkurtar.site/api/volunteerUser/update.php";
+    String urlSubpart = "https://afetkurtar.site/api/subpart/search.php";
+    String url1="https://afetkurtar.site/api/volunteerUser/update.php";
     DrawerLayout drawerLayout;
     RequestQueue queue;
-    Spinner afetSpinner;
-    int index = 0;
-    static String responceStringAfet = "", afetBolgesi = "";
+    Spinner subpartSpinner;
+    int index=0;
+    static  String responceStringSubpart = "",data="";
     GoogleSignInClient mGoogleSignInClient;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         queue = Volley.newRequestQueue(this);
-        setContentView(R.layout.activity_volunteer_participate_request);
+        setContentView(R.layout.activity_volunteer__participate_request2);
         drawerLayout = findViewById(R.id.drawer_layout);
 
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
@@ -59,70 +59,73 @@ public class Volunteer_ParticipateRequest extends AppCompatActivity {
                 .build();
         mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
 
+        subpartSpinner = (Spinner) findViewById(R.id.spinnersubpart);
 
-        afetSpinner = (Spinner) findViewById(R.id.spinnerAfet);
-        loadSpinnerDataAfet(urlAfet);
+        loadSpinnerDataSubpart(urlSubpart);
 
-
-        submit = findViewById(R.id.gdrBtnAfet);
+        submit=findViewById(R.id.gdrBtn);
         submit.setOnClickListener(new View.OnClickListener() {
-
             @Override
             public void onClick(View v) {
-                setContentView(R.layout.activity_volunteer__participate_request2);
-                EditText e = findViewById(R.id.editAfet);
-               e.append(afetBolgesi);
-                e.setFocusable(false);
-                e.setFocusableInTouchMode(false);
-
+                System.out.println("data******************************************************"+data);
+                System.out.println(arrayListSubpart.toString());
             }
         });
 
 
     }
 
-    private void loadSpinnerDataAfet(String url) {
+
+
+    private void loadSpinnerDataSubpart(String url) {
+        JSONObject obj = new JSONObject();
+        try {
+
+            obj.put("isOpenForVolunteers", 1);
+            obj.put("disasterName", "Antalya Bölgesi Deprem");
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
 
         JsonObjectRequest request = new JsonObjectRequest(
-                Request.Method.GET, // the request method
+                Request.Method.POST, // the request method
                 url, // the URL
-                null, // the parameters for the php
+                obj, // the parameters for the php
                 new Response.Listener<JSONObject>() { // the response listener
                     @Override
                     public void onResponse(JSONObject response) {
-                        responceStringAfet = response.toString();
-                        responceStringAfet = responceStringAfet.substring(responceStringAfet.indexOf("[") + 1, responceStringAfet.length() - 2);
+                        responceStringSubpart = response.toString();
+                        responceStringSubpart = responceStringSubpart.substring(responceStringSubpart.indexOf("[") + 1, responceStringSubpart.length() - 2);
 
-                        while (responceStringAfet.indexOf("}") > 1) {
-                            if (responceStringAfet.contains("{")) {
-                                String subpart = responceStringAfet.substring(responceStringAfet.indexOf("{"), responceStringAfet.indexOf("}") + 1);
-                                if (responceStringAfet.contains("},"))
-                                    responceStringAfet = responceStringAfet.substring(responceStringAfet.indexOf("}") + 2);
+                        while (responceStringSubpart.indexOf("}") > 1) {
+                            if (responceStringSubpart.contains("{")) {
+                                String subpart = responceStringSubpart.substring(responceStringSubpart.indexOf("{"), responceStringSubpart.indexOf("}") + 1);
+                                if (responceStringSubpart.contains("},"))
+                                    responceStringSubpart = responceStringSubpart.substring(responceStringSubpart.indexOf("}") + 2);
                                 else {
-                                    responceStringAfet = responceStringAfet.substring(responceStringAfet.indexOf("}") + 1);
+                                    responceStringSubpart = responceStringSubpart.substring(responceStringSubpart.indexOf("}") + 1);
                                 }
-                                String value = "\"disasterName\":\"";
+                                String value = "\"subpartName\":\"";
                                 String flag = "\"";
                                 String result = "";
                                 subpart = subpart.substring(subpart.indexOf(value) + value.length());
                                 result = subpart.substring(0, subpart.indexOf(flag));
                                 subpart = subpart.substring(subpart.indexOf("},") + 1);
-                                arrayListAfet.add(result);
+                                arrayListSubpart.add(result);
                             }
 
                         }
 
-                        adapterAfet = new ArrayAdapter<String>(Volunteer_ParticipateRequest.this, android.R.layout.simple_spinner_dropdown_item, arrayListAfet);
-                        afetSpinner.setAdapter(adapterAfet);
-                        afetSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                        adapterSubpart = new ArrayAdapter<String>(Volunteer_ParticipateRequest2.this, android.R.layout.simple_spinner_dropdown_item, arrayListSubpart);
+                        subpartSpinner.setAdapter(adapterSubpart);
+                        subpartSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
 
                             @Override
                             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                                afetBolgesi = adapterAfet.getItem(position).toString();
-                                index = position;
-                                Toast.makeText(getApplicationContext(), afetBolgesi, Toast.LENGTH_LONG).show();
+                                data = adapterSubpart.getItem(position).toString();
+                                index=position;
+                                Toast.makeText(getApplicationContext(), data, Toast.LENGTH_LONG).show();
                             }
-
                             @Override
                             public void onNothingSelected(AdapterView<?> parent) {
 
@@ -138,8 +141,9 @@ public class Volunteer_ParticipateRequest extends AppCompatActivity {
                     }
                 });
         queue.add(request);
-
     }
+
+
 
     private void signOut() {
         mGoogleSignInClient.signOut()
@@ -189,10 +193,9 @@ public class Volunteer_ParticipateRequest extends AppCompatActivity {
         //redirect activity to volunter
         redirectActivity(this, Volunteer_ParticipateRequest.class);
     }
-
     public void ClickAfetBölgesiGonder(View view) {
         //redirect activity to volunter
-        redirectActivity(this, Volunteer_ParticipateRequest2.class);
+        redirectActivity(this, Volunteer_ParticipateRequest.class);
     }
 
     public void ClickEmergency(View view) {
@@ -230,6 +233,4 @@ public class Volunteer_ParticipateRequest extends AppCompatActivity {
         activity.startActivity(intent);
 
     }
-
-
 }
