@@ -37,6 +37,14 @@ public class Authorized_Notification extends AppCompatActivity {
         list2 = new ArrayList<JSONObject>();
         getData("");
     }
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+
+        ((LinearLayout)findViewById(R.id.auth_lay_scroll)).removeAllViews();
+        list2 = new ArrayList<JSONObject>();
+        getData("");
+    }
     public void getData(String ID) {
         JSONObject obj = new JSONObject();
         try {

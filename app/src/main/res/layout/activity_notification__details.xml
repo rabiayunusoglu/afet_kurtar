@@ -24,7 +24,24 @@
 
         </Button>
         <Space
-            android:layout_width="150dp"
+            android:layout_width="100dp"
+            android:layout_height="8dp"
+            android:layout_weight="1" >
+        </Space>
+
+        <Button
+            android:textColor="@color/black"
+            android:id="@+id/Delete_notice"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="right"
+            android:layout_weight="1"
+            android:text="Sil"
+            app:backgroundTint="#BFBFBF">
+
+        </Button>
+        <Space
+            android:layout_width="20dp"
             android:layout_height="8dp"
             android:layout_weight="1" >
         </Space>
