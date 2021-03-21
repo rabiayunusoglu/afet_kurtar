@@ -199,7 +199,7 @@ redirectActivity(Volunteer_ParticipateRequest.this,Volunteer_ParticipateRequest2
 
     public void ClickParticipateForm(View view) {
         //redirect activity to emergency
-        redirectActivity(this, Volunteer_ParticipateForm.class);
+        redirectActivity(this, Volunteer_RegisterInfo.class );
     }
 
     public void ClickExit(View view) {

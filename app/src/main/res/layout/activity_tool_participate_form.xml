@@ -6,6 +6,47 @@
     android:layout_height="match_parent"
     android:background="@color/white">
 
+    <EditText
+        android:id="@+id/participate_telno"
+        android:layout_width="264dp"
+        android:layout_height="40dp"
+        android:ems="10"
+        android:hint="Telefon numaranızı giriniz..."
+        android:inputType="number"
+        android:maxLength="11"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.911"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.797" />
+
+    <TextView
+        android:id="@+id/adres3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Tel No:"
+        android:textColor="@color/black"
+        android:textSize="18sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.045"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.801" />
+
+    <ImageButton
+        android:id="@+id/imageButton3"
+        android:layout_width="204dp"
+        android:layout_height="108dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.497"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.025"
+        app:srcCompat="@mipmap/ic_banner_foreground" />
+
     <TextView
         android:id="@+id/name7"
         android:layout_width="70dp"
@@ -18,22 +59,22 @@
         app:layout_constraintHorizontal_bias="0.046"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.459" />
+        app:layout_constraintVertical_bias="0.422" />
 
     <EditText
         android:id="@+id/participate_tc"
         android:layout_width="264dp"
         android:layout_height="40dp"
         android:ems="10"
+        android:hint="TC kimlik numaranızı giriniz..."
         android:inputType="number"
+        android:maxLength="11"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.897"
+        app:layout_constraintHorizontal_bias="0.911"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.387"
-        android:maxLength="11"
-        android:hint="TC kimlik numaranızı giriniz..." />
+        app:layout_constraintVertical_bias="0.344" />
 
     <TextView
         android:id="@+id/name6"
@@ -47,7 +88,7 @@
         app:layout_constraintHorizontal_bias="0.046"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.401" />
+        app:layout_constraintVertical_bias="0.36" />
 
     <TextView
         android:id="@+id/name5"
@@ -61,19 +102,19 @@
         app:layout_constraintHorizontal_bias="0.046"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.344" />
+        app:layout_constraintVertical_bias="0.296" />
 
     <MultiAutoCompleteTextView
         android:id="@+id/participate_addres"
         android:layout_width="263dp"
         android:layout_height="43dp"
+        android:hint="Adresinizi giriniz..."
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.905"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.885"
-        android:hint="Adresinizi giriniz..." />
+        app:layout_constraintVertical_bias="0.875" />
 
     <TextView
         android:id="@+id/adres"
@@ -87,19 +128,19 @@
         app:layout_constraintHorizontal_bias="0.044"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.888" />
+        app:layout_constraintVertical_bias="0.878" />
 
     <MultiAutoCompleteTextView
         android:id="@+id/participate_soyad"
         android:layout_width="263dp"
         android:layout_height="43dp"
+        android:hint="Soyadınızı giriniz..."
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.898"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.325"
-        android:hint="Soyadınızı giriniz..." />
+        app:layout_constraintVertical_bias="0.276" />
 
     <MultiAutoCompleteTextView
         android:id="@+id/participate_ad"
@@ -111,7 +152,7 @@
         app:layout_constraintHorizontal_bias="0.898"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.263" />
+        app:layout_constraintVertical_bias="0.202" />
 
     <TextView
         android:id="@+id/name"
@@ -125,7 +166,8 @@
         app:layout_constraintHorizontal_bias="0.044"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.281" />
+        app:layout_constraintVertical_bias="0.222" />
+
 
     <Button
         android:id="@+id/participate_btn"
@@ -135,48 +177,35 @@
         app:backgroundTint="@color/black"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintHorizontal_bias="0.463"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.976" />
-
-    <ImageButton
-        android:id="@+id/imageButton2"
-        android:layout_width="264dp"
-        android:layout_height="136dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.496"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.026"
-        app:srcCompat="@mipmap/ic_banner_foreground" />
-
+        app:layout_constraintVertical_bias="0.956" />
 
     <EditText
         android:id="@+id/participate_date"
         android:layout_width="264dp"
         android:layout_height="41dp"
         android:ems="10"
+        android:hint="0000-00-00"
         android:inputType="date"
+        android:maxLength="11"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.904"
+        app:layout_constraintHorizontal_bias="0.911"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        android:maxLength="11"
-        app:layout_constraintVertical_bias="0.444"
-        android:hint="0000-00-00" />
+        app:layout_constraintVertical_bias="0.407" />
 
     <androidx.appcompat.widget.LinearLayoutCompat
         android:layout_width="410dp"
         android:layout_height="117dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.4"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.596">
+        app:layout_constraintVertical_bias="0.524">
 
 
         <RadioGroup
@@ -224,10 +253,10 @@
         android:layout_height="117dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.786">
+        app:layout_constraintVertical_bias="0.692">
 
 
         <RadioGroup

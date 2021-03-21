@@ -305,7 +305,7 @@ public class Volunteer_ParticipateRequest2 extends AppCompatActivity {
 
     public void ClickParticipateForm(View view) {
         //redirect activity to emergency
-        redirectActivity(this, Volunteer_ParticipateForm.class);
+        redirectActivity(this, Volunteer_RegisterInfo.class );
     }
 
     public void ClickExit(View view) {
