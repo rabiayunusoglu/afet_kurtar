@@ -96,6 +96,7 @@ public class Volunteer_ParticipateRequest2 extends AppCompatActivity {
                        obj.put("longitude",  volInfo.get("longitude"));
                        obj.put("locationTime",  volInfo.get("locationTime"));
                        obj.put("tc", volInfo.get("tc"));
+                       obj.put("tel", volInfo.get("tel"));
                        obj.put("birthDate", volInfo.get("birthDate"));
                    } catch (JSONException e) {
                        e.printStackTrace();
@@ -152,7 +153,6 @@ public class Volunteer_ParticipateRequest2 extends AppCompatActivity {
                             cevap = cevap.substring(1, cevap.length() - 1);
                             JSONObject tmpJson = new JSONObject(cevap);
                              volInfo= new JSONObject(cevap);
-                            type = tmpJson.getString("userType");
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }

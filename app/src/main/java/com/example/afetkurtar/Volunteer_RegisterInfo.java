@@ -60,7 +60,7 @@ public class Volunteer_RegisterInfo extends AppCompatActivity {
     private static EditText soyad;
     private EditText adres;
     public static JSONObject volInfo;
-    private EditText tc;
+    private EditText tc,tel;
     long locationTime;
     private static EditText dateBirth;
     private Button btn_gonder, getir;
@@ -97,6 +97,7 @@ public class Volunteer_RegisterInfo extends AppCompatActivity {
         ad = (EditText) findViewById(R.id.participate_name);
         adres = (EditText) findViewById(R.id.participate_addres);
         tc = (EditText) findViewById(R.id.participate_tc);
+        tel = (EditText) findViewById(R.id.participate_tel);
         dateBirth = (EditText) findViewById(R.id.participate_date);
         radioGroupExperience = findViewById(R.id.groupexperienced);
         radioGroupFirstAid = findViewById(R.id.groupfistaid);
@@ -110,6 +111,7 @@ public class Volunteer_RegisterInfo extends AppCompatActivity {
                     ad.setText(volInfo.get("volunteerName").toString());
                     adres.setText(volInfo.get("address").toString());
                     tc.setText(volInfo.get("tc").toString());
+                    tel.setText(volInfo.get("tel").toString());
                     dateBirth.setText(volInfo.get("birthDate").toString());
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -134,7 +136,7 @@ public class Volunteer_RegisterInfo extends AppCompatActivity {
                     int radioId1 = radioGroupFirstAid.getCheckedRadioButtonId();
                     firstAid = findViewById(radioId1);
 
-                    if (ad.length() == 0 || controlName() == false || tc.getText().toString().length() != 11 || experience == null || firstAid == null || adres.length() == 0 || dateBirth.getText().length() != 10 || dateBirth.getText().toString().substring(0, 4).contains("-") || dateBirth.getText().toString().contains(".") || dateBirth.getText().toString().contains("/") || controlAge() == false) {
+                    if (ad.length() == 0 || controlName() == false || tel==null|| tel.getText().toString().length() != 11||tc.getText().toString().length() != 11 || experience == null || firstAid == null || adres.length() == 0 || dateBirth.getText().length() != 10 || dateBirth.getText().toString().substring(0, 4).contains("-") || dateBirth.getText().toString().contains(".") || dateBirth.getText().toString().contains("/") || controlAge() == false) {
                         throw new Exception("");
                     }
                     //control experinece and first aid
@@ -159,6 +161,7 @@ public class Volunteer_RegisterInfo extends AppCompatActivity {
                         obj.put("longitude", longtitude);
                         obj.put("locationTime", formatDateTime);
                         obj.put("tc", tc.getText().toString());
+                        obj.put("tel", tel.getText().toString());
                         obj.put("birthDate", dateBirth.getText().toString());
 
                     } catch (JSONException e) {
@@ -176,7 +179,7 @@ public class Volunteer_RegisterInfo extends AppCompatActivity {
                         }
                     });
                     queue.add(request);
-                    Toast.makeText(Volunteer_RegisterInfo.this, "Kaydınız Başarıyla Gerçekleşti :)", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(Volunteer_RegisterInfo.this, "Güncelleme Başarıyla Gerçekleşti :)", Toast.LENGTH_SHORT).show();
                     redirectActivity(Volunteer_RegisterInfo.this, Volunteer_Anasayfa.class);
                 } catch (Exception e) {
                     System.out.println("*******************" + controlmessage);
@@ -194,6 +197,10 @@ public class Volunteer_RegisterInfo extends AppCompatActivity {
                         Toast.makeText(Volunteer_RegisterInfo.this, "Daha önce arama kurtarma olayına katılma sorgusu boş bırakılamaz!", Toast.LENGTH_SHORT).show();
                     else if (firstAid == null)
                         Toast.makeText(Volunteer_RegisterInfo.this, "İlk yardımı eğitimi sorgusu boş bırakılamaz!", Toast.LENGTH_SHORT).show();
+                    else if (tel == null)
+                        Toast.makeText(Volunteer_RegisterInfo.this, "Telefon numarası sorgusu boş bırakılamaz!", Toast.LENGTH_SHORT).show();
+                    else if (tel.getText().toString().length() != 11)
+                        Toast.makeText(Volunteer_RegisterInfo.this, "Telefon numaranızı doğru girdiğinizden emin olunuz!", Toast.LENGTH_SHORT).show();
                     else if (adres.length() == 0)
                         Toast.makeText(Volunteer_RegisterInfo.this, "Adres boş bırakılamaz!", Toast.LENGTH_SHORT).show();
                     else if (controlAge() == false) {
