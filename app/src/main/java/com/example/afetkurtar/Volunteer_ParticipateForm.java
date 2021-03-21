@@ -127,7 +127,7 @@ public class Volunteer_ParticipateForm extends AppCompatActivity {
                     int radioId1 = radioGroupFirstAid.getCheckedRadioButtonId();
                     firstAid = findViewById(radioId1);
 
-                    if (ad.length() == 0 || soyad.length() == 0 || tel.getText().toString().length() != 11 || controlName() == false || tc.getText().toString().length() != 11 || experience == null || firstAid == null || adres.length() == 0 || dateBirth.getText().length() != 10 || dateBirth.getText().toString().substring(0, 4).contains("-") || dateBirth.getText().toString().contains(".") || dateBirth.getText().toString().contains("/") || controlAge() == false) {
+                    if (ad.length() == 0 || soyad.length() == 0 || tel.getText().toString().length() != 11 || tc.getText().toString().length() != 11 || experience == null || firstAid == null || adres.length() == 0 || dateBirth.getText().length() != 10 || dateBirth.getText().toString().substring(0, 4).contains("-") || dateBirth.getText().toString().contains(".") || dateBirth.getText().toString().contains("/") || controlAge() == false) {
                         throw new Exception("");
                     }
                     //control experinece and first aid
@@ -143,7 +143,7 @@ public class Volunteer_ParticipateForm extends AppCompatActivity {
                     }
                     JSONObject obj = new JSONObject();
                     try {
-                        obj.put("volunteerID",MainActivity.userInfo.get("userID"));
+                        obj.put("volunteerID",MainActivity.userID);
                         obj.put("volunteerName", ad.getText().toString() + " " + soyad.getText().toString());
                         obj.put("address", adres.getText().toString());
                         obj.put("isExperienced", answerExperienced);
@@ -176,9 +176,7 @@ public class Volunteer_ParticipateForm extends AppCompatActivity {
                     System.out.println("*******************" + controlmessage);
                     if (ad.length() == 0 || soyad.length() == 0)
                         Toast.makeText(Volunteer_ParticipateForm.this, "Adınız ve soyadınız boş bırakılamaz!", Toast.LENGTH_SHORT).show();
-                    else if (controlName() == false) {
-                        Toast.makeText(Volunteer_ParticipateForm.this, "Lütfen adınızı ve soyadınızı doğru şekilde giriniz!", Toast.LENGTH_SHORT).show();
-                    } else if (tc.getText().toString().length() != 11)
+                   else if (tc.getText().toString().length() != 11)
                         Toast.makeText(Volunteer_ParticipateForm.this, "TC numaranızı doğru girdiğinizden emin olunuz!", Toast.LENGTH_SHORT).show();
                     else if (dateBirth == null)
                         Toast.makeText(Volunteer_ParticipateForm.this, "Doğum Tarihi kısmı boş bırakılamaz!", Toast.LENGTH_SHORT).show();
@@ -229,7 +227,7 @@ public class Volunteer_ParticipateForm extends AppCompatActivity {
         if (y > 18)
             return true;
         else if (y == 18) {
-            if (bmounth <= now.getMonthValue()) {
+            if (bmounth >= now.getMonthValue() && bmounth<=12 && bday<=31) {
                 return true;
             }
         }

@@ -136,7 +136,7 @@ public class Volunteer_RegisterInfo extends AppCompatActivity {
                     int radioId1 = radioGroupFirstAid.getCheckedRadioButtonId();
                     firstAid = findViewById(radioId1);
 
-                    if (ad.length() == 0 || controlName() == false || tel==null|| tel.getText().toString().length() != 11||tc.getText().toString().length() != 11 || experience == null || firstAid == null || adres.length() == 0 || dateBirth.getText().length() != 10 || dateBirth.getText().toString().substring(0, 4).contains("-") || dateBirth.getText().toString().contains(".") || dateBirth.getText().toString().contains("/") || controlAge() == false) {
+                    if (ad.length() == 0  || tel==null|| tel.getText().toString().length() != 11||tc.getText().toString().length() != 11 || dateBirth.getText().length() != 10 || dateBirth.getText().toString().substring(0, 4).contains("-") || dateBirth.getText().toString().contains(".") || dateBirth.getText().toString().contains("/") || controlAge() == false || experience == null || firstAid == null || adres.length() == 0 ) {
                         throw new Exception("");
                     }
                     //control experinece and first aid
@@ -185,14 +185,15 @@ public class Volunteer_RegisterInfo extends AppCompatActivity {
                     System.out.println("*******************" + controlmessage);
                     if (ad.length() == 0)
                         Toast.makeText(Volunteer_RegisterInfo.this, "Adınız ve soyadınız boş bırakılamaz!", Toast.LENGTH_SHORT).show();
-                    else if (controlName() == false) {
-                        Toast.makeText(Volunteer_RegisterInfo.this, "Lütfen adınızı ve soyadınızı doğru şekilde giriniz!", Toast.LENGTH_SHORT).show();
-                    } else if (tc.getText().toString().length() != 11)
+                   else if (tc.getText().toString().length() != 11)
                         Toast.makeText(Volunteer_RegisterInfo.this, "TC numaranızı doğru girdiğinizden emin olunuz!", Toast.LENGTH_SHORT).show();
                     else if (dateBirth == null)
                         Toast.makeText(Volunteer_RegisterInfo.this, "Doğum Tarihi kısmı boş bırakılamaz!", Toast.LENGTH_SHORT).show();
                     else if (dateBirth.getText().length() != 10 || dateBirth.getText().toString().contains(".") || dateBirth.getText().toString().contains("/") || dateBirth.getText().toString().substring(0, 4).contains("-"))
                         Toast.makeText(Volunteer_RegisterInfo.this, "Doğum Tarihi kısmı yyyy-mm-dd formatında giriniz!", Toast.LENGTH_SHORT).show();
+                    else if (controlAge() == false) {
+                        Toast.makeText(Volunteer_RegisterInfo.this, "18 yaş altındaki vatandaşlar gönüllü olamaz!", Toast.LENGTH_SHORT).show();
+                    }
                     else if (experience == null)
                         Toast.makeText(Volunteer_RegisterInfo.this, "Daha önce arama kurtarma olayına katılma sorgusu boş bırakılamaz!", Toast.LENGTH_SHORT).show();
                     else if (firstAid == null)
@@ -203,9 +204,7 @@ public class Volunteer_RegisterInfo extends AppCompatActivity {
                         Toast.makeText(Volunteer_RegisterInfo.this, "Telefon numaranızı doğru girdiğinizden emin olunuz!", Toast.LENGTH_SHORT).show();
                     else if (adres.length() == 0)
                         Toast.makeText(Volunteer_RegisterInfo.this, "Adres boş bırakılamaz!", Toast.LENGTH_SHORT).show();
-                    else if (controlAge() == false) {
-                        Toast.makeText(Volunteer_RegisterInfo.this, "18 yaş altındaki vatandaşlar gönüllü olamaz!", Toast.LENGTH_SHORT).show();
-                    } else
+                    else
                         Toast.makeText(Volunteer_RegisterInfo.this, "Tekrar Deneyiniz..", Toast.LENGTH_LONG).show();
                     System.out.println(e.toString());
                 }
@@ -230,7 +229,7 @@ public class Volunteer_RegisterInfo extends AppCompatActivity {
         String url = "https://afetkurtar.site/api/volunteerUser/search.php";
 
         Map<String, Integer> params = new HashMap<String, Integer>();
-        params.put("volunteerID", Integer.parseInt((String) MainActivity.userInfo.get("userID").toString()));
+        params.put("volunteerID", MainActivity.userID);
 
         JsonObjectRequest request = new JsonObjectRequest(
                 Request.Method.POST, // the request method
@@ -286,10 +285,10 @@ public class Volunteer_RegisterInfo extends AppCompatActivity {
 
         int y = year - byear;
 
-        if (y > 18)
+        if (y > 18 && bmounth<=12 && bday<=31)
             return true;
         else if (y == 18) {
-            if (bmounth <= now.getMonthValue()) {
+            if (bmounth >= now.getMonthValue() && bmounth<=12 && bday<=31) {
                 return true;
             }
         }

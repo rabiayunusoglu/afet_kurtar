@@ -134,7 +134,7 @@ public class Volunteer_ParticipateRequest2 extends AppCompatActivity {
         String url = "https://afetkurtar.site/api/volunteerUser/search.php";
 
         Map<String, Integer> params = new HashMap<String, Integer>();
-        params.put("volunteerID", Integer.parseInt((String) MainActivity.userInfo.get("userID")));
+        params.put("volunteerID", MainActivity.userID);
 
         JsonObjectRequest  request = new JsonObjectRequest(
                 Request.Method.POST, // the request method
