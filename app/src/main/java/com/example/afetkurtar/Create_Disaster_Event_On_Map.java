@@ -53,6 +53,9 @@ public class Create_Disaster_Event_On_Map extends AppCompatActivity implements O
     private int missingPerson;
     private int rescuedPerson;
     private String stringIsOpenForVolunteers;
+    private String disasterName = "";
+    private String disasterStatus;
+    private int disasterEmergencyLevel;
 
     private static boolean isOpenForVolunteers; //dikkat burasi sonra boolean olarak degistir
 
@@ -67,6 +70,8 @@ public class Create_Disaster_Event_On_Map extends AppCompatActivity implements O
     EditText editAfetLongitude;
     EditText editAfetMissingPerson;
     EditText editAfetRescuedPerson;
+    EditText editAfetStatus;
+    EditText editAfetEmergencyLevel;
 
     RadioGroup radioGroupIsOpenForVolunteers;
     private RadioButton radioButtonIsOpenForVolunteers;
@@ -96,7 +101,9 @@ public class Create_Disaster_Event_On_Map extends AppCompatActivity implements O
         editAfetLongitude = (EditText)findViewById(R.id.afet_longitude);
         editAfetMissingPerson = (EditText)findViewById(R.id.afet_missing_person);
         editAfetRescuedPerson = (EditText)findViewById(R.id.afet_rescued_person);
-        //isOpenForVolunteers
+        editAfetStatus = (EditText)findViewById(R.id.afet_status);
+        editAfetEmergencyLevel = (EditText)findViewById(R.id.afet_emergency_level);
+
 
         radioGroupIsOpenForVolunteers = findViewById(R.id.groupForVolunteers);
         int radioId = radioGroupIsOpenForVolunteers.getCheckedRadioButtonId();
@@ -122,6 +129,7 @@ public class Create_Disaster_Event_On_Map extends AppCompatActivity implements O
                         try {
                             if (x.getString("disasterName").equals(((Spinner) findViewById(R.id.mainDisasterSpinner)).getSelectedItem().toString())) {
                                 disasterID = x.getString("disasterID");
+                                disasterName = x.getString("disasterName");
 
                             }
                         } catch (Exception e) {
@@ -318,7 +326,7 @@ public class Create_Disaster_Event_On_Map extends AppCompatActivity implements O
                     //sendDataToDB(); bunu yaz
                     reset(); // after create, reset stats
                 }else{
-                    Toast.makeText(this, "Fill empty parts!", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, "Boş Kısımları Tamamlayınız!", Toast.LENGTH_SHORT).show();
                 }
 
                 break;
@@ -337,6 +345,8 @@ public class Create_Disaster_Event_On_Map extends AppCompatActivity implements O
             editAfetLongitude = (EditText)findViewById(R.id.afet_longitude);
             editAfetMissingPerson = (EditText)findViewById(R.id.afet_missing_person);
             editAfetRescuedPerson = (EditText)findViewById(R.id.afet_rescued_person);
+            editAfetStatus = (EditText)findViewById(R.id.afet_status);
+            editAfetEmergencyLevel = (EditText)findViewById(R.id.afet_emergency_level);
 
             radioGroupIsOpenForVolunteers = findViewById(R.id.groupForVolunteers);
             int radioId = radioGroupIsOpenForVolunteers.getCheckedRadioButtonId();
@@ -398,6 +408,7 @@ public class Create_Disaster_Event_On_Map extends AppCompatActivity implements O
                 try{
                     if(x.getString("disasterName").equals(((Spinner)findViewById(R.id.mainDisasterSpinner)).getSelectedItem().toString())){
                         disasterID = x.getString("disasterID");
+                        disasterName = x.getString("disasterName");
 
                     }
                 }catch (Exception e){
@@ -424,6 +435,8 @@ public class Create_Disaster_Event_On_Map extends AppCompatActivity implements O
                 longitude = Double.parseDouble(editAfetLongitude.getText().toString());
                 missingPerson = Integer.parseInt(editAfetMissingPerson.getText().toString());
                 rescuedPerson = Integer.parseInt(editAfetRescuedPerson.getText().toString());
+                disasterStatus = editAfetStatus.getText().toString();
+                disasterEmergencyLevel = Integer.parseInt(editAfetEmergencyLevel.getText().toString());
 
                 if (radioButtonIsOpenForVolunteers.getText().toString().equals("EVET")) {
                     isOpenForVolunteers = true;
@@ -448,6 +461,8 @@ public class Create_Disaster_Event_On_Map extends AppCompatActivity implements O
                                 "Boylam : " + longitude + "\n" +
                                 "Kayıp İnsan Sayısı : " + missingPerson + "\n" +
                                 "Kurtarılan İnsan Sayısı : " + rescuedPerson + "\n" +
+                                "Afet Durum Bilgisi : " + disasterStatus + "\n" +
+                                "Afet Durum Düzeyi : " + disasterEmergencyLevel + "\n" +
                                 "Gönüllülere Açık Mı : " + stringIsOpenForVolunteers + "\n")
                         );
                 mMap.setInfoWindowAdapter(new CustomInfoWindowAdapter(Create_Disaster_Event_On_Map.this));
@@ -488,6 +503,8 @@ public class Create_Disaster_Event_On_Map extends AppCompatActivity implements O
             ((EditText)(findViewById(R.id.afet_longitude))).setText("");
             ((EditText)(findViewById(R.id.afet_missing_person))).setText("");
             ((EditText)(findViewById(R.id.afet_rescued_person))).setText("");
+            ((EditText)(findViewById(R.id.afet_status))).setText("");
+            ((EditText)(findViewById(R.id.afet_emergency_level))).setText("");
 
             ((RadioGroup)(findViewById(R.id.groupForVolunteers))).clearCheck();
             stringIsOpenForVolunteers = "";

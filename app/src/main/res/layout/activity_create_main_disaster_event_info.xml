@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".Create_Disaster_Event_On_Map">
+    tools:context=".Create_Main_Disaster_Event_Info">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -21,14 +21,7 @@
             android:layout_gravity="left"
             android:layout_weight="1">
         </TextView>
-        <Spinner
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="right"
-            android:layout_weight="1"
-            android:id="@+id/mainDisasterSpinner">
 
-        </Spinner>
     </LinearLayout>
 
     <TextView
@@ -40,7 +33,6 @@
     </TextView>
 
     <LinearLayout
-        android:id="@+id/AfetIDLayout"
         android:layout_width="match_parent"
         android:layout_height="34dp"
         android:layout_weight="0"
@@ -48,7 +40,7 @@
         android:paddingRight="16dp"
         tools:ignore="MissingConstraints">
 
-        <TextView
+        <EditText
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/afet_id"
@@ -60,13 +52,12 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Afet Parçası İsmi:"
+        android:text="Afet İsmi:"
         android:paddingLeft="16dp"
         android:textSize="10sp">
     </TextView>
 
     <LinearLayout
-        android:id="@+id/AfetSubpartLayout"
         android:layout_width="match_parent"
         android:layout_height="34dp"
         android:layout_weight="0"
@@ -77,7 +68,7 @@
         <EditText
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/afet_subpart_name"
+            android:id="@+id/afet_name"
             android:textSize="12dp"
             android:layout_weight="1"
             />
@@ -86,13 +77,12 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Afet Parçası ID:"
+        android:text="Afet Tipi:"
         android:paddingLeft="16dp"
         android:textSize="10sp">
     </TextView>
 
     <LinearLayout
-        android:id="@+id/AfetSubpartIDLayout"
         android:layout_width="match_parent"
         android:layout_height="34dp"
         android:layout_weight="0"
@@ -103,130 +93,7 @@
         <EditText
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/afet_subpart_ID"
-            android:textSize="12dp"
-            android:layout_weight="1"
-            />
-    </LinearLayout>
-
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Afet Adresi:"
-        android:paddingLeft="16dp"
-        android:textSize="10sp">
-    </TextView>
-
-    <LinearLayout
-        android:id="@+id/AfetAdressLayout"
-        android:layout_width="match_parent"
-        android:layout_height="34dp"
-        android:layout_weight="0"
-        android:paddingLeft="16dp"
-        android:paddingRight="16dp"
-        tools:ignore="MissingConstraints">
-
-        <EditText
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/afet_address"
-            android:textSize="12dp"
-            android:layout_weight="1"
-            />
-    </LinearLayout>
-
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Afet Enlem ve Boylam Bilgisi:"
-        android:paddingLeft="16dp"
-        android:textSize="10sp">
-    </TextView>
-
-    <LinearLayout
-        android:id="@+id/AfetLatitudeAndLongitudeLayout"
-        android:layout_width="match_parent"
-        android:layout_height="34dp"
-        android:layout_weight="0"
-        android:paddingLeft="16dp"
-        android:paddingRight="16dp"
-        tools:ignore="MissingConstraints">
-
-        <EditText
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/afet_latitude"
-            android:textSize="12dp"
-            android:layout_weight="1"
-            />
-
-        <EditText
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/afet_longitude"
-            android:textSize="12dp"
-            android:layout_weight="1"
-            />
-    </LinearLayout>
-
-
-
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Kayıp İnsan Sayısı ve Kurtarılan İnsan Sayısı:"
-        android:paddingLeft="16dp"
-        android:textSize="10sp">
-    </TextView>
-
-    <LinearLayout
-        android:id="@+id/AfetMissingAndRescuedPersonLayout"
-        android:layout_width="match_parent"
-        android:layout_height="34dp"
-        android:layout_weight="0"
-        android:paddingLeft="16dp"
-        android:paddingRight="16dp"
-        tools:ignore="MissingConstraints">
-
-        <EditText
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/afet_missing_person"
-            android:textSize="12dp"
-            android:layout_weight="1"
-            />
-        <EditText
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/afet_rescued_person"
-            android:textSize="12dp"
-            android:layout_weight="1"
-            />
-    </LinearLayout>
-
-
-
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Afet Durum Bilgisi:"
-        android:paddingLeft="16dp"
-        android:textSize="10sp">
-    </TextView>
-
-    <LinearLayout
-        android:id="@+id/AfetStatusLayout"
-        android:layout_width="match_parent"
-        android:layout_height="34dp"
-        android:layout_weight="0"
-        android:paddingLeft="16dp"
-        android:paddingRight="16dp"
-        tools:ignore="MissingConstraints">
-
-        <EditText
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/afet_status"
+            android:id="@+id/afet_type"
             android:textSize="12dp"
             android:layout_weight="1"
             />
@@ -241,7 +108,6 @@
     </TextView>
 
     <LinearLayout
-        android:id="@+id/AfetEmergencyLevelLayout"
         android:layout_width="match_parent"
         android:layout_height="34dp"
         android:layout_weight="0"
@@ -258,48 +124,121 @@
             />
     </LinearLayout>
 
-    <androidx.appcompat.widget.LinearLayoutCompat
-        android:id="@+id/AfetIsOpenForVolunteersLayout"
+    <TextView
         android:layout_width="match_parent"
-        android:layout_height="40dp"
-        android:orientation="vertical"
-        >
-        <TextView
+        android:layout_height="wrap_content"
+        android:text="Başlangıç Enlem ve Boylam Bilgileri:"
+        android:paddingLeft="16dp"
+        android:textSize="10sp">
+    </TextView>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="34dp"
+        android:layout_weight="0"
+        android:paddingLeft="16dp"
+        android:paddingRight="16dp"
+        tools:ignore="MissingConstraints">
+
+        <EditText
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:paddingLeft="16dp"
-            android:text="Gönüllülere Açık Mı:"
-            android:textColor="@color/black"
-            android:textSize="10sp" />
-
-        <RadioGroup
-            android:id="@+id/groupForVolunteers"
-            android:orientation="horizontal"
-            android:paddingLeft="90dp"
-            android:paddingRight="90dp"
+            android:id="@+id/afet_latitude_start"
+            android:textSize="12dp"
+            android:layout_weight="1"
+            />
+        <EditText
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="center">
-            <RadioButton
-                android:id="@+id/btnforVolunteerYes"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_weight="1"
-                android:text="EVET"
-                android:textSize="10sp"/>
+            android:id="@+id/afet_longitude_start"
+            android:textSize="12dp"
+            android:layout_weight="1"
+            />
+    </LinearLayout>
 
-            <RadioButton
-                android:id="@+id/btnforVolunteerNo"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_weight="1"
-                android:text="HAYIR"
-                android:textSize="10sp"/>
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Bitiş Enlem ve Boylam Bilgileri:"
+        android:paddingLeft="16dp"
+        android:textSize="10sp">
+    </TextView>
 
-        </RadioGroup>
-    </androidx.appcompat.widget.LinearLayoutCompat>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="34dp"
+        android:layout_weight="0"
+        android:paddingLeft="16dp"
+        android:paddingRight="16dp"
+        tools:ignore="MissingConstraints">
+
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/afet_latitude_end"
+            android:textSize="12dp"
+            android:layout_weight="1"
+            />
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/afet_longitude_end"
+            android:textSize="12dp"
+            android:layout_weight="1"
+            />
+    </LinearLayout>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Afet Gerçekleşme Tarihi:"
+        android:paddingLeft="16dp"
+        android:textSize="10sp">
+    </TextView>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="34dp"
+        android:layout_weight="0"
+        android:paddingLeft="16dp"
+        android:paddingRight="16dp"
+        tools:ignore="MissingConstraints">
+
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/afet_date"
+            android:textSize="12dp"
+            android:layout_weight="1"
+            />
+    </LinearLayout>
+
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Afet Üssü :"
+        android:paddingLeft="16dp"
+        android:textSize="10sp">
+    </TextView>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="34dp"
+        android:layout_weight="0"
+        android:paddingLeft="16dp"
+        android:paddingRight="16dp"
+        tools:ignore="MissingConstraints">
+
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/afet_base"
+            android:textSize="12dp"
+            android:layout_weight="1"
+            />
+    </LinearLayout>
+
 
     <LinearLayout
         android:id="@+id/AfetBilgiOlusturLayout"
@@ -316,8 +255,8 @@
             android:text="Oluştur"
             android:textColor="#000"
             android:background="#1212"
-            android:id="@+id/btn_createDisaster">
-            </Button>
+            android:id="@+id/btn_createMainDisasterInfo">
+        </Button>
 
         <Button
             android:layout_width="wrap_content"
@@ -325,48 +264,12 @@
             android:text="Sıfırla"
             android:textColor="#000"
             android:background="#6767"
-            android:id="@+id/btn_resetButton"
+            android:id="@+id/btn_createMainDisasterResetInfo"
 
             >
         </Button>
 
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:text="Koordinatlar "
-            android:id="@+id/coordinateText"
-            android:textColor="#000"
-            android:paddingLeft="10dp"
-            android:textSize="20sp">
-        </TextView>
-
     </LinearLayout>
-
-    <LinearLayout
-        android:layout_weight="1"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        tools:ignore="MissingConstraints">
-
-        <fragment xmlns:android="http://schemas.android.com/apk/res/android"
-            xmlns:tools="http://schemas.android.com/tools"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/create_disaster_event_map"
-            android:layout_weight="1"
-            android:name="com.google.android.gms.maps.SupportMapFragment" />
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="KONUM"
-            android:textSize="10sp"
-            android:gravity="center"
-            android:layout_weight="0">
-        </TextView>
-
-    </LinearLayout>
-
 
 
 </LinearLayout>

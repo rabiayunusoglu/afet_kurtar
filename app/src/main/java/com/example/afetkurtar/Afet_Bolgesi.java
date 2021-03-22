@@ -46,6 +46,24 @@ public class Afet_Bolgesi extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+
+        Button btnShowSubpartMap = (Button) findViewById(R.id.btnShowSubparts);
+        btnShowSubpartMap.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View view){
+                Intent intent = new Intent(Afet_Bolgesi.this, Show_Subparts_Of_Disaster.class);
+                startActivity(intent);
+            }
+        });
+
+        Button btnCreateDisasterInfo = (Button) findViewById(R.id.btnCreateMainDisasterEvent);
+        btnCreateDisasterInfo.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View view){
+                Intent intent = new Intent(Afet_Bolgesi.this, Create_Main_Disaster_Event_Info.class);
+                startActivity(intent);
+            }
+        });
     }
 
     public boolean isServicesOk(){

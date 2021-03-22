@@ -57,6 +57,8 @@
         <activity android:name=".Volunteer_Emergency" />
         <activity android:name=".ScreenActivity" />
         <activity android:name=".Create_Disaster_Event_On_Map" />
+        <activity android:name=".Show_Subparts_Of_Disaster" />
+        <activity android:name=".Create_Main_Disaster_Event_Info" />
         <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

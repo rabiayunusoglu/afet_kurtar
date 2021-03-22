@@ -16,9 +16,9 @@
         tools:ignore="MissingConstraints">
 
         <Button
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="   Harita   "
+            android:text="Harita"
             android:layout_marginTop="12dp"
             android:textColor="#fff"
             android:background="#66ff"
@@ -27,11 +27,28 @@
 
         <Button
             android:id="@+id/btnCreateDisaster"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_marginTop="72dp"
             android:background="#66ff"
             android:layout_height="wrap_content"
-            android:text="Afet Bilgi" />
+            android:text="Afet Parçası Bilgi Girişi" />
+
+        <Button
+            android:id="@+id/btnCreateMainDisasterEvent"
+            android:layout_width="match_parent"
+            android:layout_marginTop="132dp"
+            android:background="#66ff"
+            android:layout_height="wrap_content"
+            android:text="Afet Bilgisi Oluştur " />
+
+        <Button
+            android:id="@+id/btnShowSubparts"
+            android:layout_width="match_parent"
+            android:layout_marginTop="192dp"
+            android:background="#66ff"
+            android:layout_height="wrap_content"
+            android:text=" Subpart Haritası" />
+
 
     </RelativeLayout>
 
