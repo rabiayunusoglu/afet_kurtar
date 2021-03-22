@@ -3,23 +3,45 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:layout_weight="1"
     >
-    <Button
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+     <Button
         android:id="@+id/history_geri_button"
         android:text="Geri"
+        android:layout_weight="1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         tools:ignore="MissingConstraints">
+        </Button>
+    </LinearLayout>
+        <TextView
+            android:id="@+id/History_change_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Takım Durum Geçmişi"
+            android:textColor="@color/black"
+            android:textSize="20dp"
+            tools:ignore="MissingConstraints">
 
-    </Button>
+        </TextView>
     <ScrollView
         android:id="@+id/scrollview"
         android:layout_width="match_parent"
-        android:layout_height="500dp"
+        android:layout_height="600dp"
+        android:layout_weight="1"
         android:background="@android:color/darker_gray"
         tools:ignore="MissingConstraints"
-        app:layout_constraintTop_toBottomOf="@id/history_geri_button">
+       >
 
         <LinearLayout
             android:id="@+id/layoutScroll"
@@ -35,37 +57,24 @@
 
     </ScrollView>
 
-    <TextView
-        android:id="@+id/type"
-        android:layout_width="350dp"
-        android:layout_height="26dp"
-        android:layout_marginStart="36dp"
-        android:layout_marginLeft="36dp"
-        android:background="@color/white"
-        android:textAlignment="center"
-        android:text="Bildirimler"
-        android:textColor="@color/black"
-        android:textSize="18sp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.85"
-        android:gravity="center_horizontal" />
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:gravity="center"
+       >
     <Button
-        android:id="@+id/gonderbutton"
+        android:id="@+id/Refresh_History_Button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Gönder"
+        android:text="Afet/Takım Durum Geçmişi"
         app:backgroundTint="#352D20"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.498"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/type"
-        app:layout_constraintVertical_bias="0.1" />
+        android:layout_weight="1"
 
+        tools:ignore="MissingConstraints" />
+    </LinearLayout>
+</LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>
 
 

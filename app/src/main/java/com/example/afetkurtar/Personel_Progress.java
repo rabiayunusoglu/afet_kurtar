@@ -14,6 +14,8 @@ import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.Spinner;
+import android.widget.TextView;
+import android.widget.Toast;
 
 
 import com.android.volley.Request;
@@ -39,12 +41,12 @@ import java.util.ArrayList;
 public class Personel_Progress extends AppCompatActivity  {
     DrawerLayout drawerLayout;
     GoogleSignInClient mGoogleSignInClient;
-    GoogleSignInAccount account;
     RequestQueue queue;
     Spinner spinner;
     ArrayAdapter adapter;
-    ArrayList<String> list2 = new ArrayList<String>();
-    String TeamID = "0";
+    ArrayList<String> EquipmentName = new ArrayList<String>();  // Spinner icin equipment Listesi
+    ArrayList<JSONObject> EquimentData = new ArrayList<JSONObject>(); //Equipment ID ye buradan eris
+    JSONObject TeamInfo;
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -72,7 +74,7 @@ public class Personel_Progress extends AppCompatActivity  {
                 .requestEmail()
                 .build();
         mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
-        account = GoogleSignIn.getLastSignedInAccount(this);
+
 
         getTeamID();
     }
@@ -93,12 +95,13 @@ public class Personel_Progress extends AppCompatActivity  {
             for(String x:list){
                 try {
                     JSONObject tmp = new JSONObject(x);
-                    list2.add(tmp.getString("equipmentName"));
+                    EquipmentName.add(tmp.getString("equipmentName"));
+                    EquimentData.add(tmp);
                 }catch (Exception e){
                     // e.printStackTrace();
                 }
             }
-            adapter = new ArrayAdapter<String>(getApplicationContext(),  android.R.layout.simple_spinner_dropdown_item, list2);
+            adapter = new ArrayAdapter<String>(getApplicationContext(),  android.R.layout.simple_spinner_dropdown_item, EquipmentName);
             adapter.setDropDownViewResource( android.R.layout.simple_spinner_dropdown_item);
             spinner.setAdapter(adapter);
         }catch (Exception e){
@@ -129,33 +132,21 @@ public class Personel_Progress extends AppCompatActivity  {
                 });
         queue.add(jsonObjectRequest);
     }
+
     /*
-    public void create(int subID, String status, int manpow, int equip) {
-        JSONObject obj = new JSONObject();
-        try {
-            obj.put("assignedSubpartID", subID);
-            obj.put("status", status);
-            obj.put("needManPower",manpow);
-            obj.put("needEquipment",equip);
-
-        }catch (Exception e){
-            System.out.println(e);
-        }
-        jsonRequest("https://afetkurtar.site/api/team/create.php",obj);
-        String cevap = tmp.toString();
-
-
-    }
+                ******************************** GET TEM ID YERINE PERSONEL ANASAYFADA PERSONEL BILGILERI PUBLIC OLARAK TUTULACAK( GUNCELLENECEK)
      */
     public void getTeamID(){
-        String id = account.getId();
+        String id = "";
     //    id = "3";
         JSONObject obj = new JSONObject();
         try {
+            id = MainActivity.userInfo.getString("userID");
             obj.put("personnelID", id);
         }catch (Exception e){
             System.out.println(e);
-        }String cevap;
+        }
+
         JsonObjectRequest request = new JsonObjectRequest(
                 Request.Method.POST, // the request method
                 "https://afetkurtar.site/api/personnelUser/search.php", // the URL
@@ -170,7 +161,7 @@ public class Personel_Progress extends AppCompatActivity  {
                                 cevap = cevap.substring(1,cevap.length()-1);
                                 JSONObject tmp = new JSONObject(cevap);
                                 cevap = tmp.getString("personnelID");
-                                TeamID = cevap;
+                                getTeamInfo(cevap);
                             } catch (JSONException e) {
                                 e.printStackTrace();
                             }
@@ -187,33 +178,85 @@ public class Personel_Progress extends AppCompatActivity  {
                 });
         queue.add(request);
     }
+    public void getTeamInfo(String id){
 
-    public void update(JSONObject obj){
+        JSONObject obj = new JSONObject();
+        try {
+           // obj.put("teamID", id);
+            obj.put("teamID", 1); // TEST ETMEK ICIN KULLANILABILIR
+        }catch (Exception e){
+        }
 
-     // jsonRequest("https://afetkurtar.site/api/personnelUser/update.php",obj);
-        /*
-         *
-         *  UPDATE KISMI DAHA PHP OLARAK EKLENMEDI
-         *
-         *
-         */
+        JsonObjectRequest request = new JsonObjectRequest(
+                Request.Method.POST, // the request method
+                "https://afetkurtar.site/api/team/search.php", // the URL
+                obj, // the parameters for the php
+                new Response.Listener<JSONObject>() { // the response listener
+                    @Override
+                    public void onResponse(JSONObject response){
+                        try {
+                            String cevap = response.getString("records");
+                            cevap = cevap.substring(1,cevap.length()-1);
+                            TeamInfo = new JSONObject(cevap);
+                            ((TextView)findViewById(R.id.personel_current_status)).setText(TeamInfo.getString("status"));
+                            ((TextView)findViewById(R.id.personel_current_needManPower)).setText(TeamInfo.getString("needManPower"));
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    }
+                },
+                new Response.ErrorListener() { // the error listener
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        //  addUser(account);
+                    }
+                });
+        queue.add(request);
     }
 
+
+
+    public void update(JSONObject obj){
+        JsonObjectRequest request = new JsonObjectRequest(
+                Request.Method.POST, // the request method
+                "https://afetkurtar.site/api/team/update.php", // the URL
+                obj, // the parameters for the php
+                new Response.Listener<JSONObject>() { // the response listener
+                    @Override
+                    public void onResponse(JSONObject response){
+                        try {
+                            getTeamInfo(TeamInfo.getString("teamID"));
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                        ((EditText)findViewById(R.id.updateProgress)).setText(null);
+                        ((EditText)findViewById(R.id.updateManpower)).setText(null);
+                    }
+                },
+                new Response.ErrorListener() { // the error listener
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        //  addUser(account);
+                    }
+                });
+        queue.add(request);
+    }
     public void HandleUpdate(){
-        System.out.println(((Spinner)findViewById(R.id.listOfEquipment)).getSelectedItem().toString());
-        System.out.println(TeamID);
-
-
-        String progress = null;
-        int equipment = 0, manPower = 0;
+      //  System.out.println(((Spinner)findViewById(R.id.listOfEquipment)).getSelectedItem().toString());
+        String selectedItem = "";
+        boolean statusUpdated = false;
+        String progress = (String) ((TextView)findViewById(R.id.personel_current_status)).getText();
+        String progresstmp = "";
+        int equipment = 0,manPowertmp = -1 ,manPower = Integer.parseInt((String)((TextView)findViewById(R.id.personel_current_needManPower)).getText());
         boolean p = true,e = true,m = true;
         try {
             EditText prog = findViewById(R.id.updateProgress);
-            progress = prog.getText().toString();
+            progresstmp = prog.getText().toString();
         }catch (Exception ex){
             p = false;
         }
         try {
+            selectedItem = ((Spinner)findViewById(R.id.listOfEquipment)).getSelectedItem().toString();
             EditText equip = findViewById(R.id.updateEquipment);
             equipment = Integer.parseInt(equip.getText().toString());
         }catch (Exception ex){
@@ -221,24 +264,124 @@ public class Personel_Progress extends AppCompatActivity  {
         }
         try {
             EditText manPow = findViewById(R.id.updateManpower);
-            manPower = Integer.parseInt(manPow.getText().toString());
+            manPowertmp = Integer.parseInt(manPow.getText().toString());
         } catch (Exception ex){
             m = false;
         }
 
-        if(p == true){
-            System.out.println(progress);
-        }
-        if(e == true){
-            System.out.println(equipment);
-        }
-        if(m == true){
-            System.out.println(manPower);
+        if(p == true && !progresstmp.equals("")){
+          //  System.out.println(progress);
+            statusUpdated = true;
         }
 
+        if(m == true){
+        //     System.out.println(manPower);
+        }
+
+
+        // Status ve Manpower icin update
+        JSONObject updateStatAndManpow = new JSONObject();
+        try {
+            updateStatAndManpow.put("teamID",TeamInfo.getString("teamID"));
+            if(statusUpdated){
+                updateStatAndManpow.put("status",progresstmp);
+            }
+            else {
+                updateStatAndManpow.put("status", progress);
+            }
+            if(manPowertmp > -1) {
+                updateStatAndManpow.put("needManPower", manPowertmp);
+            }else{
+                updateStatAndManpow.put("needManPower", manPower);
+            }
+        } catch (JSONException jsonException) {
+            jsonException.printStackTrace();
+        }
+        update(updateStatAndManpow);
+
+        if(statusUpdated){
+            addNewStatus(progresstmp);
+        }
+
+        if(e == true){
+            if(equipment > 0 && selectedItem.length()>0){
+                equipmentRequest(selectedItem,equipment);
+            }
+        }
 
     }
+    public void addNewStatus(String status){
+        JSONObject obj = new JSONObject();
+        try {
+            obj.put("statusMessage",status);
+            obj.put("teamID",TeamInfo.getString("teamID"));
+            obj.put("subpartID",TeamInfo.getString("assignedSubpartID"));
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
 
+        JsonObjectRequest request = new JsonObjectRequest(
+                Request.Method.POST, // the request method
+                "https://afetkurtar.site/api/status/create.php", // the URL
+                obj, // the parameters for the php
+                new Response.Listener<JSONObject>() { // the response listener
+                    @Override
+                    public void onResponse(JSONObject response){
+                        System.out.println(response.toString());
+                    }
+                },
+                new Response.ErrorListener() { // the error listener
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        //  addUser(account);
+                    }
+                });
+        queue.add(request);
+    }
+    public void equipmentRequest(String SelectedItem,int quantitiy){
+        int equipmentid = -1;
+        for(JSONObject x: EquimentData){
+            try{
+                if(x.getString("equipmentName").equals(SelectedItem)){
+                    equipmentid = Integer.parseInt(x.getString("equipmentID"));
+                }
+            }catch (Exception e){
+
+            }
+        }
+        if(equipmentid > -1) {
+            JSONObject obj = new JSONObject();
+            try {
+                // obj.put("statusMessage",status);
+                obj.put("quantity", quantitiy);
+                obj.put("equipmentID", equipmentid);
+                obj.put("teamRequestID",TeamInfo.getString("teamID"));
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+
+            JsonObjectRequest request = new JsonObjectRequest(
+                    Request.Method.POST, // the request method
+                    "https://afetkurtar.site/api/equipmentRequest/create.php", // the URL
+                    obj, // the parameters for the php
+                    new Response.Listener<JSONObject>() { // the response listener
+                        @Override
+                        public void onResponse(JSONObject response) {
+                            System.out.println(response.toString());
+                            ((EditText)findViewById(R.id.updateEquipment)).setText(null);
+                        }
+                    },
+                    new Response.ErrorListener() { // the error listener
+                        @Override
+                        public void onErrorResponse(VolleyError error) {
+                            //  addUser(account);
+                        }
+                    });
+            queue.add(request);
+        }else{
+            Toast.makeText(this, "HATA : Ekipman ID si Tabloda Bulunamadi", Toast.LENGTH_SHORT).show();
+        }
+    }
 
     public void onClick(View v) {
         switch (v.getId()) {
@@ -247,10 +390,14 @@ public class Personel_Progress extends AppCompatActivity  {
 
                 break;
             case R.id.HistoryButton:
-                Intent intent = new Intent(this, Personel_Progress_History.class);
-                intent.putExtra("Team_id", TeamID);
-                startActivity(intent);
+                try {
+                    Intent intent = new Intent(this, Personel_Progress_History.class);
+                    intent.putExtra("Team_id", TeamInfo.getString("teamID"));
+                    intent.putExtra("Sub_id", TeamInfo.getString("assignedSubpartID"));
+                    startActivity(intent);
+                }catch (Exception e){
 
+                }
                 break;
 
         }

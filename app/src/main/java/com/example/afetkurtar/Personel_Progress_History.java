@@ -25,12 +25,14 @@ import java.util.ArrayList;
 
 public class Personel_Progress_History extends AppCompatActivity {
     String TeamID;
+    String SubPartID;
     RequestQueue queue;
+    boolean TeamOrSub;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_personel__progress__history);
-        Button but = findViewById(R.id.gonderbutton);
+        Button but = findViewById(R.id.Refresh_History_Button);
         //  lin = findViewById(R.id.LinearLay);
         but.setOnClickListener(this::onClick);
         findViewById(R.id.history_geri_button).setOnClickListener(this::onClick);
@@ -38,14 +40,21 @@ public class Personel_Progress_History extends AppCompatActivity {
 
         Bundle bundle = getIntent().getExtras();
         TeamID = bundle.getString("Team_id");
-
-        getData(TeamID);
+        SubPartID = bundle.getString("Sub_id");
+        TeamID = "1";   // ******************************************************************* TEST AMACLI / SILINECEK
+        SubPartID = "2"; // ******************************************************************* TEST AMACLI / SILINECEK
+        TeamOrSub = true;
+        getData(TeamID, TeamOrSub);
 
     }
-    public void getData(String ID){
+    public void getData(String ID,boolean bool){
         JSONObject obj = new JSONObject();
         try {
+            if(bool)
             obj.put("teamID",ID); //DEGISECEK
+            else{
+                obj.put("subpartID",SubPartID);
+            }
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -53,7 +62,7 @@ public class Personel_Progress_History extends AppCompatActivity {
         // ASAGISI DEGISECEK -- TEST AMACLI YAPILDI
 
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest
-                (Request.Method.GET, "https://afetkurtar.site/api/users/search.php", null, new Response.Listener<JSONObject>() {
+                (Request.Method.POST, "https://afetkurtar.site/api/status/search.php", obj, new Response.Listener<JSONObject>() {
 
                     @Override
                     public void onResponse(JSONObject response) {
@@ -93,7 +102,7 @@ public class Personel_Progress_History extends AppCompatActivity {
                 try {
                     JSONObject tmp = new JSONObject(list.get(x));
 
-                    list2.add(tmp.getString("userID")); // DEGISECEK
+                    list2.add("Tarih   : "+tmp.getString("statusTime") + "\nDurum : "+tmp.getString("statusMessage"));
                 }catch (Exception e){
                     // e.printStackTrace();
                 }
@@ -108,7 +117,7 @@ public class Personel_Progress_History extends AppCompatActivity {
             View view = inflater.inflate(R.layout.activity_personel_history_addlayout, null);
             LinearLayout scroll = findViewById(R.id.layoutScroll);
             TextView linear = (TextView) view.findViewById(R.id.HistoryText);
-            linear.setText(x +" " + k);
+            linear.setText(x);
             linear.setOnClickListener(this::onClick);
             k++;
             scroll.addView(view);
@@ -117,23 +126,26 @@ public class Personel_Progress_History extends AppCompatActivity {
 
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.HistoryText:
-                /*
-                Burada Sunucuya sorgu ile login olan kisinin hangi yetkiye sahip oldugunu bulup
-                ona göre yonlendirme yapılacak.
-                 */
-                TextView linear = (TextView) v.findViewById(R.id.HistoryText);
-                System.out.println(linear.getText());
-                // signIn ile asagidaki update UI kısmında oluyor (startActivity)
+            case R.id.Refresh_History_Button:
+
+                if(TeamOrSub){
+                    TeamOrSub = false;
+                    ((TextView)findViewById(R.id.History_change_view)).setText("Afet Durum Geçmişi");
+                    ((LinearLayout)findViewById(R.id.layoutScroll)).removeAllViews();
+                    getData(SubPartID,TeamOrSub);
+                }else{
+                    TeamOrSub = true;
+                    ((TextView)findViewById(R.id.History_change_view)).setText("Takım Durum Geçmişi");
+                    ((LinearLayout)findViewById(R.id.layoutScroll)).removeAllViews();
+                    getData(TeamID,TeamOrSub);
+                }
 
                 break;
 
             case R.id.history_geri_button:
                 finish();
                 break;
-            case R.id.gonderbutton:
-               // addtext();
-                break;
+
         }
 
     }
