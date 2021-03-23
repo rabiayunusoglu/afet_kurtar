@@ -1,0 +1,35 @@
+[21-Mar-2021 21:27:13 Europe/Istanbul] PHP Notice:  Undefined index: noticeImage in /home/u0025294/public_html/api/notice/create.php on line 24
+[21-Mar-2021 21:27:13 Europe/Istanbul] PHP Notice:  Undefined index: noticeImage in /home/u0025294/public_html/api/notice/create.php on line 47
+[21-Mar-2021 21:27:13 Europe/Istanbul] PHP Warning:  A non-numeric value encountered in /home/u0025294/public_html/api/notice/create.php on line 71
+[21-Mar-2021 21:27:13 Europe/Istanbul] PHP Warning:  A non-numeric value encountered in /home/u0025294/public_html/api/notice/create.php on line 71
+[21-Mar-2021 21:27:13 Europe/Istanbul] PHP Warning:  simplexml_load_file(http://maps.googleapis.com/maps/api/geocode/xml?address=&amp;sensor=true&amp;key=AIzaSyCxLUKYaDqQEIIQGQGQmC0ipdS04IXRoRw): failed to open stream: HTTP request failed! HTTP/1.0 400 Bad Request
+ in /home/u0025294/public_html/api/notice/create.php on line 90
+[21-Mar-2021 21:27:13 Europe/Istanbul] PHP Warning:  simplexml_load_file(): I/O warning : failed to load external entity &quot;http://maps.googleapis.com/maps/api/geocode/xml?address=&amp;sensor=true&amp;key=AIzaSyCxLUKYaDqQEIIQGQGQmC0ipdS04IXRoRw&quot; in /home/u0025294/public_html/api/notice/create.php on line 90
+[21-Mar-2021 21:30:12 Europe/Istanbul] PHP Notice:  Undefined index: noticeImage in /home/u0025294/public_html/api/notice/create.php on line 24
+[21-Mar-2021 21:30:12 Europe/Istanbul] PHP Notice:  Undefined index: noticeImage in /home/u0025294/public_html/api/notice/create.php on line 47
+[21-Mar-2021 21:30:12 Europe/Istanbul] PHP Warning:  A non-numeric value encountered in /home/u0025294/public_html/api/notice/create.php on line 71
+[21-Mar-2021 21:30:12 Europe/Istanbul] PHP Warning:  A non-numeric value encountered in /home/u0025294/public_html/api/notice/create.php on line 71
+[21-Mar-2021 21:30:12 Europe/Istanbul] PHP Warning:  simplexml_load_file(http://maps.googleapis.com/maps/api/geocode/xml?address=&amp;sensor=true&amp;key=AIzaSyCxLUKYaDqQEIIQGQGQmC0ipdS04IXRoRw): failed to open stream: HTTP request failed! HTTP/1.0 400 Bad Request
+ in /home/u0025294/public_html/api/notice/create.php on line 90
+[21-Mar-2021 21:30:12 Europe/Istanbul] PHP Warning:  simplexml_load_file(): I/O warning : failed to load external entity &quot;http://maps.googleapis.com/maps/api/geocode/xml?address=&amp;sensor=true&amp;key=AIzaSyCxLUKYaDqQEIIQGQGQmC0ipdS04IXRoRw&quot; in /home/u0025294/public_html/api/notice/create.php on line 90
+[21-Mar-2021 21:32:50 Europe/Istanbul] PHP Notice:  Undefined index: noticeImage in /home/u0025294/public_html/api/notice/create.php on line 24
+[21-Mar-2021 21:32:50 Europe/Istanbul] PHP Notice:  Undefined index: noticeImage in /home/u0025294/public_html/api/notice/create.php on line 47
+[21-Mar-2021 21:32:50 Europe/Istanbul] PHP Warning:  A non-numeric value encountered in /home/u0025294/public_html/api/notice/create.php on line 71
+[21-Mar-2021 21:32:50 Europe/Istanbul] PHP Warning:  A non-numeric value encountered in /home/u0025294/public_html/api/notice/create.php on line 71
+[21-Mar-2021 21:32:50 Europe/Istanbul] PHP Warning:  simplexml_load_file(http://maps.googleapis.com/maps/api/geocode/xml?address=&amp;sensor=true&amp;key=AIzaSyCxLUKYaDqQEIIQGQGQmC0ipdS04IXRoRw): failed to open stream: HTTP request failed! HTTP/1.0 400 Bad Request
+ in /home/u0025294/public_html/api/notice/create.php on line 90
+[21-Mar-2021 21:32:50 Europe/Istanbul] PHP Warning:  simplexml_load_file(): I/O warning : failed to load external entity &quot;http://maps.googleapis.com/maps/api/geocode/xml?address=&amp;sensor=true&amp;key=AIzaSyCxLUKYaDqQEIIQGQGQmC0ipdS04IXRoRw&quot; in /home/u0025294/public_html/api/notice/create.php on line 90
+[21-Mar-2021 21:37:44 Europe/Istanbul] PHP Notice:  Undefined index: noticeImage in /home/u0025294/public_html/api/notice/create.php on line 24
+[21-Mar-2021 21:37:44 Europe/Istanbul] PHP Notice:  Undefined index: noticeImage in /home/u0025294/public_html/api/notice/create.php on line 47
+[21-Mar-2021 21:37:44 Europe/Istanbul] PHP Warning:  A non-numeric value encountered in /home/u0025294/public_html/api/notice/create.php on line 71
+[21-Mar-2021 21:37:44 Europe/Istanbul] PHP Warning:  A non-numeric value encountered in /home/u0025294/public_html/api/notice/create.php on line 71
+[21-Mar-2021 21:37:44 Europe/Istanbul] PHP Warning:  simplexml_load_file(http://maps.googleapis.com/maps/api/geocode/xml?address=&amp;sensor=true&amp;key=AIzaSyCxLUKYaDqQEIIQGQGQmC0ipdS04IXRoRw): failed to open stream: HTTP request failed! HTTP/1.0 400 Bad Request
+ in /home/u0025294/public_html/api/notice/create.php on line 90
+[21-Mar-2021 21:37:44 Europe/Istanbul] PHP Warning:  simplexml_load_file(): I/O warning : failed to load external entity &quot;http://maps.googleapis.com/maps/api/geocode/xml?address=&amp;sensor=true&amp;key=AIzaSyCxLUKYaDqQEIIQGQGQmC0ipdS04IXRoRw&quot; in /home/u0025294/public_html/api/notice/create.php on line 90
+[21-Mar-2021 21:48:21 Europe/Istanbul] PHP Notice:  Undefined index: noticeImage in /home/u0025294/public_html/api/notice/create.php on line 24
+[21-Mar-2021 21:48:21 Europe/Istanbul] PHP Notice:  Undefined index: noticeImage in /home/u0025294/public_html/api/notice/create.php on line 47
+[21-Mar-2021 21:48:21 Europe/Istanbul] PHP Warning:  A non-numeric value encountered in /home/u0025294/public_html/api/notice/create.php on line 71
+[21-Mar-2021 21:48:21 Europe/Istanbul] PHP Warning:  A non-numeric value encountered in /home/u0025294/public_html/api/notice/create.php on line 71
+[21-Mar-2021 21:48:21 Europe/Istanbul] PHP Warning:  simplexml_load_file(http://maps.googleapis.com/maps/api/geocode/xml?address=&amp;sensor=true&amp;key=AIzaSyCxLUKYaDqQEIIQGQGQmC0ipdS04IXRoRw): failed to open stream: HTTP request failed! HTTP/1.0 400 Bad Request
+ in /home/u0025294/public_html/api/notice/create.php on line 90
+[21-Mar-2021 21:48:21 Europe/Istanbul] PHP Warning:  simplexml_load_file(): I/O warning : failed to load external entity &quot;http://maps.googleapis.com/maps/api/geocode/xml?address=&amp;sensor=true&amp;key=AIzaSyCxLUKYaDqQEIIQGQGQmC0ipdS04IXRoRw&quot; in /home/u0025294/public_html/api/notice/create.php on line 90

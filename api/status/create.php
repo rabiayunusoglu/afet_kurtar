@@ -28,9 +28,11 @@ if(
 ){
  
     // set user property values
+     
     $status->statusMessage = isset($data["statusMessage"]) ? $data["statusMessage"] : "";
     $status->teamID = isset($data["teamID"]) ? $data["teamID"] : "";
- 
+    $status->subpartID = isset($data["subpartID"]) ? $data["subpartID"] : "";
+    
     // create the product
     if($status->create()){
  

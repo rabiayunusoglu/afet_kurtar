@@ -37,10 +37,10 @@ if (session_id() == '') {
                 <div class="collapse navbar-collapse" id="navbarSupportedContent">
                     <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                         <li class="nav-item">
-                            <a class="nav-link" aria-current="page" href="/authorizedUser.php">Aktif Afetler</a>
+                            <a class="nav-link" href="/authorizedUser.php">Aktif Afetler</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link active" href="/personelKaydi.php">Personel Kaydı</a>
+                            <a class="nav-link" href="/personelKaydi.php">Personel Kaydı</a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link" href="/ihbarlar.php">İhbarlar</a>
@@ -58,36 +58,66 @@ if (session_id() == '') {
         </nav>
     </header>
 
-    <div class="container main-container">
-        <div class="row">
-            <div class="col-lg-4 col-md-2"></div>
-            <div class="col-lg-4 col-md-8 form-box">
-                <form onsubmit="return false;" id="personnelForm">
-                    <div class="form-group">
-                        <label for="personnelEmail" style="font-size: 20px; font-weight:bold; color: #ECF0F5">Personel Emaili</label>
-                        <input type="email" class="form-control" id="personnelEmail" aria-describedby="emailHelp" placeholder="Personelin email adresini giriniz...">
-                    </div>
-                    <div class="form-group">
-                        <label for="personnelUsername" style="font-size: 20px; font-weight:bold; color: #ECF0F5">Personel Adı Soyadı</label>
-                        <input type="text" class="form-control" id="personnelUsername" placeholder="Personelin adı soyadını giriniz...">
-                    </div>
-                    <div class="form-group">
-                        <label for="personnelInstitution" style="font-size: 20px; font-weight:bold; color: #ECF0F5">Personel Kurumu</label>
-                        <input type="text" class="form-control" id="personnelInstitution" placeholder="Personelin çalıştığı kurumu giriniz...">
-                    </div>
-                    <div class="form-group">
-                        <label for="personnelRole" style="font-size: 20px; font-weight:bold; color: #ECF0F5">Personel Kurumdaki Rolü</label>
-                        <input type="text" class="form-control" id="personnelRole" placeholder="Personelin kurumdaki rolünü giriniz...">
-                    </div>
-                    <input type="button" onclick="registerPersonnel()" class="btn btn-primary" id="registerBtn" value="Kaydı Gerçekleştir"></input>
-                </form>
-            </div>
-        </div>
-    </div>
+    <?php
+    $disasterID = 0;
+    $latitude = 0.0;
+    $longitude = 0.0;
+    $disasterType = "";
+
+    if (isset($_GET["id"])) {
+        //The url you wish to send the POST request to
+        $url = "http://afetkurtar.site/api/disasterEvents/search.php";
+
+        $postdata = http_build_query(
+            array(
+                'disasterID' => (int)$_GET["id"]
+            )
+        );
+
+        $options = ['http' => [
+            'method' => 'POST',
+            'header' => 'Content-type:application/json',
+            'content' => $postdata
+        ]];
+
+        $context = stream_context_create($options);
+        $response = json_decode(file_get_contents($url, false, $context), true);
+
+        foreach ($response['records'] as $row) {
+            $disasterID = $row['disasterID'];
+            $disasterType = $row['disasterType'];
+            $latitude = $row['latitude'];
+            $longitude= $row['longitude'];
+        }
+    }
+    echo "<div id=\"map\" style=\"width:800px;height:600px\" disaster-id=\"" . $row['disasterID']."\" disaster-type=\"" . $row['disasterType']."\" latitude=\"" . $row['latitude']."\" longitude=\"" . $row['longitude']."\"></div>";
+
+    //The url you wish to send the POST request to
+    $url = "http://afetkurtar.site/api/subpart/search.php";
+
+    $postdata = http_build_query(
+        array(
+            'disasterID' => (int)$_GET["id"]
+        )
+    );
+
+    $options = ['http' => [
+        'method' => 'POST',
+        'header' => 'Content-type:application/json',
+        'content' => $postdata
+    ]];
+
+    $context = stream_context_create($options);
+    $response = json_decode(file_get_contents($url, false, $context), true);
+
+    foreach ($response['records'] as $row) {
+        echo "<div name=\"subpart\" subpart-id=\"" . $row['subpartID']."\" subpart-name=\"" . $row['subpartName']."\" latitude=\"" . $row['latitude']."\" longitude=\"" . $row['longitude']."\"></div>";
+    }
+    ?>
 
     <script src="https://code.jquery.com/jquery-3.5.1.min.js" integrity="sha256-9/aliU8dGd2tb6OSsuzixeV4y/faTqgFtohetphbbj0=" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/js/bootstrap.bundle.min.js" integrity="sha384-b5kHyXgcpbZJO/tY9Ul7kGkf1S0CWuKcCD38l8YkeH8z8QjE0GmW1gYU5S9FOnJ0" crossorigin="anonymous"></script>
     <script src="js/script.js"></script>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCxLUKYaDqQEIIQGQGQmC0ipdS04IXRoRw&callback=initMap&libraries=&v=weekly" async></script>
 </body>
-
 </html>

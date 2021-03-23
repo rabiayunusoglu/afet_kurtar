@@ -37,6 +37,7 @@ if($num>0){
         $equipmentRequest_item=array(
             "equipmentRequestID" => $equipmentRequestID,
             "quantity" => $quantity,
+            "equipmentID" => $equipmentID,
             "teamRequestID" => $teamRequestID
         );
  

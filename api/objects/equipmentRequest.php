@@ -8,6 +8,7 @@ class EquipmentRequest{
     // object properties
     public $equipmentRequestID;
     public $quantity;
+    public $equipmentID;
     public $teamRequestID;
  
     // constructor with $db as database connection
@@ -19,7 +20,7 @@ class EquipmentRequest{
  
         // select all query
         $query = "SELECT
-                    equipmentRequestID, quantity, teamRequestID
+                    equipmentRequestID, quantity,equipmentID, teamRequestID
                 FROM
                     " . $this->table_name . " ";
      
@@ -39,18 +40,20 @@ class EquipmentRequest{
     $query = "INSERT INTO
                 " . $this->table_name . "
             SET
-                quantity=:quantity, teamRequestID=:teamRequestID";
+                quantity=:quantity,equipmentID=:equipmentID, teamRequestID=:teamRequestID";
  
     // prepare query
     $stmt = $this->conn->prepare($query);
  
     // sanitize
-    $this->equipmentName=htmlspecialchars(strip_tags($this->equipmentName));
+    $this->quantity=htmlspecialchars(strip_tags($this->quantity));
+    $this->equipmentID=htmlspecialchars(strip_tags($this->equipmentID));
     $this->teamRequestID=htmlspecialchars(strip_tags($this->teamRequestID));
 
  
     // bind values
     $stmt->bindParam(":quantity", $this->quantity);
+    $stmt->bindParam(":equipmentID", $this->equipmentID);
     $stmt->bindParam(":teamRequestID", $this->teamRequestID);
 
  
@@ -66,12 +69,13 @@ class EquipmentRequest{
     function search(){
         // select all query
         $query = "SELECT
-                    equipmentRequestID, quantity, teamRequestID
+                    equipmentRequestID, quantity,equipmentID, teamRequestID
                 FROM
                     " . $this->table_name . "
                 WHERE
                     (equipmentRequestID = :equipmentRequestID OR :equipmentRequestID = '') 
                     AND (quantity = :quantity OR :quantity = '')
+                    AND (equipmentID = :equipmentID OR :equipmentID = '')
                     AND (teamRequestID = :teamRequestID OR :teamRequestID = '')";
      
         // prepare query statement
@@ -80,13 +84,15 @@ class EquipmentRequest{
 
         // sanitize
         $this->equipmentRequestID=htmlspecialchars(strip_tags($this->equipmentRequestID));
-        $this->equipmentName=htmlspecialchars(strip_tags($this->equipmentName));
+        $this->quantity=htmlspecialchars(strip_tags($this->quantity));
+        $this->equipmentID=htmlspecialchars(strip_tags($this->equipmentID));
         $this->teamRequestID=htmlspecialchars(strip_tags($this->teamRequestID));
 
     
         // bind values
         $stmt->bindParam(":equipmentRequestID", $this->equipmentRequestID);
         $stmt->bindParam(":quantity", $this->quantity);
+        $stmt->bindParam(":equipmentID", $this->equipmentID);
         $stmt->bindParam(":teamRequestID", $this->teamRequestID);
      
         // execute query

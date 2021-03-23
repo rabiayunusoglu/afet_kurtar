@@ -9,7 +9,9 @@ class Status{
     public $statusID;
     public $statusMessage;
     public $teamID;
+    public $subpartID;
     public $statusTime;
+    
  
     // constructor with $db as database connection
     public function __construct($db){
@@ -20,7 +22,7 @@ class Status{
  
         // select all query
         $query = "SELECT
-                    statusID, statusMessage, teamID, statusTime
+                    statusID, statusMessage, teamID,subpartID ,statusTime
                 FROM
                     " . $this->table_name . " ";
      
@@ -40,7 +42,7 @@ class Status{
     $query = "INSERT INTO
                 " . $this->table_name . "
             SET
-                statusMessage=:statusMessage, teamID=:teamID";
+                statusMessage=:statusMessage, teamID=:teamID, subpartID=:subpartID";
  
     // prepare query
     $stmt = $this->conn->prepare($query);
@@ -48,11 +50,13 @@ class Status{
     // sanitize
     $this->statusMessage=htmlspecialchars(strip_tags($this->statusMessage));
     $this->teamID=htmlspecialchars(strip_tags($this->teamID));
+    $this->subpartID=htmlspecialchars(strip_tags($this->subpartID));
 
  
     // bind values
     $stmt->bindParam(":statusMessage", $this->statusMessage);
     $stmt->bindParam(":teamID", $this->teamID);
+    $stmt->bindParam(":subpartID", $this->subpartID);
 
  
     // execute query
@@ -67,13 +71,14 @@ class Status{
     function search(){
         // select all query
         $query = "SELECT
-                    statusID, statusMessage, teamID, statusTime
+                    statusID, statusMessage, teamID,subpartID, statusTime
                 FROM
                     " . $this->table_name . "
                 WHERE
                     (statusID = :statusID OR :statusID = '') 
                     AND (statusMessage = :statusMessage OR :statusMessage = '')
                     AND (teamID = :teamID OR :teamID = '')
+                    AND (subpartID = :subpartID OR :subpartID = '')
                     AND (statusTime = :statusTime OR :statusTime = '')";
      
         // prepare query statement
@@ -84,13 +89,15 @@ class Status{
         $this->statusID=htmlspecialchars(strip_tags($this->statusID));
         $this->statusMessage=htmlspecialchars(strip_tags($this->statusMessage));
         $this->teamID=htmlspecialchars(strip_tags($this->teamID));
-        $this->teamID=htmlspecialchars(strip_tags($this->statusTime));
+        $this->subpartID=htmlspecialchars(strip_tags($this->subpartID));
+        $this->statusTime=htmlspecialchars(strip_tags($this->statusTime));
 
     
         // bind values
         $stmt->bindParam(":statusID", $this->statusID);
         $stmt->bindParam(":statusMessage", $this->statusMessage);
         $stmt->bindParam(":teamID", $this->teamID);
+        $stmt->bindParam(":subpartID", $this->subpartID);
         $stmt->bindParam(":statusTime", $this->statusTime);
      
         // execute query

@@ -37,10 +37,8 @@ if(
     $disasterEvents->disasterID = isset($data["disasterID"]) ? $data["disasterID"] : "";
     $disasterEvents->disasterID = isset($data["disasterType"]) ? $data["disasterType"] : "";
     $disasterEvents->emergencyLevel = isset($data["emergencyLevel"]) ? $data["emergencyLevel"] : "";
-    $disasterEvents->latitudeStart = isset($data["latitudeStart"]) ? $data["latitudeStart"] : "";
-    $disasterEvents->latitudeEnd = isset($data["latitudeEnd"]) ? $data["latitudeEnd"] : "";
-    $disasterEvents->longitudeStart = isset($data["longitudeStart"]) ? $data["longitudeStart"] : "";
-    $disasterEvents->longitudeEnd = isset($data["longitudeEnd"]) ? $data["longitudeEnd"] : "";
+    $disasterEvents->latitudeStart = isset($data["latitude"]) ? $data["latitude"] : "";
+    $disasterEvents->longitudeStart = isset($data["longitude"]) ? $data["longitude"] : "";
     $disasterEvents->disasterDate = isset($data["disasterDate"]) ? $data["disasterDate"] : "";
     $disasterEvents->disasterBase = isset($data["disasterBase"]) ? $data["disasterBase"] : "";
     $disasterEvents->disasterName = isset($data["disasterName"]) ? $data["disasterName"] : "";

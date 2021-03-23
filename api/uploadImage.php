@@ -13,8 +13,8 @@
          $errors[]="extension not allowed, please choose a JPEG or PNG file.";
       }
       
-      if($file_size > 2097152){
-         $errors[]='File size must be excately 2 MB';
+      if($file_size > 8388608){
+         $errors[]='File size must be excately 8 MB';
       }
       echo "https://afetkurtar.site/imgs/" . $file_name;
 
@@ -23,5 +23,7 @@
       }else{
          print_r($errors);
       }
+   }else{
+       echo "ERROR: isset is false.";
    }
 ?>

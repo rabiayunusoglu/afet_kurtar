@@ -20,6 +20,7 @@ $data = json_decode(file_get_contents("php://input"),true);
 $status->statusID = isset($data["statusID"]) ? $data["statusID"] : "";
 $status->statusMessage = isset($data["statusMessage"]) ? $data["statusMessage"] : "";
 $status->teamID = isset($data["teamID"]) ? $data["teamID"] : "";
+$status->subpartID = isset($data["subpartID"]) ? $data["subpartID"] : "";
 $status->statusType = isset($data["statusType"]) ? $data["statusType"] : "";
 
 // query status
@@ -46,7 +47,8 @@ if($num>0){
             "statusID" => $statusID,
             "statusMessage" => $statusMessage,
             "teamID" => $teamID,
-            "statusType" => $statusType,
+            "subpartID" => $subpartID,
+            "statusTime" => $statusTime,
         );
  
         array_push($status_arr["records"], $status_item);

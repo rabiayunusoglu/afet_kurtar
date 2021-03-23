@@ -29,6 +29,7 @@ if(
  
     // set user property values
     $equipmentRequest->quantity = isset($data["quantity"]) ? $data["quantity"] : "";
+    $equipmentRequest->equipmentID = isset($data["equipmentID"]) ? $data["equipmentID"] : "";
     $equipmentRequest->teamRequestID = isset($data["teamRequestID"]) ? $data["teamRequestID"] : "";
  
     // create the product

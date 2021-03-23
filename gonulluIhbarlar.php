@@ -76,7 +76,7 @@ if (session_id() == '') {
                         <label for="noticeImage" style="font-size: 20px; font-weight:bold; color: #ECF0F5">İhbar Fotoğrafı</label>
                         <input type="file" name= "noticeImage" class="form-control" id="noticeImage" placeholder="İhbar fotoğrafını yükleyiniz..." required>
                     </div>
-                    <input type="submit" onclick="sendNotice()" class="btn btn-primary" id="registerBtn">İhbarı Gönder</button>
+                    <input type="submit" onclick="sendNotice()" class="btn btn-primary" id="registerBtn" value="İhbarı Gönder"></input>
                 </form>
             </div>
         </div>

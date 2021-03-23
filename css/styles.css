@@ -81,3 +81,15 @@ body {
 .td-element{
     vertical-align: middle;
 }
+
+#map{
+    height: 100%;
+}
+
+.dataTables_wrapper .dataTables_length, .dataTables_wrapper .dataTables_filter, .dataTables_wrapper .dataTables_info, .dataTables_wrapper .dataTables_processing, .dataTables_wrapper .dataTables_paginate {
+    color: #FFF;
+}
+
+.dataTables_empty {
+    display: none;
+  }

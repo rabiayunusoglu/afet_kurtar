@@ -33,11 +33,12 @@ if($num>0){
         // this will make $row['name'] to
         // just $name only
         extract($row);
- 
+        
         $status_item=array(
             "statusID" => $statusID,
             "statusMessage" => $statusMessage,
             "teamID" => $teamID,
+            "subpartID" => $subpartID,
             "statusTime" => $statusTime
         );
  

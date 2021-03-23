@@ -9,10 +9,8 @@ class DisasterEvents{
     public $disasterID;
     public $disasterType;
     public $emergencyLevel;
-    public $latitudeStart;
-    public $latitudeEnd;
-    public $longitudeStart;
-    public $longitudeEnd;
+    public $latitude;
+    public $longitude;
     public $disasterDate;
     public $disasterBase;
     public $disasterName;
@@ -26,7 +24,7 @@ class DisasterEvents{
  
         // select all query
         $query = "SELECT
-                    disasterID, disasterType, emergencyLevel, latitudeStart, latitudeEnd, longitudeStart, longitudeEnd, disasterDate, disasterBase, disasterName
+                    disasterID, disasterType, emergencyLevel, latitude, longitude, disasterDate, disasterBase, disasterName
                 FROM
                     " . $this->table_name . " ";
      
@@ -46,7 +44,7 @@ class DisasterEvents{
     $query = "INSERT INTO
                 " . $this->table_name . "
             SET
-                disasterType=:disasterType, emergencyLevel=:emergencyLevel, latitudeStart=:latitudeStart, latitudeEnd=:latitudeEnd, longitudeStart=:longitudeStart, longitudeEnd=:longitudeEnd, disasterDate=:disasterDate, disasterBase=:disasterBase, disasterName=:disasterName";
+                disasterType=:disasterType, emergencyLevel=:emergencyLevel, latitude=:latitude, longitude=:longitude, disasterDate=:disasterDate, disasterBase=:disasterBase, disasterName=:disasterName";
  
     // prepare query
     $stmt = $this->conn->prepare($query);
@@ -54,20 +52,16 @@ class DisasterEvents{
     // sanitize
     $this->disasterType=htmlspecialchars(strip_tags($this->disasterType));
     $this->emergencyLevel=htmlspecialchars(strip_tags($this->emergencyLevel));
-    $this->latitudeStart=htmlspecialchars(strip_tags($this->latitudeStart));
-    $this->latitudeEnd=htmlspecialchars(strip_tags($this->latitudeEnd));
-    $this->longitudeStart=htmlspecialchars(strip_tags($this->longitudeStart));
-    $this->longitudeEnd=htmlspecialchars(strip_tags($this->longitudeEnd));
+    $this->latitude=htmlspecialchars(strip_tags($this->latitude));
+    $this->longitude=htmlspecialchars(strip_tags($this->longitude));
     $this->disasterDate=htmlspecialchars(strip_tags($this->disasterDate));
     $this->disasterName=htmlspecialchars(strip_tags($this->disasterName));
  
     // bind values
     $stmt->bindParam(":disasterType", $this->disasterType);
     $stmt->bindParam(":emergencyLevel", $this->emergencyLevel);
-    $stmt->bindParam(":latitudeStart", $this->latitudeStart);
-    $stmt->bindParam(":latitudeEnd", $this->latitudeEnd);
-    $stmt->bindParam(":longitudeStart", $this->longitudeStart);
-    $stmt->bindParam(":longitudeEnd", $this->longitudeEnd);
+    $stmt->bindParam(":latitude", $this->latitude);
+    $stmt->bindParam(":longitude", $this->longitude);
     $stmt->bindParam(":disasterDate", $this->disasterDate);
     $stmt->bindParam(":disasterBase", $this->disasterBase);
     $stmt->bindParam(":disasterName", $this->disasterName);
@@ -85,17 +79,15 @@ class DisasterEvents{
     function search(){
         // select all query
         $query = "SELECT
-                    disasterID, disasterType, emergencyLevel, latitudeStart, latitudeEnd, longitudeStart, longitudeEnd, disasterDate, disasterBase, disasterName
+                    disasterID, disasterType, emergencyLevel, latitude, longitude,  disasterDate, disasterBase, disasterName
                 FROM
                     " . $this->table_name . "
                 WHERE
                     (disasterID = :disasterID OR :disasterID = '') 
                     AND (disasterType = :disasterType OR :disasterType = '')
                     AND (emergencyLevel = :emergencyLevel OR :emergencyLevel = '') 
-                    AND (latitudeStart = :latitudeStart OR :latitudeStart = '')
-                    AND (latitudeEnd = :latitudeEnd OR :latitudeEnd = '') 
-                    AND (longitudeStart = :longitudeStart OR :longitudeStart = '')
-                    AND (longitudeEnd = :longitudeEnd OR :longitudeEnd = '') 
+                    AND (latitude = :latitude OR :latitude = '')
+                    AND (longitude = :longitude OR :longitude = '')
                     AND (disasterDate = :disasterDate OR :disasterDate = '')
                     AND (disasterBase = :disasterBase OR :disasterBase = '')
                     AND (disasterName = :disasterName OR :disasterName = '')";
@@ -108,22 +100,18 @@ class DisasterEvents{
         $this->disasterID=htmlspecialchars(strip_tags($this->disasterID));
         $this->disasterType=htmlspecialchars(strip_tags($this->disasterType));
         $this->emergencyLevel=htmlspecialchars(strip_tags($this->emergencyLevel));
-        $this->latitudeStart=htmlspecialchars(strip_tags($this->latitudeStart));
-        $this->latitudeEnd=htmlspecialchars(strip_tags($this->latitudeEnd));
-        $this->longitudeStart=htmlspecialchars(strip_tags($this->longitudeStart));
-        $this->longitudeEnd=htmlspecialchars(strip_tags($this->longitudeEnd));
+        $this->latitude=htmlspecialchars(strip_tags($this->latitude));
+        $this->longitude=htmlspecialchars(strip_tags($this->longitude));
         $this->disasterDate=htmlspecialchars(strip_tags($this->disasterDate));
         $this->disasterBase=htmlspecialchars(strip_tags($this->disasterBase));
         $this->disasterName=htmlspecialchars(strip_tags($this->disasterName));
     
         // bind values
-        $stmt->bindParam(":disasterID", $this->disasterType);
+        $stmt->bindParam(":disasterID", $this->disasterID);
         $stmt->bindParam(":disasterType", $this->disasterType);
         $stmt->bindParam(":emergencyLevel", $this->emergencyLevel);
-        $stmt->bindParam(":latitudeStart", $this->latitudeStart);
-        $stmt->bindParam(":latitudeEnd", $this->latitudeEnd);
-        $stmt->bindParam(":longitudeStart", $this->longitudeStart);
-        $stmt->bindParam(":longitudeEnd", $this->longitudeEnd);
+        $stmt->bindParam(":latitude", $this->latitude);
+        $stmt->bindParam(":longitude", $this->longitude);
         $stmt->bindParam(":disasterDate", $this->disasterDate);
         $stmt->bindParam(":disasterBase", $this->disasterBase);
         $stmt->bindParam(":disasterName", $this->disasterName);
