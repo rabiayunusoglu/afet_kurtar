@@ -4,6 +4,8 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Context;
 import android.content.Intent;
+import android.location.Address;
+import android.location.Geocoder;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -20,7 +22,10 @@ import com.android.volley.toolbox.Volley;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
+import java.util.Locale;
 
 public class Authorized_Notification extends AppCompatActivity {
     RequestQueue queue;
@@ -105,15 +110,32 @@ public class Authorized_Notification extends AppCompatActivity {
             e.printStackTrace();
         }
 
+        Geocoder geocoder;
+        List<Address> addresses = null;
+        geocoder = new Geocoder(this, Locale.getDefault());
 
         for (JSONObject x : list2) {
             LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             View view = inflater.inflate(R.layout.activity_personel_history_addlayout, null);
             LinearLayout scroll = findViewById(R.id.auth_lay_scroll);
             TextView linear = (TextView) view.findViewById(R.id.HistoryText); // personel_history ile ayni addlayout'u kullaniyor
+            linear.setTextSize(20);
+
+
             try {
-                linear.setText("ID: "+ x.getString("noticeID"));
-            } catch (JSONException e) {
+                addresses = geocoder.getFromLocation(Double.parseDouble(x.getString("latitude")), Double.parseDouble(x.getString("longitude")), 1);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+            try {
+                String addres = "Koordinatlardan Adres Bilgisi Alınamadı";
+                try {
+                    addres = addresses.get(0).getAddressLine(0);
+                }catch (Exception e){
+                }
+                linear.setText("ID: "+ x.getString("noticeID") + "\n"+"Tip : "+ x.getString("type") +"\n"+ "Adress : " + addres);
+            } catch (Exception e) {
                 e.printStackTrace();
             }
             linear.setOnClickListener(this::onClick);

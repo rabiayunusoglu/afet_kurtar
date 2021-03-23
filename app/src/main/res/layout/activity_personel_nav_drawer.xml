@@ -34,7 +34,7 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:gravity="center_vertical"
-        android:onClick="ClickAnasayfa">
+        android:onClick="ClickPersonelAnasayfa">
         <TextView
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -60,12 +60,12 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:gravity="center_vertical"
-        android:onClick="ClickParticipateRequest">
+        android:onClick="ClickTeamManagement">
         <TextView
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="Gönüllü Katılım Talebi"
+            android:text="Takım Yönetimi"
             android:padding="12dp"
             android:layout_marginStart="16dp"
             tools:ignore="Suspicious0dp"
@@ -85,12 +85,12 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:gravity="center_vertical"
-        android:onClick="ClickEmergency">
+        android:onClick="CliackPersonelNotification">
         <TextView
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="Acil İhbar"
+            android:text="Bildirim (*)"
             android:padding="12dp"
             android:layout_marginStart="16dp"
             tools:ignore="Suspicious0dp"
@@ -110,12 +110,12 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:gravity="center_vertical"
-        android:onClick="ClickParticipateForm">
+        android:onClick="ClickPersonelInfo">
         <TextView
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="Kayıt Bilgisi"
+            android:text="Görev Bilgi Ekranı (*)"
             android:padding="12dp"
             android:layout_marginStart="16dp"
             tools:ignore="Suspicious0dp"
@@ -137,7 +137,7 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:gravity="center_vertical"
-        android:onClick="ClickAfetBolgesi">
+        android:onClick="ClşckPersonelArea">
         <TextView
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -159,7 +159,7 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:gravity="center_vertical"
-        android:onClick="ClickExit">
+        android:onClick="ClickPersonelExit">
         <TextView
             android:layout_width="0dp"
             android:layout_height="wrap_content"
