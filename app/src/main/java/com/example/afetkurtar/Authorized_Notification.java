@@ -151,9 +151,9 @@ public class Authorized_Notification extends AppCompatActivity {
 
                 TextView linear = (TextView) v.findViewById(R.id.HistoryText);
                 String tmp = (String) linear.getText();
-                tmp = tmp.substring(tmp.indexOf(" ")+1);
-
-
+                tmp = tmp.substring(tmp.indexOf(" ")+1,tmp.indexOf("Tip")).trim();
+               // tmp = tmp.substring(0,tmp.indexOf(" ")).trim(); // **************************************** MESAJI DEGISTIRIRSEN BURAYI AYARLA
+               // System.out.println(tmp);
 
                 Intent asd = new Intent(this, Notification_Details.class);
                 JSONObject json = new JSONObject();
