@@ -66,22 +66,18 @@ if (session_id() == '') {
 
     if (isset($_GET["id"])) {
         //The url you wish to send the POST request to
-        $url = "http://afetkurtar.site/api/disasterEvents/search.php";
+        $url = "https://afetkurtar.site/api/disasterEvents/search.php";
 
-        $postdata = http_build_query(
-            array(
-                'disasterID' => (int)$_GET["id"]
-            )
-        );
-
-        $options = ['http' => [
-            'method' => 'POST',
-            'header' => 'Content-type:application/json',
-            'content' => $postdata
-        ]];
-
-        $context = stream_context_create($options);
-        $response = json_decode(file_get_contents($url, false, $context), true);
+        $body = '{
+            "disasterID":'.$_GET["id"].'
+          }';
+          $ch = curl_init();
+          curl_setopt($ch, CURLOPT_URL, $url);
+          curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+          curl_setopt($ch, CURLOPT_HTTPHEADER, array("Content-Type: application/json"));
+          curl_setopt($ch, CURLOPT_POST, 1);
+          curl_setopt($ch, CURLOPT_POSTFIELDS, $body);
+          $response = json_decode(curl_exec($ch),true);
 
         foreach ($response['records'] as $row) {
             $disasterID = $row['disasterID'];
@@ -93,22 +89,18 @@ if (session_id() == '') {
     echo "<div id=\"map\" style=\"width:800px;height:600px\" disaster-id=\"" . $row['disasterID']."\" disaster-type=\"" . $row['disasterType']."\" latitude=\"" . $row['latitude']."\" longitude=\"" . $row['longitude']."\"></div>";
 
     //The url you wish to send the POST request to
-    $url = "http://afetkurtar.site/api/subpart/search.php";
+    $url = "https://afetkurtar.site/api/subpart/search.php";
 
-    $postdata = http_build_query(
-        array(
-            'disasterID' => (int)$_GET["id"]
-        )
-    );
-
-    $options = ['http' => [
-        'method' => 'POST',
-        'header' => 'Content-type:application/json',
-        'content' => $postdata
-    ]];
-
-    $context = stream_context_create($options);
-    $response = json_decode(file_get_contents($url, false, $context), true);
+    $body = '{
+        "disasterID":'.$_GET["id"].'
+      }';
+    $ch = curl_init();
+    curl_setopt($ch, CURLOPT_URL, $url);
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+    curl_setopt($ch, CURLOPT_HTTPHEADER, array("Content-Type: application/json"));
+    curl_setopt($ch, CURLOPT_POST, 1);
+    curl_setopt($ch, CURLOPT_POSTFIELDS, $body);
+    $response = json_decode(curl_exec($ch),true);
 
     foreach ($response['records'] as $row) {
         echo "<div name=\"subpart\" subpart-id=\"" . $row['subpartID']."\" subpart-name=\"" . $row['subpartName']."\" latitude=\"" . $row['latitude']."\" longitude=\"" . $row['longitude']."\"></div>";

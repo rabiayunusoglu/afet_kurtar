@@ -225,6 +225,10 @@ function editDisaster(disasterID){
     window.location.href = "../editDisaster.php?id=" + disasterID;
 }
 
+function addDisaster(){
+    window.location.href = "../addDisaster.php";
+}
+
 $(document).ready(function() {
     var disasterTable = $('#disaster-table');
     if(disasterTable.length){
@@ -233,3 +237,7 @@ $(document).ready(function() {
         });
     }
 });
+
+function sendDisaster(){
+    
+}
