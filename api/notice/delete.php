@@ -17,7 +17,7 @@ include_once '../objects/notice.php';
 $database = new Database();
 $db = $database->getConnection();
  
-$notice = new notice($db);
+$notice = new Notice($db);
    
 // get posted data
 $data = json_decode(file_get_contents("php://input"),true);
@@ -27,11 +27,6 @@ $data = json_decode(file_get_contents("php://input"),true);
 // delete the notice
 if(
      isset($data["noticeID"])
-    // isset($data["latitude"]) &&
-    // isset($data["longitude"]) &&
-    // isset($data["message"]) &&
-    // isset($data["imageURL"])
-   
 ){
  
     // set user property values

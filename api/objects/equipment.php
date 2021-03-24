@@ -93,5 +93,57 @@ class Equipment{
      
         return $stmt;
     }
+
+    function delete(){
+        // delete query
+        $query = "DELETE FROM " . $this->table_name . " WHERE equipmentID = :equipmentID";
+    
+        // prepare query
+        $stmt = $this->conn->prepare($query);
+    
+        // sanitize
+        $this->equipmentID=htmlspecialchars(strip_tags($this->equipmentID));
+    
+        // bind id of record to delete
+        $stmt->bindParam(":equipmentID", $this->equipmentID);
+    
+        // execute query
+        if($stmt->execute()){
+            return true;
+        }
+    
+        return false;
+    }
+
+    function update(){
+        // update query
+        $query = "UPDATE
+                    " . $this->table_name . "
+                SET
+                    equipmentName=:equipmentName, equipmentImageURL=:equipmentImageURL
+                WHERE
+                    equipmentID=:equipmentID";
+    
+        // prepare query statement
+        $stmt = $this->conn->prepare($query);
+    
+        // sanitize
+        $this->equipmentID=htmlspecialchars(strip_tags($this->equipmentID));
+        $this->equipmentName=htmlspecialchars(strip_tags($this->equipmentName));
+        $this->equipmentImageURL=htmlspecialchars(strip_tags($this->equipmentImageURL));
+
+        // bind values
+        $stmt->bindParam(":equipmentID", $this->equipmentID);
+        $stmt->bindParam(":equipmentName", $this->equipmentName);
+        $stmt->bindParam(":equipmentImageURL", $this->equipmentImageURL);
+    
+    
+        // execute the query
+        if($stmt->execute()){
+            return true;
+        }
+    
+        return false;
+    }
 }
 ?>

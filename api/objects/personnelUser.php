@@ -55,7 +55,7 @@ class PersonnelUser{
         $this->latitude=htmlspecialchars(strip_tags($this->latitude));
         $this->longitude=htmlspecialchars(strip_tags($this->longitude));
         $this->personnelName=htmlspecialchars(strip_tags($this->personnelName));
-	$this->personnelEmail=htmlspecialchars(strip_tags($this->personnelEmail));
+        $this->personnelEmail=htmlspecialchars(strip_tags($this->personnelEmail));
         $this->personnelRole=htmlspecialchars(strip_tags($this->personnelRole));
         $this->teamID=htmlspecialchars(strip_tags($this->teamID));
         $this->locationTime=htmlspecialchars(strip_tags($this->locationTime));
@@ -67,7 +67,7 @@ class PersonnelUser{
         $stmt->bindParam(":latitude", $this->latitude);
         $stmt->bindParam(":longitude", $this->longitude);
         $stmt->bindParam(":personnelName", $this->personnelName);
-	$stmt->bindParam(":personnelEmail", $this->personnelEmail);
+        $stmt->bindParam(":personnelEmail", $this->personnelEmail);
         $stmt->bindParam(":personnelRole", $this->personnelRole);
         $stmt->bindParam(":teamID", $this->teamID);
         $stmt->bindParam(":locationTime", $this->locationTime);
@@ -94,7 +94,7 @@ class PersonnelUser{
                     AND (latitude = :latitude OR :latitude = '')
                     AND (longitude = :longitude OR :longitude = '')
                     AND (personnelName = :personnelName OR :personnelName = '')
-AND (personnelEmail = :personnelEmail OR :personnelEmail = '')
+                    AND (personnelEmail = :personnelEmail OR :personnelEmail = '')
                     AND (personnelRole = :personnelRole OR :personnelRole = '')
                     AND (teamID = :teamID OR :teamID = '')
                     AND (locationTime = :locationTime OR :locationTime = '')";
@@ -109,7 +109,7 @@ AND (personnelEmail = :personnelEmail OR :personnelEmail = '')
         $this->latitude=htmlspecialchars(strip_tags($this->latitude));
         $this->longitude=htmlspecialchars(strip_tags($this->longitude));
         $this->personnelName=htmlspecialchars(strip_tags($this->personnelName));
-$this->personnelEmail=htmlspecialchars(strip_tags($this->personnelEmail));
+        $this->personnelEmail=htmlspecialchars(strip_tags($this->personnelEmail));
         $this->personnelRole=htmlspecialchars(strip_tags($this->personnelRole));
         $this->teamID=htmlspecialchars(strip_tags($this->teamID));
         $this->locationTime=htmlspecialchars(strip_tags($this->locationTime));
@@ -121,7 +121,7 @@ $this->personnelEmail=htmlspecialchars(strip_tags($this->personnelEmail));
         $stmt->bindParam(":latitude", $this->latitude);
         $stmt->bindParam(":longitude", $this->longitude);
         $stmt->bindParam(":personnelName", $this->personnelName);
-$stmt->bindParam(":personnelEmail", $this->personnelEmail);
+        $stmt->bindParam(":personnelEmail", $this->personnelEmail);
         $stmt->bindParam(":personnelRole", $this->personnelRole);
         $stmt->bindParam(":teamID", $this->teamID);
         $stmt->bindParam(":locationTime", $this->locationTime);
@@ -130,6 +130,71 @@ $stmt->bindParam(":personnelEmail", $this->personnelEmail);
         $stmt->execute();
      
         return $stmt;
+    }
+
+    function delete(){
+        // delete query
+        $query = "DELETE FROM " . $this->table_name . " WHERE personnelID = :personnelID";
+    
+        // prepare query
+        $stmt = $this->conn->prepare($query);
+    
+        // sanitize
+        $this->personnelID=htmlspecialchars(strip_tags($this->personnelID));
+    
+        // bind id of record to delete
+        $stmt->bindParam(":personnelID", $this->personnelID);
+    
+        // execute query
+        if($stmt->execute()){
+            return true;
+        }
+    
+        return false;
+    }
+
+    function update(){
+        // update query
+        $query = "UPDATE
+                    " . $this->table_name . "
+                SET
+                    personnelID=:personnelID, institution=:institution, latitude=:latitude, longitude=:longitude, personnelName=:personnelName,personnelEmail=:personnelEmail, personnelRole=:personnelRole, teamID=:teamID, locationTime=:locationTime
+                WHERE
+                    personnelID=:personnelID";
+    
+        // prepare query statement
+        $stmt = $this->conn->prepare($query);
+    
+        // sanitize
+        $this->personnelID=htmlspecialchars(strip_tags($this->personnelID));
+        $this->institution=htmlspecialchars(strip_tags($this->institution));
+        $this->latitude=htmlspecialchars(strip_tags($this->latitude));
+        $this->longitude=htmlspecialchars(strip_tags($this->longitude));
+        $this->personnelName=htmlspecialchars(strip_tags($this->personnelName));
+        $this->personnelEmail=htmlspecialchars(strip_tags($this->personnelEmail));
+        $this->personnelRole=htmlspecialchars(strip_tags($this->personnelRole));
+        $this->teamID=htmlspecialchars(strip_tags($this->teamID));
+        $this->locationTime=htmlspecialchars(strip_tags($this->locationTime));
+    
+        
+        // bind values
+        $stmt->bindParam(":personnelID", $this->personnelID);
+        $stmt->bindParam(":institution", $this->institution);
+        $stmt->bindParam(":latitude", $this->latitude);
+        $stmt->bindParam(":longitude", $this->longitude);
+        $stmt->bindParam(":personnelName", $this->personnelName);
+        $stmt->bindParam(":personnelEmail", $this->personnelEmail);
+        $stmt->bindParam(":personnelRole", $this->personnelRole);
+        $stmt->bindParam(":teamID", $this->teamID);
+        $stmt->bindParam(":locationTime", $this->locationTime);
+    
+    
+        // execute the query
+        if($stmt->execute()){
+            return true;
+        }
+    
+        return false;
     }
 }
 ?>

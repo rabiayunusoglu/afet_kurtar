@@ -67,7 +67,7 @@ if($num>0){
             "longitude" => $longitude,
             "locationTime" => $locationTime,
             "tc" => $tc,
-"tel" => $tel,
+            "tel" => $tel,
             "birthDate" => $birthDate,
         );
  

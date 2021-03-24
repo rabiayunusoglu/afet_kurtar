@@ -105,5 +105,61 @@ class Status{
      
         return $stmt;
     }
+
+    function delete(){
+        // delete query
+        $query = "DELETE FROM " . $this->table_name . " WHERE statusID = :statusID";
+    
+        // prepare query
+        $stmt = $this->conn->prepare($query);
+    
+        // sanitize
+        $this->statusID=htmlspecialchars(strip_tags($this->statusID));
+    
+        // bind id of record to delete
+        $stmt->bindParam(":statusID", $this->statusID);
+    
+        // execute query
+        if($stmt->execute()){
+            return true;
+        }
+    
+        return false;
+    }
+
+    function update(){
+        // update query
+        $query = "UPDATE
+                    " . $this->table_name . "
+                SET
+                    statusMessage=:statusMessage, teamID=:teamID, subpartID=:subpartID
+                WHERE
+                    statusID=:statusID";
+    
+        // prepare query statement
+        $stmt = $this->conn->prepare($query);
+    
+        // sanitize
+        $this->statusID=htmlspecialchars(strip_tags($this->statusID));
+        $this->statusMessage=htmlspecialchars(strip_tags($this->statusMessage));
+        $this->teamID=htmlspecialchars(strip_tags($this->teamID));
+        $this->subpartID=htmlspecialchars(strip_tags($this->subpartID));
+        $this->statusTime=htmlspecialchars(strip_tags($this->statusTime));
+    
+        // bind values
+        $stmt->bindParam(":statusID", $this->statusID);
+        $stmt->bindParam(":statusMessage", $this->statusMessage);
+        $stmt->bindParam(":teamID", $this->teamID);
+        $stmt->bindParam(":subpartID", $this->subpartID);
+        $stmt->bindParam(":statusTime", $this->statusTime);
+    
+    
+        // execute the query
+        if($stmt->execute()){
+            return true;
+        }
+    
+        return false;
+    }
 }
 ?>

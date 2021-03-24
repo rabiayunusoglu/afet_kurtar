@@ -91,5 +91,57 @@ class AuthorizedUser{
      
         return $stmt;
     }
+
+    function delete(){
+        // delete query
+        $query = "DELETE FROM " . $this->table_name . " WHERE authorizedID = :authorizedID";
+    
+        // prepare query
+        $stmt = $this->conn->prepare($query);
+    
+        // sanitize
+        $this->authorizedID=htmlspecialchars(strip_tags($this->authorizedID));
+    
+        // bind id of record to delete
+        $stmt->bindParam(":authorizedID", $this->authorizedID);
+    
+        // execute query
+        if($stmt->execute()){
+            return true;
+        }
+    
+        return false;
+    }
+
+    function update(){
+        // update query
+        $query = "UPDATE
+                    " . $this->table_name . "
+                SET
+                    institution=:institution, authorizedName=:authorizedName
+                WHERE
+                    authorizedID=:authorizedID";
+    
+        // prepare query statement
+        $stmt = $this->conn->prepare($query);
+    
+        // sanitize
+        $this->authorizedID=htmlspecialchars(strip_tags($this->authorizedID));
+        $this->institution=htmlspecialchars(strip_tags($this->institution));
+        $this->authorizedName=htmlspecialchars(strip_tags($this->authorizedName));
+    
+        // bind values
+        $stmt->bindParam(":authorizedID", $this->authorizedID);
+        $stmt->bindParam(":institution", $this->institution);
+        $stmt->bindParam(":authorizedName", $this->authorizedName);
+    
+    
+        // execute the query
+        if($stmt->execute()){
+            return true;
+        }
+    
+        return false;
+    }
 }
 ?>

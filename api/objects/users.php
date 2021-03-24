@@ -103,5 +103,61 @@ class Users{
      
         return $stmt;
     }
+
+    function delete(){
+        // delete query
+        $query = "DELETE FROM " . $this->table_name . " WHERE userID = :userID";
+    
+        // prepare query
+        $stmt = $this->conn->prepare($query);
+    
+        // sanitize
+        $this->userID=htmlspecialchars(strip_tags($this->userID));
+    
+        // bind id of record to delete
+        $stmt->bindParam(":userID", $this->userID);
+    
+        // execute query
+        if($stmt->execute()){
+            return true;
+        }
+    
+        return false;
+    }
+
+    function update(){
+        // update query
+        $query = "UPDATE
+                    " . $this->table_name . "
+                SET
+                    userType=:userType, userName=:userName, email=:email
+                WHERE
+                    userID=:userID";
+    
+        // prepare query statement
+        $stmt = $this->conn->prepare($query);
+    
+        // sanitize
+        $this->userID=htmlspecialchars(strip_tags($this->userID));
+        $this->userType=htmlspecialchars(strip_tags($this->userType));
+        $this->userName=htmlspecialchars(strip_tags($this->userName));
+        $this->email=htmlspecialchars(strip_tags($this->email));
+        $this->createTime=htmlspecialchars(strip_tags($this->createTime));
+     
+        // bind values
+        $stmt->bindParam(":userID", $this->userID);
+        $stmt->bindParam(":userType", $this->userType);
+        $stmt->bindParam(":userName", $this->userName);
+        $stmt->bindParam(":email", $this->email);
+        $stmt->bindParam(":createTime", $this->createTime);
+    
+    
+        // execute the query
+        if($stmt->execute()){
+            return true;
+        }
+    
+        return false;
+    }
 }
 ?>

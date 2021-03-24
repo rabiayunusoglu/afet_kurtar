@@ -35,7 +35,7 @@ if(
  
     // set user property values
     $disasterEvents->disasterID = isset($data["disasterID"]) ? $data["disasterID"] : "";
-    $disasterEvents->disasterID = isset($data["disasterType"]) ? $data["disasterType"] : "";
+    $disasterEvents->disasterType = isset($data["disasterType"]) ? $data["disasterType"] : "";
     $disasterEvents->emergencyLevel = isset($data["emergencyLevel"]) ? $data["emergencyLevel"] : "";
     $disasterEvents->latitudeStart = isset($data["latitude"]) ? $data["latitude"] : "";
     $disasterEvents->longitudeStart = isset($data["longitude"]) ? $data["longitude"] : "";

@@ -68,7 +68,7 @@ class VolunteerUser{
         $this->responseSubpart=htmlspecialchars(strip_tags($this->responseSubpart));
         $this->locationTime=htmlspecialchars(strip_tags($this->locationTime));
         $this->tc=htmlspecialchars(strip_tags($this->tc));
-	$this->tel=htmlspecialchars(strip_tags($this->tel));
+        $this->tel=htmlspecialchars(strip_tags($this->tel));
         $this->birthDate=htmlspecialchars(strip_tags($this->birthDate));
     
      
@@ -86,7 +86,7 @@ class VolunteerUser{
         $stmt->bindParam(":responseSubpart", $this->responseSubpart);
         $stmt->bindParam(":locationTime", $this->locationTime);
         $stmt->bindParam(":tc", $this->tc);
-     $stmt->bindParam(":tel", $this->tel);
+        $stmt->bindParam(":tel", $this->tel);
         $stmt->bindParam(":birthDate", $this->birthDate);
     
      
@@ -119,7 +119,7 @@ class VolunteerUser{
                     AND (responseSubpart = :responseSubpart OR :responseSubpart = '')
                     AND (locationTime = :locationTime OR :locationTime = '')
                     AND (tc = :tc OR :tc = '')
-AND (tel = :tel OR :tel = '')
+                    AND (tel = :tel OR :tel = '')
                     AND (birthDate = :birthDate OR :birthDate = '')";
      
         // prepare query statement
@@ -140,7 +140,7 @@ AND (tel = :tel OR :tel = '')
         $this->responseSubpart=htmlspecialchars(strip_tags($this->responseSubpart));
         $this->locationTime=htmlspecialchars(strip_tags($this->locationTime));
         $this->tc=htmlspecialchars(strip_tags($this->tc));
-$this->tel=htmlspecialchars(strip_tags($this->tel));
+        $this->tel=htmlspecialchars(strip_tags($this->tel));
         $this->birthDate=htmlspecialchars(strip_tags($this->birthDate));
     
      
@@ -158,7 +158,7 @@ $this->tel=htmlspecialchars(strip_tags($this->tel));
         $stmt->bindParam(":responseSubpart", $this->responseSubpart);
         $stmt->bindParam(":locationTime", $this->locationTime);
         $stmt->bindParam(":tc", $this->tc);
-$stmt->bindParam(":tel", $this->tel);
+        $stmt->bindParam(":tel", $this->tel);
         $stmt->bindParam(":birthDate", $this->birthDate);
      
         // execute query
@@ -166,19 +166,41 @@ $stmt->bindParam(":tel", $this->tel);
      
         return $stmt;
     }
-// update the volunteeruser
-function update(){
+
+    function delete(){
+        // delete query
+        $query = "DELETE FROM " . $this->table_name . " WHERE volunteerID = :volunteerID";
+    
+        // prepare query
+        $stmt = $this->conn->prepare($query);
+    
+        // sanitize
+        $this->volunteerID=htmlspecialchars(strip_tags($this->volunteerID));
+    
+        // bind id of record to delete
+        $stmt->bindParam(":volunteerID", $this->volunteerID);
+    
+        // execute query
+        if($stmt->execute()){
+            return true;
+        }
+    
+        return false;
+    }
+
+    // update the volunteeruser
+    function update(){
   
-    // update query
-    $query = "UPDATE
-                " . $this->table_name . "
-             SET
-                volunteerName=:volunteerName, `role`=:role, assignedTeamID=:assignedTeamID, latitude=:latitude, longitude=:longitude, `address`=:address, isExperienced=:isExperienced, haveFirstAidCert=:haveFirstAidCert, requestedSubpart=:requestedSubpart, responseSubpart=:responseSubpart, locationTime=:locationTime, tc=:tc, tel=:tel, birthDate=:birthDate
-            WHERE
-                volunteerID=:volunteerID";
-  
-    // prepare query statement
-    $stmt = $this->conn->prepare($query);
+        // update query
+        $query = "UPDATE
+                    " . $this->table_name . "
+                SET
+                    volunteerName=:volunteerName, `role`=:role, assignedTeamID=:assignedTeamID, latitude=:latitude, longitude=:longitude, `address`=:address, isExperienced=:isExperienced, haveFirstAidCert=:haveFirstAidCert, requestedSubpart=:requestedSubpart, responseSubpart=:responseSubpart, locationTime=:locationTime, tc=:tc, tel=:tel, birthDate=:birthDate
+                WHERE
+                    volunteerID=:volunteerID";
+    
+        // prepare query statement
+        $stmt = $this->conn->prepare($query);
   
     
         // sanitize
@@ -195,7 +217,7 @@ function update(){
         $this->responseSubpart=htmlspecialchars(strip_tags($this->responseSubpart));
         $this->locationTime=htmlspecialchars(strip_tags($this->locationTime));
         $this->tc=htmlspecialchars(strip_tags($this->tc));
-$this->tel=htmlspecialchars(strip_tags($this->tel));
+        $this->tel=htmlspecialchars(strip_tags($this->tel));
         $this->birthDate=htmlspecialchars(strip_tags($this->birthDate));
     
      
@@ -213,7 +235,7 @@ $this->tel=htmlspecialchars(strip_tags($this->tel));
         $stmt->bindParam(":responseSubpart", $this->responseSubpart);
         $stmt->bindParam(":locationTime", $this->locationTime);
         $stmt->bindParam(":tc", $this->tc);
-$stmt->bindParam(":tel", $this->tel);
+        $stmt->bindParam(":tel", $this->tel);
         $stmt->bindParam(":birthDate", $this->birthDate);
     
      

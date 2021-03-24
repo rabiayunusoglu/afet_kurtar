@@ -11,12 +11,12 @@ header("Access-Control-Allow-Headers: Content-Type, Access-Control-Allow-Headers
 include_once '../config/database.php';
  
 // instantiate product object
-include_once '../objects/team.php';
+include_once '../objects/users.php';
  
 $database = new Database();
 $db = $database->getConnection();
  
-$team = new Team($db);
+$users = new Users($db);
  
 // get posted data
 $data = json_decode(file_get_contents("php://input"),true);
@@ -24,25 +24,25 @@ $data = json_decode(file_get_contents("php://input"),true);
 
  
 if(
-    isset($data["teamID"])
+    isset($data["userID"])
 ){
  
     // set user property values
-    $team->teamID = isset($data["teamID"]) ? $data["teamID"] : "";
-    $team->assignedSubpartID = isset($data["assignedSubpartID"]) ? $data["assignedSubpartID"] : "";
-    $team->status = isset($data["status"]) ? $data["status"] : "";
-    $team->needManPower = isset($data["needManPower"]) ? $data["needManPower"] : "";
-    $team->needEquipment = isset($data["needEquipment"]) ? $data["needEquipment"] : "";
-        
+    $users->userID = isset($data["userID"]) ? $data["userID"] : "";
+    $users->userType = isset($data["userType"]) ? $data["userType"] : "";
+    $users->userName = isset($data["userName"]) ? $data["userName"] : "";
+    $users->email = isset($data["email"]) ? $data["email"] : "";
+    $users->createTime = isset($data["createTime"]) ? $data["createTime"] : "";
+    
  
     // create the product
-    if($team->update()){
+    if($users->update()){
  
         // set response code - 201 created
         http_response_code(201);
  
         // tell the user
-        echo json_encode(array("message" => "team was updated."));
+        echo json_encode(array("message" => "users was updated."));
     }
  
     // if unable to create the product, tell the user
@@ -52,7 +52,7 @@ if(
         http_response_code(503);
  
         // tell the user
-        echo json_encode(array("message" => "Unable to update team."));
+        echo json_encode(array("message" => "Unable to update users."));
     }
 }
  
@@ -63,7 +63,7 @@ else{
     http_response_code(400);
  
     // tell the user
-    echo json_encode(array("message" => "Unable to update team. Data is incomplete."));
+    echo json_encode(array("message" => "Unable to update users. Data is incomplete."));
 }
 
 ?>

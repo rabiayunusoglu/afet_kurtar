@@ -34,7 +34,7 @@ $volunteerUser->volunteerID = isset($data["volunteerID"]) ? $data["volunteerID"]
     $volunteerUser->longitude = isset($data["longitude"]) ? $data["longitude"] : null;
     $volunteerUser->locationTime = isset($data["locationTime"]) ? $data["locationTime"] : null;
     $volunteerUser->tc = isset($data["tc"]) ? $data["tc"] : null;
-$volunteerUser->tel = isset($data["tel"]) ? $data["tel"] : null;
+    $volunteerUser->tel = isset($data["tel"]) ? $data["tel"] : null;
     $volunteerUser->birthDate = isset($data["birthDate"]) ? $data["birthDate"] : null;
  // update the volunteerUser
 if($volunteerUser->update()){

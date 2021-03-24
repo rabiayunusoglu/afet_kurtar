@@ -100,5 +100,59 @@ class EquipmentRequest{
      
         return $stmt;
     }
+
+    function delete(){
+        // delete query
+        $query = "DELETE FROM " . $this->table_name . " WHERE equipmentRequestID = :equipmentRequestID";
+    
+        // prepare query
+        $stmt = $this->conn->prepare($query);
+    
+        // sanitize
+        $this->equipmentRequestID=htmlspecialchars(strip_tags($this->equipmentRequestID));
+    
+        // bind id of record to delete
+        $stmt->bindParam(":equipmentRequestID", $this->equipmentRequestID);
+    
+        // execute query
+        if($stmt->execute()){
+            return true;
+        }
+    
+        return false;
+    }
+
+    function update(){
+        // update query
+        $query = "UPDATE
+                    " . $this->table_name . "
+                SET
+                    quantity=:quantity,equipmentID=:equipmentID, teamRequestID=:teamRequestID
+                WHERE
+                    equipmentRequestID=:equipmentRequestID";
+    
+        // prepare query statement
+        $stmt = $this->conn->prepare($query);
+    
+        // sanitize
+        $this->equipmentRequestID=htmlspecialchars(strip_tags($this->equipmentRequestID));
+        $this->quantity=htmlspecialchars(strip_tags($this->quantity));
+        $this->equipmentID=htmlspecialchars(strip_tags($this->equipmentID));
+        $this->teamRequestID=htmlspecialchars(strip_tags($this->teamRequestID));
+    
+        // bind values
+        $stmt->bindParam(":equipmentRequestID", $this->equipmentRequestID);
+        $stmt->bindParam(":quantity", $this->quantity);
+        $stmt->bindParam(":equipmentID", $this->equipmentID);
+        $stmt->bindParam(":teamRequestID", $this->teamRequestID);
+    
+    
+        // execute the query
+        if($stmt->execute()){
+            return true;
+        }
+    
+        return false;
+    }
 }
 ?>

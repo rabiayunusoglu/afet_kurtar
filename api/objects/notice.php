@@ -111,26 +111,63 @@ class Notice{
      
         return $stmt;
     }
+
     function delete(){
-  
-    // delete query
-    $query = "DELETE FROM " . $this->table_name . " WHERE noticeID = :noticeID";
-  
-    // prepare query
-    $stmt = $this->conn->prepare($query);
-  
-    // sanitize
-	$this->noticeID=htmlspecialchars(strip_tags($this->noticeID));
-  
-    // bind id of record to delete
-    $stmt->bindParam(":noticeID", $this->noticeID);
-  
-    // execute query
-    if($stmt->execute()){
-        return true;
+        // delete query
+        $query = "DELETE FROM " . $this->table_name . " WHERE noticeID = :noticeID";
+    
+        // prepare query
+        $stmt = $this->conn->prepare($query);
+    
+        // sanitize
+        $this->noticeID=htmlspecialchars(strip_tags($this->noticeID));
+    
+        // bind id of record to delete
+        $stmt->bindParam(":noticeID", $this->noticeID);
+    
+        // execute query
+        if($stmt->execute()){
+            return true;
+        }
+    
+        return false;
     }
-  
-    return false;
-}
+
+    function update(){
+        // update query
+        $query = "UPDATE
+                    " . $this->table_name . "
+                SET
+                    type=:type, latitude=:latitude, longitude=:longitude, message=:message, imageURL=:imageURL
+                WHERE
+                    noticeID=:noticeID";
+    
+        // prepare query statement
+        $stmt = $this->conn->prepare($query);
+    
+        // sanitize
+        $this->noticeID=htmlspecialchars(strip_tags($this->noticeID));
+        $this->type=htmlspecialchars(strip_tags($this->type));
+        $this->latitude=htmlspecialchars(strip_tags($this->latitude));
+        $this->longitude=htmlspecialchars(strip_tags($this->longitude));
+        $this->message=htmlspecialchars(strip_tags($this->message));
+        $this->imageURL=htmlspecialchars(strip_tags($this->imageURL));
+    
+        // bind values
+        $stmt->bindParam(":noticeID", $this->noticeID);
+        $stmt->bindParam(":type", $this->type);
+        $stmt->bindParam(":latitude", $this->latitude);
+        $stmt->bindParam(":longitude", $this->longitude);
+        $stmt->bindParam(":message", $this->message);
+        $stmt->bindParam(":imageURL", $this->imageURL);
+    
+    
+        // execute the query
+        if($stmt->execute()){
+            return true;
+        }
+    
+        return false;
+    }
 }
 ?>

@@ -61,7 +61,7 @@ class Subpart{
         $this->rescuedPerson=htmlspecialchars(strip_tags($this->rescuedPerson));
         $this->isOpenForVolunteers=htmlspecialchars(strip_tags($this->isOpenForVolunteers));
         $this->subpartName=htmlspecialchars(strip_tags($this->subpartName));
-	$this->disasterName=htmlspecialchars(strip_tags($this->disasterName));
+        $this->disasterName=htmlspecialchars(strip_tags($this->disasterName));
         $this->status=htmlspecialchars(strip_tags($this->status));
         $this->emergencyLevel=htmlspecialchars(strip_tags($this->emergencyLevel));
      
@@ -74,7 +74,7 @@ class Subpart{
         $stmt->bindParam(":rescuedPerson", $this->rescuedPerson);
         $stmt->bindParam(":isOpenForVolunteers", $this->isOpenForVolunteers);
         $stmt->bindParam(":subpartName", $this->subpartName);
-	$stmt->bindParam(":disasterName", $this->disasterName);
+        $stmt->bindParam(":disasterName", $this->disasterName);
         $stmt->bindParam(":status", $this->status);
         $stmt->bindParam(":emergencyLevel", $this->emergencyLevel);
      
@@ -103,7 +103,7 @@ class Subpart{
                     AND (rescuedPerson = :rescuedPerson OR :rescuedPerson = '')
                     AND (isOpenForVolunteers = :isOpenForVolunteers OR :isOpenForVolunteers = '')
                     AND (subpartName = :subpartName OR :subpartName = '')
-AND (disasterName = :disasterName OR :disasterName = '')
+                    AND (disasterName = :disasterName OR :disasterName = '')
                     AND (`status` = :status OR :status = '')
                     AND (emergencyLevel = :emergencyLevel OR :emergencyLevel = '')";
      
@@ -121,7 +121,7 @@ AND (disasterName = :disasterName OR :disasterName = '')
         $this->rescuedPerson=htmlspecialchars(strip_tags($this->rescuedPerson));
         $this->isOpenForVolunteers=htmlspecialchars(strip_tags($this->isOpenForVolunteers));
         $this->subpartName=htmlspecialchars(strip_tags($this->subpartName));
-	$this->disasterName=htmlspecialchars(strip_tags($this->disasterName));
+        $this->disasterName=htmlspecialchars(strip_tags($this->disasterName));
         $this->status=htmlspecialchars(strip_tags($this->status));
         $this->emergencyLevel=htmlspecialchars(strip_tags($this->emergencyLevel));
     
@@ -136,7 +136,7 @@ AND (disasterName = :disasterName OR :disasterName = '')
         $stmt->bindParam(":rescuedPerson", $this->rescuedPerson);
         $stmt->bindParam(":isOpenForVolunteers", $this->isOpenForVolunteers);
         $stmt->bindParam(":subpartName", $this->subpartName);
-	$stmt->bindParam(":disasterName", $this->disasterName);
+        $stmt->bindParam(":disasterName", $this->disasterName);
         $stmt->bindParam(":status", $this->status);
         $stmt->bindParam(":emergencyLevel", $this->emergencyLevel);
      
@@ -144,6 +144,77 @@ AND (disasterName = :disasterName OR :disasterName = '')
         $stmt->execute();
      
         return $stmt;
+    }
+
+    function delete(){
+        // delete query
+        $query = "DELETE FROM " . $this->table_name . " WHERE subpartID = :subpartID";
+    
+        // prepare query
+        $stmt = $this->conn->prepare($query);
+    
+        // sanitize
+        $this->subpartID=htmlspecialchars(strip_tags($this->subpartID));
+    
+        // bind id of record to delete
+        $stmt->bindParam(":subpartID", $this->subpartID);
+    
+        // execute query
+        if($stmt->execute()){
+            return true;
+        }
+    
+        return false;
+    }
+
+    function update(){
+        // update query
+        $query = "UPDATE
+                    " . $this->table_name . "
+                SET
+                    disasterID=:disasterID, latitude=:latitude, longitude=:longitude, address=:address, missingPerson=:missingPerson, rescuedPerson=:rescuedPerson, isOpenForVolunteers=:isOpenForVolunteers, subpartName=:subpartName,disasterName=:disasterName, `status`=:status, emergencyLevel=:emergencyLevel
+                WHERE
+                    subpartID=:subpartID";
+    
+        // prepare query statement
+        $stmt = $this->conn->prepare($query);
+    
+        // sanitize
+        $this->subpartID=htmlspecialchars(strip_tags($this->subpartID));
+        $this->disasterID=htmlspecialchars(strip_tags($this->disasterID));
+        $this->latitude=htmlspecialchars(strip_tags($this->latitude));
+        $this->longitude=htmlspecialchars(strip_tags($this->longitude));
+        $this->address=htmlspecialchars(strip_tags($this->address));
+        $this->missingPerson=htmlspecialchars(strip_tags($this->missingPerson));
+        $this->rescuedPerson=htmlspecialchars(strip_tags($this->rescuedPerson));
+        $this->isOpenForVolunteers=htmlspecialchars(strip_tags($this->isOpenForVolunteers));
+        $this->subpartName=htmlspecialchars(strip_tags($this->subpartName));
+        $this->disasterName=htmlspecialchars(strip_tags($this->disasterName));
+        $this->status=htmlspecialchars(strip_tags($this->status));
+        $this->emergencyLevel=htmlspecialchars(strip_tags($this->emergencyLevel));
+    
+     
+        // bind values
+        $stmt->bindParam(":subpartID", $this->subpartID);
+        $stmt->bindParam(":disasterID", $this->disasterID);
+        $stmt->bindParam(":latitude", $this->latitude);
+        $stmt->bindParam(":longitude", $this->longitude);
+        $stmt->bindParam(":address", $this->address);
+        $stmt->bindParam(":missingPerson", $this->missingPerson);
+        $stmt->bindParam(":rescuedPerson", $this->rescuedPerson);
+        $stmt->bindParam(":isOpenForVolunteers", $this->isOpenForVolunteers);
+        $stmt->bindParam(":subpartName", $this->subpartName);
+        $stmt->bindParam(":disasterName", $this->disasterName);
+        $stmt->bindParam(":status", $this->status);
+        $stmt->bindParam(":emergencyLevel", $this->emergencyLevel);
+    
+    
+        // execute the query
+        if($stmt->execute()){
+            return true;
+        }
+    
+        return false;
     }
 }
 ?>

@@ -105,38 +105,62 @@ class Team{
      
         return $stmt;
     }
-    function update(){
-  
-    // update query
-    $query = "UPDATE
-                " . $this->table_name . "
-            SET
-				status=:status,
-				needManPower=:needManPower
-            WHERE
-                teamID = :teamID";
-  
-    // prepare query statement
-    $stmt = $this->conn->prepare($query);
-  
-    // sanitize
-    $this->teamID=htmlspecialchars(strip_tags($this->teamID));
-    $this->status=htmlspecialchars(strip_tags($this->status));
-    $this->needManPower=htmlspecialchars(strip_tags($this->needManPower));
 
-  
-    // bind new values
-    $stmt->bindParam(':status', $this->status);
-    $stmt->bindParam(':needManPower', $this->needManPower);
-    $stmt->bindParam(':teamID', $this->teamID);
- 
-  
-    // execute the query
-    if($stmt->execute()){
-        return true;
+    function delete(){
+        // delete query
+        $query = "DELETE FROM " . $this->table_name . " WHERE teamID = :teamID";
+    
+        // prepare query
+        $stmt = $this->conn->prepare($query);
+    
+        // sanitize
+        $this->teamID=htmlspecialchars(strip_tags($this->teamID));
+    
+        // bind id of record to delete
+        $stmt->bindParam(":teamID", $this->teamID);
+    
+        // execute query
+        if($stmt->execute()){
+            return true;
+        }
+    
+        return false;
     }
-  
-    return false;
-}
+
+    function update(){
+        // update query
+        $query = "UPDATE
+                    " . $this->table_name . "
+                SET
+                    assignedSubpartID=:assignedSubpartID, status=:status, needManPower=:needManPower, needEquipment=:needEquipment
+                WHERE
+                    teamID = :teamID";
+    
+        // prepare query statement
+        $stmt = $this->conn->prepare($query);
+    
+        // sanitize
+        $this->teamID=htmlspecialchars(strip_tags($this->teamID));
+        $this->assignedSubpartID=htmlspecialchars(strip_tags($this->assignedSubpartID));
+        $this->status=htmlspecialchars(strip_tags($this->status));
+        $this->needManPower=htmlspecialchars(strip_tags($this->needManPower));
+        $this->needEquipment=htmlspecialchars(strip_tags($this->needEquipment));
+    
+     
+        // bind values
+        $stmt->bindParam(":teamID", $this->teamID);
+        $stmt->bindParam(":assignedSubpartID", $this->assignedSubpartID);
+        $stmt->bindParam(":status", $this->status);
+        $stmt->bindParam(":needManPower", $this->needManPower);
+        $stmt->bindParam(":needEquipment", $this->needEquipment);
+    
+    
+        // execute the query
+        if($stmt->execute()){
+            return true;
+        }
+    
+        return false;
+    }
 }
 ?>
