@@ -39,6 +39,7 @@
             android:layout_gravity="center"
             android:layout_weight="1"
             android:text="Afet Bilgisini Güncelle"
+            android:onClick="ClickUpdateAfetBilgisi"
             android:textColor="@color/black"
             app:backgroundTint="#BFBFBF">
 

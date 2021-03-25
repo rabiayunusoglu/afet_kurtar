@@ -2,6 +2,7 @@ package com.example.afetkurtar;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.location.Address;
@@ -233,5 +234,18 @@ public class Disaster_Details extends AppCompatActivity implements OnMapReadyCal
         Intent intent = new Intent(this, Create_Disaster_Event_On_Map.class);
         intent.putExtra("json", "");
         startActivity(intent);
+    }
+
+    public void ClickUpdateAfetBilgisi(View view) {
+        redirectActivity(this,Disaster_Update.class);
+    }
+    public static void redirectActivity(Activity activity, Class aClass) {
+        //initialize intent
+        Intent intent = new Intent(activity, aClass);
+        //Set flag
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        //Start activity
+        activity.startActivity(intent);
+
     }
 }

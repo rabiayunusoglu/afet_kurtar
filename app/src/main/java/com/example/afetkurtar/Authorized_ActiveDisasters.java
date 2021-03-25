@@ -43,6 +43,13 @@ import java.util.Locale;
 public class Authorized_ActiveDisasters extends AppCompatActivity {
     RequestQueue queue;
     public static int disasterID;
+    public static String disasterName,
+            disasterBase,
+            disasterDate,
+            disasterType,
+            emergencyLevel,
+            disasterlatitude,
+            disasterlongitude;
     public static Double latitude, longtitude;
     static int k = 0;
     ArrayList<JSONObject> list2 = new ArrayList<JSONObject>();
@@ -153,8 +160,9 @@ public class Authorized_ActiveDisasters extends AppCompatActivity {
         }
 
     }
-    public void ClickDisasterCreate(View view){
-        redirectActivity(this,DisasterCreate.class);
+
+    public void ClickDisasterCreate(View view) {
+        redirectActivity(this, DisasterCreate.class);
     }
 
     public void onClick(View v) {
@@ -172,7 +180,14 @@ public class Authorized_ActiveDisasters extends AppCompatActivity {
                 for (JSONObject x : list2) {
                     try {
                         if (x.getString("disasterID").equals(tmp.trim())) {
-                            disasterID=Integer.parseInt(x.getString("disasterID"));
+                            disasterID = Integer.parseInt(x.getString("disasterID"));
+                            disasterName = x.getString("disasterName");
+                            disasterBase = x.getString("disasterBase");
+                            disasterDate = x.getString("disasterDate");
+                            disasterType = x.getString("disasterType");
+                            emergencyLevel = x.getString("emergencyLevel");
+                            disasterlatitude = x.getString("latitude");
+                            disasterlongitude = x.getString("longitude");
                             json = x;
                         }
                     } catch (JSONException e) {
@@ -192,6 +207,7 @@ public class Authorized_ActiveDisasters extends AppCompatActivity {
         }
 
     }
+
     public static void redirectActivity(Activity activity, Class aClass) {
         //initialize intent
         Intent intent = new Intent(activity, aClass);
