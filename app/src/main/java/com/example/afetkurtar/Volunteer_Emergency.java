@@ -26,9 +26,12 @@ import android.os.Looper;
 import android.provider.MediaStore;
 import android.util.Log;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.Spinner;
 import android.widget.Toast;
 import android.webkit.MimeTypeMap;
 import android.content.ContentResolver;
@@ -82,6 +85,7 @@ import java.io.OutputStream;
 import java.io.Reader;
 import java.net.Socket;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.concurrent.TimeUnit;
@@ -91,8 +95,12 @@ import org.jibble.simpleftp.*;
 
 
 public class Volunteer_Emergency extends AppCompatActivity {
+    ArrayList<String> arrayListAfet = new ArrayList<>();
+    ArrayAdapter<String> adapterAfet;
     DrawerLayout drawerLayout;
+    Spinner afetSpinner;
     RequestQueue queue;
+    static boolean resimKontrol = false, photoControl=true;
     static File finalFile;
     String url = "https://afetkurtar.site/api/notice/create.php";
     public static final int CAMERA_PERM_CODE = 101;
@@ -104,6 +112,8 @@ public class Volunteer_Emergency extends AppCompatActivity {
     Button cameraBtn, galleryBtn, submitBtn, yukleBtn;
     String currentPhotoPath;
     static String photoUrl = "";
+    int index = 0;
+    static String afetBolgesi = "";
     OutputStream outputstrema;
     private EditText message, type;
     StorageReference storageReference;
@@ -132,7 +142,8 @@ public class Volunteer_Emergency extends AppCompatActivity {
         galleryBtn = findViewById(R.id.GaleryBtn);
         yukleBtn = findViewById(R.id.UpdateButton);
         message = (EditText) findViewById(R.id.message_disaster);
-        type = (EditText) findViewById(R.id.type_disaster);
+        afetSpinner = (Spinner) findViewById(R.id.spinnerAfetTipi);
+        loadSpinnerDataAfet();
 
         submitBtn = findViewById(R.id.submit);
         queue = Volley.newRequestQueue(this);
@@ -140,16 +151,46 @@ public class Volunteer_Emergency extends AppCompatActivity {
 
             @Override
             public void onClick(View v) {
+                try {
+                    if (message.getText().toString().length() == 0 || resimKontrol == false || photoControl==false)
+                        throw new Exception("");
 
-                UploadFile uploadFile=new UploadFile();
-                uploadFile.execute();
-                System.out.println("PHOTO URL:*********************************************************"+photoUrl);
-
-
-
+                    UploadFile uploadFile = new UploadFile();
+                    uploadFile.execute();
+                    System.out.println("PHOTO URL:*********************************************************" + photoUrl);
+                } catch (Exception e) {
+                    if (resimKontrol == false| photoControl==false)
+                        Toast.makeText(Volunteer_Emergency.this, "Afet bölgesinin resmini yüklemelisiniz.", Toast.LENGTH_LONG).show();
+                    else if (message.getText().toString().length() == 0)
+                        Toast.makeText(Volunteer_Emergency.this, "Detaylı bilgi kısmını doldurunuz...", Toast.LENGTH_LONG).show();
+                }
             }
         });
 
+    }
+
+    private void loadSpinnerDataAfet() {
+        adapterAfet = new ArrayAdapter<String>(Volunteer_Emergency.this, android.R.layout.simple_spinner_dropdown_item, arrayListAfet);
+        adapterAfet.add("Deprem");
+        adapterAfet.add("Yangın");
+        adapterAfet.add("Sel");
+        adapterAfet.add("Heyelan");
+        adapterAfet.add("Çığ");
+        afetSpinner.setAdapter(adapterAfet);
+        afetSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                afetBolgesi = adapterAfet.getItem(position).toString();
+                index = position;
+                Toast.makeText(getApplicationContext(), afetBolgesi, Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
     }
 
 
@@ -281,11 +322,13 @@ public class Volunteer_Emergency extends AppCompatActivity {
 
     public void ClickCameraBtn(View view) {
         askCameraPermissions();
+        resimKontrol = true;
     }
 
     public void ClickGaleryBtn(View view) {
         Intent gallery = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
         startActivityForResult(gallery, GALLERY_REQUEST_CODE);
+        resimKontrol = true;
     }
 
     @Override
@@ -319,7 +362,7 @@ public class Volunteer_Emergency extends AppCompatActivity {
 
                 // CALL THIS METHOD TO GET THE ACTUAL PATH
                 finalFile = new File(getRealPathFromURI(tempUri));
-                System.out.println(finalFile+"***************************************************");
+                System.out.println(finalFile + "***************************************************");
 
                 try {
                     SaveImage(photo, finalFile.getName());
@@ -338,6 +381,8 @@ public class Volunteer_Emergency extends AppCompatActivity {
                 String imageFileName = "JPEG_" + timeStamp + "." + getFileExt(contentUri);
                 Log.d("tag", "onActivityResult: Gallery Image Uri:  " + imageFileName);
                 selectedImage.setImageURI(contentUri);
+                finalFile = new File(getRealPathFromURI(contentUri));
+                System.out.println(finalFile + "***************************************************");
 
                 //uploadImageToFirebase(imageFileName, contentUri);
 
@@ -348,12 +393,18 @@ public class Volunteer_Emergency extends AppCompatActivity {
 
     }
 
+    private String getFileExt(Uri contentUri) {
+        ContentResolver c = getContentResolver();
+        MimeTypeMap mime = MimeTypeMap.getSingleton();
+        return mime.getExtensionFromMimeType(c.getType(contentUri));
+    }
+
     private void SaveImage(Bitmap finalBitmap, String filename) throws IOException {
         File root = android.os.Environment.getExternalStorageDirectory();
         File dir = new File(root.getAbsolutePath() + "/Pictures");
         dir.mkdirs();
         File file = new File(dir, filename);
-      // photoUrl = file.getAbsolutePath();
+        // photoUrl = file.getAbsolutePath();
         Reader pr;
         String line = "";
         try {
@@ -375,7 +426,9 @@ public class Volunteer_Emergency extends AppCompatActivity {
     public Uri getImageUri(Context inContext, Bitmap inImage) {
         ByteArrayOutputStream bytes = new ByteArrayOutputStream();
         inImage.compress(Bitmap.CompressFormat.JPEG, 100, bytes);
-        String path = MediaStore.Images.Media.insertImage(inContext.getContentResolver(), inImage, "Rabia", null);
+        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+        String imageFileName = "JPEG_" + timeStamp;
+        String path = MediaStore.Images.Media.insertImage(inContext.getContentResolver(), inImage, imageFileName, null);
         return Uri.parse(path);
     }
 
@@ -393,74 +446,6 @@ public class Volunteer_Emergency extends AppCompatActivity {
         return path;
     }
 
-    private void uploadImageToFirebase(String name, Uri contentUri) {
-        final StorageReference image = storageReference.child("pictures/" + name);
-        image.putFile(contentUri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-            @Override
-            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                image.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
-                    @Override
-                    public void onSuccess(Uri uri) {
-                        Log.d("tag", "onSuccess: Uploaded Image URl is " + uri.toString());
-                    }
-                });
-
-                Toast.makeText(Volunteer_Emergency.this, "Image Is Uploaded.", Toast.LENGTH_SHORT).show();
-            }
-        }).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-                Toast.makeText(Volunteer_Emergency.this, "Upload Failled.", Toast.LENGTH_SHORT).show();
-            }
-        });
-
-    }
-
-    private String getFileExt(Uri contentUri) {
-        ContentResolver c = getContentResolver();
-        MimeTypeMap mime = MimeTypeMap.getSingleton();
-        return mime.getExtensionFromMimeType(c.getType(contentUri));
-    }
-
-
-    private File createImageFile() throws IOException {
-        // Create an image file name
-        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
-        String imageFileName = "JPEG_" + timeStamp + "_";
-        File storageDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
-        File image = File.createTempFile(
-                imageFileName,  /* prefix */
-                ".jpg",         /* suffix */
-                storageDir      /* directory */
-        );
-
-        // Save a file: path for use with ACTION_VIEW intents
-        currentPhotoPath = image.getAbsolutePath();
-        return image;
-    }
-
-    private void dispatchTakePictureIntent() {
-        Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        // Ensure that there's a camera activity to handle the intent
-        if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
-            // Create the File where the photo should go
-            File photoFile = null;
-            try {
-                photoFile = createImageFile();
-            } catch (IOException ex) {
-                // Error occurred while creating the File
-
-            }
-            // Continue only if the File was successfully created
-            if (photoFile != null) {
-                Uri photoURI = FileProvider.getUriForFile(this,
-                        "com.example.android.fileprovider",
-                        photoFile);
-                takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
-                startActivityForResult(takePictureIntent, CAMERA_REQUEST_CODE);
-            }
-        }
-    }
     public static String getStringContent(HttpResponse response) throws IOException {
         BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(response.getEntity().getContent(), "utf-8"));
         String body;
@@ -471,36 +456,15 @@ public class Volunteer_Emergency extends AppCompatActivity {
         }
         return content.trim();
     }
+
     class UploadFile extends AsyncTask<File, Integer, String> {
         ProgressDialog dialog;
 
         @Override
         protected String doInBackground(File... params) {
-            /*
-             // CALL THIS METHOD TO GET THE URI FROM THE BITMAP
-
-                HttpClient httpclient = new DefaultHttpClient();
-                HttpPost httppost = new HttpPost("https://afetkurtar.site/api/uploadImage.php");
-
-                MultipartEntity mpEntity = new MultipartEntity(HttpMultipartMode.BROWSER_COMPATIBLE);
-                if (finalFile != null) {
-                    Log.d("EDIT USER PROFILE", "UPLOAD: file length = " + finalFile.length());
-                    Log.d("EDIT USER PROFILE", "UPLOAD: file exist = " + finalFile.exists());
-                    mpEntity.addPart("avatar", new FileBody(finalFile, "application/octet"));
-                }
-
-                httppost.setEntity(mpEntity);
-
-                try {
-
-                    HttpResponse response = httpclient.execute(httppost);
-                    photoUrl = response.toString();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }*/
-//             ftpClient=uploadingFilestoFtp();
-            Log.e("FTP","doInBackground");
             try {
+                if (resimKontrol == false || message.getText().toString().length() == 0)
+                    throw new Exception("");
                 HttpClient httpclient = new DefaultHttpClient();
                 HttpPost httppost = new HttpPost("https://afetkurtar.site/api/uploadImage.php");
 
@@ -516,12 +480,18 @@ public class Volunteer_Emergency extends AppCompatActivity {
 
                     HttpResponse response = httpclient.execute(httppost);
                     photoUrl = getStringContent(response);
+                    if(photoUrl==null || photoUrl.length()==0)
+                        photoControl=false;
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
 
             } catch (Exception e) {
                 e.printStackTrace();
+                if (resimKontrol == false || photoControl==false)
+                    Toast.makeText(Volunteer_Emergency.this, "Afet bölgesinin resmini yüklemelisiniz.", Toast.LENGTH_LONG).show();
+                else if (message.getText().toString().length() == 0)
+                    Toast.makeText(Volunteer_Emergency.this, "Detaylı bilgi kısmını doldurunuz...", Toast.LENGTH_LONG).show();
                 //Toast.makeText(MainActivity.this, "Something Went Wrong...", Toast.LENGTH_LONG).show();
                 dialog.dismiss();
             }
@@ -529,11 +499,10 @@ public class Volunteer_Emergency extends AppCompatActivity {
         }
 
 
-
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-            Log.e("FTP","onPreExecute*************************");
+            Log.e("FTP", "onPreExecute*************************");
             dialog = new ProgressDialog(Volunteer_Emergency.this);
             dialog.setMessage("Please wait...");
             dialog.setCancelable(false);
@@ -544,38 +513,51 @@ public class Volunteer_Emergency extends AppCompatActivity {
         @Override
         protected void onPostExecute(String result) {
             // TODO Auto-generated method stub
-            Log.e("FTP","onPostExecute******************************");
+            Log.e("FTP", "onPostExecute******************************");
             super.onPostExecute(result);
             if (photoUrl.length() != 0) {
-                JSONObject obj = new JSONObject();
                 try {
+                    JSONObject obj = new JSONObject();
+                    if (message.getText().toString().length() == 0 || resimKontrol == false|| photoControl==false)
+                        throw new Exception("");
+                    try {
 
-                    obj.put("type", type.getText().toString());
-                    obj.put("latitude", latitude);
-                    obj.put("longitude", longtitude);
-                    obj.put("message", message.getText().toString());
-                    obj.put("imageURL", photoUrl);
+                        obj.put("type", afetBolgesi);
+                        obj.put("latitude", latitude);
+                        obj.put("longitude", longtitude);
+                        obj.put("message", message.getText().toString());
+                        obj.put("imageURL", photoUrl);
 
-                } catch (JSONException e) {
-                    e.printStackTrace();
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                    JsonObjectRequest request = new JsonObjectRequest(Request.Method.POST, url, obj, new Response.Listener<JSONObject>() {
+                        @Override
+                        public void onResponse(JSONObject response) {
+                            System.out.println(response.toString());
+                        }
+                    }, new Response.ErrorListener() {
+                        @Override
+                        public void onErrorResponse(VolleyError error) {
+                            System.out.println(error);
+                        }
+                    });
+                    queue.add(request);
+                    dialog.dismiss();
+                    Toast.makeText(Volunteer_Emergency.this, "Bildiriminiz iletilmiştir.", Toast.LENGTH_LONG).show();
+                    finish();
+                } catch (Exception e) {
+                    if (resimKontrol == false|| photoControl==false)
+                        Toast.makeText(Volunteer_Emergency.this, "Afet bölgesinin resmini yüklemelisiniz.", Toast.LENGTH_LONG).show();
+                    else if (message.getText().toString().length() == 0)
+                        Toast.makeText(Volunteer_Emergency.this, "Detaylı bilgi kısmını doldurunuz...", Toast.LENGTH_LONG).show();
                 }
-                JsonObjectRequest request = new JsonObjectRequest(Request.Method.POST, url, obj, new Response.Listener<JSONObject>() {
-                    @Override
-                    public void onResponse(JSONObject response) {
-                        System.out.println(response.toString());
-                    }
-                }, new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        System.out.println(error);
-                    }
-                });
-                queue.add(request);
 
+            } else {
+                dialog.dismiss();
+                Toast.makeText(Volunteer_Emergency.this, "Bildirim sırasında bir hata oluştu.Tekrar deneyiniz!", Toast.LENGTH_LONG).show();
             }
-            dialog.dismiss();
-            Toast.makeText(Volunteer_Emergency.this, "Image Upload Successfully", Toast.LENGTH_LONG).show();
-            finish();
+
         }
 
     }
