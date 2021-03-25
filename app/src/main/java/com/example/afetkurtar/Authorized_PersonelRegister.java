@@ -267,7 +267,7 @@ public class Authorized_PersonelRegister extends AppCompatActivity {
 
     // AKTIF AFET
     public void ClickAuthorizeActiveDisaster(View view) {
-        //  redirectActivity(this, Authorized_Notification.class);
+          redirectActivity(this, Authorized_ActiveDisasters.class);
     }
 
     // PERSONEL KAYIT

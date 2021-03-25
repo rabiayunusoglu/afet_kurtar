@@ -1,0 +1,382 @@
+package com.example.afetkurtar;
+
+import androidx.annotation.RequiresApi;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.drawerlayout.widget.DrawerLayout;
+
+import android.location.Geocoder;
+import android.os.Build;
+import android.os.Bundle;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.Spinner;
+import android.widget.Toast;
+
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.Volley;
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
+import com.google.android.gms.maps.model.MarkerOptions;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+
+public class DisasterCreate extends AppCompatActivity implements OnMapReadyCallback {
+    ArrayList<String> arrayListAfetType = new ArrayList<>();
+    RequestQueue queue;
+    JSONObject data = new JSONObject();
+    private GoogleMap mMap;
+    private Geocoder geocoder;
+    ArrayAdapter<String> adapterAfetType;
+    Spinner afetTypeSpinner;
+    DrawerLayout drawerLayout;
+    Marker clickMarker;
+    ArrayList<String> arrayListEmergencyLevel = new ArrayList<>();
+    ArrayAdapter<String> adapterEmergencyLevel;
+    Spinner emergencyLevelSpinner;
+    ArrayList<String> arrayListAfetBase = new ArrayList<>();
+    ArrayAdapter<String> adapterAfetBase;
+    Spinner afetBaseSpinner;
+    EditText afetName, latitude, longtitude;
+    static Double latitudeMap,logtitudeMap;
+    Button gonder,geri;
+    static String afetTipi, afetussu;
+    static String level;
+    static int indexType, indexbase, indexlevel;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_disaster_create);
+        queue = Volley.newRequestQueue(this);
+        afetTypeSpinner = findViewById(R.id.afetlistner);
+        emergencyLevelSpinner = findViewById(R.id.emergencylevellistliner);
+        afetBaseSpinner = findViewById(R.id.disasterBaseListliner);
+        latitude = findViewById(R.id.latitudeBtn);
+        longtitude = findViewById(R.id.longtitudeBtn);
+        loadSpinnerAfetBase();
+        loadSpinnerDataAfetType();
+        loadSpinnerEmergencyLevel();
+        afetName = findViewById(R.id.disasterNameBtn);
+        gonder = findViewById(R.id.afetolusturBTN);
+        geri=findViewById(R.id.disaster_create_geri_button);
+        try {
+
+            Bundle bundle = getIntent().getExtras();
+            if(!bundle.isEmpty()){
+                try {
+                    String message = bundle.getString("json");
+                    data = new JSONObject(message);
+                }catch (Exception e){
+                    e.getMessage();
+                }
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        initMap();
+        geri.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
+        gonder.setOnClickListener(new View.OnClickListener() {
+
+            @RequiresApi(api = Build.VERSION_CODES.O)
+            @Override
+            public void onClick(View v) {
+                JSONObject obj = new JSONObject();
+                try {
+//Get current date time
+                    System.out.println("*********************************************************************");
+                    System.out.println(afetTipi+"***********"+level+"**********"+afetussu);
+                    System.out.println("*********************************************************************");
+                    LocalDateTime now = LocalDateTime.now();
+                    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+                    String formatDateTime = now.format(formatter);
+                    obj.put("disasterType", afetTipi);
+                    obj.put("emergencyLevel", Integer.parseInt(level));
+                    obj.put("latitude", latitudeMap);
+                    obj.put("longitude", logtitudeMap);
+                    obj.put("disasterDate", formatDateTime);
+                    obj.put("disasterBase", afetussu);
+                    obj.put("disasterName", afetName.getText().toString());
+                } catch (Exception e) {
+
+                }
+                JsonObjectRequest request = new JsonObjectRequest(Request.Method.POST, "https://afetkurtar.site/api/disasterEvents/create.php", obj, new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        System.out.println(response.toString());
+                    }
+                }, new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        System.out.println(error);
+                    }
+                });
+                queue.add(request);
+                Toast.makeText(DisasterCreate.this, "Afet Oluşturuldu.", Toast.LENGTH_LONG).show();
+                finish();
+            }
+        });
+    }
+    public void initMap(){
+        geocoder = new Geocoder(this);
+        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.disaster_create_map);
+        mapFragment.getMapAsync(DisasterCreate.this) ;
+    }
+    public void calculateCoordinates(LatLng myLatlng){
+        try{
+            if(!clickMarker.equals(null)){
+                clickMarker.remove();
+            }
+        }catch (Exception e){
+            e.getMessage();
+        }
+
+        double tmpLatitude = myLatlng.latitude;
+        double tmpLongitude = myLatlng.longitude;
+
+        String tmpLatitudeString = String.valueOf(myLatlng.latitude);
+        String tmpLongitudeString = String.valueOf(myLatlng.longitude);
+
+        try{
+            if(tmpLatitudeString.indexOf(".") != -1 &&tmpLatitudeString.substring(tmpLatitudeString.indexOf(".")).length() >4){
+                tmpLatitude = Double.parseDouble(tmpLatitudeString.substring(0,tmpLatitudeString.indexOf(".")+4));
+            }
+            if(tmpLongitudeString.indexOf(".") != -1 && tmpLongitudeString.substring(tmpLongitudeString.indexOf(".")).length() >4){
+                tmpLongitude = Double.parseDouble(tmpLongitudeString.substring(0,tmpLongitudeString.indexOf(".")+4));
+            }
+        }catch(Exception e){
+            e.getMessage();
+        }
+        ((EditText)(findViewById(R.id.latitudeBtn))).setText(tmpLatitudeString);
+        ((EditText)(findViewById(R.id.longtitudeBtn))).setText(tmpLongitudeString);
+
+        latitudeMap=tmpLatitude;
+        logtitudeMap=tmpLongitude;
+
+        LatLng latLng = new LatLng(myLatlng.latitude,myLatlng.longitude);
+        clickMarker = mMap.addMarker(new MarkerOptions().position(latLng));
+        mMap.setInfoWindowAdapter(new CustomInfoWindowAdapter(DisasterCreate.this));
+        mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng,8));
+    }
+    @Override
+    public void onMapReady(GoogleMap googleMap) {
+        mMap = googleMap;
+        System.out.println("test : map is ready");
+        Toast.makeText(this, "map is ready", Toast.LENGTH_SHORT).show();
+
+        mMap.setOnMapClickListener(new GoogleMap.OnMapClickListener()
+        {
+            @Override
+            public void onMapClick(LatLng arg0)
+            {
+
+                //for calculate coordinates and show on screen
+                calculateCoordinates(arg0);
+            }
+        });
+
+        // if data is not empty get dataLatitude and dataLongitude
+
+        if(!data.equals(new JSONObject())){
+
+            try {
+                String dataLatitude = data.getString("latitude");
+                String dataLongitude = data.getString("longitude");
+
+                double doubleDataLatitude = Double.parseDouble(dataLatitude);
+                double doubleDataLongitude = Double.parseDouble(dataLongitude);
+
+                LatLng latLng = new LatLng(doubleDataLatitude, doubleDataLongitude);
+
+                ((EditText)(findViewById(R.id.afet_latitude))).setText(dataLatitude);
+                ((EditText)(findViewById(R.id.afet_longitude))).setText(dataLongitude);
+
+                Marker dataMarker = mMap.addMarker(new MarkerOptions().position(latLng));
+                mMap.setInfoWindowAdapter(new CustomInfoWindowAdapter(DisasterCreate.this));
+                mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng,13));
+
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+
+        }
+
+    }
+
+    private void loadSpinnerAfetBase() {
+        adapterAfetBase = new ArrayAdapter<String>(DisasterCreate.this, android.R.layout.simple_spinner_dropdown_item, arrayListAfetBase);
+        adapterAfetBase.add("Adana");
+        adapterAfetBase.add("Adıyaman");
+        adapterAfetBase.add("Afyon");
+        adapterAfetBase.add("Ağrı");
+        adapterAfetBase.add("Amasya");
+        adapterAfetBase.add("Ankara");
+        adapterAfetBase.add("Antalya");
+        adapterAfetBase.add("Artvin");
+        adapterAfetBase.add("Aydın");
+        adapterAfetBase.add("Balıkesir");
+        adapterAfetBase.add("Bilecik");
+        adapterAfetBase.add("Bingöl");
+        adapterAfetBase.add("Bitlis");
+        adapterAfetBase.add("Bolu");
+        adapterAfetBase.add("Burdur");
+        adapterAfetBase.add("Bursa");
+        adapterAfetBase.add("Çanakkale");
+        adapterAfetBase.add("Çankırı");
+        adapterAfetBase.add("Çorum");
+        adapterAfetBase.add("Denizli");
+        adapterAfetBase.add("Diyarbakır");
+        adapterAfetBase.add("Edirne");
+        adapterAfetBase.add("Elazığ");
+        adapterAfetBase.add("Erzincan");
+        adapterAfetBase.add("Erzurum");
+        adapterAfetBase.add("Eskişehir");
+        adapterAfetBase.add("Gaziantep");
+        adapterAfetBase.add("Giresun");
+        adapterAfetBase.add("Gümüşhane");
+        adapterAfetBase.add("Hakkari");
+        adapterAfetBase.add("Hatay");
+        adapterAfetBase.add("Isparta");
+        adapterAfetBase.add("İçel (Mersin)");
+        adapterAfetBase.add("İstanbul");
+        adapterAfetBase.add("İzmir");
+        adapterAfetBase.add("Kars");
+        adapterAfetBase.add("Kastamonu");
+        adapterAfetBase.add("Kayseri");
+        adapterAfetBase.add("Kırklareli");
+        adapterAfetBase.add("Kırşehir");
+        adapterAfetBase.add("Kocaeli");
+        adapterAfetBase.add("Konya");
+        adapterAfetBase.add("Kütahya");
+        adapterAfetBase.add("Malatya");
+        adapterAfetBase.add("Manisa");
+        adapterAfetBase.add("Kahramanmaraş");
+        adapterAfetBase.add("Mardin");
+        adapterAfetBase.add("Muğla");
+        adapterAfetBase.add("Muş");
+        adapterAfetBase.add("Nevşehir");
+        adapterAfetBase.add("Niğde");
+        adapterAfetBase.add("Ordu");
+        adapterAfetBase.add("Rize");
+        adapterAfetBase.add("Sakarya");
+        adapterAfetBase.add("Samsun");
+        adapterAfetBase.add("Siirt");
+        adapterAfetBase.add("Sinop");
+        adapterAfetBase.add("Sivas");
+        adapterAfetBase.add("Tekirdağ");
+        adapterAfetBase.add("Tokat");
+        adapterAfetBase.add("Trabzon");
+        adapterAfetBase.add("Tunceli");
+        adapterAfetBase.add("Şanlıurfa");
+        adapterAfetBase.add("Uşak");
+        adapterAfetBase.add("Van");
+        adapterAfetBase.add("Yozgat");
+        adapterAfetBase.add("Zonguldak");
+        adapterAfetBase.add("Aksaray");
+        adapterAfetBase.add("Bayburt");
+        adapterAfetBase.add("Karaman");
+        adapterAfetBase.add("Kırıkkale");
+        adapterAfetBase.add("Batman");
+        adapterAfetBase.add("Şırnak");
+        adapterAfetBase.add("Bartın");
+        adapterAfetBase.add("Ardahan");
+        adapterAfetBase.add("Iğdır");
+        adapterAfetBase.add("Yalova");
+        adapterAfetBase.add("Karabük");
+        adapterAfetBase.add("Kilis");
+        adapterAfetBase.add("Osmaniye");
+        adapterAfetBase.add("Düzce");
+
+        afetBaseSpinner.setAdapter(adapterAfetBase);
+        afetBaseSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                afetussu = adapterAfetBase.getItem(position).toString();
+                indexbase = position;
+                Toast.makeText(getApplicationContext(), afetussu, Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+    }
+
+    private void loadSpinnerEmergencyLevel() {
+        adapterEmergencyLevel = new ArrayAdapter<String>(DisasterCreate.this, android.R.layout.simple_spinner_dropdown_item, arrayListEmergencyLevel);
+        adapterEmergencyLevel.add("1");
+        adapterEmergencyLevel.add("2");
+        adapterEmergencyLevel.add("3");
+        adapterEmergencyLevel.add("4");
+        adapterEmergencyLevel.add("5");
+        adapterEmergencyLevel.add("6");
+        adapterEmergencyLevel.add("7");
+        adapterEmergencyLevel.add("8");
+        adapterEmergencyLevel.add("9");
+        adapterEmergencyLevel.add("10");
+
+        emergencyLevelSpinner.setAdapter(adapterEmergencyLevel);
+        emergencyLevelSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                level = adapterEmergencyLevel.getItem(position).toString();
+                indexlevel = position;
+                Toast.makeText(getApplicationContext(), level, Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+    }
+
+    private void loadSpinnerDataAfetType() {
+        adapterAfetType = new ArrayAdapter<String>(DisasterCreate.this, android.R.layout.simple_spinner_dropdown_item, arrayListAfetType);
+        adapterAfetType.add("Deprem");
+        adapterAfetType.add("Yangın");
+        adapterAfetType.add("Sel");
+        adapterAfetType.add("Heyelan");
+        adapterAfetType.add("Çığ");
+        afetTypeSpinner.setAdapter(adapterAfetType);
+        afetTypeSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                afetTipi = adapterAfetType.getItem(position).toString();
+                indexType = position;
+                Toast.makeText(getApplicationContext(), afetTipi, Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+
+    }
+}

@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".Authorized_ActiveDisasters">
+
+
+    <include
+        layout="@layout/activity_tool_bar"
+        tools:layout_editor_absoluteX="-113dp"
+        tools:layout_editor_absoluteY="0dp"></include>
+    <Button
+        android:textColor="@color/black"
+        android:id="@+id/disaster_active_geri_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:onClick="ClickDisasterActiveGeri"
+        android:text="Geri"
+        app:backgroundTint="#BFBFBF"
+        tools:ignore="MissingConstraints">
+
+    </Button>
+    <ScrollView
+
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="60dp"
+        android:background="@color/white"
+        app:layout_constraintTop_toBottomOf="@id/history_geri_button"
+        tools:ignore="MissingConstraints">
+
+        <LinearLayout
+            android:id="@+id/auth_lay_DisasterScroll"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:gravity="center_vertical"
+            android:orientation="vertical">
+
+        </LinearLayout>
+
+
+    </ScrollView>
+
+    <Button
+        android:id="@+id/newAfetBtn"
+        android:layout_width="237dp"
+        android:layout_height="45dp"
+        android:onClick="ClickDisasterCreate"
+        android:text="Yeni Afet Oluştur"
+        android:textColor="@color/black"
+        app:backgroundTint="@color/griback"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.856"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.004"
+        tools:ignore="OnClick" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
+
+
+
+
+
+
+
