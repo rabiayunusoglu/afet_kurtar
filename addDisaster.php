@@ -81,19 +81,99 @@ if (session_id() == '') {
                         <input type="text" name="disasterName" class="form-control" id="disasterName" placeholder="Afetin kaydedileceği ismi giriniz..." required>
                     </div>
                     <div class="form-group">
-                        <label for="emergencyLevel" style="font-size: 20px; font-weight:bold; color: #ECF0F5">Aciliyet Seviyesi</label>
-                        <input id="emergencyLevel" name="emergencyLevel" type="text" data-slider-min="1" data-slider-max="10" data-slider-step="1" data-slider-value="5">
+                        <label id="emergencyLabel" for="emergencyLevel" style="font-size: 20px; font-weight:bold; color: #ECF0F5">Aciliyet Seviyesi</label>
+                        <input id="emergencyLevel" onchange="updateEmergency(this.value)" name="emergencyLevel" type="text" data-slider-min="1" data-slider-max="10" data-slider-step="1" data-slider-value="5">
+                        <span id="emergencyLevelValue" style="color:white;">5</span>
+                    </div>
+                    <div class="form-group">
+                        <label for="disasterCity" style="font-size: 20px; font-weight:bold; color: #ECF0F5">Afetin Gerçekleştiği Şehir</label>
+                        <select name="disasterCity" class="form-control" id="disasterCity">
+                            <option value="1">Adana</option>
+                            <option value="2">Adıyaman</option>
+                            <option value="3">Afyonkarahisar</option>
+                            <option value="4">Ağrı</option>
+                            <option value="5">Amasya</option>
+                            <option value="6">Ankara</option>
+                            <option value="7">Antalya</option>
+                            <option value="8">Artvin</option>
+                            <option value="9">Aydın</option>
+                            <option value="10">Balıkesir</option>
+                            <option value="11">Bilecik</option>
+                            <option value="12">Bingöl</option>
+                            <option value="13">Bitlis</option>
+                            <option value="14">Bolu</option>
+                            <option value="15">Burdur</option>
+                            <option value="16">Bursa</option>
+                            <option value="17">Çanakkale</option>
+                            <option value="18">Çankırı</option>
+                            <option value="19">Çorum</option>
+                            <option value="20">Denizli</option>
+                            <option value="21">Diyarbakır</option>
+                            <option value="22">Edirne</option>
+                            <option value="23">Elazığ</option>
+                            <option value="24">Erzincan</option>
+                            <option value="25">Erzurum</option>
+                            <option value="26">Eskişehir</option>
+                            <option value="27">Gaziantep</option>
+                            <option value="28">Giresun</option>
+                            <option value="29">Gümüşhane</option>
+                            <option value="30">Hakkâri</option>
+                            <option value="31">Hatay</option>
+                            <option value="32">Isparta</option>
+                            <option value="33">Mersin</option>
+                            <option value="34">İstanbul</option>
+                            <option value="35">İzmir</option>
+                            <option value="36">Kars</option>
+                            <option value="37">Kastamonu</option>
+                            <option value="38">Kayseri</option>
+                            <option value="39">Kırklareli</option>
+                            <option value="40">Kırşehir</option>
+                            <option value="41">Kocaeli</option>
+                            <option value="42">Konya</option>
+                            <option value="43">Kütahya</option>
+                            <option value="44">Malatya</option>
+                            <option value="45">Manisa</option>
+                            <option value="46">Kahramanmaraş</option>
+                            <option value="47">Mardin</option>
+                            <option value="48">Muğla</option>
+                            <option value="49">Muş</option>
+                            <option value="50">Nevşehir</option>
+                            <option value="51">Niğde</option>
+                            <option value="52">Ordu</option>
+                            <option value="53">Rize</option>
+                            <option value="54">Sakarya</option>
+                            <option value="55">Samsun</option>
+                            <option value="56">Siirt</option>
+                            <option value="57">Sinop</option>
+                            <option value="58">Sivas</option>
+                            <option value="59">Tekirdağ</option>
+                            <option value="60">Tokat</option>
+                            <option value="61">Trabzon</option>
+                            <option value="62">Tunceli</option>
+                            <option value="63">Şanlıurfa</option>
+                            <option value="64">Uşak</option>
+                            <option value="65">Van</option>
+                            <option value="66">Yozgat</option>
+                            <option value="67">Zonguldak</option>
+                            <option value="68">Aksaray</option>
+                            <option value="69">Bayburt</option>
+                            <option value="70">Karaman</option>
+                            <option value="71">Kırıkkale</option>
+                            <option value="72">Batman</option>
+                            <option value="73">Şırnak</option>
+                            <option value="74">Bartın</option>
+                            <option value="75">Ardahan</option>
+                            <option value="76">Iğdır</option>
+                            <option value="77">Yalova</option>
+                            <option value="78">Karabük</option>
+                            <option value="79">Kilis</option>
+                            <option value="80">Osmaniye</option>
+                            <option value="81">Düzce</option>
+                        </select>
                     </div>
                     <div class="form-group">
                         <label for="emergencyAddress" style="font-size: 20px; font-weight:bold; color: #ECF0F5">Afet Üssü Konumu</label>
                         <input type="text" name="emergencyAddress" class="form-control" id="emergencyAddress" placeholder="Afet üssünün adresini giriniz..." required>
-                    </div>
-                    <div class="form-group">
-                        <label for="disasterDate" style="font-size: 20px; font-weight:bold; color: #ECF0F5">Afet Gerçekleşme Zamanı</label>
-                        <div class="input-append">
-                            <input class="datepicker" id="datepicker" type="text" />
-                            <label for="foo" class="add-on"><i class="icon-calendar"></i></label>
-                        </div>
                     </div>
                     <input type="submit" onclick="sendDisaster()" class="btn btn-primary" id="registerBtn" value="Afet Kaydını Oluştur"></input>
                 </form>
@@ -101,24 +181,14 @@ if (session_id() == '') {
         </div>
     </div>
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.13.0/moment.min.js"></script>
-    <script type="text/javascript" src="js/moment/tr.js"></script>
     <script src="https://code.jquery.com/jquery-3.5.1.min.js" integrity="sha256-9/aliU8dGd2tb6OSsuzixeV4y/faTqgFtohetphbbj0=" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/js/bootstrap.bundle.min.js" integrity="sha384-b5kHyXgcpbZJO/tY9Ul7kGkf1S0CWuKcCD38l8YkeH8z8QjE0GmW1gYU5S9FOnJ0" crossorigin="anonymous"></script>
     <script src="js/script.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.47/js/bootstrap-datetimepicker.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-slider/10.0.0/bootstrap-slider.min.js"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.47/css/bootstrap-datetimepicker.min.css" />
     <script>
         // Basic Slider
         var slider = new Slider("#emergencyLevel", {
             tooltip: 'always'
-        });
-
-        $(function() {
-            $('#datetimepicker').datetimepicker({
-                locale: 'tr'
-            });
         });
     </script>
 </body>

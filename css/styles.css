@@ -111,3 +111,7 @@ body {
     margin-top: 5px;
 	line-height: inherit!important;
 }
+
+#emergencyLabel{
+    display: block;
+}

@@ -37,20 +37,31 @@ if(
     $disasterEvents->disasterID = isset($data["disasterID"]) ? $data["disasterID"] : "";
     $disasterEvents->disasterType = isset($data["disasterType"]) ? $data["disasterType"] : "";
     $disasterEvents->emergencyLevel = isset($data["emergencyLevel"]) ? $data["emergencyLevel"] : "";
-    $disasterEvents->latitudeStart = isset($data["latitude"]) ? $data["latitude"] : "";
-    $disasterEvents->longitudeStart = isset($data["longitude"]) ? $data["longitude"] : "";
+    $disasterEvents->latitude = isset($data["latitude"]) ? $data["latitude"] : "";
+    $disasterEvents->longitude = isset($data["longitude"]) ? $data["longitude"] : "";
     $disasterEvents->disasterDate = isset($data["disasterDate"]) ? $data["disasterDate"] : "";
     $disasterEvents->disasterBase = isset($data["disasterBase"]) ? $data["disasterBase"] : "";
     $disasterEvents->disasterName = isset($data["disasterName"]) ? $data["disasterName"] : "";
  
     // create the product
     if($disasterEvents->create()){
+
+        $stmt = $disasterEvents->search();
+
+        $insertedDisasterID = 0;
+        while ($row = $stmt->fetch(PDO::FETCH_ASSOC)){
+            // extract row
+            // this will make $row['name'] to
+            // just $name only
+            extract($row);
+            $insertedDisasterID = $disasterID;
+        }
  
         // set response code - 201 created
         http_response_code(201);
  
         // tell the user
-        echo json_encode(array("message" => "Disaster was created."));
+        echo json_encode(array("message" => "Disaster was created.", "id" => $insertedDisasterID));
     }
  
     // if unable to create the product, tell the user

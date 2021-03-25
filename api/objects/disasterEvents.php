@@ -55,6 +55,7 @@ class DisasterEvents{
     $this->latitude=htmlspecialchars(strip_tags($this->latitude));
     $this->longitude=htmlspecialchars(strip_tags($this->longitude));
     $this->disasterDate=htmlspecialchars(strip_tags($this->disasterDate));
+    $this->disasterBase=htmlspecialchars(strip_tags($this->disasterBase));
     $this->disasterName=htmlspecialchars(strip_tags($this->disasterName));
  
     // bind values
@@ -78,6 +79,8 @@ class DisasterEvents{
 
     function search(){
         // select all query
+        // AND (latitude = :latitude OR :latitude = '')
+        // AND (longitude = :longitude OR :longitude = '')
         $query = "SELECT
                     disasterID, disasterType, emergencyLevel, latitude, longitude,  disasterDate, disasterBase, disasterName
                 FROM
@@ -86,8 +89,6 @@ class DisasterEvents{
                     (disasterID = :disasterID OR :disasterID = '') 
                     AND (disasterType = :disasterType OR :disasterType = '')
                     AND (emergencyLevel = :emergencyLevel OR :emergencyLevel = '') 
-                    AND (latitude = :latitude OR :latitude = '')
-                    AND (longitude = :longitude OR :longitude = '')
                     AND (disasterDate = :disasterDate OR :disasterDate = '')
                     AND (disasterBase = :disasterBase OR :disasterBase = '')
                     AND (disasterName = :disasterName OR :disasterName = '')";

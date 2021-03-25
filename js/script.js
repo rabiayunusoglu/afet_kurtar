@@ -238,6 +238,63 @@ $(document).ready(function() {
     }
 });
 
+function updateEmergency(value){
+    $("#emergencyLevelValue").text(value);
+}
+
 function sendDisaster(){
-    
+
+    var type = document.getElementById("disasterType").value.trim();
+    var name = document.getElementById("disasterName").value.trim();
+    var address = document.getElementById("emergencyAddress").value.trim();
+    var city = $("#disasterCity option:selected").text();
+    var emergencyLevel = document.getElementById("emergencyLevel").value;
+
+    if (type == '') {
+        alert("Afet türü boş bırakılamaz.");
+        return false;
+    } else if (name == '') {
+        alert("Afet kayıt ismi boş bırakılamaz.");
+        return false;
+    } else if (address == '') {
+        alert("Afet üssü adresi boş bırakılamaz.");
+        return false;
+    }
+
+    var encodedAddress = encodeURI(city + " " + address);
+    console.log(encodedAddress);
+
+    $.get("https://maps.googleapis.com/maps/api/geocode/json?address="+encodedAddress+"&sensor=true&key=AIzaSyCxLUKYaDqQEIIQGQGQmC0ipdS04IXRoRw")
+        .done(function(data, status, xhr) {
+            if(data["status"] == "OK"){
+                var latitude = 0.0
+                var longitude = 0.0
+                latitude = data["results"][0]["geometry"]["location"]["lat"];
+                longitude = data["results"][0]["geometry"]["location"]["lng"];
+
+                $.post("https://afetkurtar.site/api/disasterEvents/create.php", JSON.stringify({ disasterType: type, disasterName: name, disasterBase: city, emergencyLevel: emergencyLevel, latitude: latitude, longitude: longitude }))
+                    .done(function(data, status, xhr) {
+                        //window.alert("data:" + data);
+                        console.log(data);
+                        if (xhr.status == 201) {
+                            window.alert("Afet kaydı başarıyla oluşturuldu.");
+                            window.location.href = "../editDisaster.php?id=" + data.id;
+                            document.getElementById('disasterForm').reset();
+                        } else {
+                            window.alert("Afet kaydı esnasında bir hata ile karşılaşıldı y");
+                            //document.getElementById('personnelForm').reset();
+                        }
+                    })
+                    .fail(function(data, xhr) {
+                        window.alert("dataf:" + data.message);
+                        //window.alert("Kullanıcı kaydı esnasında bir hata ile karşılaşıldı z");
+                        window.alert("xhr:" + xhr.status);
+                        //document.getElementById('personnelForm').reset();
+                    });
+            }
+            else{
+                window.alert("Afet üssü için girdiğiniz adres geçerli değil, lütfen düzeltip yeniden deneyiniz.");
+                document.getElementById('disasterForm').reset();
+            }        
+    });  
 }
