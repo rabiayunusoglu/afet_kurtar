@@ -43,13 +43,13 @@ if (session_id() == '') {
                             <a class="nav-link" href="/personelKaydi.php">Personel Kaydı</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link active" href="/ihbarlar.php">İhbarlar</a>
+                            <a class="nav-link" href="/ihbarlar.php">İhbarlar</a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link" href="gonulluIstekleri.php">Gönüllü İstekleri</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="/mesajKutusu.php">Mesaj Kutusu</a>
+                            <a class="nav-link active" href="/mesajKutusu.php">Mesaj Kutusu</a>
                         </li>
                     </ul>
                 </div>
@@ -59,26 +59,8 @@ if (session_id() == '') {
     </header>
 
     <?php
-
-        //<img src="https://maps.googleapis.com/maps/api/staticmap?center=40.714728,-73.998672&zoom=12&size=600x400&key=AIzaSyCSHwrddoGGXBr4TpzN8HqAUQ8wjXSDIPY"/>
-
-            function getaddress($lat,$lng)
-            {
-                $url = 'https://maps.googleapis.com/maps/api/geocode/json?latlng='.trim($lat).','.trim($lng).'&sensor=false&key=AIzaSyCxLUKYaDqQEIIQGQGQmC0ipdS04IXRoRw';
-                $json = @file_get_contents($url);
-                $data=json_decode($json);
-                $status = $data->status;
-                if($status=="OK")
-                {
-                    return $data->results[0]->formatted_address;
-                }
-                else
-                {
-                    return false;
-                }
-            }
             //The url you wish to send the POST request to
-            $url = "http://afetkurtar.site/api/notice/read.php";
+            $url = "http://afetkurtar.site/api/status/read.php";
 
             $options = ['http' => [
                 'method' => 'POST',
@@ -91,25 +73,21 @@ if (session_id() == '') {
 
             echo "<table class=\"table table-dark\">
             <tr>
-            <th>İhbar Türü</th>
+            <th>Bölge ID</th>
             <th>Mesaj</th>
-            <th>İhbar Konumu</th>
-            <th>Konum Fotoğrafı</th>
-            <th>İhbar Fotoğrafı</th>
+            <th>Takım ID</th>
+            <th>Tarih</th>
             </tr>";
 
             
 
             foreach($response['records'] as $row)
             {
-                $address = getaddress($row['latitude'], $row['longitude']);
-
                 echo "<tr>";
-                echo "<td class=\"td-element\">" . $row['type'] . "</td>";
-                echo "<td class=\"td-element\">" . $row['message'] . "</td>";
-                echo "<td class=\"td-element\">" . $address . "</td>";
-                echo "<td><img style=\"height: 150px;\" src=\"https://maps.googleapis.com/maps/api/staticmap?center=" . $row['latitude'] . "," . $row['longitude'] . "&zoom=12&size=200x200&key=AIzaSyCxLUKYaDqQEIIQGQGQmC0ipdS04IXRoRw\"/></td>";
-                echo "<td><img class=\"img-responsive\" style=\"height: 150px;\" src=\"" . $row['imageURL'] . "\"/></td>";
+                echo "<td class=\"td-element\">" . $row['subpartID'] . "</td>";
+                echo "<td class=\"td-element\">" . $row['statusMessage'] . "</td>";
+                echo "<td class=\"td-element\">" . $row['teamID'] . "</td>";
+                echo "<td class=\"td-element\">" . $row['statusTime'] . "</td>";
                 echo "</tr>";
             }
             echo "</table>";
