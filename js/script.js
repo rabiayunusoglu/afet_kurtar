@@ -97,75 +97,74 @@ function registerPersonnel() {
             //document.getElementById('personnelForm').reset();
         });
 
-    
+
+}
+
+function sendNotice() {
+
+    var type = document.getElementById("noticeType").value.trim();
+    var message = document.getElementById("noticeMessage").value.trim();
+    var address = document.getElementById("noticeAddress").value.trim();
+    var files = document.getElementById("noticeImage").files;
+
+    if (files.length == 0) {
+        alert("Afet fotoğrafını yüklemek zorunludur.");
+        return false;
+    } else if (type == '') {
+        alert("Afet ihbar türü boş bırakılamaz.");
+        return false;
+    } else if (address == '') {
+        alert("Afet ihbar adresi boş bırakılamaz.");
+        return false;
+    } else if (message == '') {
+        alert("Afet ihbar mesajı boş bırakılamaz.");
+        return false;
     }
-    function sendNotice(){
 
-        var type = document.getElementById("noticeType").value.trim();
-        var message = document.getElementById("noticeMessage").value.trim();
-        var address = document.getElementById("noticeAddress").value.trim();
-        var files = document.getElementById("noticeImage").files;
+    var image = files[0];
 
-        if(files.length == 0){
-            alert("Afet fotoğrafını yüklemek zorunludur.");
-            return false;
-        }
+    var form_data = new FormData();
+    form_data.append('image', image);
+    // alert(form_data);                             
+    $.ajax({
+        url: 'https://afetkurtar.site/api/uploadImage.php', // point to server-side PHP script 
+        dataType: 'text', // what to expect back from the PHP script, if anything
+        cache: false,
+        contentType: false,
+        processData: false,
+        data: form_data,
+        type: 'post',
+        success: function(php_script_response) {
+            var imageURL = php_script_response;
+            var encodedAddress = encodeURI(address);
 
-        else if (type == '') {
-            alert("Afet ihbar türü boş bırakılamaz.");
-            return false;
-        } else if (address == '') {
-            alert("Afet ihbar adresi boş bırakılamaz.");
-            return false;
-        } else if (message == '') {
-            alert("Afet ihbar mesajı boş bırakılamaz.");
-            return false;
-        }
-
-        var image = files[0];
-
-        var form_data = new FormData();                  
-        form_data.append('image', image);
-        // alert(form_data);                             
-        $.ajax({
-            url: 'https://afetkurtar.site/api/uploadImage.php', // point to server-side PHP script 
-            dataType: 'text',  // what to expect back from the PHP script, if anything
-            cache: false,
-            contentType: false,
-            processData: false,
-            data: form_data,                         
-            type: 'post',
-            success: function(php_script_response){
-                var imageURL = php_script_response;
-                var encodedAddress = encodeURI(address);
-
-                $.get("https://maps.googleapis.com/maps/api/geocode/json?address="+encodedAddress+"&sensor=true&key=AIzaSyCxLUKYaDqQEIIQGQGQmC0ipdS04IXRoRw")
-                    .done(function(data, status, xhr) {
-                        alert(data);
-                        var latitude = 0.0;
-                        var longitude = 0.0;
-                        if(data["status"] == "OK"){
-                            latitude = data["results"][0]["geometry"]["location"]["lat"];
-                            longitude = data["results"][0]["geometry"]["location"]["lng"];
-                        }
-                        $.post("https://afetkurtar.site/api/notice/create.php",
-                        JSON.stringify({ type: type, message: message, latitude: latitude, longitude: longitude, imageURL: imageURL }))
+            $.get("https://maps.googleapis.com/maps/api/geocode/json?address=" + encodedAddress + "&sensor=true&key=AIzaSyCxLUKYaDqQEIIQGQGQmC0ipdS04IXRoRw")
+                .done(function(data, status, xhr) {
+                    alert(data);
+                    var latitude = 0.0;
+                    var longitude = 0.0;
+                    if (data["status"] == "OK") {
+                        latitude = data["results"][0]["geometry"]["location"]["lat"];
+                        longitude = data["results"][0]["geometry"]["location"]["lng"];
+                    }
+                    $.post("https://afetkurtar.site/api/notice/create.php",
+                            JSON.stringify({ type: type, message: message, latitude: latitude, longitude: longitude, imageURL: imageURL }))
                         .done(function(data, status, xhr) {
-                        if (xhr.status == 201) {
-                            window.alert("İhbar başarı ile gönderildi.");
-                            //document.getElementById('personnelForm').reset();
-                        } else {
-                            window.alert("İhbar gönderimi esnasında bir hata ile karşılaşıldı");
-                            //document.getElementById('personnelForm').reset();
-                        }
-                    });
-                    });
+                            if (xhr.status == 201) {
+                                window.alert("İhbar başarı ile gönderildi.");
+                                //document.getElementById('personnelForm').reset();
+                            } else {
+                                window.alert("İhbar gönderimi esnasında bir hata ile karşılaşıldı");
+                                //document.getElementById('personnelForm').reset();
+                            }
+                        });
+                });
 
-                
 
-                document.getElementById('noticeForm').reset();
-            }
-        });
+
+            document.getElementById('noticeForm').reset();
+        }
+    });
 }
 
 function initMap() {
@@ -174,13 +173,13 @@ function initMap() {
     var lat = parseFloat(document.getElementById("map").getAttribute("latitude"));
     var lng = parseFloat(document.getElementById("map").getAttribute("longitude"));
     const map = new google.maps.Map(document.getElementById("map"), {
-      zoom: 10,
-      center: { lat: lat, lng: lng },
+        zoom: 10,
+        center: { lat: lat, lng: lng },
     });
     setMarkers(map);
-  }
-  
-  function setMarkers(map) {
+}
+
+function setMarkers(map) {
     // Adds markers to the map.
     // Marker sizes are expressed as a Size of X,Y where the origin of the image
     // (0,0) is located in the top left of the image.
@@ -189,60 +188,59 @@ function initMap() {
     subparts = document.getElementsByName("subpart");
 
     const image = {
-      url:
-        "https://developers.google.com/maps/documentation/javascript/examples/full/images/beachflag.png",
-      // This marker is 20 pixels wide by 32 pixels high.
-      size: new google.maps.Size(20, 32),
-      // The origin for this image is (0, 0).
-      origin: new google.maps.Point(0, 0),
-      // The anchor for this image is the base of the flagpole at (0, 32).
-      anchor: new google.maps.Point(0, 32),
+        url: "https://developers.google.com/maps/documentation/javascript/examples/full/images/beachflag.png",
+        // This marker is 20 pixels wide by 32 pixels high.
+        size: new google.maps.Size(20, 32),
+        // The origin for this image is (0, 0).
+        origin: new google.maps.Point(0, 0),
+        // The anchor for this image is the base of the flagpole at (0, 32).
+        anchor: new google.maps.Point(0, 32),
     };
     // Shapes define the clickable region of the icon. The type defines an HTML
     // <area> element 'poly' which traces out a polygon as a series of X,Y points.
     // The final coordinate closes the poly by connecting to the first coordinate.
     const shape = {
-      coords: [1, 1, 1, 20, 18, 20, 18, 1],
-      type: "poly",
+        coords: [1, 1, 1, 20, 18, 20, 18, 1],
+        type: "poly",
     };
-  
+
     for (let i = 0; i < subparts.length; i++) {
         //console.log(subparts[i]);
         var lat = parseFloat(subparts[i].getAttribute("latitude"));
         var lng = parseFloat(subparts[i].getAttribute("longitude"));
         var name = subparts[i].getAttribute("subpart-name");
         new google.maps.Marker({
-        position: { lat: lat, lng: lng },
-        map,
-        icon: image,
-        shape: shape,
-        title: name
+            position: { lat: lat, lng: lng },
+            map,
+            icon: image,
+            shape: shape,
+            title: name
         });
     }
-  }
+}
 
-function editDisaster(disasterID){
+function editDisaster(disasterID) {
     window.location.href = "../editDisaster.php?id=" + disasterID;
 }
 
-function addDisaster(){
+function addDisaster() {
     window.location.href = "../addDisaster.php";
 }
 
 $(document).ready(function() {
     var disasterTable = $('#disaster-table');
-    if(disasterTable.length){
+    if (disasterTable.length) {
         $('#disaster-table').DataTable({
             "pagingType": "full_numbers"
         });
     }
 });
 
-function updateEmergency(value){
+function updateEmergency(value) {
     $("#emergencyLevelValue").text(value);
 }
 
-function sendDisaster(){
+function sendDisaster() {
 
     var type = document.getElementById("disasterType").value.trim();
     var name = document.getElementById("disasterName").value.trim();
@@ -264,9 +262,9 @@ function sendDisaster(){
     var encodedAddress = encodeURI(city + " " + address);
     console.log(encodedAddress);
 
-    $.get("https://maps.googleapis.com/maps/api/geocode/json?address="+encodedAddress+"&sensor=true&key=AIzaSyCxLUKYaDqQEIIQGQGQmC0ipdS04IXRoRw")
+    $.get("https://maps.googleapis.com/maps/api/geocode/json?address=" + encodedAddress + "&sensor=true&key=AIzaSyCxLUKYaDqQEIIQGQGQmC0ipdS04IXRoRw")
         .done(function(data, status, xhr) {
-            if(data["status"] == "OK"){
+            if (data["status"] == "OK") {
                 var latitude = 0.0
                 var longitude = 0.0
                 latitude = data["results"][0]["geometry"]["location"]["lat"];
@@ -291,10 +289,20 @@ function sendDisaster(){
                         window.alert("xhr:" + xhr.status);
                         //document.getElementById('personnelForm').reset();
                     });
-            }
-            else{
+            } else {
                 window.alert("Afet üssü için girdiğiniz adres geçerli değil, lütfen düzeltip yeniden deneyiniz.");
                 document.getElementById('disasterForm').reset();
-            }        
-    });  
+            }
+        });
 }
+
+$('#v-pills-tab a').on('click', function(e) {
+    e.preventDefault()
+    $(this).tab('show')
+        //map.setCenter(new google.maps.LatLng(-34.397, 150.644)); //degisecek
+})
+
+$('#v-pills-tab-subpart a').on('click', function(e) {
+    e.preventDefault()
+    $(this).tab('show')
+})

@@ -1,6 +1,12 @@
 body {
     background: #222D32;
     font-family: 'Newsreader';
+    margin: 0;
+    /* This is used to reset any browser-default margins */
+    height: 100vh;
+    /* This is needed to overcome a Chrome bug. 
+    width: 100vw;
+    As above. */
 }
 
 .login-box {
@@ -30,41 +36,41 @@ body {
     color: #ECF0F5;
 }
 
-.g-signin2{
+.g-signin2 {
     width: 100%;
     margin-top: 50px;
     margin-bottom: 50px;
-  }
-  
-.g-signin2 > div{
-    margin: 0 auto;
-  }
+}
 
-.main-container{
+.g-signin2>div {
+    margin: 0 auto;
+}
+
+.main-container {
     margin-top: 50px;
 }
 
-.nav-item{
+.nav-item {
     margin-right: 36px;
 }
 
-.navbar-nav{
+.navbar-nav {
     margin-right: auto;
     margin-left: auto;
 }
 
-#logout{
+#logout {
     margin-right: 10px;
 }
 
-#registerBtn{
+#registerBtn {
     margin-top: 20px;
     margin-right: auto;
     margin-left: auto;
     margin-bottom: 30px;
 }
 
-.form-box{
+.form-box {
     margin-top: 75px;
     height: auto;
     background: #1A2226;
@@ -74,19 +80,23 @@ body {
     padding-top: 30px;
 }
 
-.form-group{
+.form-group {
     margin-bottom: 20px;
 }
 
-.td-element{
+.td-element {
     vertical-align: middle;
 }
 
-#map{
+#map {
     height: 100%;
 }
 
-.dataTables_wrapper .dataTables_length, .dataTables_wrapper .dataTables_filter, .dataTables_wrapper .dataTables_info, .dataTables_wrapper .dataTables_processing, .dataTables_wrapper .dataTables_paginate {
+.dataTables_wrapper .dataTables_length,
+.dataTables_wrapper .dataTables_filter,
+.dataTables_wrapper .dataTables_info,
+.dataTables_wrapper .dataTables_processing,
+.dataTables_wrapper .dataTables_paginate {
     color: #FFF;
 }
 
@@ -94,24 +104,95 @@ body {
     display: none;
 }
 
-.float{
-	position:fixed;
-	width:60px;
-	height:60px;
-	bottom:60px;
-	right:80px;
-	background-color:#0d6efd;
-	color:#FFF;
-	border-radius:50px;
-	text-align:center;
-	box-shadow: 1px 1px 2px #999;
+.float {
+    position: fixed;
+    width: 60px;
+    height: 60px;
+    bottom: 60px;
+    right: 80px;
+    background-color: #0d6efd;
+    color: #FFF;
+    border-radius: 50px;
+    text-align: center;
+    box-shadow: 1px 1px 2px #999;
 }
 
-.my-float{
+.my-float {
     margin-top: 5px;
-	line-height: inherit!important;
+    line-height: inherit!important;
 }
 
-#emergencyLabel{
+#emergencyLabel {
     display: block;
+}
+
+.nav-tabs {
+    overflow-x: auto;
+    overflow-y: hidden;
+    display: -webkit-box;
+    display: -moz-box;
+}
+
+.nav-tabs>div {
+    float: none;
+}
+
+#content,
+.container-fluid-mesaj-kutusu,
+.span9 {
+    /*border: 1px solid #000;*/
+    overflow-y: auto;
+    height: 100vh;
+}
+
+.header-mesaj-kutusu {
+    padding: auto;
+    background-color: #181a1d;
+    color: white;
+    font-weight: bold;
+    font-size: 20px;
+}
+
+#content,
+.container-fluid-edit-disaster,
+.span9 {
+    /*border: 1px solid #000;*/
+    overflow-y: auto;
+    height: 100vh;
+}
+
+.header-edit-disaster {
+    padding: auto;
+    background-color: #181a1d;
+    color: white;
+    font-weight: bold;
+    font-size: 20px;
+}
+
+
+/* .nav.nav-tabs li:not(:last-child) a {
+    border-bottom: 2px solid #ddd;
+} */
+
+.nav.nav-tabs a {
+    border-top: 1px solid #ccc;
+}
+
+.nav.nav-tabs a {
+    border-radius: 0;
+    /* avoid curved divisor corner */
+}
+
+.vl {
+    border-left: 8px solid #383B3E;
+    height: 100vh;
+}
+
+.nav-pills .nav-link:not(.active) {
+    color: #ddd;
+}
+
+.nav-pills .nav-link {
+    background-color: #222529;
+    color: white;
 }

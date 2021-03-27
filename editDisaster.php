@@ -86,7 +86,7 @@ if (session_id() == '') {
             $longitude= $row['longitude'];
         }
     }
-    echo "<div id=\"map\" style=\"width:800px;height:600px\" disaster-id=\"" . $row['disasterID']."\" disaster-type=\"" . $row['disasterType']."\" latitude=\"" . $row['latitude']."\" longitude=\"" . $row['longitude']."\"></div>";
+    //echo "<div id=\"map\" style=\"width:600px;height:100vh\" disaster-id=\"" . $row['disasterID']."\" disaster-type=\"" . $row['disasterType']."\" latitude=\"" . $row['latitude']."\" longitude=\"" . $row['longitude']."\"></div>";
 
     //The url you wish to send the POST request to
     $url = "https://afetkurtar.site/api/subpart/search.php";
@@ -105,6 +105,38 @@ if (session_id() == '') {
     foreach ($response['records'] as $row) {
         echo "<div name=\"subpart\" subpart-id=\"" . $row['subpartID']."\" subpart-name=\"" . $row['subpartName']."\" latitude=\"" . $row['latitude']."\" longitude=\"" . $row['longitude']."\"></div>";
     }
+
+    echo '<ul class="nav nav-tabs">';
+
+    echo "<div id=\"map\" style=\"width:600px;height:100vh\" disaster-id=\"" . $row['disasterID']."\" disaster-type=\"" . $row['disasterType']."\" latitude=\"" . $row['latitude']."\" longitude=\"" . $row['longitude']."\"></div>";
+
+    echo '<div class="container-fluid-edit-disaster">';
+    echo '<div class="row-fluid-edit-disaster">';
+    echo '<div class="span9" id="content">';
+    echo '<div class="header-edit-disaster">Bölge</div>';
+
+    echo '<div class="nav flex-column nav-pills" id="v-pills-tab" role="tablist" aria-orientation="vertical">';
+    foreach($response['records'] as $row){
+        echo '<a class="nav-link" id="subpart-' . $row["subpartID"] . '-tab" data-toggle="tab" href="#subpart-' . $row["subpartID"] . '" role="tab" aria-controls="subpart-' . $row["subpartID"] . '" aria-selected="false">' . $row["subpartName"] . '</a>';
+    }
+    echo '</div>';
+
+    echo '</div>';
+    echo '</div>';
+    echo '</div>';
+
+    echo '<div class="vl"></div>';
+
+    echo '<div class="tab-content" id="v-pills-tabContent">';
+    foreach($response['records'] as $row){
+        echo '<div class="tab-pane fade" id="subpart-' . $row["subpartID"] . '" role="tabpanel" aria-labelledby="subpart' . $row["subpartID"] . '-tab">';
+        
+        echo $row["subpartName"];
+        echo '</div>';
+    }
+    echo '</div>';
+
+    echo '</ul>';
     ?>
 
     <script src="https://code.jquery.com/jquery-3.5.1.min.js" integrity="sha256-9/aliU8dGd2tb6OSsuzixeV4y/faTqgFtohetphbbj0=" crossorigin="anonymous"></script>

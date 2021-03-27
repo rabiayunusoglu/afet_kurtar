@@ -59,39 +59,107 @@ if (session_id() == '') {
     </header>
 
     <?php
-            //The url you wish to send the POST request to
-            $url = "http://afetkurtar.site/api/status/read.php";
-
             $options = ['http' => [
                 'method' => 'POST',
                 'header' => 'Content-type:application/json'
                 // 'content' => $json
             ]];
-
             $context = stream_context_create($options);
-            $response = json_decode(file_get_contents($url, false, $context), true);
 
-            echo "<table class=\"table table-dark\">
-            <tr>
-            <th>Bölge ID</th>
-            <th>Mesaj</th>
-            <th>Takım ID</th>
-            <th>Tarih</th>
-            </tr>";
+            //The url you wish to send the POST request to
+            $url = "http://afetkurtar.site/api/disasterEvents/read.php";
+            $responseDisaster = json_decode(file_get_contents($url, false, $context), true);
 
-            
+            // foreach($responseDisaster['records'] as $row){
+            //     $disasterMap[$row['disasterID']] = $row["disasterName"];
+            // }
 
-            foreach($response['records'] as $row)
-            {
-                echo "<tr>";
-                echo "<td class=\"td-element\">" . $row['subpartID'] . "</td>";
-                echo "<td class=\"td-element\">" . $row['statusMessage'] . "</td>";
-                echo "<td class=\"td-element\">" . $row['teamID'] . "</td>";
-                echo "<td class=\"td-element\">" . $row['statusTime'] . "</td>";
-                echo "</tr>";
+            //The url you wish to send the POST request to
+            $url = "http://afetkurtar.site/api/subpart/read.php";
+            $responseSubpart = json_decode(file_get_contents($url, false, $context), true);
+
+            // foreach($responseSubpart['records'] as $row){
+            //     $subpartMap[$row['subpartID']] = $row["subpartName"];
+            // }
+
+            //The url you wish to send the POST request to
+            $url = "http://afetkurtar.site/api/status/read.php";
+            $responseStatus = json_decode(file_get_contents($url, false, $context), true);
+
+            echo '<ul class="nav nav-tabs">';
+
+            echo '<div class="container-fluid-mesaj-kutusu">';
+            echo '<div class="row-fluid-mesaj-kutusu">';
+            echo '<div class="span9" id="content">';
+            echo '<div class="header-mesaj-kutusu">Afet</div>';
+            echo '<div class="nav flex-column nav-pills" id="v-pills-tab" role="tablist" aria-orientation="vertical">';
+            foreach($responseDisaster['records'] as $row){
+                echo '<a class="nav-link" id="disaster-' . $row["disasterID"] . '-tab" data-toggle="tab" href="#disaster-' . $row["disasterID"] . '" role="tab" aria-controls="disaster-' . $row["disasterID"] . '" aria-selected="false">' . $row["disasterName"] . '</a>';
             }
-            echo "</table>";
+            echo '</div>';
+            echo '</div>';
+            echo '</div>';
+            echo '</div>';
 
+            echo '<div class="vl"></div>';
+
+            echo '<div class="tab-content" id="v-pills-tabContent">';
+            foreach($responseDisaster['records'] as $row){
+                echo '<div class="tab-pane fade" id="disaster-' . $row["disasterID"] . '" role="tabpanel" aria-labelledby="disaster' . $row["disasterID"] . '-tab">';
+                
+                echo '<ul class="nav nav-pills">';
+
+                echo '<div class="container-fluid-mesaj-kutusu">';
+                echo '<div class="row-fluid-mesaj-kutusu">';
+                echo '<div class="span9" id="content">';
+                echo '<div class="header-mesaj-kutusu">Bölge</div>';
+                echo '<div class="nav flex-column nav-pills" id="v-pills-tab-subpart" role="tablist" aria-orientation="vertical">';
+                foreach($responseSubpart['records'] as $rowSubpart){
+                    if ($row["disasterID"] == $rowSubpart["disasterID"]) {
+                        echo '<a class="nav-link" id="subpart-' . $rowSubpart["subpartID"] . '-tab" data-toggle="tab" href="#subpart-' . $rowSubpart["subpartID"] . '" role="tab" aria-controls="subpart-' . $rowSubpart["subpartID"] . '" aria-selected="false">' . $rowSubpart["subpartName"] . '</a>';
+                    }
+                }
+                echo '</div>';
+                echo '</div>';
+                echo '</div>';
+                echo '</div>';
+
+                echo '<div class="vl"></div>';
+
+                echo '<div class="tab-content" id="v-pills-tabContent">';
+                foreach($responseSubpart['records'] as $rowSubpart){
+                    if ($row["disasterID"] == $rowSubpart["disasterID"]) {
+                        echo '<div class="tab-pane fade" id="subpart-' . $rowSubpart["subpartID"] . '" role="tabpanel" aria-labelledby="subpart' . $rowSubpart["subpartID"] . '-tab">';
+                        // echo $rowSubpart["subpartName"];
+                        echo "<table class=\"table table-dark\">
+                        <tr>
+                        <th>Bildiren Takım</th>
+                        <th>Durum</th>
+                        <th>Tarih</th>
+                        </tr>";
+
+                        foreach($responseStatus['records'] as $rowStatus)
+                        {
+                            if ($rowStatus["subpartID"] == $rowSubpart["subpartID"]) {
+                                echo "<tr>";
+                                echo "<td class=\"td-element\">" . $rowStatus['teamID'] . "</td>";
+                                echo "<td class=\"td-element\">" . $rowStatus['statusMessage'] . "</td>";
+                                echo "<td class=\"td-element\">" . $rowStatus['statusTime'] . "</td>";
+                                echo "</tr>";
+                            }
+                            
+                        }
+                        echo "</table>";
+                        echo '</div>';
+                    }
+                    
+                }
+                echo '</div>';
+                echo '</ul>';
+                echo '</div>';
+            }
+            echo '</div>';
+            echo '</ul>';
         ?>
 
     <script src="https://code.jquery.com/jquery-3.5.1.min.js" integrity="sha256-9/aliU8dGd2tb6OSsuzixeV4y/faTqgFtohetphbbj0=" crossorigin="anonymous"></script>
