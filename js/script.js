@@ -209,18 +209,107 @@ function setMarkers(map) {
         var lat = parseFloat(subparts[i].getAttribute("latitude"));
         var lng = parseFloat(subparts[i].getAttribute("longitude"));
         var name = subparts[i].getAttribute("subpart-name");
-        new google.maps.Marker({
+        var marker = new google.maps.Marker({
             position: { lat: lat, lng: lng },
             map,
             icon: image,
             shape: shape,
             title: name
         });
+
+        google.maps.event.addDomListener(marker, 'click', function() {
+            var subpart = document.getElementById("subpart-"+subparts[i].getAttribute("subpart-id")+"-tab");
+            $(subpart).tab('show');
+
+        });
     }
+}
+
+function initMapForVolunteer() {
+    var temp = document.getElementById("map").id;
+    console.log(temp);
+    var lat = parseFloat(document.getElementById("map").getAttribute("latitude"));
+    var lng = parseFloat(document.getElementById("map").getAttribute("longitude"));
+    const map = new google.maps.Map(document.getElementById("map"), {
+        zoom: 10,
+        center: { lat: lat, lng: lng },
+    });
+    setMarkersForVolunteer(map);
+}
+
+function setMarkersForVolunteer(map) {
+    // Adds markers to the map.
+    // Marker sizes are expressed as a Size of X,Y where the origin of the image
+    // (0,0) is located in the top left of the image.
+    // Origins, anchor positions and coordinates of the marker increase in the X
+    // direction to the right and in the Y direction down.
+    subparts = document.getElementsByName("subpart");
+
+    const image = {
+        url: "https://developers.google.com/maps/documentation/javascript/examples/full/images/beachflag.png",
+        // This marker is 20 pixels wide by 32 pixels high.
+        size: new google.maps.Size(20, 32),
+        // The origin for this image is (0, 0).
+        origin: new google.maps.Point(0, 0),
+        // The anchor for this image is the base of the flagpole at (0, 32).
+        anchor: new google.maps.Point(0, 32),
+    };
+    // Shapes define the clickable region of the icon. The type defines an HTML
+    // <area> element 'poly' which traces out a polygon as a series of X,Y points.
+    // The final coordinate closes the poly by connecting to the first coordinate.
+    const shape = {
+        coords: [1, 1, 1, 20, 18, 20, 18, 1],
+        type: "poly",
+    };
+
+    for (let i = 0; i < subparts.length; i++) {
+        //console.log(subparts[i]);
+        var lat = parseFloat(subparts[i].getAttribute("latitude"));
+        var lng = parseFloat(subparts[i].getAttribute("longitude"));
+        var name = subparts[i].getAttribute("subpart-name");
+        var marker = new google.maps.Marker({
+            position: { lat: lat, lng: lng },
+            map,
+            icon: image,
+            shape: shape,
+            title: name
+        });
+        var userID = document.getElementById("user-info").getAttribute("user-id");
+        const infowindow = new google.maps.InfoWindow({
+            content: '<div>'+ name +'</div>' + '<input type="submit" onclick="joinSubpart(' + subparts[i].id + "," + userID + ')" class="btn btn-primary" id="button-'+ subparts[i].id +'" value="Gönüllü İsteği Gönder"></input>'
+          });
+        
+        google.maps.event.addListener(marker, "click", () => {
+            infowindow.open(map, marker);
+          });        
+    }
+}
+
+function joinSubpart(subpartID,userID){
+
+    $.post("https://afetkurtar.site/api/volunteerUser/update.php", JSON.stringify({ volunteerID: userID, requestedSubpart: subpartID}))
+                    .done(function(data, status, xhr) {
+                        //window.alert("data:" + data);
+                        console.log(data);
+                        if (xhr.status == 200) {
+                            window.alert("Afete gönüllü katılım isteği başarıyla oluşturuldu.");
+                        }
+                    })
+                    .fail(function(data, xhr) {
+                        //window.alert("dataf:" + data.message);
+                        window.alert("Afete gönüllü katılım isteğinde hata oluştu");
+                        //window.alert("xhr:" + xhr.status);
+                        //document.getElementById('personnelForm').reset();
+                    });
+
 }
 
 function editDisaster(disasterID) {
     window.location.href = "../editDisaster.php?id=" + disasterID;
+}
+
+function joinDisaster(disasterID) {
+    window.location.href = "../joinDisaster.php?id=" + disasterID;
 }
 
 function addDisaster() {

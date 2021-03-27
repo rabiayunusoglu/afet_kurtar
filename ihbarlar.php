@@ -49,7 +49,7 @@ if (session_id() == '') {
                             <a class="nav-link" href="gonulluIstekleri.php">Gönüllü İstekleri</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="/mesajKutusu.php">Mesaj Kutusu</a>
+                            <a class="nav-link" href="/mesajKutusu.php">Bildirim Kutusu</a>
                         </li>
                     </ul>
                 </div>
