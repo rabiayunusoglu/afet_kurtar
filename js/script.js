@@ -218,7 +218,7 @@ function setMarkers(map) {
         });
 
         google.maps.event.addDomListener(marker, 'click', function() {
-            var subpart = document.getElementById("subpart-"+subparts[i].getAttribute("subpart-id")+"-tab");
+            var subpart = document.getElementById("subpart-" + subparts[i].getAttribute("subpart-id") + "-tab");
             $(subpart).tab('show');
 
         });
@@ -276,31 +276,31 @@ function setMarkersForVolunteer(map) {
         });
         var userID = document.getElementById("user-info").getAttribute("user-id");
         const infowindow = new google.maps.InfoWindow({
-            content: '<div>'+ name +'</div>' + '<input type="submit" onclick="joinSubpart(' + subparts[i].getAttribute("subpart-id") + "," + userID + ')" class="btn btn-primary" id="button-'+ subparts[i].id +'" value="Gönüllü İsteği Gönder"></input>'
-          });
-        
-          marker.addListener("click", () => {
+            content: '<div>' + name + '</div>' + '<input type="submit" onclick="joinSubpart(' + subparts[i].getAttribute("subpart-id") + "," + userID + ')" class="btn btn-primary" id="button-' + subparts[i].id + '" value="Gönüllü İsteği Gönder"></input>'
+        });
+
+        marker.addListener("click", () => {
             infowindow.open(map, marker);
-          });        
+        });
     }
 }
 
-function joinSubpart(subpartID,userID){
+function joinSubpart(subpartID, userID) {
 
-    $.post("https://afetkurtar.site/api/volunteerUser/update.php", JSON.stringify({ volunteerID: userID, requestedSubpart: subpartID}))
-                    .done(function(data, status, xhr) {
-                        //window.alert("data:" + data);
-                        console.log(data);
-                        if (xhr.status == 200) {
-                            window.alert("Afete gönüllü katılım isteği başarıyla oluşturuldu.");
-                        }
-                    })
-                    .fail(function(data, xhr) {
-                        //window.alert("dataf:" + data.message);
-                        window.alert("Afete gönüllü katılım isteğinde hata oluştu");
-                        //window.alert("xhr:" + xhr.status);
-                        //document.getElementById('personnelForm').reset();
-                    });
+    $.post("https://afetkurtar.site/api/volunteerUser/update.php", JSON.stringify({ volunteerID: userID, requestedSubpart: subpartID }))
+        .done(function(data, status, xhr) {
+            //window.alert("data:" + data);
+            console.log(data);
+            if (xhr.status == 200) {
+                window.alert("Afete gönüllü katılım isteği başarıyla oluşturuldu.");
+            }
+        })
+        .fail(function(data, xhr) {
+            //window.alert("dataf:" + data.message);
+            window.alert("Afete gönüllü katılım isteğinde hata oluştu");
+            //window.alert("xhr:" + xhr.status);
+            //document.getElementById('personnelForm').reset();
+        });
 
 }
 
@@ -395,3 +395,109 @@ $('#v-pills-tab-subpart a').on('click', function(e) {
     e.preventDefault()
     $(this).tab('show')
 })
+
+
+function registerVolunteer() {
+
+    var email = document.getElementById("volunteerEmail").value.trim();
+    var username = document.getElementById("volunteerUsername").value.trim();
+    var address = document.getElementById("volunteerAddress").value.trim();
+    var tc = document.getElementById("volunteerTc").value.trim();
+    var tel = document.getElementById("volunteerTel").value.trim();
+    //var birthDate = document.getElementById("volunteerBirthDate").value.trim();
+
+    if (email == '') {
+        alert("Email adresi boş bırakılamaz.");
+        return false;
+    } else if (username == '') {
+        alert("Ad soyad boş bırakılamaz.");
+        return false;
+    } else if (address == '') {
+        alert("Adres boş bırakılamaz.");
+        return false;
+    } else if (tc == '') {
+        alert("Kimlik numarası boş bırakılamaz.");
+        return false;
+    } else if (tel == '') {
+        alert("Telefon numarası boş bırakılamaz.");
+        return false;
+    } //else if (birthDate == '') {
+    //     alert("Doğum Tarihi boş bırakılamaz.");
+    //     return false;
+    // }
+
+
+    $.post("https://afetkurtar.site/api/users/create.php", JSON.stringify({ userType: 'volunteerUser', userName: username, email: email }))
+        .done(function(data, status, xhr) {
+            if (xhr.status == 201) {
+                $.post("https://afetkurtar.site/api/volunteerUser/create.php",
+                        JSON.stringify({ volunteerName: username, address: address, tc: tc, tel: tel, volunteerID: data.id }))
+                    .done(function(data, status, xhr) {
+                        if (xhr.status == 201) {
+                            window.alert("Kaydınız başarıyla gerçekleştirildi.");
+                            document.location.href = "https://afetkurtar.site";
+                            //document.getElementById('personnelForm').reset();
+                        } else {
+                            window.alert("Kayıt esnasında bir hata ile karşılaşıldı.");
+                            //document.getElementById('personnelForm').reset();
+                        }
+                    });
+
+                document.getElementById('volunteerForm').reset();
+            } else {
+                window.alert("Kullanıcı kaydı esnasında bir hata ile karşılaşıldı");
+                //document.getElementById('personnelForm').reset();
+            }
+        })
+        .fail(function(data, xhr) {
+            window.alert("dataf:" + data.message);
+            //window.alert("Kullanıcı kaydı esnasında bir hata ile karşılaşıldı z");
+            window.alert("xhr:" + xhr.status);
+            //document.getElementById('personnelForm').reset();
+        });
+}
+
+
+function addSubpart() {
+
+    var subpartName = document.getElementById("subpartName").value.trim();
+    var latitude = document.getElementById("subpartLatitude").value;
+    var longitude = document.getElementById("subpartLongitude").value;
+    var subpartMissingPerson = document.getElementById("subpartMissingPerson").value;
+    var isOpenForVolunteers = document.getElementById("subpartIsOpenForVolunteers").value;
+    var emergencyLevel = document.getElementById("emergencyLevel").value;
+    var disasterID = parseFloat(document.getElementById("map").getAttribute("disaster-id"));
+    var disasterBase = parseFloat(document.getElementById("map").getAttribute("disaster-base"));
+    var disasterName = parseFloat(document.getElementById("map").getAttribute("disaster-name"));
+
+
+
+    $.post("https://afetkurtar.site/api/subpart/create.php", JSON.stringify({
+            subpartName: subpartName,
+            latitude: latitude,
+            longitude: longitude,
+            missingPerson: subpartMissingPerson,
+            isOpenForVolunteers: isOpenForVolunteers,
+            disasterID: disasterID,
+            address: disasterBase,
+            disasterName: disasterName,
+            emergencyLevel: emergencyLevel,
+            rescuedPerson: "0",
+            status: ""
+        }))
+        .done(function(data, status, xhr) {
+            if (xhr.status == 201) {
+                window.alert("Yeni bölge eklendi.");
+                document.location.href = "https://afetkurtar.site/editDisaster.php?id=" + disasterID;
+            } else {
+                window.alert("Bölge eklenirken hata oluştu.");
+                //document.getElementById('personnelForm').reset();
+            }
+        })
+        .fail(function(data, xhr) {
+            window.alert("dataf:" + data.message);
+            //window.alert("Kullanıcı kaydı esnasında bir hata ile karşılaşıldı z");
+            window.alert("xhr:" + xhr.status);
+            //document.getElementById('personnelForm').reset();
+        });
+}

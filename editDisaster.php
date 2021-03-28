@@ -23,6 +23,8 @@ if (session_id() == '') {
     <link rel="stylesheet" href="css/styles.css">
     <link rel="preconnect" href="https://fonts.gstatic.com">
     <link href="https://fonts.googleapis.com/css2?family=Newsreader&display=swap" rel="stylesheet">
+    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-slider/10.0.0/css/bootstrap-slider.min.css">
     <script src="https://apis.google.com/js/platform.js" async defer></script>
 </head>
 
@@ -63,6 +65,8 @@ if (session_id() == '') {
     $latitude = 0.0;
     $longitude = 0.0;
     $disasterType = "";
+    $disasterBase = "";
+    $disasterName = "";
 
     if (isset($_GET["id"])) {
         //The url you wish to send the POST request to
@@ -84,6 +88,9 @@ if (session_id() == '') {
             $disasterType = $row['disasterType'];
             $latitude = $row['latitude'];
             $longitude= $row['longitude'];
+            $disasterName = $row['disasterName'];
+            $disasterBase = $row['disasterBase'];
+
         }
     }
     //echo "<div id=\"map\" style=\"width:600px;height:100vh\" disaster-id=\"" . $row['disasterID']."\" disaster-type=\"" . $row['disasterType']."\" latitude=\"" . $row['latitude']."\" longitude=\"" . $row['longitude']."\"></div>";
@@ -108,7 +115,7 @@ if (session_id() == '') {
 
     echo '<ul class="nav nav-tabs">';
 
-    echo "<div id=\"map\" style=\"width:750px;height:100vh\" disaster-id=\"" . $disasterID . "\" disaster-type=\"" . $disasterType . "\" latitude=\"" . $latitude . "\" longitude=\"" . $longitude . "\"></div>";
+    echo "<div id=\"map\" style=\"width:750px;height:100vh\" disaster-id=\"" . $disasterID . "\" disaster-type=\"" . $disasterType . "\" disaster-base=\"" . $disasterBase . "\" disaster-name=\"" . $disasterName . "\" latitude=\"" . $latitude . "\" longitude=\"" . $longitude . "\"></div>";
 
     echo '<div class="container-fluid-edit-disaster">';
     echo '<div class="row-fluid-edit-disaster">';
@@ -119,6 +126,7 @@ if (session_id() == '') {
     foreach($response['records'] as $row){
         echo '<a class="nav-link" id="subpart-' . $row["subpartID"] . '-tab" data-toggle="tab" href="#subpart-' . $row["subpartID"] . '" role="tab" aria-controls="subpart-' . $row["subpartID"] . '" aria-selected="false">' . $row["subpartName"] . '</a>';
     }
+    echo '<a class="nav-link" id="subpart-add-tab" data-toggle="tab" href="#subpart-add" role="tab" aria-controls="subpart-add" aria-selected="false"> <i class="fa fa-plus my-float fa-1x">Ekle</i> </a>';
     echo '</div>';
 
     echo '</div>';
@@ -129,11 +137,95 @@ if (session_id() == '') {
 
     echo '<div class="tab-content" id="v-pills-tabContent">';
     foreach($response['records'] as $row){
-        echo '<div class="tab-pane fade" id="subpart-' . $row["subpartID"] . '" role="tabpanel" aria-labelledby="subpart' . $row["subpartID"] . '-tab">';
-        
+        echo '<div class="tab-pane fade" id="subpart-' . $row["subpartID"] . '" role="tabpanel" aria-labelledby="subpart-' . $row["subpartID"] . '-tab">';
+        /////
+
+        echo '<div class="container main-container" style="margin-left:75px;">';
+        echo '<div class="row">';
+        echo '<div class="col-lg-12 col-md-8"></div>';
+        echo '<div class="col-lg-12 col-md-8 form-box">';
+        echo '<form onsubmit="return false;" id="volunteerForm">';
+        echo '<div class="form-group">';
+        echo '<label for="subpartName2" style="font-size: 20px; font-weight:bold; color: #ECF0F5">Bölge Adı</label>';
+        echo '<div><h1 style="font-size: 16px;color: #ECF0F5" id="subpartName2">';
         echo $row["subpartName"];
+        echo '</h1></div>';
+        echo '</div>';
+        echo '<div class="form-group">';
+        echo '<label for="subpartLatitude2" style="font-size: 20px; font-weight:bold; color: #ECF0F5">Enlem</label>';
+        echo '<div><h1 style="font-size: 16px;color: #ECF0F5" id="subpartLatitude2">';
+        echo $row["latitude"];
+        echo '</h1></div>';
+        echo '</div>';
+        echo '<div class="form-group">';
+        echo '<label for="subpartLongitude2" style="font-size: 20px; font-weight:bold; color: #ECF0F5">Boylam</label>';
+        echo '<div><h1 style="font-size: 16px;color: #ECF0F5" id="subpartLongitude2">';
+        echo $row["longitude"];
+        echo '</h1></div>';
+        echo '</div>';
+        echo '<div class="form-group">';
+        echo '<label for="subpartMissingPerson2" style="font-size: 20px; font-weight:bold; color: #ECF0F5">Kayıp İnsan Sayısı</label>';
+        echo '<div><h1 style="font-size: 16px;color: #ECF0F5" id="subpartMissingPerson2">';
+        echo $row["missingPerson"];
+        echo '</h1></div>';
+        echo '</div>';
+        echo '<div class="form-group">';
+        echo '<label for="subpartIsOpenForVolunteers2" style="font-size: 20px; font-weight:bold; color: #ECF0F5">Gönüllü Kullanıcılara Açık Mı?</label>';
+        echo '<div><input type="checkbox" id="subpartIsOpenForVolunteers2" value="'. $row["isOpenForVolunteers"] . '"></div>';
+        echo '</div>';
+        echo '<div class="form-group">';
+        echo '<label id="emergencyLabel2" for="emergencyLevel" style="font-size: 20px; font-weight:bold; color: #ECF0F5">Aciliyet Seviyesi</label>';
+        echo '<input id="emergencyLevel" onchange="updateEmergency(this.value)" name="emergencyLevel" type="range" data-slider-min="1" data-slider-max="10" data-slider-step="1" data-slider-value="'. $row["emergencyLevel"] . '">';
+        echo '<span id="emergencyLevelValue" style="color:white;">'. $row["isOpenForVolunteers"] . '</span>';
+        echo '</div>';
+        echo '<input type="button" onclick="addSubpart()" class="btn btn-primary" id="registerBtn" value="Düzenle"></input>';
+        echo '</form>';
+        echo '</div>';
+        echo '</div>';
+        echo '</div>';
+
+        /////
         echo '</div>';
     }
+    /////
+    echo '<div class="tab-pane fade" id="subpart-add" role="tabpanel" aria-labelledby="subpart-add-tab">';
+echo '<div class="container main-container" style="margin-left:75px; margin-top:20px;">';
+echo '<div class="row">';
+echo '<div class="col-lg-12 col-md-8"></div>';
+echo '<div class="col-lg-12 col-md-8 form-box">';
+echo '<form onsubmit="return false;" id="volunteerForm">';
+echo '<div class="form-group">';
+echo '<label for="subpartName" style="font-size: 20px; font-weight:bold; color: #ECF0F5">Bölge Adı</label>';
+echo '<input type="email" class="form-control" id="subpartName" placeholder="Bölge adını giriniz...">';
+echo '</div>';
+echo '<div class="form-group">';
+echo '<label for="subpartLatitude" style="font-size: 20px; font-weight:bold; color: #ECF0F5">Enlem</label>';
+echo '<input type="text" class="form-control" id="subpartLatitude" placeholder="Enlemi giriniz...">';
+echo '</div>';
+echo '<div class="form-group">';
+echo '<label for="subpartLongitude" style="font-size: 20px; font-weight:bold; color: #ECF0F5">Boylam</label>';
+echo '<input type="text" class="form-control" id="subpartLongitude" placeholder="Boylamı giriniz...">';
+echo '</div>';
+echo '<div class="form-group">';
+echo '<label for="subpartMissingPerson" style="font-size: 20px; font-weight:bold; color: #ECF0F5">Kayıp İnsan Sayısı</label>';
+echo '<input type="text" class="form-control" id="subpartMissingPerson" placeholder="Tahmin edilen kayıp insan sayısını giriniz...">';
+echo '</div>';
+echo '<div class="form-group">';
+echo '<label for="subpartIsOpenForVolunteers" style="font-size: 20px; font-weight:bold; color: #ECF0F5">Gönüllü Kullanıcılara Açık Mı?</label>';
+echo '<div><input type="checkbox" id="subpartIsOpenForVolunteers" value="1"></div>';
+echo '</div>';
+echo '<div class="form-group">';
+echo '<label id="emergencyLabel" for="emergencyLevel" style="font-size: 20px; font-weight:bold; color: #ECF0F5">Aciliyet Seviyesi</label>';
+echo '<input id="emergencyLevel" onchange="updateEmergency(this.value)" name="emergencyLevel" type="range" data-slider-min="1" data-slider-max="10" data-slider-step="1" data-slider-value="5">';
+echo '<span id="emergencyLevelValue" style="color:white;">5</span>';
+echo '</div>';
+echo '<input type="button" onclick="addSubpart()" class="btn btn-primary" id="registerBtn" value="Bölgeyi Ekle"></input>';
+echo '</form>';
+echo '</div>';
+echo '</div>';
+echo '</div>';
+    echo '</div>';
+    /////
     echo '</div>';
 
     echo '</ul>';
@@ -142,6 +234,7 @@ if (session_id() == '') {
     <script src="https://code.jquery.com/jquery-3.5.1.min.js" integrity="sha256-9/aliU8dGd2tb6OSsuzixeV4y/faTqgFtohetphbbj0=" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/js/bootstrap.bundle.min.js" integrity="sha384-b5kHyXgcpbZJO/tY9Ul7kGkf1S0CWuKcCD38l8YkeH8z8QjE0GmW1gYU5S9FOnJ0" crossorigin="anonymous"></script>
     <script src="js/script.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-slider/10.0.0/bootstrap-slider.min.js"></script>
     <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCxLUKYaDqQEIIQGQGQmC0ipdS04IXRoRw&callback=initMap&libraries=&v=weekly" async></script>
 </body>
 </html>
