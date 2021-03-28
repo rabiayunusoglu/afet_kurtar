@@ -276,10 +276,10 @@ function setMarkersForVolunteer(map) {
         });
         var userID = document.getElementById("user-info").getAttribute("user-id");
         const infowindow = new google.maps.InfoWindow({
-            content: '<div>'+ name +'</div>' + '<input type="submit" onclick="joinSubpart(' + subparts[i].id + "," + userID + ')" class="btn btn-primary" id="button-'+ subparts[i].id +'" value="Gönüllü İsteği Gönder"></input>'
+            content: '<div>'+ name +'</div>' + '<input type="submit" onclick="joinSubpart(' + subparts[i].getAttribute("subpart-id") + "," + userID + ')" class="btn btn-primary" id="button-'+ subparts[i].id +'" value="Gönüllü İsteği Gönder"></input>'
           });
         
-        google.maps.event.addListener(marker, "click", () => {
+          marker.addListener("click", () => {
             infowindow.open(map, marker);
           });        
     }
