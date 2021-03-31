@@ -29,7 +29,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.AfetKurtar">
-        <activity android:name=".Disaster_Subpart"></activity>
+        <activity android:name=".Authorized_AssignTeam"></activity>
+        <activity android:name=".Disaster_Subpart" />
         <activity android:name=".Disaster_Update" />
         <activity android:name=".DisasterCreate" />
         <activity android:name=".Disaster_Details" />
@@ -61,7 +62,7 @@
         <activity android:name=".Volunteer_ParticipateRequest" />
         <activity android:name=".Volunteer_Emergency" />
         <activity android:name=".ScreenActivity" />
-        <activity android:name=".Create_Disaster_Event_On_Map" />
+        <activity android:name=".Create_Subpart_On_Map" />
         <activity android:name=".Show_Subparts_Of_Disaster" />
         <activity android:name=".Create_Main_Disaster_Event_Info" />
         <activity android:name=".MainActivity">

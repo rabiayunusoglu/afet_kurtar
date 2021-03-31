@@ -42,6 +42,7 @@ public class Disaster_Details extends AppCompatActivity implements OnMapReadyCal
     private Geocoder geocoder;
     static int k = 0;
     ArrayList<JSONObject> list2 = new ArrayList<JSONObject>();
+    static ArrayList<JSONObject> subpartList = new ArrayList<JSONObject>();
 
 
     @Override
@@ -102,7 +103,7 @@ public class Disaster_Details extends AppCompatActivity implements OnMapReadyCal
                 finish();
                 break;
             case R.id.afetolusturBTN:
-                Intent intent = new Intent(this, Create_Disaster_Event_On_Map.class);
+                Intent intent = new Intent(this, Create_Subpart_On_Map.class);
                 intent.putExtra("json", data.toString());
                 startActivity(intent);
                 //  finish();
@@ -167,6 +168,7 @@ public class Disaster_Details extends AppCompatActivity implements OnMapReadyCal
         List<Address> addresses = null;
         geocoder = new Geocoder(this, Locale.getDefault());
 
+
         for (JSONObject x : list2) {
             LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             View view = inflater.inflate(R.layout.activity_personel_history_addlayout, null);
@@ -196,6 +198,9 @@ public class Disaster_Details extends AppCompatActivity implements OnMapReadyCal
             scroll.addView(view);
         }
 
+        //this method creates subparts on map
+       subpartList = list2;
+        initSubpartsOnMap(subpartList);
     }
 
     public void getData(String ID) {
@@ -231,7 +236,7 @@ public class Disaster_Details extends AppCompatActivity implements OnMapReadyCal
     }
 
     public void ClickCreateSubpart(View view) {
-        Intent intent = new Intent(this, Create_Disaster_Event_On_Map.class);
+        Intent intent = new Intent(this, Create_Subpart_On_Map.class);
         intent.putExtra("json", "");
         startActivity(intent);
     }
@@ -247,5 +252,78 @@ public class Disaster_Details extends AppCompatActivity implements OnMapReadyCal
         //Start activity
         activity.startActivity(intent);
 
+    }
+    public void initSubpartsOnMap(ArrayList<JSONObject> myList){
+        createSubpartMarkerOnMap(myList);
+    }
+    public ArrayList<Marker> createSubpartMarkerOnMap(ArrayList<JSONObject> jsonList){
+        System.out.println("Test1 : createSubpartMarkerOnMap");
+        ArrayList<Marker> markerList = new ArrayList<Marker>();
+
+        String subpartID;
+        String tmpdisasterID;
+        double latitude;
+        double longitude;
+        String address;
+        int missingPerson;
+        int rescuedPerson;
+        String stringIsOpenForVolunteers;
+        String subpartName;
+        String tmpdisasterName;
+        String disasterStatus;
+        int disasterEmergencyLevel;
+
+
+        for(JSONObject object: jsonList){
+            try{
+                System.out.println("object in createSubpartMarkerOnMap: " + object.toString());
+                subpartID = object.getString("subpartID").toString();
+                tmpdisasterID = object.getString("disasterID").toString();
+                latitude = Double.parseDouble(object.getString("latitude").toString());
+                longitude = Double.parseDouble(object.getString("longitude").toString());
+                address = object.getString("address").toString();
+                missingPerson = Integer.parseInt(object.getString("missingPerson"));
+                rescuedPerson = Integer.parseInt(object.getString("rescuedPerson"));
+                stringIsOpenForVolunteers = object.getString("isOpenForVolunteers").toString();
+                subpartName = object.getString("subpartName").toString();
+                tmpdisasterName = object.getString("disasterName").toString();
+                disasterStatus = object.getString("status").toString();
+                disasterEmergencyLevel = Integer.parseInt(object.getString("emergencyLevel"));
+
+                System.out.println("Test2 : createSubpartMarkerOnMap");
+                LatLng latLng = new LatLng(latitude, longitude);
+                Marker subMarker = mMap.addMarker(new MarkerOptions().position(latLng).title("Asıl Afet ID: " + tmpdisasterID).snippet("Afet Parçası ID : " + subpartID + "\n" +
+                        "Afet Parçası İsmi : " + subpartName + "\n" +
+                        "Adress : " + address + "\n" +
+                        "Enlem : " + latitude + "\n" +
+                        "Boylam : " + longitude + "\n" +
+                        "Kayıp İnsan Sayısı : " + missingPerson + "\n" +
+                        "Kurtarılan İnsan Sayısı : " + rescuedPerson + "\n" +
+                        "Afet Durum Bilgisi : " + disasterStatus + "\n" +
+                        "Afet Durum Düzeyi : " + disasterEmergencyLevel + "\n" +
+                        "Gönüllülere Açık Mı : " + stringIsOpenForVolunteers + "\n")
+                );
+                mMap.setInfoWindowAdapter(new CustomInfoWindowAdapter(Disaster_Details.this));
+                markerList.add(subMarker);
+
+
+
+            }catch (Exception e){
+                e.getMessage();
+            }
+        }
+        try{
+                /*
+                double avarageLatitude = (latitudeStart + latitudeEnd)/2;
+                double avarageLongitude = (longitudeStart + longitudeEnd)/2;
+                */
+
+            LatLng forZoomLatlng = new LatLng(Authorized_ActiveDisasters.latitude,Authorized_ActiveDisasters.longtitude);
+            mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(forZoomLatlng,5));
+        }catch (Exception e){
+            e.getMessage();
+        }
+
+        return markerList;
     }
 }

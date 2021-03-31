@@ -42,7 +42,7 @@ public class Afet_Bolgesi extends AppCompatActivity {
         btnCreateDis.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view){
-                Intent intent = new Intent(Afet_Bolgesi.this, Create_Disaster_Event_On_Map.class);
+                Intent intent = new Intent(Afet_Bolgesi.this, Create_Subpart_On_Map.class);
                 startActivity(intent);
             }
         });

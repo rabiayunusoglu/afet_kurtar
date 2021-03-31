@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".Create_Disaster_Event_On_Map">
+    tools:context=".Create_Subpart_On_Map">
 
     <LinearLayout
         android:layout_width="match_parent"

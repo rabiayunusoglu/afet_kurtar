@@ -34,18 +34,21 @@ import java.util.ArrayList;
 
 public class Show_Subparts_Of_Disaster extends AppCompatActivity implements OnMapReadyCallback {
 
-    private static final String TAG = "Create_Disaster_Event_On_Map";
+    private static final String TAG = "Show_Subparts_Of_Disaster";
     RequestQueue queue;
     JSONObject data = new JSONObject();
     private GoogleMap mMap;
     private Geocoder geocoder;
 
     private String disasterID = "";
+    private double latitudeMainAfet = 0;
+    private double longitudeMainAfet = 0;
+    /*
     private double latitudeStart = 0;
     private double longitudeStart = 0;
     private double latitudeEnd = 0;
     private double longitudeEnd = 0;
-
+    */
     Spinner spinner;
     ArrayAdapter adapter;
 
@@ -75,11 +78,15 @@ public class Show_Subparts_Of_Disaster extends AppCompatActivity implements OnMa
                         try {
                             if (x.getString("disasterName").equals(((Spinner) findViewById(R.id.mainDisasterSpinnerForSubPart)).getSelectedItem().toString())) {
                                 disasterID = x.getString("disasterID");
+
+                                latitudeMainAfet = Double.parseDouble(x.getString("latitude"));
+                                longitudeMainAfet = Double.parseDouble(x.getString("longitude"));
+                                /*
                                 latitudeStart = Double.parseDouble(x.getString("latitudeStart"));
                                 latitudeEnd = Double.parseDouble(x.getString("latitudeEnd"));
                                 longitudeStart = Double.parseDouble(x.getString("longitudeStart"));
                                 longitudeEnd = Double.parseDouble(x.getString("longitudeEnd"));
-
+                                */
                                 resetMap();
                                 getSubpartsFromDB();
                             }
@@ -265,9 +272,12 @@ public class Show_Subparts_Of_Disaster extends AppCompatActivity implements OnMa
                 }
             }
             try{
+                /*
                 double avarageLatitude = (latitudeStart + latitudeEnd)/2;
                 double avarageLongitude = (longitudeStart + longitudeEnd)/2;
-                LatLng forZoomLatlng = new LatLng(avarageLatitude,avarageLongitude);
+                */
+
+                LatLng forZoomLatlng = new LatLng(latitudeMainAfet,longitudeMainAfet);
                 mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(forZoomLatlng,5));
             }catch (Exception e){
                 e.getMessage();

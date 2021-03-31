@@ -4,13 +4,9 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.location.Address;
 import android.location.Geocoder;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
-import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -32,9 +28,6 @@ import com.google.android.gms.maps.model.MarkerOptions;
 
 import org.json.JSONException;
 import org.json.JSONObject;
-
-import java.io.IOException;
-import java.util.List;
 
 public class Notification_Details extends AppCompatActivity implements OnMapReadyCallback {
     RequestQueue queue;
@@ -154,7 +147,7 @@ public class Notification_Details extends AppCompatActivity implements OnMapRead
                 finish();
                 break;
             case R.id.Create_new_Disaster:
-                  Intent intent = new Intent(this, Create_Disaster_Event_On_Map.class);
+                  Intent intent = new Intent(this, Create_Subpart_On_Map.class);
                   intent.putExtra("json", data.toString());
                   startActivity(intent);
                 //  finish();

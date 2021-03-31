@@ -1,13 +1,10 @@
 package com.example.afetkurtar;
 
-import android.location.Address;
 import android.location.Geocoder;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
@@ -36,7 +33,7 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 
-public class Create_Disaster_Event_On_Map extends AppCompatActivity implements OnMapReadyCallback {
+public class Create_Subpart_On_Map extends AppCompatActivity implements OnMapReadyCallback {
     private static final String TAG = "Create_Disaster_Event_On_Map";
     RequestQueue queue;
     JSONObject data = new JSONObject();
@@ -266,7 +263,7 @@ public class Create_Disaster_Event_On_Map extends AppCompatActivity implements O
                 ((EditText)(findViewById(R.id.afet_longitude))).setText(dataLongitude);
 
                 Marker dataMarker = mMap.addMarker(new MarkerOptions().position(latLng));
-                mMap.setInfoWindowAdapter(new CustomInfoWindowAdapter(Create_Disaster_Event_On_Map.this));
+                mMap.setInfoWindowAdapter(new CustomInfoWindowAdapter(Create_Subpart_On_Map.this));
                 mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng,13));
 
             } catch (JSONException e) {
@@ -309,7 +306,7 @@ public class Create_Disaster_Event_On_Map extends AppCompatActivity implements O
 
         LatLng latLng = new LatLng(myLatlng.latitude,myLatlng.longitude);
         clickMarker = mMap.addMarker(new MarkerOptions().position(latLng));
-        mMap.setInfoWindowAdapter(new CustomInfoWindowAdapter(Create_Disaster_Event_On_Map.this));
+        mMap.setInfoWindowAdapter(new CustomInfoWindowAdapter(Create_Subpart_On_Map.this));
         mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng,8));
     }
 
@@ -465,7 +462,7 @@ public class Create_Disaster_Event_On_Map extends AppCompatActivity implements O
                                 "Afet Durum Düzeyi : " + disasterEmergencyLevel + "\n" +
                                 "Gönüllülere Açık Mı : " + stringIsOpenForVolunteers + "\n")
                         );
-                mMap.setInfoWindowAdapter(new CustomInfoWindowAdapter(Create_Disaster_Event_On_Map.this));
+                mMap.setInfoWindowAdapter(new CustomInfoWindowAdapter(Create_Subpart_On_Map.this));
                 mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng,8));
                 //Dikkat!!! burada bellki bilgi olusturulup database e gönderildikten sonra ekrandaki coordinat hesaplama tekrar yaptırılabilir.
 
@@ -483,7 +480,7 @@ public class Create_Disaster_Event_On_Map extends AppCompatActivity implements O
     public void initMap(){
         geocoder = new Geocoder(this);
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.create_disaster_event_map);
-        mapFragment.getMapAsync(Create_Disaster_Event_On_Map.this) ;
+        mapFragment.getMapAsync(Create_Subpart_On_Map.this) ;
     }
     public void resetWithMap(){
         try{

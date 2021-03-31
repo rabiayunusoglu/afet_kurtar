@@ -4,9 +4,11 @@ import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.drawerlayout.widget.DrawerLayout;
 
+import android.location.Address;
 import android.location.Geocoder;
 import android.os.Build;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -32,9 +34,12 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.List;
+import java.util.Locale;
 
 public class DisasterCreate extends AppCompatActivity implements OnMapReadyCallback {
     ArrayList<String> arrayListAfetType = new ArrayList<>();
@@ -59,6 +64,7 @@ public class DisasterCreate extends AppCompatActivity implements OnMapReadyCallb
     static String level;
     static int indexType, indexbase, indexlevel;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -75,6 +81,7 @@ public class DisasterCreate extends AppCompatActivity implements OnMapReadyCallb
         afetName = findViewById(R.id.disasterNameBtn);
         gonder = findViewById(R.id.afetolusturBTN);
         geri=findViewById(R.id.disaster_create_geri_button);
+        /*
         try {
 
             Bundle bundle = getIntent().getExtras();
@@ -90,6 +97,8 @@ public class DisasterCreate extends AppCompatActivity implements OnMapReadyCallb
         } catch (Exception e) {
             e.printStackTrace();
         }
+        */
+
         initMap();
         geri.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -139,7 +148,11 @@ public class DisasterCreate extends AppCompatActivity implements OnMapReadyCallb
         });
     }
     public void initMap(){
-        geocoder = new Geocoder(this);
+        Locale locale = new Locale("tr", "TR");
+        geocoder = new Geocoder(this,locale);
+
+
+        //geocoder = new Geocoder(this);
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.disaster_create_map);
         mapFragment.getMapAsync(DisasterCreate.this) ;
     }
@@ -314,6 +327,12 @@ public class DisasterCreate extends AppCompatActivity implements OnMapReadyCallb
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 afetussu = adapterAfetBase.getItem(position).toString();
+                try {
+                    setMapLocation();
+                }catch (Exception e){
+                    e.getMessage();
+                }
+
                 indexbase = position;
                 Toast.makeText(getApplicationContext(), afetussu, Toast.LENGTH_SHORT).show();
             }
@@ -379,4 +398,80 @@ public class DisasterCreate extends AppCompatActivity implements OnMapReadyCallb
         });
 
     }
+    public void setMapLocation(){
+        mMap.clear();
+        String location = controlString(afetussu);
+        //String location = afetussu;
+
+        System.out.println("location :  ==============================" + location);
+        // = //// aldığımız yazı
+        if(location != null && !location.equals("")){
+
+            List<Address> addressList = null;
+            //geocoder = new Geocoder(MapActivity.this);
+
+            try{
+                addressList=geocoder.getFromLocationName(location,1);
+
+            }catch(IOException e){
+                e.printStackTrace();
+            }
+            try{
+                if(addressList.size() > 0){
+                    Address address = addressList.get(0);
+                    LatLng latLng = new LatLng(address.getLatitude(), address.getLongitude());
+                    Marker mMarker = mMap.addMarker(new MarkerOptions().position(latLng).title("Burası "+ location));
+                    mMap.setInfoWindowAdapter(new CustomInfoWindowAdapter(DisasterCreate.this));
+                    mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng,10));
+                }else{
+                    //Log.d(TAG,"onMapReady: can not find this area!");
+                }
+            }catch(Exception e){
+                e.printStackTrace();
+            }
+
+        }
+    }
+    public String controlString(String line){
+        line = line.toLowerCase();
+        String part1="";
+        String part2="";
+        System.out.println("control String e girdi");
+        for(int i = 0; i<line.length(); i++) {
+            if (line.charAt(i) == 'ç') {
+
+                part1 = line.substring(0,i);
+                part2 = line.substring(i+1);
+                line = part1 + "c" + part2;
+            }else if(line.charAt(i) == 'ş'){
+                part1 = line.substring(0,i);
+                part2 = line.substring(i+1);
+                line = part1 + "s" + part2;
+            }else if(line.charAt(i) == 'ü'){
+                part1 = line.substring(0,i);
+                part2 = line.substring(i+1);
+                line = part1 + "u" + part2;
+            }else if(line.charAt(i) == 'ğ'){
+                part1 = line.substring(0,i);
+                part2 = line.substring(i+1);
+                line = part1 + "g" + part2;
+            }else if(line.charAt(i) == 'ı'){
+                part1 = line.substring(0,i);
+                part2 = line.substring(i+1);
+                System.out.println("part1 :" + part1);
+                System.out.println("part2 :" + part2);
+                line = part1 + "i" + part2;
+                System.out.println("line p1p2 :" + line);
+            }else if(line.charAt(i) == 'ö'){
+                part1 = line.substring(0,i);
+                part2 = line.substring(i+1);
+                line = part1 + "o" + part2;
+            }
+             part1="";
+             part2="";
+        }
+        System.out.println("line " + line);
+        return line;
+    }
+
 }
