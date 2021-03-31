@@ -115,7 +115,7 @@ public class Disaster_Details extends AppCompatActivity implements OnMapReadyCal
                 // tmp = tmp.substring(0,tmp.indexOf(" ")).trim(); // **************************************** MESAJI DEGISTIRIRSEN BURAYI AYARLA
                 // System.out.println(tmp);
 
-                Intent asd = new Intent(this, Notification_Details.class);
+                Intent asd = new Intent(this, Disaster_Subpart.class);
                 JSONObject json = new JSONObject();
                 for (JSONObject x : list2) {
                     try {

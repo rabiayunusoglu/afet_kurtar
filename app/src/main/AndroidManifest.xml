@@ -29,7 +29,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.AfetKurtar">
-        <activity android:name=".Disaster_Update"></activity>
+        <activity android:name=".Disaster_Subpart"></activity>
+        <activity android:name=".Disaster_Update" />
         <activity android:name=".DisasterCreate" />
         <activity android:name=".Disaster_Details" />
         <activity android:name=".Authorized_ActiveDisasters" />
