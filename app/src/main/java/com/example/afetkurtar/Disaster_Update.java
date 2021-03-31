@@ -4,6 +4,9 @@ import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.drawerlayout.widget.DrawerLayout;
 
+import android.app.Activity;
+import android.content.Intent;
+import android.location.Address;
 import android.location.Geocoder;
 import android.os.Build;
 import android.os.Bundle;
@@ -32,12 +35,19 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.List;
 
 public class Disaster_Update extends AppCompatActivity implements OnMapReadyCallback {
-
+    ArrayList<String> arrayListAfetType = new ArrayList<>();
+    ArrayAdapter<String> adapterAfetType;
+    ArrayList<String> arrayListEmergencyLevel = new ArrayList<>();
+    ArrayAdapter<String> adapterEmergencyLevel;
+    ArrayList<String> arrayListAfetBase = new ArrayList<>();
+    ArrayAdapter<String> adapterAfetBase;
     RequestQueue queue;
     JSONObject data = new JSONObject();
     private GoogleMap mMap;
@@ -46,12 +56,14 @@ public class Disaster_Update extends AppCompatActivity implements OnMapReadyCall
     DrawerLayout drawerLayout;
     Marker clickMarker;
 
-    EditText afetName, latitude, longtitude,type,levell,base;
-    static Double latitudeMap,logtitudeMap;
-    Button gonder,geri;
+    Spinner type, levell, base;
+    EditText afetName, latitude, longtitude;
+    static Double latitudeMap, logtitudeMap;
+    Button gonder, geri, sil;
     static String afetTipi, afetussu;
     static String level;
     static int indexType, indexbase, indexlevel;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -63,23 +75,26 @@ public class Disaster_Update extends AppCompatActivity implements OnMapReadyCall
         latitude = findViewById(R.id.latitudeBtnUpdate);
         longtitude = findViewById(R.id.longtitudeBtnUpdate);
         afetName = findViewById(R.id.disasterNameBtnUpdate);
-        type.setText(Authorized_ActiveDisasters.disasterType);
-        levell.setText(Authorized_ActiveDisasters.emergencyLevel);
-        base.setText(Authorized_ActiveDisasters.disasterBase);
+        loadSpinnerAfetBase();
+        loadSpinnerDataAfetType();
+        loadSpinnerEmergencyLevel();
+
+
         latitude.setText(Authorized_ActiveDisasters.disasterlatitude);
         longtitude.setText(Authorized_ActiveDisasters.disasterlongitude);
         afetName.setText(Authorized_ActiveDisasters.disasterName);
         gonder = findViewById(R.id.afetupdateBTN);
-        geri=findViewById(R.id.disaster_update_geri_button);
+        geri = findViewById(R.id.disaster_update_geri_button);
+        sil = findViewById(R.id.delete_disasater_Btn);
         try {
 
             Bundle bundle = getIntent().getExtras();
 
-            if(!bundle.isEmpty()){
+            if (!bundle.isEmpty()) {
                 try {
                     String message = bundle.getString("json");
                     data = new JSONObject(message);
-                }catch (Exception e){
+                } catch (Exception e) {
                     e.getMessage();
                 }
             }
@@ -88,6 +103,12 @@ public class Disaster_Update extends AppCompatActivity implements OnMapReadyCall
             e.printStackTrace();
         }
         initMap();
+        sil.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                delete();
+            }
+        });
         geri.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -99,28 +120,25 @@ public class Disaster_Update extends AppCompatActivity implements OnMapReadyCall
             @RequiresApi(api = Build.VERSION_CODES.O)
             @Override
             public void onClick(View v) {
-              /*  JSONObject obj = new JSONObject();
-
-              Authorized_ActiveDisasters.disasterID
+                JSONObject obj = new JSONObject();
                 try {
 //Get current date time
-                    System.out.println("*********************************************************************");
-                    System.out.println(afetTipi+"***********"+level+"**********"+afetussu);
-                    System.out.println("*********************************************************************");
+
                     LocalDateTime now = LocalDateTime.now();
                     DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
                     String formatDateTime = now.format(formatter);
-                    obj.put("disasterType", afetName.getText().toString());
-                    obj.put("emergencyLevel", Integer.parseInt(levell.getText().toString()));
+                    obj.put("disasterID", Authorized_ActiveDisasters.disasterID);
+                    obj.put("disasterType", afetTipi);
+                    obj.put("emergencyLevel", Integer.parseInt(level));
                     obj.put("latitude", latitudeMap);
                     obj.put("longitude", logtitudeMap);
                     obj.put("disasterDate", formatDateTime);
-                    obj.put("disasterBase", base.getText().toString());
+                    obj.put("disasterBase", afetussu);
                     obj.put("disasterName", afetName.getText().toString());
                 } catch (Exception e) {
 
                 }
-                JsonObjectRequest request = new JsonObjectRequest(Request.Method.POST, "https://afetkurtar.site/api/disasterEvents/create.php", obj, new Response.Listener<JSONObject>() {
+                JsonObjectRequest request = new JsonObjectRequest(Request.Method.POST, "https://afetkurtar.site/api/disasterEvents/update.php", obj, new Response.Listener<JSONObject>() {
                     @Override
                     public void onResponse(JSONObject response) {
                         System.out.println(response.toString());
@@ -132,22 +150,322 @@ public class Disaster_Update extends AppCompatActivity implements OnMapReadyCall
                     }
                 });
                 queue.add(request);
-                Toast.makeText(Disaster_Update.this, "Afet Oluşturuldu.", Toast.LENGTH_LONG).show();
-                finish();*/
+                Toast.makeText(Disaster_Update.this, "Afet Güncellendi.", Toast.LENGTH_SHORT).show();
+                finish();
             }
         });
     }
-    public void initMap(){
+
+    public void delete() {
+        JSONObject obj = new JSONObject();
+        try {
+            obj.put("disasterID", Authorized_ActiveDisasters.disasterID);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        // ASAGISI DEGISECEK -- TEST AMACLI YAPILDI
+
+        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest
+                (Request.Method.POST, "https://afetkurtar.site/api/disasterEvents/delete.php", obj, new Response.Listener<JSONObject>() {
+
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        try {
+                            //  System.out.println(response.toString());
+                            ReturnBack();
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }, new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        // TODO: Handle error
+                        System.out.println(error);
+                    }
+                });
+        queue.add(jsonObjectRequest);
+    }
+
+    public void ReturnBack() {
+        redirectActivity(this,Authorized_ActiveDisasters.class);
+    }
+    public static void redirectActivity(Activity activity, Class aClass) {
+        //initialize intent
+        Intent intent = new Intent(activity, aClass);
+        //Set flag
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        //Start activity
+        activity.startActivity(intent);
+
+    }
+
+
+    private void loadSpinnerAfetBase() {
+        adapterAfetBase = new ArrayAdapter<String>(Disaster_Update.this, android.R.layout.simple_spinner_dropdown_item, arrayListAfetBase);
+        adapterAfetBase.add("Adana");
+        adapterAfetBase.add("Adıyaman");
+        adapterAfetBase.add("Afyon");
+        adapterAfetBase.add("Ağrı");
+        adapterAfetBase.add("Amasya");
+        adapterAfetBase.add("Ankara");
+        adapterAfetBase.add("Antalya");
+        adapterAfetBase.add("Artvin");
+        adapterAfetBase.add("Aydın");
+        adapterAfetBase.add("Balıkesir");
+        adapterAfetBase.add("Bilecik");
+        adapterAfetBase.add("Bingöl");
+        adapterAfetBase.add("Bitlis");
+        adapterAfetBase.add("Bolu");
+        adapterAfetBase.add("Burdur");
+        adapterAfetBase.add("Bursa");
+        adapterAfetBase.add("Çanakkale");
+        adapterAfetBase.add("Çankırı");
+        adapterAfetBase.add("Çorum");
+        adapterAfetBase.add("Denizli");
+        adapterAfetBase.add("Diyarbakır");
+        adapterAfetBase.add("Edirne");
+        adapterAfetBase.add("Elazığ");
+        adapterAfetBase.add("Erzincan");
+        adapterAfetBase.add("Erzurum");
+        adapterAfetBase.add("Eskişehir");
+        adapterAfetBase.add("Gaziantep");
+        adapterAfetBase.add("Giresun");
+        adapterAfetBase.add("Gümüşhane");
+        adapterAfetBase.add("Hakkari");
+        adapterAfetBase.add("Hatay");
+        adapterAfetBase.add("Isparta");
+        adapterAfetBase.add("İçel (Mersin)");
+        adapterAfetBase.add("İstanbul");
+        adapterAfetBase.add("İzmir");
+        adapterAfetBase.add("Kars");
+        adapterAfetBase.add("Kastamonu");
+        adapterAfetBase.add("Kayseri");
+        adapterAfetBase.add("Kırklareli");
+        adapterAfetBase.add("Kırşehir");
+        adapterAfetBase.add("Kocaeli");
+        adapterAfetBase.add("Konya");
+        adapterAfetBase.add("Kütahya");
+        adapterAfetBase.add("Malatya");
+        adapterAfetBase.add("Manisa");
+        adapterAfetBase.add("Kahramanmaraş");
+        adapterAfetBase.add("Mardin");
+        adapterAfetBase.add("Muğla");
+        adapterAfetBase.add("Muş");
+        adapterAfetBase.add("Nevşehir");
+        adapterAfetBase.add("Niğde");
+        adapterAfetBase.add("Ordu");
+        adapterAfetBase.add("Rize");
+        adapterAfetBase.add("Sakarya");
+        adapterAfetBase.add("Samsun");
+        adapterAfetBase.add("Siirt");
+        adapterAfetBase.add("Sinop");
+        adapterAfetBase.add("Sivas");
+        adapterAfetBase.add("Tekirdağ");
+        adapterAfetBase.add("Tokat");
+        adapterAfetBase.add("Trabzon");
+        adapterAfetBase.add("Tunceli");
+        adapterAfetBase.add("Şanlıurfa");
+        adapterAfetBase.add("Uşak");
+        adapterAfetBase.add("Van");
+        adapterAfetBase.add("Yozgat");
+        adapterAfetBase.add("Zonguldak");
+        adapterAfetBase.add("Aksaray");
+        adapterAfetBase.add("Bayburt");
+        adapterAfetBase.add("Karaman");
+        adapterAfetBase.add("Kırıkkale");
+        adapterAfetBase.add("Batman");
+        adapterAfetBase.add("Şırnak");
+        adapterAfetBase.add("Bartın");
+        adapterAfetBase.add("Ardahan");
+        adapterAfetBase.add("Iğdır");
+        adapterAfetBase.add("Yalova");
+        adapterAfetBase.add("Karabük");
+        adapterAfetBase.add("Kilis");
+        adapterAfetBase.add("Osmaniye");
+        adapterAfetBase.add("Düzce");
+
+        base.setAdapter(adapterAfetBase);
+        int spinnerPosition = adapterAfetBase.getPosition(Authorized_ActiveDisasters.disasterBase);
+        base.setSelection(spinnerPosition);
+        base.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                afetussu = adapterAfetBase.getItem(position).toString();
+                afetName.setText(afetussu + " " + afetTipi + " " + "Bölgesi");
+                try {
+                    setMapLocation();
+                } catch (Exception e) {
+                    e.getMessage();
+                }
+
+                indexbase = position;
+                Toast.makeText(getApplicationContext(), afetussu, Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+    }
+
+    public void setMapLocation() {
+        mMap.clear();
+        String location = controlString(afetussu);
+        //String location = afetussu;
+
+        System.out.println("location :  ==============================" + location);
+        // = //// aldığımız yazı
+        if (location != null && !location.equals("")) {
+
+            List<Address> addressList = null;
+            //geocoder = new Geocoder(MapActivity.this);
+
+            try {
+                addressList = geocoder.getFromLocationName(location, 1);
+
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            try {
+                if (addressList.size() > 0) {
+                    Address address = addressList.get(0);
+                    LatLng latLng = new LatLng(address.getLatitude(), address.getLongitude());
+
+                    Marker mMarker = mMap.addMarker(new MarkerOptions().position(latLng).title("Burası " + location));
+                    mMap.setInfoWindowAdapter(new CustomInfoWindowAdapter(Disaster_Update.this));
+                    mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 10));
+                    latitudeMap = address.getLatitude();
+                    logtitudeMap = address.getLongitude();
+                    ((EditText) (findViewById(R.id.latitudeBtn))).setText(latitudeMap + "");
+                    ((EditText) (findViewById(R.id.longtitudeBtn))).setText(logtitudeMap + "");
+                } else {
+                    //Log.d(TAG,"onMapReady: can not find this area!");
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+        }
+    }
+
+    public String controlString(String line) {
+        line = line.toLowerCase();
+        String part1 = "";
+        String part2 = "";
+        System.out.println("control String e girdi");
+        for (int i = 0; i < line.length(); i++) {
+            if (line.charAt(i) == 'ç') {
+
+                part1 = line.substring(0, i);
+                part2 = line.substring(i + 1);
+                line = part1 + "c" + part2;
+            } else if (line.charAt(i) == 'ş') {
+                part1 = line.substring(0, i);
+                part2 = line.substring(i + 1);
+                line = part1 + "s" + part2;
+            } else if (line.charAt(i) == 'ü') {
+                part1 = line.substring(0, i);
+                part2 = line.substring(i + 1);
+                line = part1 + "u" + part2;
+            } else if (line.charAt(i) == 'ğ') {
+                part1 = line.substring(0, i);
+                part2 = line.substring(i + 1);
+                line = part1 + "g" + part2;
+            } else if (line.charAt(i) == 'ı') {
+                part1 = line.substring(0, i);
+                part2 = line.substring(i + 1);
+                System.out.println("part1 :" + part1);
+                System.out.println("part2 :" + part2);
+                line = part1 + "i" + part2;
+                System.out.println("line p1p2 :" + line);
+            } else if (line.charAt(i) == 'ö') {
+                part1 = line.substring(0, i);
+                part2 = line.substring(i + 1);
+                line = part1 + "o" + part2;
+            }
+            part1 = "";
+            part2 = "";
+        }
+        System.out.println("line " + line);
+        return line;
+    }
+
+    private void loadSpinnerEmergencyLevel() {
+        adapterEmergencyLevel = new ArrayAdapter<String>(Disaster_Update.this, android.R.layout.simple_spinner_dropdown_item, arrayListEmergencyLevel);
+        adapterEmergencyLevel.add("1");
+        adapterEmergencyLevel.add("2");
+        adapterEmergencyLevel.add("3");
+        adapterEmergencyLevel.add("4");
+        adapterEmergencyLevel.add("5");
+        adapterEmergencyLevel.add("6");
+        adapterEmergencyLevel.add("7");
+        adapterEmergencyLevel.add("8");
+        adapterEmergencyLevel.add("9");
+        adapterEmergencyLevel.add("10");
+
+        levell.setAdapter(adapterEmergencyLevel);
+        int spinnerPosition = adapterEmergencyLevel.getPosition(Authorized_ActiveDisasters.emergencyLevel);
+        levell.setSelection(spinnerPosition);
+        levell.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                level = adapterEmergencyLevel.getItem(position).toString();
+                indexlevel = position;
+                Toast.makeText(getApplicationContext(), level, Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+    }
+
+    private void loadSpinnerDataAfetType() {
+        adapterAfetType = new ArrayAdapter<String>(Disaster_Update.this, android.R.layout.simple_spinner_dropdown_item, arrayListAfetType);
+        adapterAfetType.add("Deprem");
+        adapterAfetType.add("Yangın");
+        adapterAfetType.add("Sel");
+        adapterAfetType.add("Heyelan");
+        adapterAfetType.add("Çığ");
+        adapterAfetType.add("COVID-19");
+        type.setAdapter(adapterAfetType);
+        int spinnerPosition = adapterAfetType.getPosition(Authorized_ActiveDisasters.disasterType);
+        type.setSelection(spinnerPosition);
+        type.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                afetTipi = adapterAfetType.getItem(position).toString();
+                afetName.setText(afetussu + " " + afetTipi + " " + "Bölgesi");
+                indexType = position;
+                Toast.makeText(getApplicationContext(), afetTipi, Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+
+    }
+
+    public void initMap() {
         geocoder = new Geocoder(this);
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.disaster_update_map);
-        mapFragment.getMapAsync(Disaster_Update.this) ;
+        mapFragment.getMapAsync(Disaster_Update.this);
     }
-    public void calculateCoordinates(LatLng myLatlng){
-        try{
-            if(!clickMarker.equals(null)){
+
+    public void calculateCoordinates(LatLng myLatlng) {
+        try {
+            if (!clickMarker.equals(null)) {
                 clickMarker.remove();
             }
-        }catch (Exception e){
+        } catch (Exception e) {
             e.getMessage();
         }
 
@@ -156,45 +474,44 @@ public class Disaster_Update extends AppCompatActivity implements OnMapReadyCall
         String tmpLatitudeString = String.valueOf(myLatlng.latitude);
         String tmpLongitudeString = String.valueOf(myLatlng.longitude);
 
-        try{
-            if(tmpLatitudeString.indexOf(".") != -1 &&tmpLatitudeString.substring(tmpLatitudeString.indexOf(".")).length() >4){
-                tmpLatitude = Double.parseDouble(tmpLatitudeString.substring(0,tmpLatitudeString.indexOf(".")+4));
+        try {
+            if (tmpLatitudeString.indexOf(".") != -1 && tmpLatitudeString.substring(tmpLatitudeString.indexOf(".")).length() > 4) {
+                tmpLatitude = Double.parseDouble(tmpLatitudeString.substring(0, tmpLatitudeString.indexOf(".") + 4));
             }
-            if(tmpLongitudeString.indexOf(".") != -1 && tmpLongitudeString.substring(tmpLongitudeString.indexOf(".")).length() >4){
-                tmpLongitude = Double.parseDouble(tmpLongitudeString.substring(0,tmpLongitudeString.indexOf(".")+4));
+            if (tmpLongitudeString.indexOf(".") != -1 && tmpLongitudeString.substring(tmpLongitudeString.indexOf(".")).length() > 4) {
+                tmpLongitude = Double.parseDouble(tmpLongitudeString.substring(0, tmpLongitudeString.indexOf(".") + 4));
             }
-        }catch(Exception e){
+        } catch (Exception e) {
             e.getMessage();
         }
-        ((EditText)(findViewById(R.id.latitudeBtnUpdate))).setText(tmpLatitudeString);
-        ((EditText)(findViewById(R.id.longtitudeBtnUpdate))).setText(tmpLongitudeString);
+        ((EditText) (findViewById(R.id.latitudeBtnUpdate))).setText(tmpLatitudeString);
+        ((EditText) (findViewById(R.id.longtitudeBtnUpdate))).setText(tmpLongitudeString);
 
-        latitudeMap=tmpLatitude;
-        logtitudeMap=tmpLongitude;
+        latitudeMap = tmpLatitude;
+        logtitudeMap = tmpLongitude;
 
-        LatLng latLng1 = new LatLng(myLatlng.latitude,myLatlng.longitude);
+        LatLng latLng1 = new LatLng(myLatlng.latitude, myLatlng.longitude);
         clickMarker = mMap.addMarker(new MarkerOptions().position(latLng1));
         mMap.setInfoWindowAdapter(new CustomInfoWindowAdapter(Disaster_Update.this));
-        mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng1,8));
+        mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng1, 8));
     }
+
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
         System.out.println("test : map is ready");
         Toast.makeText(this, "map is ready", Toast.LENGTH_SHORT).show();
-        LatLng latLng1=null;
+        LatLng latLng1 = null;
         try {
             latLng1 = new LatLng(Double.parseDouble(data.getString("latitude")), Double.parseDouble(data.getString("longitude")));
             Marker marker = mMap.addMarker(new MarkerOptions().position(latLng1).title("Enkaz Noktasi").draggable(true));
-            mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng1,10));
+            mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng1, 10));
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        mMap.setOnMapClickListener(new GoogleMap.OnMapClickListener()
-        {
+        mMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
             @Override
-            public void onMapClick(LatLng arg0)
-            {
+            public void onMapClick(LatLng arg0) {
 
                 //for calculate coordinates and show on screen
                 calculateCoordinates(arg0);
@@ -203,7 +520,7 @@ public class Disaster_Update extends AppCompatActivity implements OnMapReadyCall
 
         // if data is not empty get dataLatitude and dataLongitude
 
-        if(!data.equals(new JSONObject())){
+        if (!data.equals(new JSONObject())) {
 
             try {
                 String dataLatitude = data.getString("latitude");
@@ -214,12 +531,12 @@ public class Disaster_Update extends AppCompatActivity implements OnMapReadyCall
 
                 LatLng latLng = new LatLng(doubleDataLatitude, doubleDataLongitude);
 
-                ((EditText)(findViewById(R.id.afet_latitude))).setText(dataLatitude);
-                ((EditText)(findViewById(R.id.afet_longitude))).setText(dataLongitude);
+                ((EditText) (findViewById(R.id.afet_latitude))).setText(dataLatitude);
+                ((EditText) (findViewById(R.id.afet_longitude))).setText(dataLongitude);
 
                 Marker dataMarker = mMap.addMarker(new MarkerOptions().position(latLng));
                 mMap.setInfoWindowAdapter(new CustomInfoWindowAdapter(Disaster_Update.this));
-                mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng,13));
+                mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 13));
 
             } catch (JSONException e) {
                 e.printStackTrace();

@@ -47,15 +47,16 @@
 
     <Button
         android:id="@+id/newAfetBtn"
-        android:layout_width="237dp"
+        android:layout_width="257dp"
         android:layout_height="45dp"
         android:onClick="ClickDisasterCreate"
         android:text="Yeni Afet Oluştur"
-        android:textColor="@color/black"
-        app:backgroundTint="@color/griback"
+
+        android:textColor="@color/white"
+        app:backgroundTint="@color/purple_500"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.856"
+        app:layout_constraintHorizontal_bias="0.959"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.004"

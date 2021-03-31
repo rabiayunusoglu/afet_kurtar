@@ -38,10 +38,10 @@
             android:layout_height="match_parent"
             android:layout_gravity="center"
             android:layout_weight="1"
-            android:text="Afet Bilgisini Güncelle"
             android:onClick="ClickUpdateAfetBilgisi"
+            android:text="Afet Bilgisini Güncelle"
             android:textColor="@color/black"
-            app:backgroundTint="#BFBFBF">
+            app:backgroundTint="#9CCC65">
 
         </Button>
         <Space
@@ -53,12 +53,12 @@
             android:id="@+id/afetolusturBTN"
             android:layout_width="164dp"
             android:layout_height="match_parent"
-            android:onClick="ClickCreateSubpart"
             android:layout_gravity="right"
             android:layout_weight="1"
+            android:onClick="ClickCreateSubpart"
             android:text="Afet Parçası Oluştur"
-            android:textColor="@color/black"
-            app:backgroundTint="#BFBFBF"
+            android:textColor="@color/white"
+            app:backgroundTint="@color/purple_500"
             app:iconTint="#FFFFFF"
             tools:ignore="OnClick">
 
@@ -103,7 +103,7 @@
 
         <fragment xmlns:android="http://schemas.android.com/apk/res/android"
             xmlns:tools="http://schemas.android.com/tools"
-            android:id="@+id/notification_map"
+            android:id="@+id/disaster_Detail_map"
             android:name="com.google.android.gms.maps.SupportMapFragment"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

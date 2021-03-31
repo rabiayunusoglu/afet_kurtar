@@ -12,51 +12,69 @@
         android:orientation="horizontal"
         android:layout_gravity="center_horizontal">
 
-        <Button
-            android:textColor="@color/black"
-            android:id="@+id/subpart_geri_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="left"
-            android:layout_weight="1"
-            android:text="Geri"
-            app:backgroundTint="#BFBFBF">
 
-        </Button>
+
         <Space
-            android:layout_width="100dp"
+            android:layout_width="50dp"
             android:layout_height="8dp"
             android:layout_weight="1" >
         </Space>
-
         <Button
-            android:textColor="@color/black"
-            android:id="@+id/Delete_subpart"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:id="@+id/subpart_güncelle"
+            android:layout_width="210dp"
+            android:layout_height="60dp"
+            android:onClick="clickSubpartguncelle"
             android:layout_gravity="right"
             android:layout_weight="1"
-            android:text="Sil"
-            app:backgroundTint="#BFBFBF">
+            android:text="Afet Alt Parçasını Güncelle"
+            android:textColor="@color/black"
+            android:textSize="11sp"
+            app:backgroundTint="#9CCC65">
 
         </Button>
+
         <Space
-            android:layout_width="20dp"
+            android:layout_width="50dp"
             android:layout_height="8dp"
             android:layout_weight="1" >
         </Space>
 
         <Button
             android:id="@+id/Assign_Team_Subpart"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="170dp"
+            android:layout_height="60dp"
             android:layout_gravity="right"
             android:layout_weight="1"
             android:text="Takım Ataması Yap"
-            android:textColor="@color/black"
-            app:backgroundTint="#BFBFBF">
+            android:textColor="@color/white"
+            android:textSize="11sp"
+            app:backgroundTint="@color/purple_500">
 
         </Button>
+        <Space
+            android:layout_width="50dp"
+            android:layout_height="8dp"
+            android:layout_weight="1" >
+        </Space>
+        <Button
+            android:id="@+id/subpart_sil_button"
+            android:layout_width="110dp"
+            android:layout_height="60dp"
+            android:layout_gravity="left"
+            android:layout_weight="1"
+            android:onClick="clickSubpartsil"
+            android:text="Sil"
+            android:textColor="@color/white"
+            android:textSize="11sp"
+            app:backgroundTint="@color/design_default_color_error">
+
+        </Button>
+
+        <Space
+            android:layout_width="50dp"
+            android:layout_height="8dp"
+            android:layout_weight="1" >
+        </Space>
     </LinearLayout>
     <LinearLayout
         android:background="@drawable/notification_layout_background"
@@ -72,76 +90,90 @@
             android:id="@+id/subpart_detail"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="@color/griback"
             android:src="@drawable/no_image">
 
             <EditText
-                android:id="@+id/subpartname5"
-                android:layout_width="200dp"
+                android:id="@+id/subpartlevel"
+                android:layout_width="75dp"
                 android:layout_height="41dp"
                 android:ems="10"
                 android:inputType="textPersonName"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.972"
+                app:layout_constraintHorizontal_bias="0.911"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintVertical_bias="0.528" />
+                app:layout_constraintVertical_bias="0.938" />
+
+            <TextView
+                android:id="@+id/textView23"
+                android:layout_width="75dp"
+                android:layout_height="25dp"
+                android:gravity="left"
+                android:text="Level:"
+                android:textColor="@color/black"
+                android:textStyle="bold"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.911"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_bias="0.767" />
 
             <EditText
-                android:id="@+id/subpartname6"
-                android:layout_width="200dp"
+                android:id="@+id/subpartresper"
+                android:layout_width="75dp"
                 android:layout_height="41dp"
                 android:ems="10"
                 android:inputType="textPersonName"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.972"
+                app:layout_constraintHorizontal_bias="0.184"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintVertical_bias="0.706" />
+                app:layout_constraintVertical_bias="0.629" />
 
             <EditText
-                android:id="@+id/subpartname7"
-                android:layout_width="200dp"
+                android:id="@+id/subpartmisper"
+                android:layout_width="75dp"
                 android:layout_height="41dp"
                 android:ems="10"
                 android:inputType="textPersonName"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.972"
+                app:layout_constraintHorizontal_bias="0.546"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintVertical_bias="0.868" />
+                app:layout_constraintVertical_bias="0.629" />
 
             <EditText
-                android:id="@+id/subpartname4"
-                android:layout_width="200dp"
+                android:id="@+id/subpartstatus"
+                android:layout_width="75dp"
                 android:layout_height="41dp"
                 android:ems="10"
                 android:inputType="textPersonName"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.972"
+                app:layout_constraintHorizontal_bias="0.983"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintVertical_bias="0.355" />
+                app:layout_constraintVertical_bias="0.629" />
 
             <EditText
-                android:id="@+id/subpartname3"
-                android:layout_width="200dp"
+                android:id="@+id/subpartisvolstate"
+                android:layout_width="75dp"
                 android:layout_height="41dp"
                 android:ems="10"
                 android:inputType="textPersonName"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.972"
+                app:layout_constraintHorizontal_bias="0.22"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintVertical_bias="0.2" />
+                app:layout_constraintVertical_bias="0.934" />
 
             <EditText
-                android:id="@+id/subpartname2"
+                android:id="@+id/subpartaddres"
                 android:layout_width="200dp"
                 android:layout_height="41dp"
                 android:ems="10"
@@ -151,21 +183,34 @@
                 app:layout_constraintHorizontal_bias="0.972"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintVertical_bias="0.046" />
+                app:layout_constraintVertical_bias="0.328" />
+
+            <EditText
+                android:id="@+id/subpartname"
+                android:layout_width="200dp"
+                android:layout_height="41dp"
+                android:ems="10"
+                android:inputType="textPersonName"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.972"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_bias="0.169" />
 
             <TextView
                 android:id="@+id/textView21"
-                android:layout_width="169dp"
-                android:layout_height="36dp"
+                android:layout_width="250dp"
+                android:layout_height="31dp"
                 android:text="Gönüllü İstek Talep Edebilme Durumu:"
                 android:textColor="@color/black"
                 android:textStyle="bold"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.076"
+                app:layout_constraintHorizontal_bias="0.052"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintVertical_bias="0.875" />
+                app:layout_constraintVertical_bias="0.784" />
 
             <TextView
                 android:id="@+id/textView18"
@@ -193,21 +238,37 @@
                 app:layout_constraintHorizontal_bias="0.069"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintVertical_bias="0.254" />
+                app:layout_constraintVertical_bias="0.218" />
 
             <TextView
                 android:id="@+id/textView19"
-                android:layout_width="150dp"
+                android:layout_width="140dp"
                 android:layout_height="25dp"
+                android:gravity="center"
                 android:text="Kayıp İnsan Sayısı:"
                 android:textColor="@color/black"
                 android:textStyle="bold"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.069"
+                app:layout_constraintHorizontal_bias="0.665"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintVertical_bias="0.69" />
+                app:layout_constraintVertical_bias="0.501" />
+
+            <TextView
+                android:id="@+id/textView22"
+                android:layout_width="75dp"
+                android:layout_height="25dp"
+                android:gravity="left"
+                android:text="Durum:"
+                android:textColor="@color/black"
+                android:textStyle="bold"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.983"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_bias="0.501" />
 
             <TextView
                 android:id="@+id/textView20"
@@ -218,10 +279,10 @@
                 android:textStyle="bold"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.069"
+                app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintVertical_bias="0.549" />
+                app:layout_constraintVertical_bias="0.501" />
 
             <TextView
                 android:id="@+id/textView16"
@@ -235,10 +296,10 @@
                 app:layout_constraintHorizontal_bias="0.057"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintVertical_bias="0.41" />
+                app:layout_constraintVertical_bias="0.367" />
 
             <EditText
-                android:id="@+id/subpartname"
+                android:id="@+id/subpartdisname"
                 android:layout_width="200dp"
                 android:layout_height="41dp"
                 android:ems="10"
@@ -248,7 +309,7 @@
                 app:layout_constraintHorizontal_bias="0.972"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintVertical_bias="0.046" />
+                app:layout_constraintVertical_bias="0.0" />
         </androidx.constraintlayout.widget.ConstraintLayout>
     </LinearLayout>
     <Space

@@ -33,6 +33,15 @@
             android:layout_height="8dp"
             android:layout_weight="1"></Space>
 
+        <Button
+            android:id="@+id/delete_disasater_Btn"
+            android:layout_width="75dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:text="Sil"
+            android:textColor="@color/black"
+            app:backgroundTint="@color/design_default_color_error" />
+
         <Space
             android:layout_width="10dp"
             android:layout_height="8dp"
@@ -46,7 +55,7 @@
             android:layout_weight="1"
             android:text="Afeti Güncelle"
             android:textColor="@color/black"
-            app:backgroundTint="#BFBFBF"
+            app:backgroundTint="#9CCC65"
             app:iconTint="#FFFFFF">
 
         </Button>
@@ -62,41 +71,13 @@
         tools:ignore="MissingConstraints">
 
 
-        <EditText
-            android:id="@+id/disastertypeBtnUpdate"
-            android:layout_width="238dp"
-            android:layout_height="41dp"
-            android:ems="10"
-            android:inputType="textPersonName"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.843"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.042" />
-
-        <EditText
-            android:id="@+id/disasterlevelBtnUpdate"
-            android:layout_width="238dp"
-            android:layout_height="41dp"
-            android:ems="10"
-            android:inputType="textPersonName"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.843"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.235" />
-
-        <EditText
+        <Spinner
             android:id="@+id/disasterussuBtnUpdate"
             android:layout_width="238dp"
             android:layout_height="41dp"
-            android:ems="10"
-            android:inputType="textPersonName"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.843"
+            app:layout_constraintHorizontal_bias="0.89"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintVertical_bias="0.44" />
@@ -178,7 +159,7 @@
             android:inputType="textPersonName"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.843"
+            app:layout_constraintHorizontal_bias="0.89"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintVertical_bias="0.648" />
@@ -222,6 +203,28 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintVertical_bias="0.938" />
+
+        <Spinner
+            android:id="@+id/disastertypeBtnUpdate"
+            android:layout_width="238dp"
+            android:layout_height="41dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.876"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.061" />
+
+        <Spinner
+            android:id="@+id/disasterlevelBtnUpdate"
+            android:layout_width="238dp"
+            android:layout_height="41dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.89"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.235" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <Space

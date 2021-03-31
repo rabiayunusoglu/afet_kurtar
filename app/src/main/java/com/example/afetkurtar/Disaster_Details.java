@@ -37,6 +37,12 @@ import java.util.Locale;
 
 public class Disaster_Details extends AppCompatActivity implements OnMapReadyCallback {
     RequestQueue queue;
+    public static int subpartID,disID;
+    public static String isOpenForVolunteer;
+    public static String subpartName,disname,missingPerson,rescuedPerson,status,level,
+            subpartAdres,
+            subpartlatitude,
+            subpartlongitude;
     JSONObject data;
     private GoogleMap mMap;
     private Geocoder geocoder;
@@ -60,7 +66,7 @@ public class Disaster_Details extends AppCompatActivity implements OnMapReadyCal
 
 
         geocoder = new Geocoder(this);
-        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.notification_map);
+        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.disaster_Detail_map);
         mapFragment.getMapAsync((OnMapReadyCallback) Disaster_Details.this);
     }
 
@@ -79,7 +85,7 @@ public class Disaster_Details extends AppCompatActivity implements OnMapReadyCal
         Toast.makeText(this, "map is ready", Toast.LENGTH_SHORT).show();
         LatLng latLng = null;
         try {
-            latLng = new LatLng(Authorized_ActiveDisasters.latitude, Authorized_ActiveDisasters.longtitude);
+            latLng = new LatLng(Double.parseDouble(Authorized_ActiveDisasters.disasterlatitude), Double.parseDouble(Authorized_ActiveDisasters.disasterlongitude));
             Marker marker = mMap.addMarker(new MarkerOptions().position(latLng).title("Enkaz Noktasi").draggable(true));
             mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 10));
         } catch (Exception e) {
@@ -120,7 +126,20 @@ public class Disaster_Details extends AppCompatActivity implements OnMapReadyCal
                 JSONObject json = new JSONObject();
                 for (JSONObject x : list2) {
                     try {
-                        if (x.getString("disasterID").equals(tmp.trim())) {
+                        System.out.println(tmp.trim()+"**************************************************");
+                        if (x.getString("subpartID").equals(tmp.trim())) {
+                            subpartID=x.getInt("subpartID");
+                            disID=Authorized_ActiveDisasters.disasterID;
+                            subpartlatitude=x.getString("latitude");
+                            subpartlongitude=x.getString("longitude");
+                            subpartAdres=x.getString("address");
+                            missingPerson=x.getString("missingPerson");
+                            rescuedPerson=x.getString("rescuedPerson");
+                            isOpenForVolunteer=x.getString("isOpenForVolunteers");
+                            subpartName=x.getString("subpartName");
+                            status=x.getString("status");
+                            level=x.getString("emergencyLevel");
+                            disname=Authorized_ActiveDisasters.disasterName;
                             json = x;
                         }
                     } catch (JSONException e) {

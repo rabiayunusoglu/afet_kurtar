@@ -60,8 +60,8 @@ public class DisasterCreate extends AppCompatActivity implements OnMapReadyCallb
     EditText afetName, latitude, longtitude;
     static Double latitudeMap,logtitudeMap;
     Button gonder,geri;
-    static String afetTipi, afetussu;
-    static String level;
+    static String afetTipi="", afetussu="";
+    static String level="";
     static int indexType, indexbase, indexlevel;
 
 
@@ -79,6 +79,7 @@ public class DisasterCreate extends AppCompatActivity implements OnMapReadyCallb
         loadSpinnerDataAfetType();
         loadSpinnerEmergencyLevel();
         afetName = findViewById(R.id.disasterNameBtn);
+        afetName.setText(afetussu+" "+afetTipi+" "+"Bölgesi");
         gonder = findViewById(R.id.afetolusturBTN);
         geri=findViewById(R.id.disaster_create_geri_button);
         /*
@@ -114,6 +115,7 @@ public class DisasterCreate extends AppCompatActivity implements OnMapReadyCallb
                 JSONObject obj = new JSONObject();
                 try {
 //Get current date time
+                    afetName.setText(afetussu+" "+afetTipi+" "+"Bölgesi");
                     System.out.println("*********************************************************************");
                     System.out.println(afetTipi+"***********"+level+"**********"+afetussu);
                     System.out.println("*********************************************************************");
@@ -222,9 +224,6 @@ public class DisasterCreate extends AppCompatActivity implements OnMapReadyCallb
 
                 LatLng latLng = new LatLng(doubleDataLatitude, doubleDataLongitude);
 
-                ((EditText)(findViewById(R.id.afet_latitude))).setText(dataLatitude);
-                ((EditText)(findViewById(R.id.afet_longitude))).setText(dataLongitude);
-
                 Marker dataMarker = mMap.addMarker(new MarkerOptions().position(latLng));
                 mMap.setInfoWindowAdapter(new CustomInfoWindowAdapter(DisasterCreate.this));
                 mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng,13));
@@ -327,6 +326,7 @@ public class DisasterCreate extends AppCompatActivity implements OnMapReadyCallb
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 afetussu = adapterAfetBase.getItem(position).toString();
+                afetName.setText(afetussu+" "+afetTipi+" "+"Bölgesi");
                 try {
                     setMapLocation();
                 }catch (Exception e){
@@ -381,12 +381,14 @@ public class DisasterCreate extends AppCompatActivity implements OnMapReadyCallb
         adapterAfetType.add("Sel");
         adapterAfetType.add("Heyelan");
         adapterAfetType.add("Çığ");
+        adapterAfetType.add("COVID-19");
         afetTypeSpinner.setAdapter(adapterAfetType);
         afetTypeSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
 
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 afetTipi = adapterAfetType.getItem(position).toString();
+                afetName.setText(afetussu+" "+afetTipi+" "+"Bölgesi");
                 indexType = position;
                 Toast.makeText(getApplicationContext(), afetTipi, Toast.LENGTH_SHORT).show();
             }
@@ -420,9 +422,14 @@ public class DisasterCreate extends AppCompatActivity implements OnMapReadyCallb
                 if(addressList.size() > 0){
                     Address address = addressList.get(0);
                     LatLng latLng = new LatLng(address.getLatitude(), address.getLongitude());
+
                     Marker mMarker = mMap.addMarker(new MarkerOptions().position(latLng).title("Burası "+ location));
                     mMap.setInfoWindowAdapter(new CustomInfoWindowAdapter(DisasterCreate.this));
                     mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng,10));
+                    latitudeMap=address.getLatitude();
+                    logtitudeMap=address.getLongitude();
+                    ((EditText)(findViewById(R.id.latitudeBtn))).setText(latitudeMap+"");
+                    ((EditText)(findViewById(R.id.longtitudeBtn))).setText(logtitudeMap+"");
                 }else{
                     //Log.d(TAG,"onMapReady: can not find this area!");
                 }
