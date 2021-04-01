@@ -24,6 +24,8 @@ $users->userType = isset($data["userType"]) ? $data["userType"] : "";
 $users->userName = isset($data["userName"]) ? $data["userName"] : "";
 $users->email = isset($data["email"]) ? $data["email"] : "";
 $users->createTime = isset($data["createTime"]) ? $data["createTime"] : "";
+$users->userToken = isset($data["userToken"]) ? $data["userToken"] : "";
+
 
 
 
@@ -55,6 +57,7 @@ if($num>0){
             "userName" => html_entity_decode($userName),
             "email" => $email,
             "createTime" => $createTime,
+            "userToken" => $userToken
         );
  
         array_push($users_arr["records"], $users_item);

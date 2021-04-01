@@ -33,6 +33,8 @@ if(
     $users->userName = isset($data["userName"]) ? $data["userName"] : "";
     $users->email = isset($data["email"]) ? $data["email"] : "";
     $users->createTime = isset($data["createTime"]) ? $data["createTime"] : "";
+    $users->userToken = isset($data["userToken"]) ? $data["userToken"] : "";
+
     
  
     // create the product

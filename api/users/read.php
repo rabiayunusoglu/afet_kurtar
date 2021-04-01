@@ -38,7 +38,8 @@ if($num>0){
             "userType" => $userType,
             "userName" => $userName,
             "email" => $email,
-            "createTime" => $createTime
+            "createTime" => $createTime,
+            "userToken" => $userToken
         );
  
         array_push($users_arr["records"], $users_item);

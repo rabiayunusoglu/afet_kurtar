@@ -11,6 +11,7 @@ class Users{
     public $userName;
     public $email;
     public $createTime;
+    public $userToken;
  
     // constructor with $db as database connection
     public function __construct($db){
@@ -21,7 +22,7 @@ class Users{
  
         // select all query
         $query = "SELECT
-                    userID, userType, userName, email, createTime
+                    userID, userType, userName, email, createTime, userToken
                 FROM
                     " . $this->table_name . " ";
      
@@ -40,7 +41,7 @@ class Users{
         $query = "INSERT INTO
                     " . $this->table_name . "
                 SET
-                    userType=:userType, userName=:userName, email=:email";
+                    userType=:userType, userName=:userName, email=:email, userToken=:userToken";
      
         // prepare query
         $stmt = $this->conn->prepare($query);
@@ -49,12 +50,14 @@ class Users{
         $this->userType=htmlspecialchars(strip_tags($this->userType));
         $this->userName=htmlspecialchars(strip_tags($this->userName));
         $this->email=htmlspecialchars(strip_tags($this->email));
+        $this->userToken=htmlspecialchars(strip_tags($this->userToken));
     
      
         // bind values
         $stmt->bindParam(":userType", $this->userType);
         $stmt->bindParam(":userName", $this->userName);
         $stmt->bindParam(":email", $this->email);
+        $stmt->bindParam(":userToken", $this->userToken);
     
      
         // execute query
@@ -69,7 +72,7 @@ class Users{
     function search(){
         // select all query
         $query = "SELECT
-                    userID, userType, userName, email, createTime
+                    userID, userType, userName, email, createTime, userToken
                 FROM
                     " . $this->table_name . "
                 WHERE
@@ -77,7 +80,8 @@ class Users{
                     AND (userType = :userType OR :userType = '') 
                     AND (userName = :userName OR :userName = '') 
                     AND (email = :email OR :email = '') 
-                    AND (createTime = :createTime OR :createTime = '')";
+                    AND (createTime = :createTime OR :createTime = '')
+                    AND (userToken = :userToken OR :userToken = '')";
      
         // prepare query statement
         $stmt = $this->conn->prepare($query);
@@ -89,7 +93,8 @@ class Users{
         $this->userName=htmlspecialchars(strip_tags($this->userName));
         $this->email=htmlspecialchars(strip_tags($this->email));
         $this->createTime=htmlspecialchars(strip_tags($this->createTime));
-    
+        $this->userToken=htmlspecialchars(strip_tags($this->userToken));
+
      
         // bind values
         $stmt->bindParam(":userID", $this->userID);
@@ -97,6 +102,8 @@ class Users{
         $stmt->bindParam(":userName", $this->userName);
         $stmt->bindParam(":email", $this->email);
         $stmt->bindParam(":createTime", $this->createTime);
+        $stmt->bindParam(":userToken", $this->userToken);
+
      
         // execute query
         $stmt->execute();
@@ -130,7 +137,7 @@ class Users{
         $query = "UPDATE
                     " . $this->table_name . "
                 SET
-                    userType=:userType, userName=:userName, email=:email
+                    userType=:userType, userName=:userName, email=:email, userToken=:userToken
                 WHERE
                     userID=:userID";
     
@@ -143,6 +150,8 @@ class Users{
         $this->userName=htmlspecialchars(strip_tags($this->userName));
         $this->email=htmlspecialchars(strip_tags($this->email));
         $this->createTime=htmlspecialchars(strip_tags($this->createTime));
+        $this->userToken=htmlspecialchars(strip_tags($this->userToken));
+
      
         // bind values
         $stmt->bindParam(":userID", $this->userID);
@@ -150,6 +159,8 @@ class Users{
         $stmt->bindParam(":userName", $this->userName);
         $stmt->bindParam(":email", $this->email);
         $stmt->bindParam(":createTime", $this->createTime);
+        $stmt->bindParam(":userToken", $this->userToken);
+
     
     
         // execute the query

@@ -32,6 +32,7 @@ if(
     $users->userType = isset($data["userType"]) ? $data["userType"] : "";
     $users->userName = isset($data["userName"]) ? $data["userName"] : "";
     $users->email = isset($data["email"]) ? $data["email"] : "";
+    $users->userToken = isset($data["userToken"]) ? $data["userToken"] : "";
  
     // create the product
     if($users->create()){
