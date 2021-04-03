@@ -31,10 +31,12 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 
 public class Create_Subpart_On_Map extends AppCompatActivity implements OnMapReadyCallback {
-    private static final String TAG = "Create_Disaster_Event_On_Map";
+    private static final String TAG = "Create_Subpart_On_Map";
     RequestQueue queue;
     JSONObject data = new JSONObject();
     private GoogleMap mMap;
@@ -320,7 +322,7 @@ public class Create_Subpart_On_Map extends AppCompatActivity implements OnMapRea
 
                 if(!textAfetId.getText().equals("seçilmedi") && !isTextsAreEmpty() && !textAfetId.getText().equals("")){
                     getEditTextData();
-                    //sendDataToDB(); bunu yaz
+                    sendDataToDB();
                     reset(); // after create, reset stats
                 }else{
                     Toast.makeText(this, "Boş Kısımları Tamamlayınız!", Toast.LENGTH_SHORT).show();
@@ -434,7 +436,7 @@ public class Create_Subpart_On_Map extends AppCompatActivity implements OnMapRea
                 rescuedPerson = Integer.parseInt(editAfetRescuedPerson.getText().toString());
                 disasterStatus = editAfetStatus.getText().toString();
                 disasterEmergencyLevel = Integer.parseInt(editAfetEmergencyLevel.getText().toString());
-
+                
                 if (radioButtonIsOpenForVolunteers.getText().toString().equals("EVET")) {
                     isOpenForVolunteers = true;
                     stringIsOpenForVolunteers = "evet";
@@ -512,5 +514,51 @@ public class Create_Subpart_On_Map extends AppCompatActivity implements OnMapRea
             e.getMessage();
         }
 
+    }
+    public void sendDataToDB(){
+        JSONObject obj = new JSONObject();
+        try {
+            obj.put("subpartID", subpartID.toString());
+            obj.put("disasterID", disasterID.toString());
+            obj.put("address", address.toString());
+            String sendLatitude = "";
+            sendLatitude += latitude;
+            obj.put("latitude", sendLatitude);
+            String sendLongitude = "";
+            sendLongitude += longitude;
+            obj.put("longitude", sendLongitude);
+            String sendMissingPerson = "";
+            sendMissingPerson += missingPerson;
+            obj.put("missingPerson", missingPerson);
+            String sendRescuedPerson = "";
+            sendRescuedPerson += rescuedPerson;
+            obj.put("rescuedPerson", sendRescuedPerson);
+            String sendIsOpenForVolunteers ="";
+            sendIsOpenForVolunteers += isOpenForVolunteers;
+            obj.put("isOpenForVolunteers", sendIsOpenForVolunteers);
+            obj.put("subpartName", subpartName.toString());
+            obj.put("disasterName", disasterName.toString());
+            obj.put("status", disasterStatus.toString());
+            String sendDisasterEmergencyLevel = "";
+            sendDisasterEmergencyLevel += disasterEmergencyLevel;
+            obj.put("emergencyLevel", sendDisasterEmergencyLevel);
+
+        } catch (Exception e) {
+            e.getMessage();
+        }
+        JsonObjectRequest request = new JsonObjectRequest(Request.Method.POST, "https://afetkurtar.site/api/subpart/create.php", obj, new Response.Listener<JSONObject>() {
+            @Override
+            public void onResponse(JSONObject response) {
+                System.out.println(response.toString());
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                System.out.println(error);
+            }
+        });
+        queue.add(request);
+        Toast.makeText(this, "Afet parçası oluşturuldu.", Toast.LENGTH_LONG).show();
+        finish();
     }
 }//class end

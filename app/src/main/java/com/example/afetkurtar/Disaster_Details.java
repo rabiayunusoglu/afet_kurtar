@@ -49,7 +49,7 @@ public class Disaster_Details extends AppCompatActivity implements OnMapReadyCal
     static int k = 0;
     ArrayList<JSONObject> list2 = new ArrayList<JSONObject>();
     static ArrayList<JSONObject> subpartList = new ArrayList<JSONObject>();
-
+    static String selectedSubpartID = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,7 +58,6 @@ public class Disaster_Details extends AppCompatActivity implements OnMapReadyCal
         queue = Volley.newRequestQueue(this);
         findViewById(R.id.disaster_detail_geri_button).setOnClickListener(this::onClick);
         // findViewById(R.id.Create_new_Subpart).setOnClickListener(this::onClick);
-
         queue = Volley.newRequestQueue(this);
         list2 = new ArrayList<JSONObject>();
         getData("");
@@ -115,13 +114,19 @@ public class Disaster_Details extends AppCompatActivity implements OnMapReadyCal
                 //  finish();
                 break;
             case R.id.HistoryText:
-
                 TextView linear = (TextView) v.findViewById(R.id.HistoryText);
+                //System.out.println("What is in HistoryText ,Linear: " + linear.getText().toString());
                 String tmp = (String) linear.getText();
+                //System.out.println("What is in HistoryText ,tmp: " + tmp.toString());
                 tmp = tmp.substring(tmp.indexOf(" ") + 1, tmp.indexOf("İsim")).trim();
                 // tmp = tmp.substring(0,tmp.indexOf(" ")).trim(); // **************************************** MESAJI DEGISTIRIRSEN BURAYI AYARLA
                 // System.out.println(tmp);
-
+                try{
+                    selectedSubpartID = tmp.trim();
+                }catch (Exception e){
+                    e.getMessage();
+                }
+                //System.out.println("What is in HistoryText After String compute,tmp: " + tmp.toString());
                 Intent asd = new Intent(this, Disaster_Subpart.class);
                 JSONObject json = new JSONObject();
                 for (JSONObject x : list2) {

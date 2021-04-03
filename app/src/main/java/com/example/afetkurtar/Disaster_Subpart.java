@@ -10,10 +10,12 @@ import android.location.Geocoder;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
+
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.Button;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -49,10 +51,12 @@ public class Disaster_Subpart extends AppCompatActivity implements OnMapReadyCal
     ArrayList<JSONObject> list2 = new ArrayList<JSONObject>();
     static ArrayList<JSONObject> subpartList = new ArrayList<JSONObject>();
 
+    Button createTeamButton;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_disaster__subpart);
+
         diname = findViewById(R.id.subpartdisname);
         subname = findViewById(R.id.subpartname);
         adrs = findViewById(R.id.subpartaddres);
@@ -91,6 +95,22 @@ public class Disaster_Subpart extends AppCompatActivity implements OnMapReadyCal
         geocoder = new Geocoder(this);
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.subpart_map);
         mapFragment.getMapAsync((OnMapReadyCallback) Disaster_Subpart.this);
+
+
+        createTeamButton=findViewById(R.id.Assign_Team_Subpart);
+
+
+
+
+
+
+        createTeamButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(Disaster_Subpart.this, Authorized_Assign_Team.class);
+                startActivity(intent);
+            }
+        });
 
     }
 

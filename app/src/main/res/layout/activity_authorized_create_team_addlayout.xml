@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/create_team_layoutEk"
+    android:layout_width="match_parent"
+    android:layout_height="150dp"
+    android:orientation="vertical"
+    android:gravity="center_vertical"
+    android:layout_alignParentTop="true"
+    android:background="@drawable/text_round_background"
+    android:layout_marginLeft="10dp"
+    android:layout_marginRight="10dp"
+    >
+
+    <TextView
+        android:id="@+id/tv_availablePersonnel_create_team"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textColor="@color/black"
+        android:text="Uygun personellerin listesi:"
+        android:layout_gravity="center"
+        android:textSize="20dp"
+        android:layout_weight="1"
+        android:paddingLeft="30dp"
+        android:paddingRight="30dp">
+
+    </TextView>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="34dp"
+        android:layout_weight="0"
+        android:paddingLeft="16dp"
+        android:paddingRight="16dp">
+
+
+        <Spinner
+            android:id="@+id/create_team_availablePersonnelSpinner"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="#000"
+            android:background="#FFF"
+            android:layout_weight="1"></Spinner>
+
+    </LinearLayout>
+    <androidx.appcompat.widget.LinearLayoutCompat
+        android:id="@+id/AfetIsOpenForVolunteersLayout"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:orientation="vertical"
+        >
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingLeft="16dp"
+            android:text="Eklenecek üyenin rolünü seçiniz:"
+            android:textColor="@color/black"
+            android:textSize="10sp" />
+
+        <RadioGroup
+            android:id="@+id/groupForTeamRole"
+            android:orientation="horizontal"
+            android:paddingLeft="90dp"
+            android:paddingRight="90dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center">
+            <RadioButton
+                android:id="@+id/btnforTeamRoleKaptan"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_weight="1"
+                android:text="Kaptan"
+                android:textSize="10sp"/>
+
+            <RadioButton
+                android:id="@+id/btnforTeamRoleNormal"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_weight="1"
+                android:text="Normal"
+                android:textSize="10sp"/>
+
+        </RadioGroup>
+    </androidx.appcompat.widget.LinearLayoutCompat>
+
+
+
+    <Space
+        android:layout_width="0dp"
+        android:layout_height="8dp"
+        android:layout_weight="1" >
+    </Space>
+
+
+</LinearLayout>

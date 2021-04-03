@@ -29,7 +29,9 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.AfetKurtar">
-        <activity android:name=".Authorized_AssignTeam"></activity>
+        <activity android:name=".Authorized_Assign_Team"></activity>
+        <activity android:name=".Authorized_Edit_Team" />
+        <activity android:name=".Authorized_Create_Team" />
         <activity android:name=".Disaster_Subpart" />
         <activity android:name=".Disaster_Update" />
         <activity android:name=".DisasterCreate" />
