@@ -48,6 +48,7 @@
             android:name="com.google.android.geo.API_KEY"
             android:value="${MAPS_API_KEY}" />
 
+
         <uses-library android:name="com.google.android.maps" />
 
         <activity android:name=".Volunteer_RegisterInfo" />

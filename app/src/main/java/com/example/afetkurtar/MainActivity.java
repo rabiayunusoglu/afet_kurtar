@@ -151,7 +151,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        System.out.println(tmp.toString() + "**********************************************************");
+     //   System.out.println(tmp.toString() + "**********************************************************");
         JsonObjectRequest request = new JsonObjectRequest(
                 Request.Method.POST, // the request method
                 "https://afetkurtar.site/api/users/update.php", // the URL

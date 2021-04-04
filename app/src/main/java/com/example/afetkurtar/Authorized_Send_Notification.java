@@ -60,70 +60,19 @@ public class Authorized_Send_Notification extends AppCompatActivity {
     }
 
     public void sendNotification(){
-        /*
-        {
-            "to" : "faek0BAUT26VTjq62mBs_v:APA91bEU0thQI4tGZ7hlt3HDYelRIlWTGYXswjsHBXfV3VVn2TLQyiI1vvjWNNG0VetwaUcWyzOjpV5x4uqObT45JxhGN0xqX_mPiO79hYgwuX5dKNvw7Ylxm93e0c5Jf9sEz1krK5iC",
-                "notification" : {
-            "body" : "Body of Your Notification",
-                    "title": "Title of Your Notification"
-        },
-            "data" : {
-            "body" : "Body of Your Notification in Data",
-                    "title": "Title of Your Notification in Title"
 
-        }
-        }
-*/
+        NotificationSender send = new NotificationSender(getApplicationContext());
         try {
-             String url = "https://fcm.googleapis.com/fcm/send";
-
-            JSONObject idler = new JSONObject();
-
-            idler.put("title", "Android Test Title");
-            idler.put("body", "Android Test Body");
-
-            JSONObject data = new JSONObject();
-
-            data.put("title", "Android Test Title");
-            data.put("body", "Android Test Body");
-
-            JSONObject data2 = new JSONObject();
-
-            data2.put("title", " DATA TITLE");
-            data2.put("body", "DATA BODY");
-
-            JSONObject notification_data = new JSONObject();
-            notification_data.put("notification", data);
-            notification_data.put("data", data2);
-            // notification_data.put("to",MainActivity.userInfo.getString("userToken"));
-            notification_data.put("to",MainActivity.userInfo.getString("userToken"));
-
-        JsonObjectRequest request = new JsonObjectRequest(url, notification_data, new Response.Listener<JSONObject>() {
-            @Override
-            public void onResponse(JSONObject response) {
-                System.out.println(response.toString());
-            }
-        }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                error.printStackTrace();
-            }
-        }) {
-            @Override
-            public Map<String, String> getHeaders() {
-                String api_key_header_value = "key=AAAA5VKNhzk:APA91bGhZd1yaXmsMFvgpRQFREmNFd92pPnFhdMfQuWe3WBnppWSFtFxZK9QmgLOqVz26gK9U507kZl9M7OAExkjaWJiNLj-NPHtF7JHKNBNFFWndBwvYrx4dcBKVE_chcZroUlqF_Jn";
-                Map<String, String> headers = new HashMap<>();
-                headers.put("Content-Type", "application/json");
-                headers.put("Authorization", api_key_header_value);
-                return headers;
-            }
-        };
-
-        queue.add(request);
+            System.out.println("SEND NOTIFICATION");
+            send.sendNotificationWithData(
+                    "Notification Title",
+                    "Notification Body",
+                    "Data Title",
+                    "DataBody",
+                    MainActivity.userInfo.getString("userToken"));
         } catch (JSONException e) {
             e.printStackTrace();
         }
-
 
     }
 
