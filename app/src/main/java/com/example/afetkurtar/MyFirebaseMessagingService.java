@@ -86,7 +86,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
                       }
                     }
          */
-
+        System.out.println( "Message data payload: " + remoteMessage.getData());
 
         if (remoteMessage.getData().size() > 0) {  // Eger Data varsa ( sadece notification degil)
             Log.d(TAG, "Message data payload: " + remoteMessage.getData());
@@ -139,7 +139,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
 
         NotificationCompat.Builder builder = new NotificationCompat.Builder(this, "my_channel_01")
                 .setSmallIcon(R.mipmap.ic_launcher)
-                .setContentTitle("FCM Message  TETETEST")
+                .setContentTitle("App acik notification")
                 .setContentText(messageBody + "  " + a + "  " + b);
 
         Intent resultIntent = new Intent(this, MainActivity.class);

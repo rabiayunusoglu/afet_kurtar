@@ -437,37 +437,31 @@ public class Personel_Progress extends AppCompatActivity  {
     }
 
 
-    public void ClickAnasayfa(View view) {
-        //redirect activity to dashboard
-        redirectActivity(this, Volunteer_Anasayfa.class );
+    public void ClickTeamManagement(View view) {
+
     }
 
-
-    public void ClickParticipateRequest(View view) {
-        //redirect activity to volunter
-        redirectActivity(this, Volunteer_ParticipateRequest.class );
+    public void CliackPersonelNotification(View view) {
+        //  redirectActivity(this, Authorized_Notification.class);
     }
 
-    public void ClickEmergency(View view) {
-        //redirect activity to emergency
-        redirectActivity(this, Volunteer_Emergency.class );
+    public void ClickPersonelInfo(View view) {
+        // redirectActivity(this, Authorized_PersonelRegister.class);
     }
-    public void ClickParticipateForm(View view) {
-        //redirect activity to emergency
-        redirectActivity(this, Volunteer_RegisterInfo.class );
+
+    public void ClşckPersonelArea(View view) {
+        // redirectActivity(this, Authorized_Notification.class);
     }
-    public void ClickExit(View view) {
-        //redirect activity to main screen
+
+    // CIKIS
+    public void ClickPersonelExit(View view) {
         signOut();
         redirectActivity(this, MainActivity.class );
     }
-    public void ClickPersonel(View view) {
-        //redirect activity to main screen
-        redirectActivity(this, Personel_Progress.class );
-    }
-    public void ClickAfetBolgesi(View view) {
-        //redirect activity to main screen
-        redirectActivity(this, Afet_Bolgesi.class );
+    // ANA SAYFA
+    public void ClickPersonelAnasayfa(View view) {
+
+        redirectActivity(this, Personel_Anasayfa.class );
     }
 
     public static void redirectActivity(Activity activity, Class aClass) {

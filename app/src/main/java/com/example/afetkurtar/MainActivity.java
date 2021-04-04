@@ -24,12 +24,15 @@ import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.gms.common.SignInButton;
 import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
+import com.google.firebase.iid.FirebaseInstanceId;
+import com.google.firebase.messaging.FirebaseMessaging;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -61,6 +64,16 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         queue = Volley.newRequestQueue(this);
 
+        System.out.println( FirebaseInstanceId.getInstance().getToken() + "**********************************");
+        /*
+        FirebaseMessaging.getInstance().getToken().addOnSuccessListener(new OnSuccessListener<String>() {
+            @Override
+            public void onSuccess(String s) {
+                System.out.println(s + "*****************************************************************");
+            }
+        });
+        
+         */
     }
 
     private void checkUser(GoogleSignInAccount account) {
@@ -79,30 +92,41 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         //  System.out.println("response dönüyor");
                         System.out.println(response.toString());
 
-
+                        JSONObject tmpJson = null;
                         String type = "";
                         try {
                             String cevap = response.getString("records");
                             cevap = cevap.substring(1, cevap.length() - 1);
-                            JSONObject tmpJson = new JSONObject(cevap);
+                            tmpJson = new JSONObject(cevap);
                             userInfo = new JSONObject(cevap);
                             userID=Integer.parseInt(userInfo.getString("userID"));
                             type = tmpJson.getString("userType");
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
-                        // ****************************************************************************************** TEST ICIN USER TYPE AYARLAMA YERI
-                        type = "authorizedUser";
-                        // ****************************************************************************************** TEST ICIN USER TYPE AYARLAMA YERI
-                        Intent intentLogin;
-                        if (type.equals("authorizedUser")) {
-                            intentLogin = new Intent(MainActivity.this, Authorized_Anasayfa.class);
-                        } else if (type.equals("personnelUser")) {
-                            intentLogin = new Intent(MainActivity.this, Personel_Anasayfa.class);
-                        } else {
-                            intentLogin = new Intent(MainActivity.this, Volunteer_Anasayfa.class);
+                        try {
+                            if(tmpJson.getString("userToken").equals(FirebaseInstanceId.getInstance().getToken())){
+                                // ****************************************************************************************** TEST ICIN USER TYPE AYARLAMA YERI
+                                type = "authorizedUser";
+                                // ****************************************************************************************** TEST ICIN USER TYPE AYARLAMA YERI
+                                Intent intentLogin;
+                                if (type.equals("authorizedUser")) {
+                                    intentLogin = new Intent(MainActivity.this, Authorized_Anasayfa.class);
+                                } else if (type.equals("personnelUser")) {
+                                    intentLogin = new Intent(MainActivity.this, Personel_Anasayfa.class);
+                                } else {
+                                    intentLogin = new Intent(MainActivity.this, Volunteer_Anasayfa.class);
+                                }
+                                startActivity(intentLogin);
+                            }
+                            else{
+                                updateUser(tmpJson);
+                            }
+
+                        } catch (JSONException e) {
+                            e.printStackTrace();
                         }
-                        startActivity(intentLogin);
+
                     }
                 },
                 new Response.ErrorListener() { // the error listener
@@ -114,6 +138,63 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         queue.add(request);
     }
 
+    public void updateUser(JSONObject obj){
+
+    JSONObject tmp = new JSONObject();
+        try {
+            tmp.put("userID",obj.getString("userID"));
+            tmp.put("userType",obj.getString("userType"));
+            tmp.put("userName",obj.getString("userName"));
+            tmp.put("email",obj.getString("email"));
+            tmp.put("createTime",obj.getString("createTime"));
+            tmp.put("userToken", FirebaseInstanceId.getInstance().getToken());
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        System.out.println(tmp.toString() + "**********************************************************");
+        JsonObjectRequest request = new JsonObjectRequest(
+                Request.Method.POST, // the request method
+                "https://afetkurtar.site/api/users/update.php", // the URL
+                tmp, // the parameters for the php
+                new Response.Listener<JSONObject>() { // the response listener
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        System.out.println(response.toString());
+                        String type = "";
+                        try {
+                            type = obj.getString("userType");
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                        // *************************************************************************** TEST ICIN USER TYPE AYARLAMA YERI (UPDATE DURUMU)
+                        type = "authorizedUser";
+                        // **************************************************************************** TEST ICIN USER TYPE AYARLAMA YERI (UPDATE DURUMU)
+                        Intent intentLogin;
+                        if (type.equals("authorizedUser")) {
+                            intentLogin = new Intent(MainActivity.this, Authorized_Anasayfa.class);
+                        } else if (type.equals("personnelUser")) {
+                            intentLogin = new Intent(MainActivity.this, Personel_Anasayfa.class);
+                        } else {
+                            intentLogin = new Intent(MainActivity.this, Volunteer_Anasayfa.class);
+                        }
+                        startActivity(intentLogin);
+
+                    }
+                },
+                new Response.ErrorListener() { // the error listener
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        System.out.println(error.getMessage());
+
+                        error.printStackTrace();
+
+                    }
+                });
+        queue.add(request);
+
+    }
+
+
     public void addUser(GoogleSignInAccount account) {
         String url = "https://afetkurtar.site/api/users/create.php";
 
@@ -121,6 +202,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         params.put("userType", "volunteerUser");
         params.put("userName", account.getDisplayName());
         params.put("email", account.getEmail());
+        params.put("userToken", FirebaseInstanceId.getInstance().getToken());
 
         JsonObjectRequest request = new JsonObjectRequest(
                 Request.Method.POST, // the request method
@@ -140,7 +222,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 new Response.ErrorListener() { // the error listener
                     @Override
                     public void onErrorResponse(VolleyError error) {
-                        System.out.println(error.getStackTrace());
+                        System.out.println(error);
 
                     }
                 });

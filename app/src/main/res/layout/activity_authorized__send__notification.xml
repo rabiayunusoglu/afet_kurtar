@@ -5,7 +5,7 @@
     android:id="@+id/drawer_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-   >
+    >
 
 
     <LinearLayout
@@ -20,53 +20,11 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:text="Personel Gelişme Bildirimi ve Destek"
+            android:text="Bildirim Gönderme Aracı"
             android:textColor="#050505"
             android:textSize="15sp"
             android:textStyle="bold" />
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/white"
-        android:orientation="vertical"
-        android:paddingLeft="30dp"
-        android:paddingRight="30dp"
-        >
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:background="@color/white"
-            android:text="En Son Durum :"
-            android:textColor="#050505"
-            android:textSize="15sp"
-            android:textStyle="bold" />
-        <TextView
-            android:id="@+id/personel_current_status"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Yok"
-            android:layout_gravity="center"
-            android:background="@color/white"
-            android:textColor="#050505"
-            android:textSize="18sp"
-            android:textStyle="bold" />
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Talep Edilmiş İşgücü Desteği :"
-            android:textColor="#050505"
-            android:textSize="15sp"
-            android:textStyle="bold" />
-        <TextView
-            android:id="@+id/personel_current_needManPower"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Yok"
-            android:layout_gravity="center"
-            android:textColor="#050505"
-            android:textSize="18sp"
-            android:textStyle="bold" />
-    </LinearLayout>
+
         <TextView
             android:id="@+id/text1"
             android:layout_width="match_parent"
@@ -75,7 +33,7 @@
             android:layout_marginLeft="36dp"
             android:layout_marginTop="30dp"
             android:background="@color/white"
-            android:text="Afet Bolgesi Durum Güncelleme :"
+            android:text="Bildirim Başlığı :"
             android:textColor="@color/black"
             android:textSize="18sp"
             app:layout_constraintBottom_toTopOf="parent"
@@ -85,7 +43,7 @@
 
 
         <EditText
-            android:id="@+id/updateProgress"
+            android:id="@+id/NotificationHeader"
             android:layout_width="match_parent"
             android:layout_height="60dp"
             android:scrollbars="vertical"
@@ -105,7 +63,7 @@
             android:layout_marginLeft="36dp"
             android:layout_marginTop="30dp"
             android:background="@color/white"
-            android:text="Talep Edilen Ek İnsan Gücü :"
+            android:text="Bildirim İçeriği :"
             android:textColor="@color/black"
             android:textSize="18sp"
             app:layout_constraintBottom_toTopOf="parent"
@@ -115,7 +73,7 @@
 
 
         <EditText
-            android:id="@+id/updateManpower"
+            android:id="@+id/NotificationBody"
             android:layout_width="match_parent"
             android:layout_height="60dp"
             android:scrollbars="vertical"
@@ -128,78 +86,23 @@
             app:layout_constraintVertical_bias="0.647" />
 
 
-        <LinearLayout
-            android:layout_width="480dp"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
 
-            <TextView
-                android:id="@+id/text3"
-                android:layout_width="129dp"
-                android:layout_height="26dp"
-                android:layout_marginStart="36dp"
-                android:layout_marginLeft="36dp"
-                android:layout_marginTop="30dp"
-                android:background="@color/white"
-                android:text="Miktarı :"
-                android:textColor="@color/black"
-                android:textSize="18sp" />
 
-            <TextView
-                android:id="@+id/text4"
-                android:layout_width="98dp"
-                android:layout_height="26dp"
-                android:layout_marginStart="36dp"
-                android:layout_marginLeft="50dp"
-                android:layout_marginTop="30dp"
-                android:layout_toRightOf="@id/text3"
-                android:background="@color/white"
-                android:text="Ekipman :"
-                android:textColor="@color/black"
-                android:textSize="18sp"
-                android:layout_marginHorizontal="20dp"/>
 
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="480dp"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
-
-            <EditText
-                android:id="@+id/updateEquipment"
-                android:layout_width="158dp"
-                android:layout_height="60dp"
-                android:ems="10"
-                android:inputType="number"
-                android:scrollbars="vertical"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintVertical_bias="0.647" />
-
-            <Spinner
-                android:id="@+id/listOfEquipment"
-                android:layout_width="246dp"
-                android:layout_height="match_parent"
-                android:layout_marginHorizontal="0.9dp"
-                />
-        </LinearLayout>
 
         <LinearLayout
             android:layout_width="480dp"
             android:layout_height="wrap_content"
             android:orientation="horizontal">
             <Button
-                android:id="@+id/UpdateButton"
+                android:id="@+id/SendNotificationButton"
                 android:layout_width="150dp"
                 android:layout_height="46dp"
                 android:layout_marginStart="36dp"
                 android:layout_marginLeft="36dp"
                 android:layout_marginTop="30dp"
                 android:background="@color/white"
-                android:text="İstek Oluştur Güncelle"
+                android:text="Bildirim Gönder"
                 android:textColor="@color/black"
                 android:textSize="11sp"
                 app:backgroundTint="#5AE311"
@@ -208,22 +111,7 @@
                 app:layout_constraintTop_toBottomOf="parent"
                 app:layout_constraintVertical_bias="0.5" />
 
-            <Button
-                android:id="@+id/HistoryButton"
-                android:layout_width="150dp"
-                android:layout_height="46dp"
-                android:layout_marginStart="36dp"
-                android:layout_marginLeft="36dp"
-                android:layout_marginTop="30dp"
-                android:background="@color/white"
-                android:text="Durum Geçmişi"
-                android:textColor="@color/black"
-                android:textSize="11sp"
-                app:backgroundTint="#0CA8E4"
-                app:layout_constraintBottom_toTopOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="parent"
-                app:layout_constraintVertical_bias="0.5" />
+
 
         </LinearLayout>
 
@@ -267,7 +155,7 @@
         android:layout_gravity="start"
         android:background="@color/white">
 
-        <include layout="@layout/activity_personel_nav_drawer" />
+        <include layout="@layout/activity_authorized_nav_drawer" />
 
     </RelativeLayout>
 

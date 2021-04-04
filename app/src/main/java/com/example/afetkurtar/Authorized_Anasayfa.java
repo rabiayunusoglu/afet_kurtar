@@ -102,6 +102,10 @@ public class Authorized_Anasayfa extends AppCompatActivity {
         signOut();
         redirectActivity(this, MainActivity.class );
     }
+    public void ClickNotificationSend(View view) {
+        redirectActivity(this, Authorized_Send_Notification.class );
+    }
+
     // ANA SAYFA
     public void ClickAuthAnasayfa(View view) {
         // ZATEN BU SAYFADA OLDUGUNDAN KAPALI

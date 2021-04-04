@@ -51,16 +51,10 @@ public class Authorized_Notification extends AppCompatActivity {
         getData("");
     }
     public void getData(String ID) {
-        JSONObject obj = new JSONObject();
-        try {
-            obj.put("teamID", ID);
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-        // ASAGISI DEGISECEK -- TEST AMACLI YAPILDI
+
 
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest
-                (Request.Method.POST, "https://afetkurtar.site/api/notice/search.php", obj, new Response.Listener<JSONObject>() {
+                (Request.Method.POST, "https://afetkurtar.site/api/notice/read.php", null, new Response.Listener<JSONObject>() {
 
                     @Override
                     public void onResponse(JSONObject response) {
