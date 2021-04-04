@@ -213,8 +213,8 @@
             android:text="Uygun Personel Ekle"
             android:textSize="8dp"
             android:textColor="#FFF"
+            android:background="#6464"
             android:layout_weight="1"
-            android:background="#1212"
             android:textStyle="bold"
             android:id="@+id/btn_editTeam_addPersonnel">
         </Button>
@@ -229,10 +229,11 @@
             android:layout_height="match_parent"
             android:text="Takım Personeli Çıkar"
             android:textSize="8dp"
-            android:background="#1212"
+            android:textColor="#FFF"
+            android:background="#6464"
             android:layout_weight="1"
             android:textStyle="bold"
-            android:textColor="#FFF"
+
             android:id="@+id/btn_editTeam_removePersonnel">
         </Button>
 

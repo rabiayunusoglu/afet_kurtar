@@ -1,6 +1,7 @@
 package com.example.afetkurtar;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -24,6 +25,7 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
@@ -42,6 +44,10 @@ public class Authorized_Create_Team extends AppCompatActivity {
     private ArrayList<String> selectedPersonnelListWithID = new ArrayList<String>();
     private ArrayList<String> selectedPersonnelListWithRole = new ArrayList<String>();
 
+    private ArrayList<String> afterCreateTeamStringList = new ArrayList<String>();
+
+    private ArrayList<JSONObject> availablePersonnelObjectList = new ArrayList<JSONObject>();
+
     JSONObject data = new JSONObject();
     ArrayAdapter adapter;
     private static String personnelID = "";
@@ -52,6 +58,7 @@ public class Authorized_Create_Team extends AppCompatActivity {
 
 
     ArrayList<JSONObject> jsonObjectList = new ArrayList<JSONObject>();
+    //ArrayList<JSONObject> jsonObjectListForTeam = new ArrayList<JSONObject>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,6 +67,7 @@ public class Authorized_Create_Team extends AppCompatActivity {
         queue = Volley.newRequestQueue(this);
         findViewById(R.id.btn_createTeam_calculateHowManyMember).setOnClickListener(this::onClick);
         findViewById(R.id.btn_createTeam_Create).setOnClickListener(this::onClick);
+        findViewById(R.id.btn_returnTo_assignTeam).setOnClickListener(this::onClick);
 
     }
     public void onClick(View v) {
@@ -87,6 +95,14 @@ public class Authorized_Create_Team extends AppCompatActivity {
                     //deneme5();
                     //deneme6();
                     createTeamWithSelectedPersonnels();
+                }catch (Exception e){
+                    e.getMessage();
+                }
+                break;
+            case R.id.btn_returnTo_assignTeam:
+                try{
+                    //burada team id yi assign sayfasındaki spinner a bir şekilde ekleyelim
+                    openTeamAssignPage();
                 }catch (Exception e){
                     e.getMessage();
                 }
@@ -273,9 +289,103 @@ public class Authorized_Create_Team extends AppCompatActivity {
         */
 
     }
-    public void createTeamWithGivenInformationToDB(){
+    ////////////////////////////////////////////////
+    public void findCreatedTeamID(){
+        readFromTeamTable();
 
-        //finish();
+
+
+    }
+    public void readFromTeamTable() {
+        //System.out.println("is it in here Read From table ?");
+        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest
+                (Request.Method.GET, "https://afetkurtar.site/api/team/read.php", null, new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        try {
+                            //  System.out.println(response.toString());
+                            handleResponseForTeamTable(response);
+
+                            if(Authorized_Assign_Team.teamStringListSize == afterCreateTeamStringList.size()){
+                               // System.out.println("is it in here =????? Ifffff");
+                               // System.out.println("teamStringListSize : " + Authorized_Assign_Team.teamStringListSize);
+                                createdTeamID = "0";
+                            }else{
+                               // System.out.println("is it in here =????? Elseeeee");
+                                // db de ıd ne olursa olsun hep son eleman
+                                // olarak eklenicek gibi olduğundan okuduğum verilerde en son elemanın team id sini team id olarak belirlerim
+                                createdTeamID = afterCreateTeamStringList.get(afterCreateTeamStringList.size()-1);
+                                //System.out.println("createdTeamID was updated :" + createdTeamID);
+                            }
+
+                            /// team id üretildi şimdi bu team id kullanılarak üyelerin assigned team id lerini burada güncelle
+                            updateNewPersonnelsTeamID();
+
+
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }, new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        // TODO: Handle error
+                        System.out.println(error);
+                    }
+                });
+        queue.add(jsonObjectRequest);
+        /*
+        if(Authorized_Assign_Team.teamStringListSize == afterCreateTeamStringList.size()){
+            System.out.println("is it in here =????? Ifffff");
+            System.out.println("teamStringListSize : " + Authorized_Assign_Team.teamStringListSize);
+            createdTeamID = "0";
+        }else{
+            System.out.println("is it in here =????? Elseeeee");
+            // db de ıd ne olursa olsun hep son eleman
+            // olarak eklenicek gibi olduğundan okuduğum verilerde en son elemanın team id sini team id olarak belirlerim
+            createdTeamID = afterCreateTeamStringList.get(afterCreateTeamStringList.size()-1);
+            System.out.println("createdTeamID was updated :" + createdTeamID);
+        }
+
+        */
+    }
+
+    public void handleResponseForTeamTable(JSONObject a) {
+        //System.out.println("is it in here responsehandle teamtable ?");
+        ArrayList<String> list = new ArrayList<String>();
+        try {
+            //    System.out.println(response.toString());
+            String cevap = a.getString("records");
+            cevap = cevap.substring(1, cevap.length() - 1);
+
+            while (cevap.indexOf(",{") > -1) {
+                list.add(cevap.substring(0, cevap.indexOf(",{")));
+                cevap = cevap.substring(cevap.indexOf(",{") + 1);
+            }
+            list.add(cevap);
+
+            afterCreateTeamStringList.add("Takım Seçin");
+
+            for (String x : list) {
+                try {
+                    JSONObject tmp = new JSONObject(x);
+                    //System.out.println("tmp.getString ===============???? : " + tmp.getString("teamID"));
+                    afterCreateTeamStringList.add(tmp.getString("teamID"));
+                    //jsonObjectListForTeam.add(tmp);
+                } catch (Exception e) {
+                    // e.printStackTrace();
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }// handle response end
+    /////////////////////////////////////////////////////////////////////for find Team ID
+    public void createTeamWithGivenInformationToDB(){
+        //create a team
+        sendTeamTableDataToDB();
+        //to specify createdTeamID
+
     }
     public void updatePersonnelUserDataToDB(){
 
@@ -294,7 +404,19 @@ public class Authorized_Create_Team extends AppCompatActivity {
         JsonObjectRequest request = new JsonObjectRequest(Request.Method.POST, "https://afetkurtar.site/api/team/create.php", obj, new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
-                System.out.println(response.toString());
+                //rintln("OnResponse output : " + response.toString());
+               // System.out.println("before findeCreated ?");
+                findCreatedTeamID();
+
+                //System.out.println("after findeCreated ?");
+
+                //addTeamIDToAssignTeamSpinner();
+                //after create team, we need to update every personnel in this team with new roles and new assigned team id
+                //updatePersonnelUserDataToDB();
+
+                //finish();
+                //System.out.println("before openTeamAssignPage ?");
+                //openTeamAssignPage();
             }
         }, new Response.ErrorListener() {
             @Override
@@ -302,9 +424,22 @@ public class Authorized_Create_Team extends AppCompatActivity {
                 System.out.println(error);
             }
         });
+
         queue.add(request);
-        //Toast.makeText(this, "Takım oluşturuldu.", Toast.LENGTH_LONG).show();
+        Toast.makeText(this, "Takım oluşturuldu.", Toast.LENGTH_LONG).show();
+        //addTeamIDToAssignTeamSpinner();
         //finish();
+    }
+    /*
+    public void addTeamIDToAssignTeamSpinner(){
+
+    }
+    */
+
+    public void openTeamAssignPage(){
+        //System.out.println("is it in openTeamAssignPage ?");
+        Intent intent = new Intent(this, Authorized_Assign_Team.class);
+        startActivity(intent);
     }
     public boolean controlPersonnelListWithRole(){
         int captanCount = 0;
@@ -358,12 +493,12 @@ public class Authorized_Create_Team extends AppCompatActivity {
         }
 
         for(int i = 0; i< howMany; i++){
-            addPersonelAddViewToScroll();
+            addPersonnelAddViewToScroll();
         }
 
     }
 
-     public void addPersonelAddViewToScroll(){
+     public void addPersonnelAddViewToScroll(){
          LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
          View view = inflater.inflate(R.layout.activity_authorized_create_team_addlayout, null);
          scroll = findViewById(R.id.authorized_create_team_linearLayoutScroll);
@@ -386,11 +521,11 @@ public class Authorized_Create_Team extends AppCompatActivity {
 
                      for (JSONObject x : jsonObjectList) {
                          try {
-                             String personelIDPart = ((Spinner) findViewById(R.id.create_team_availablePersonnelSpinner)).getSelectedItem().toString();
-                             personelIDPart = findPersonnelID(personelIDPart);
-                             System.out.println("Personnel id " + personelIDPart);
-                             System.out.println("Personnel id ???????????????????????????????????????????????????????999" + personelIDPart);
-                             if (x.getString("personelID").equals(personelIDPart)) {
+                             String personnelIDPart = ((Spinner) findViewById(R.id.create_team_availablePersonnelSpinner)).getSelectedItem().toString();
+                             personnelIDPart = findPersonnelID(personnelIDPart);
+                             System.out.println("Personnel id " + personnelIDPart);
+                             System.out.println("Personnel id ???????????????????????????????????????????????????????999" + personnelIDPart);
+                             if (x.getString("personnelID").equals(personnelIDPart)) {
                                  personnelID = (((Spinner) findViewById(R.id.create_team_availablePersonnelSpinner)).getSelectedItem().toString());
                                  return;
                              }
@@ -453,7 +588,8 @@ public class Authorized_Create_Team extends AppCompatActivity {
                 try {
                     JSONObject tmp = new JSONObject(x);
                     if(tmp.getString("teamID").equals("0")){
-                        personnelAvailableStringList.add("PersonelID: " + tmp.getString("personnelID") +", Personnel İsmi: "+ tmp.getString("personnelName"));
+                        personnelAvailableStringList.add("PersonnelID: " + tmp.getString("personnelID") +", Personnel İsmi: "+ tmp.getString("personnelName"));
+                        availablePersonnelObjectList.add(tmp);
                     }
                     jsonObjectList.add(tmp);
                 } catch (Exception e) {
@@ -473,13 +609,68 @@ public class Authorized_Create_Team extends AppCompatActivity {
     }// handle response end
 
     public String findPersonnelID(String line){
-        if(line.indexOf("PersonelID:") != -1){
-            line = line.substring(11,line.indexOf(","));
+        if(line.indexOf("PersonnelID:") != -1){
+            line = line.substring(12,line.indexOf(","));
             line.trim();
             System.out.println("Test Line : " + line);
             return line;
         }
         return "";
+    }
+    public void updateNewPersonnelsTeamID(){
+        //burasi yeni personellerin team id lerinin güncellenmesi için
+        //System.out.println("bu methoda girdi mi update new personnel xxx");
+        //System.out.println("availablePersonnelObjectList.size():" + availablePersonnelObjectList.size());
+        //System.out.println("selectedPersonnelListWithID.size():" + selectedPersonnelListWithID.size());
+        for(int i = 0 ; i<availablePersonnelObjectList.size(); i++){
+            for(int j = 0 ; j < selectedPersonnelListWithID.size(); j++){
+                try {
+                   // System.out.println("available personnel ID : " + availablePersonnelObjectList.get(i).getString("personnelID"));
+                    //System.out.println("selected personnel ID : " + selectedPersonnelListWithID.get(j));
+                    if(availablePersonnelObjectList.get(i).getString("personnelID").trim().equalsIgnoreCase(selectedPersonnelListWithID.get(j).trim())){
+                      //  System.out.println("Update New Personnel team id and role icin for a girdi");
+                        updateTeamIDAndRole(availablePersonnelObjectList.get(i),selectedPersonnelListWithRole.get(j));
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+    }
+    /////////////////////////////
+    public void updateTeamIDAndRole(JSONObject myJsonObject,String role){
+        //System.out.println("jsonobject oluşturdu.");
+        JSONObject obj = new JSONObject();
+        try {
+            obj.put("personnelID", myJsonObject.getString("personnelID"));
+            obj.put("personnelName", myJsonObject.getString("personnelName"));
+            obj.put("personnelEmail", myJsonObject.getString("personnelEmail"));
+            obj.put("personnelRole", role);
+            obj.put("teamID", createdTeamID); // teamID set to 0 to clear assignment on team
+            obj.put("latitude", myJsonObject.getString("latitude"));
+            obj.put("longitude", myJsonObject.getString("longitude"));
+            obj.put("institution", myJsonObject.getString("institution"));
+            obj.put("locationTime", myJsonObject.getString("locationTime"));
+            //System.out.println("oluşturduğumuz objenin to stringi : " + obj.toString());
+
+        } catch (Exception e) {
+            e.getMessage();
+        }
+        JsonObjectRequest request = new JsonObjectRequest(Request.Method.POST, "https://afetkurtar.site/api/personnelUser/update.php", obj, new Response.Listener<JSONObject>() {
+            @Override
+            public void onResponse(JSONObject response) {
+                //System.out.println(response.toString());
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                System.out.println(error);
+            }
+        });
+        queue.add(request);
+        Toast.makeText(this, "Takım elemanlarının teamID leri güncellendi.", Toast.LENGTH_SHORT).show();
+        //finish();
+
     }
 
 

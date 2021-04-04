@@ -1,51 +1,178 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.drawerlayout.widget.DrawerLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="#BFBFBF"
     tools:context=".Authorized_Assign_Team">
+
+    <Space
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:layout_weight="0"></Space>
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:layout_height="40dp"
+        android:layout_weight="0"
+        android:paddingLeft="16dp"
+        android:paddingRight="16dp"
+        tools:ignore="MissingConstraints">
 
-        <include layout="@layout/activity_tool_bar"></include>
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:text="Takımı Düzenle"
+            android:textSize="8dp"
+            android:textColor="#FFF"
+            android:background="#6464"
+            android:layout_weight="1"
+            android:textStyle="bold"
+            android:id="@+id/btn_team_edit">
+        </Button>
 
-        <TextView
+        <Space
+            android:layout_width="20dp"
+            android:layout_height="match_parent"
+            android:layout_weight="0"></Space>
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:text="Takım Oluştur"
+            android:textSize="8dp"
+            android:textColor="#FFF"
+            android:background="#6464"
+            android:layout_weight="1"
+            android:textStyle="bold"
+            android:id="@+id/btn_team_create">
+        </Button>
+
+    </LinearLayout>
+
+    <Space
+        android:layout_width="match_parent"
+        android:layout_height="30dp"
+        android:layout_weight="0"></Space>
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Subpart ID:"
+        android:paddingLeft="16dp"
+        android:textColor="#000"
+        android:textStyle="bold"
+        android:textSize="16sp">
+    </TextView>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="34dp"
+        android:layout_weight="0"
+        android:paddingLeft="16dp"
+        android:paddingRight="16dp"
+        tools:ignore="MissingConstraints">
+
+
+        <Spinner
+            android:id="@+id/assignSubpartSpinner"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:text="Takım Ataması"
             android:textColor="#000"
-            android:textSize="15sp"
-            android:textStyle="bold" />
-
+            android:background="#FFF"
+            android:layout_weight="1"></Spinner>
 
     </LinearLayout>
-    <LinearLayout
-        android:layout_width="wrap_content"
+    <Space
+        android:layout_width="match_parent"
+        android:layout_height="30dp"
+        android:layout_weight="0"></Space>
+    <TextView
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:text="Takım ID:"
+        android:paddingLeft="16dp"
+        android:textColor="#000"
+        android:textStyle="bold"
+        android:textSize="16sp">
+    </TextView>
 
-        <include layout="@layout/activity_tool_assign_team"></include>
-
-    </LinearLayout>
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:layout_height="34dp"
+        android:layout_weight="0"
+        android:paddingLeft="16dp"
+        android:paddingRight="16dp"
+        tools:ignore="MissingConstraints">
+
+
+        <Spinner
+            android:id="@+id/assignTeamSpinner"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="#000"
+            android:background="#FFF"
+            android:layout_weight="1"></Spinner>
 
     </LinearLayout>
 
-    <RelativeLayout
-        android:layout_width="300dp"
-        android:layout_height="match_parent"
-        android:layout_gravity="start"
-        android:background="@color/white">
+    <Space
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:layout_weight="0"></Space>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:layout_weight="0"
+        android:paddingLeft="16dp"
+        android:paddingRight="16dp"
+        tools:ignore="MissingConstraints">
+        <Space
+            android:layout_width="80dp"
+            android:layout_height="match_parent"
+            android:layout_weight="0"></Space>
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:text="Takımı Sil"
+            android:textSize="8dp"
+            android:textColor="#FFF"
+            android:background="#000"
+            app:backgroundTint="@color/design_default_color_error"
+            android:layout_weight="1"
+            android:textStyle="bold"
+            android:id="@+id/btn_team_delete">
+        </Button>
+        <Space
+            android:layout_width="80dp"
+            android:layout_height="match_parent"
+            android:layout_weight="0"></Space>
+    </LinearLayout>
+    <Space
+        android:layout_width="match_parent"
+        android:layout_height="300dp"
+        android:layout_weight="0"></Space>
 
-        <include layout="@layout/activitiy_nav_drawer" />
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:layout_weight="0"
+        android:paddingLeft="16dp"
+        android:paddingRight="16dp"
+        tools:ignore="MissingConstraints">
 
-    </RelativeLayout>
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:text="Takımı ata"
+            android:textSize="8dp"
+            android:textColor="#FFF"
+            android:background="#6464"
+            android:layout_weight="1"
+            android:textStyle="bold"
+            android:id="@+id/btn_assignTeamComplete">
+        </Button>
 
-</androidx.drawerlayout.widget.DrawerLayout>
+    </LinearLayout>
+
+</LinearLayout>
