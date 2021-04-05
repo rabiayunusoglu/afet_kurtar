@@ -3,19 +3,22 @@ package com.example.afetkurtar;
 import android.app.Activity;
 import android.content.Context;
 
-import androidx.appcompat.app.AppCompatActivity;
 
+import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+
 
 public class NotificationSender extends Activity {
     Context context;
@@ -28,7 +31,94 @@ public class NotificationSender extends Activity {
         queue = Volley.newRequestQueue(context);
     }
 
-    public void SendNotification(String Title, String Body, String ID){
+    public void sendToTeam(String ID){
+        JSONObject obj = new JSONObject();
+        try {
+            obj.put("teamID",ID); //DEGISECEK
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        // ASAGISI DEGISECEK -- TEST AMACLI YAPILDI
+
+        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest
+                (Request.Method.POST, "https://afetkurtar.site/api/personnelUser/search.php", obj, new Response.Listener<JSONObject>() {
+
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        String cevap;
+                        ArrayList<JSONObject> list = new ArrayList<JSONObject>();
+                        try {
+                            cevap = response.getString("records");
+                            cevap = cevap.substring(1, cevap.length() - 1);
+
+                            while (cevap.indexOf(",{") > -1) {
+                                list.add(new JSONObject(cevap.substring(0, cevap.indexOf(",{"))));
+                                cevap = cevap.substring(cevap.indexOf(",{") + 1);
+                            }
+                            list.add(new JSONObject(cevap));
+                            getTokensandSend(list);
+                        }catch (Exception e){
+
+                        }
+                    }
+                }, new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        // TODO: Handle error
+                        System.out.println(error);
+                    }
+                });
+        queue.add(jsonObjectRequest);
+
+    }
+    public void getTokensandSend(ArrayList<JSONObject> perarr){
+        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest
+                (Request.Method.GET, "https://afetkurtar.site/api/users/read.php", null, new Response.Listener<JSONObject>() {
+
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        String cevap;
+                        ArrayList<JSONObject> list = new ArrayList<JSONObject>();
+                        try {
+                            cevap = response.getString("records");
+                            cevap = cevap.substring(1, cevap.length() - 1);
+
+                            while (cevap.indexOf(",{") > -1) {
+                                list.add(new JSONObject(cevap.substring(0, cevap.indexOf(",{"))));
+                                cevap = cevap.substring(cevap.indexOf(",{") + 1);
+                            }
+                            list.add(new JSONObject(cevap));
+                            ArrayList<String> Strarr = new ArrayList<>();
+                            for(JSONObject x: perarr){
+                                for(JSONObject y: list){
+                                    if(x.getString("personnelID").equals(y.getString("userID"))){
+                                        Strarr.add(y.getString("userToken"));
+                                    }
+                                }
+                            }
+                            for(String str : Strarr){
+                                System.out.println("BURAYADA GELDIK MIIIIIIII ****************************  " + str);
+                                if(str.length()>10) {
+                                    sendNotificationWithData("Yeni Mesaj", "Yeni Mesaj", "Yeni Mesaj", "Yeni Mesaj", str);
+                                }
+                            }
+
+                        }catch (Exception e){
+
+                        }
+                    }
+                }, new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        // TODO: Handle error
+                        System.out.println(error);
+                    }
+                });
+        queue.add(jsonObjectRequest);
+    }
+
+    public void sendNotification(String Title, String Body, String ID){
         try {
             JSONObject data = new JSONObject();
 

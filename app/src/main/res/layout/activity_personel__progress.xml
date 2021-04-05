@@ -1,17 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.drawerlayout.widget.DrawerLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/drawer_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
    >
 
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        >
 
         <include layout="@layout/activity_tool_bar"></include>
 
@@ -23,36 +24,47 @@
             android:text="Personel Gelişme Bildirimi ve Destek"
             android:textColor="#050505"
             android:textSize="15sp"
-            android:textStyle="bold" />
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/white"
-        android:orientation="vertical"
-        android:paddingLeft="30dp"
-        android:paddingRight="30dp"
-        >
-        <TextView
-            android:layout_width="wrap_content"
+            android:textStyle="bold"
+            />
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:background="@color/white"
+            android:orientation="vertical"
+            android:paddingLeft="30dp"
+            android:paddingRight="30dp"
+            android:layout_weight="1"
+            >
+            <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="18dp"
             android:background="@color/white"
             android:text="En Son Durum :"
             android:textColor="#050505"
             android:textSize="15sp"
             android:textStyle="bold" />
+            <ScrollView
+                android:layout_width="wrap_content"
+                android:layout_height="42dp"
+                android:layout_gravity="center"
+                android:scrollbars="vertical">
+                 <TextView
+                    android:id="@+id/personel_current_status"
+                    android:layout_width="wrap_content"
+                    android:layout_height="fill_parent"
+                    android:text="Yok"
+                    android:background="@color/white"
+                    android:textColor="#050505"
+                    android:textSize="18sp"
+                    android:textStyle="bold"
+                    android:scrollbars = "vertical"
+                    android:scrollbarAlwaysDrawVerticalTrack="true"
+                    android:fadeScrollbars="false"
+                    />
+            </ScrollView>
         <TextView
-            android:id="@+id/personel_current_status"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Yok"
-            android:layout_gravity="center"
-            android:background="@color/white"
-            android:textColor="#050505"
-            android:textSize="18sp"
-            android:textStyle="bold" />
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="18dp"
             android:text="Talep Edilmiş İşgücü Desteği :"
             android:textColor="#050505"
             android:textSize="15sp"
@@ -60,20 +72,73 @@
         <TextView
             android:id="@+id/personel_current_needManPower"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="22dp"
             android:text="Yok"
             android:layout_gravity="center"
             android:textColor="#050505"
             android:textSize="18sp"
             android:textStyle="bold" />
-    </LinearLayout>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/white"
+            android:orientation="vertical"
+            android:paddingLeft="30dp"
+            android:paddingRight="30dp"
+            android:layout_weight="1"
+            >
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@color/white"
+                android:text="Kurtarılmış İnsan Sayısı :"
+                android:textColor="#050505"
+                android:textSize="15sp"
+                android:textStyle="bold" />
+            <TextView
+                android:id="@+id/Rescued_Person"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Yok"
+                android:layout_gravity="center"
+                android:background="@color/white"
+                android:textColor="#050505"
+                android:textSize="18sp"
+                android:textStyle="bold" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Kayıp Insan Sayısı :"
+                android:textColor="#050505"
+                android:textSize="15sp"
+                android:textStyle="bold" />
+            <TextView
+                android:id="@+id/Missing_Person"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Yok"
+                android:layout_gravity="center"
+                android:textColor="#050505"
+                android:textSize="18sp"
+                android:textStyle="bold" />
+        </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/white"
+        android:orientation="vertical"
+        android:paddingLeft="30dp"
+        android:paddingRight="30dp"
+        android:layout_weight="1"
+        >
         <TextView
             android:id="@+id/text1"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginStart="36dp"
-            android:layout_marginLeft="36dp"
-            android:layout_marginTop="30dp"
+
             android:background="@color/white"
             android:text="Afet Bolgesi Durum Güncelleme :"
             android:textColor="@color/black"
@@ -96,14 +161,21 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintVertical_bias="0.647" />
-
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/white"
+        android:orientation="vertical"
+        android:paddingLeft="30dp"
+        android:paddingRight="30dp"
+        android:layout_weight="1"
+        >
         <TextView
             android:id="@+id/text2"
             android:layout_width="281dp"
             android:layout_height="26dp"
-            android:layout_marginStart="36dp"
-            android:layout_marginLeft="36dp"
-            android:layout_marginTop="30dp"
+
             android:background="@color/white"
             android:text="Talep Edilen Ek İnsan Gücü :"
             android:textColor="@color/black"
@@ -127,7 +199,14 @@
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintVertical_bias="0.647" />
 
-
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/white"
+        android:orientation="vertical"
+        android:layout_weight="1"
+        >
         <LinearLayout
             android:layout_width="480dp"
             android:layout_height="wrap_content"
@@ -186,9 +265,16 @@
                 android:layout_marginHorizontal="0.9dp"
                 />
         </LinearLayout>
-
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/white"
+        android:orientation="vertical"
+        android:layout_weight="1"
+        >
         <LinearLayout
-            android:layout_width="480dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="horizontal">
             <Button
@@ -226,40 +312,10 @@
                 app:layout_constraintVertical_bias="0.5" />
 
         </LinearLayout>
-
-
-
-        <TextView
-            android:id="@+id/textHata"
-            android:layout_width="281dp"
-            android:layout_height="26dp"
-            android:layout_marginStart="36dp"
-            android:layout_marginLeft="36dp"
-            android:layout_marginTop="30dp"
-            android:background="@color/white"
-            android:text="Eksik veya hatalı bilgi girildi"
-            android:textColor="#FF0000"
-            android:textSize="18sp"
-            app:layout_constraintBottom_toTopOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="parent"
-            app:layout_constraintVertical_bias="0.5" />
+    </LinearLayout>
 
     </LinearLayout>
-    <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="vertical">
 
-
-
-    </LinearLayout>
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical">
-
-    </LinearLayout>
 
     <RelativeLayout
         android:layout_width="300dp"
@@ -272,4 +328,4 @@
     </RelativeLayout>
 
 
-</androidx.drawerlayout.widget.DrawerLayout>
+</LinearLayout>

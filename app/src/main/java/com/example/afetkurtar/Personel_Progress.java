@@ -59,8 +59,7 @@ public class Personel_Progress extends AppCompatActivity  {
         setContentView(R.layout.activity_personel__progress);
 
         queue = Volley.newRequestQueue(this);
-
-        findViewById(R.id.textHata).setVisibility(View.INVISIBLE);
+      //  findViewById(R.id.personel_current_status).setMovementMethod(new ScrollingMovementMethod());
 
         spinner = (Spinner) findViewById(R.id.listOfEquipment);
         setEquipmentToSpinner();
@@ -200,6 +199,9 @@ public class Personel_Progress extends AppCompatActivity  {
                             TeamInfo = new JSONObject(cevap);
                             ((TextView)findViewById(R.id.personel_current_status)).setText(TeamInfo.getString("status"));
                             ((TextView)findViewById(R.id.personel_current_needManPower)).setText(TeamInfo.getString("needManPower"));
+
+                            // ******************
+                            getSubInfo(TeamInfo.getString("assignedSubpartID"));
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
@@ -213,7 +215,41 @@ public class Personel_Progress extends AppCompatActivity  {
                 });
         queue.add(request);
     }
+    public void getSubInfo(String subID){
+        JSONObject obj = new JSONObject();
+        try {
+            // obj.put("teamID", id);
+            obj.put("subpartID", 1); // TEST AMACLI subID olarak degisecek *****************************************************
+        }catch (Exception e){
+        }
 
+        JsonObjectRequest request = new JsonObjectRequest(
+                Request.Method.POST, // the request method
+                "https://afetkurtar.site/api/subpart/search.php", // the URL
+                obj, // the parameters for the php
+                new Response.Listener<JSONObject>() { // the response listener
+                    @Override
+                    public void onResponse(JSONObject response){
+                        try {
+                            String cevap = response.getString("records");
+                            cevap = cevap.substring(1,cevap.length()-1);
+                            JSONObject Subinfo = new JSONObject(cevap);
+                            ((TextView)findViewById(R.id.Rescued_Person)).setText(Subinfo.getString("rescuedPerson"));
+                            ((TextView)findViewById(R.id.Missing_Person)).setText(Subinfo.getString("missingPerson"));
+
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    }
+                },
+                new Response.ErrorListener() { // the error listener
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        //  addUser(account);
+                    }
+                });
+        queue.add(request);
+    }
 
 
     public void update(JSONObject obj){

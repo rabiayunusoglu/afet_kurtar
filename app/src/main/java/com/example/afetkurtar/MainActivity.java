@@ -120,7 +120,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                                 startActivity(intentLogin);
                             }
                             else{
-                                updateUser(tmpJson);
+                                updateUser(tmpJson,account);
                             }
 
                         } catch (JSONException e) {
@@ -138,28 +138,31 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         queue.add(request);
     }
 
-    public void updateUser(JSONObject obj){
+    public void updateUser(JSONObject obj,GoogleSignInAccount account){
 
     JSONObject tmp = new JSONObject();
         try {
-            tmp.put("userID",obj.getString("userID"));
-            tmp.put("userType",obj.getString("userType"));
-            tmp.put("userName",obj.getString("userName"));
-            tmp.put("email",obj.getString("email"));
-            tmp.put("createTime",obj.getString("createTime"));
+            tmp.put("userID", obj.getString("userID"));
+            tmp.put("userType", obj.getString("userType"));
+            tmp.put("userName", obj.getString("userName"));
+            tmp.put("email", obj.getString("email"));
+            tmp.put("createTime", obj.getString("createTime"));
             tmp.put("userToken", FirebaseInstanceId.getInstance().getToken());
         } catch (JSONException e) {
             e.printStackTrace();
         }
-     //   System.out.println(tmp.toString() + "**********************************************************");
-        JsonObjectRequest request = new JsonObjectRequest(
-                Request.Method.POST, // the request method
-                "https://afetkurtar.site/api/users/update.php", // the URL
-                tmp, // the parameters for the php
-                new Response.Listener<JSONObject>() { // the response listener
-                    @Override
-                    public void onResponse(JSONObject response) {
-                        System.out.println(response.toString());
+        try {
+            if (tmp.getString("userToken").length() > 10) {
+                //   System.out.println(tmp.toString() + "**********************************************************");
+                JsonObjectRequest request = new JsonObjectRequest(
+                        Request.Method.POST, // the request method
+                        "https://afetkurtar.site/api/users/update.php", // the URL
+                        tmp, // the parameters for the php
+                        new Response.Listener<JSONObject>() { // the response listener
+                            @Override
+                            public void onResponse(JSONObject response) {
+                                System.out.println(response.toString());
+                        /*
                         String type = "";
                         try {
                             type = obj.getString("userType");
@@ -167,7 +170,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                             e.printStackTrace();
                         }
                         // *************************************************************************** TEST ICIN USER TYPE AYARLAMA YERI (UPDATE DURUMU)
-                        type = "authorizedUser";
+                        type = "personnelUser";
                         // **************************************************************************** TEST ICIN USER TYPE AYARLAMA YERI (UPDATE DURUMU)
                         Intent intentLogin;
                         if (type.equals("authorizedUser")) {
@@ -178,22 +181,30 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                             intentLogin = new Intent(MainActivity.this, Volunteer_Anasayfa.class);
                         }
                         startActivity(intentLogin);
+                        */
+                                checkUser(account);
+                            }
+                        },
+                        new Response.ErrorListener() { // the error listener
+                            @Override
+                            public void onErrorResponse(VolleyError error) {
+                                System.out.println(error.getMessage());
 
-                    }
-                },
-                new Response.ErrorListener() { // the error listener
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        System.out.println(error.getMessage());
+                                error.printStackTrace();
 
-                        error.printStackTrace();
-
-                    }
-                });
-        queue.add(request);
-
+                            }
+                        });
+                queue.add(request);
+            } else {
+                printLoginError();
+            }
+        }catch (Exception e){
+            printLoginError();
+        }
     }
-
+    public void printLoginError(){
+        Toast.makeText(getApplicationContext(), "Giriş Yapma Başarısız Oldu, Tekrar Deneyin", Toast.LENGTH_LONG).show();
+    }
 
     public void addUser(GoogleSignInAccount account) {
         String url = "https://afetkurtar.site/api/users/create.php";

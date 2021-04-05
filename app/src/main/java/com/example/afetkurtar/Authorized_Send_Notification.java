@@ -59,8 +59,8 @@ public class Authorized_Send_Notification extends AppCompatActivity {
         mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
     }
 
-    public void sendNotification(){
-
+    public void sendButton(){
+        /*
         NotificationSender send = new NotificationSender(getApplicationContext());
         try {
             System.out.println("SEND NOTIFICATION");
@@ -73,7 +73,14 @@ public class Authorized_Send_Notification extends AppCompatActivity {
         } catch (JSONException e) {
             e.printStackTrace();
         }
-
+        */
+        NotificationSender send = new NotificationSender(getApplicationContext());
+        try {
+            //send.testGrup( MainActivity.userInfo.getString("userToken"));
+            send.sendToTeam("0");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     public void onClick(View v) {
@@ -81,7 +88,7 @@ public class Authorized_Send_Notification extends AppCompatActivity {
 
             case R.id.SendNotificationButton:
                 System.out.println("BILDIRIM GONDERILIYOR");
-                sendNotification();
+                sendButton();
                 break;
 
         }
