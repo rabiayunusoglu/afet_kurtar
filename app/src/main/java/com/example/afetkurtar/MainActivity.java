@@ -8,6 +8,7 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.SoundEffectConstants;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -20,6 +21,7 @@ import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
+import com.google.android.gms.auth.api.signin.GoogleSignInApi;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.common.api.ApiException;
@@ -47,7 +49,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     RequestQueue queue;
     public static int userID;
     public static JSONObject userInfo;
-
+    Bundle bundle;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -60,9 +62,22 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         SignInButton signInButton = findViewById(R.id.sign_in_button);
         signInButton.setSize(SignInButton.SIZE_STANDARD);
         findViewById(R.id.sign_in_button).setOnClickListener(this);
-
-
+        GoogleSignInAccount lastSignedInAccount= GoogleSignIn.getLastSignedInAccount(this);
         queue = Volley.newRequestQueue(this);
+        try{
+            if(!lastSignedInAccount.getDisplayName().equals("")){
+                try {
+                    bundle = getIntent().getExtras();
+                    Toast.makeText(getApplicationContext(), "BURAYA GELDI " + bundle.getString("title"), Toast.LENGTH_LONG).show();
+                }catch (Exception e){
+                }
+                checkUser(lastSignedInAccount);
+            }
+        }catch (Exception e){
+            Toast.makeText(getApplicationContext(), "Giriş Yapınız", Toast.LENGTH_LONG).show();
+        }
+
+
 
         System.out.println( FirebaseInstanceId.getInstance().getToken() + "**********************************");
         /*
@@ -78,7 +93,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     private void checkUser(GoogleSignInAccount account) {
         String url = "https://afetkurtar.site/api/users/search.php";
-
+        System.out.println(account.getDisplayName() +"***************************");
+        System.out.println(account.getEmail() + "***************************");
+        System.out.println(account.getId() + "***************************************");
         Map<String, String> params = new HashMap<String, String>();
         params.put("email", account.getEmail());
 
@@ -105,17 +122,27 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                             e.printStackTrace();
                         }
                         try {
+
                             if(tmpJson.getString("userToken").equals(FirebaseInstanceId.getInstance().getToken())){
                                 // ****************************************************************************************** TEST ICIN USER TYPE AYARLAMA YERI
-                                type = "authorizedUser";
+                                type = "personnelUser";
                                 // ****************************************************************************************** TEST ICIN USER TYPE AYARLAMA YERI
-                                Intent intentLogin;
-                                if (type.equals("authorizedUser")) {
-                                    intentLogin = new Intent(MainActivity.this, Authorized_Anasayfa.class);
-                                } else if (type.equals("personnelUser")) {
-                                    intentLogin = new Intent(MainActivity.this, Personel_Anasayfa.class);
-                                } else {
-                                    intentLogin = new Intent(MainActivity.this, Volunteer_Anasayfa.class);
+                                Intent intentLogin = null;
+                                try {
+                                    if ((bundle.getString("title")).equals("Yeni Mesaj")) {
+                                        intentLogin = new Intent(MainActivity.this, MessageActivity.class);
+                                    }
+                                    else{
+                                        printLoginError();
+                                    }
+                                }catch (Exception e){
+                                    if (type.equals("authorizedUser")) {
+                                        intentLogin = new Intent(MainActivity.this, Authorized_Anasayfa.class);
+                                    } else if (type.equals("personnelUser")) {
+                                        intentLogin = new Intent(MainActivity.this, Personel_Anasayfa.class);
+                                    } else {
+                                        intentLogin = new Intent(MainActivity.this, Volunteer_Anasayfa.class);
+                                    }
                                 }
                                 startActivity(intentLogin);
                             }
@@ -222,12 +249,15 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 new Response.Listener<JSONObject>() { // the response listener
                     @Override
                     public void onResponse(JSONObject response) {
+                        /*
                         System.out.println(response.toString());
                         String cevap = response.toString().substring(0, response.toString().lastIndexOf("\""));
                         cevap = cevap.substring(cevap.toString().lastIndexOf("\"") + 1);
                         userID = Integer.parseInt(cevap);
                         Intent intentLogin = new Intent(MainActivity.this, Volunteer_ParticipateForm.class);
                         startActivity(intentLogin);
+                        */
+                        checkUser(account);  // *********************************************************************** TEST EDILECEK
                     }
                 },
                 new Response.ErrorListener() { // the error listener

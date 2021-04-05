@@ -72,19 +72,19 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
         // Check if message contains a data payload.
         /*
             Data Ornegi:
-                     {
-                      "message":{
-                        "token":"bk3RNwTe3H0:CI2k_HHwgIpoDKCIZvvDMExUdFQ3P1...",
-                        "notification":{
-                          "title":"Portugal vs. Denmark",
-                          "body":"great match!"
-                        },
-                        "data" : {
-                          "Nick" : "Mario",
-                          "Room" : "PortugalVSDenmark"
-                        }
-                      }
-                    }
+                    {
+ "to" : "faek0BAUT26VTjq62mBs_v:APA91bEU0thQI4tGZ7hlt3HDYelRIlWTGYXswjsHBXfV3VVn2TLQyiI1vvjWNNG0VetwaUcWyzOjpV5x4uqObT45JxhGN0xqX_mPiO79hYgwuX5dKNvw7Ylxm93e0c5Jf9sEz1krK5iC",
+ "notification" : {
+     "body" : "Body of Your Notification",
+     "title": "Title of Your Notification"
+ },
+ "data" : {
+     "body" : "Body of Your Notification in Data",
+     "title": "Title of Your Notification in Title",
+     "patates":"Bu da patates datası"
+
+ }
+}
          */
         System.out.println( "Message data payload: " + remoteMessage.getData());
 
@@ -92,7 +92,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
             Log.d(TAG, "Message data payload: " + remoteMessage.getData());
             String a =remoteMessage.getData().get("title"); //Data içinden istedigin bolumu almak icin get
             String b  =remoteMessage.getData().get("body"); //Data içinden istedigin bolumu almak icin get
-            sendNotification(remoteMessage.getNotification().getBody(),a,b); // Foreground icin notification oluşturulan yer
+            showNotification(remoteMessage); // Foreground icin notification oluşturulan yer
                                                                              // Detayli test ve islevler ileride yapilacak
 
         }
@@ -121,13 +121,13 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
     }
     // [END receive_message]
 
-    /**
+    /*
      * Create and show a simple notification containing the received FCM message.
      *
      * @param messageBody FCM message body received.
      */
     @RequiresApi(api = Build.VERSION_CODES.M)
-    private void sendNotification(String messageBody,String a, String b) {
+    private void showNotification(RemoteMessage remoteMessage) {
         /*
         *********** Channel Oluşturup o channel üzerinden foreground notification gonderiyor.
         *   Channel i birden fazla kere oluşturmasi sikinti yaratabilir Test Edilmedi.
@@ -155,10 +155,12 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
 
         NotificationCompat.Builder builder = new NotificationCompat.Builder(this, "my_channel_01")
                 .setSmallIcon(R.mipmap.ic_launcher)
-                .setContentTitle("App acik notification")
-                .setContentText(messageBody + "  " + a + "  " + b);
+                .setContentTitle(remoteMessage.getNotification().getTitle())
+                .setContentText(remoteMessage.getNotification().getBody());
 
         Intent resultIntent = new Intent(this, MainActivity.class);
+        resultIntent.putExtra("title",remoteMessage.getData().get("title"));
+        resultIntent.putExtra("body",remoteMessage.getData().get("body"));
         TaskStackBuilder stackBuilder = TaskStackBuilder.create(this);
         stackBuilder.addParentStack(MainActivity.class);
         stackBuilder.addNextIntent(resultIntent);

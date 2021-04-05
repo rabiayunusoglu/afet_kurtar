@@ -31,7 +31,7 @@ public class NotificationSender extends Activity {
         queue = Volley.newRequestQueue(context);
     }
 
-    public void sendToTeam(String ID){
+    public void sendToTeam(String ID,String mesaj){
         JSONObject obj = new JSONObject();
         try {
             obj.put("teamID",ID); //DEGISECEK
@@ -57,7 +57,7 @@ public class NotificationSender extends Activity {
                                 cevap = cevap.substring(cevap.indexOf(",{") + 1);
                             }
                             list.add(new JSONObject(cevap));
-                            getTokensandSend(list);
+                            getTokensandSend(list,ID,mesaj);
                         }catch (Exception e){
 
                         }
@@ -72,7 +72,7 @@ public class NotificationSender extends Activity {
         queue.add(jsonObjectRequest);
 
     }
-    public void getTokensandSend(ArrayList<JSONObject> perarr){
+    public void getTokensandSend(ArrayList<JSONObject> perarr,String ID,String mesaj){
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest
                 (Request.Method.GET, "https://afetkurtar.site/api/users/read.php", null, new Response.Listener<JSONObject>() {
 
@@ -98,10 +98,9 @@ public class NotificationSender extends Activity {
                                 }
                             }
                             for(String str : Strarr){
-                                System.out.println("BURAYADA GELDIK MIIIIIIII ****************************  " + str);
                                 if(str.length()>10) {
                                     if(!str.equals(MainActivity.userInfo.getString("userToken"))) {
-                                        sendNotificationWithData("Yeni Mesaj", "Yeni Mesaj", "Yeni Mesaj", "Yeni Mesaj", str);
+                                        sendNotificationWithData("Takım " +ID +" Yeni Mesaj", mesaj, "Yeni Mesaj", "Yeni Mesaj", str);
                                     }
                                 }
                             }
