@@ -31,6 +31,7 @@
         android:theme="@style/Theme.AfetKurtar">
         <activity android:name=".Authorized_Send_Notification"></activity>
         <activity android:name=".Authorized_Assign_Team" />
+        <activity android:name=".MessageActivity" />
         <activity android:name=".Authorized_Edit_Team" />
         <activity android:name=".Authorized_Create_Team" />
         <activity android:name=".Disaster_Subpart" />

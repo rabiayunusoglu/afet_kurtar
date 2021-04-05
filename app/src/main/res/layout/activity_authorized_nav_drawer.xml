@@ -157,7 +157,7 @@
 
     </LinearLayout>
     <LinearLayout
-        android:id="@+id/AfetBolgesi"
+        android:id="@+id/MesajKutusu"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"

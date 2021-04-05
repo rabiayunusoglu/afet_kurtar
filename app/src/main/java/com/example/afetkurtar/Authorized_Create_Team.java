@@ -249,7 +249,7 @@ public class Authorized_Create_Team extends AppCompatActivity {
             Spinner linearSpinner = (Spinner) scroll.getChildAt(i).findViewById(R.id.create_team_availablePersonnelSpinner);
             String selectedSpinnerText = linearSpinner.getSelectedItem().toString();
             String selectedPersonnelID = "";
-            selectedPersonnelID = findPersonnelID(selectedSpinnerText);
+            selectedPersonnelID = findPersonnelID(selectedSpinnerText).trim();
 
             radioGroupRoleOfTeamMembers = (RadioGroup) scroll.getChildAt(i).findViewById(R.id.groupForTeamRole);
             int radioId = radioGroupRoleOfTeamMembers.getCheckedRadioButtonId();

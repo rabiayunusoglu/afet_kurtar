@@ -102,6 +102,22 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
             Log.d(TAG, "Message Notification Body: " + remoteMessage.getNotification().getBody());
             // Burayı else if e alip Bunu da sendNotification a gonder. Yoksa bildirin cikmaz gibi (Test Edilmedi)
         }
+        System.out.println(" ");
+        System.out.println("remoteMessage.getCollapseKey(): " + remoteMessage.getCollapseKey());
+        System.out.println("remoteMessage.getData(): "+remoteMessage.getData());
+        System.out.println("remoteMessage.getFrom(): " + remoteMessage.getFrom());
+        System.out.println("remoteMessage.getMessageId(): " + remoteMessage.getMessageId());
+        System.out.println("remoteMessage.getMessageType(): " + remoteMessage.getMessageType());
+        System.out.println("remoteMessage.getNotification(): " + remoteMessage.getNotification());
+        System.out.println("remoteMessage.getOriginalPriority(): " + remoteMessage.getOriginalPriority());
+        System.out.println("remoteMessage.getRawData(): " + remoteMessage.getRawData());
+        System.out.println("remoteMessage.getSenderId(): " + remoteMessage.getSenderId());
+        System.out.println("remoteMessage.getSentTime(): " + remoteMessage.getSentTime());
+        System.out.println("remoteMessage.getTo(): " + remoteMessage.getTo());
+        System.out.println("remoteMessage.getTtl(): " + remoteMessage.getTtl());
+        System.out.println("remoteMessage.describeContents(): " + remoteMessage.describeContents());
+        System.out.println(" ");
+
     }
     // [END receive_message]
 
