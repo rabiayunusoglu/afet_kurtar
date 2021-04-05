@@ -77,7 +77,7 @@ public class Authorized_Send_Notification extends AppCompatActivity {
         NotificationSender send = new NotificationSender(getApplicationContext());
         try {
             //send.testGrup( MainActivity.userInfo.getString("userToken"));
-            send.sendToTeam("0");
+           // send.sendToTeam("0");
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -154,10 +154,8 @@ public class Authorized_Send_Notification extends AppCompatActivity {
     public void ClickAuthrizedVolunteerRequest(View view) {
         // redirectActivity(this, Authorized_Notification.class);
     }
-    //MESAJ
-    public void ClickAuthorizedMessage(View view) {
 
-    }
+
     // CIKIS
     public void ClickAuthorizedExit(View view) {
         signOut();

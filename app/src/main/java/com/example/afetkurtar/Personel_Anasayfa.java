@@ -30,6 +30,7 @@ public class Personel_Anasayfa extends AppCompatActivity {
     DrawerLayout drawerLayout;
     GoogleSignInClient mGoogleSignInClient;
     RequestQueue queue;
+    Bundle bundle;
     public static JSONObject PersonelInfo = null;
     static String Yetki = "";
     @Override
@@ -43,8 +44,15 @@ public class Personel_Anasayfa extends AppCompatActivity {
         mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
 
         queue = Volley.newRequestQueue(this);
-        if(Yetki.length()>0)
+        try {
+            bundle = getIntent().getExtras();
+        }
+        catch (Exception e){
+        }
+        if(!(Yetki.length()>0))
         checkAuthority();
+
+
     }
 
     public void checkAuthority(){
@@ -63,8 +71,19 @@ public class Personel_Anasayfa extends AppCompatActivity {
                     public void onResponse(JSONObject response) {
                         try {
                             //  System.out.println(response.toString());
-                           PersonelInfo = response;
-                           Yetki = response.getString("personnelRole");
+                            String cevap = response.getString("records");
+                            cevap = cevap.substring(1, cevap.length() - 1);
+                            JSONObject tmpJson = new JSONObject(cevap);
+                           PersonelInfo = tmpJson;
+                           Yetki = tmpJson.getString("personnelRole");
+                            try {
+                                if((bundle.getString("title")).equals("Yeni Mesaj")){
+                                    messageRedirect();
+                                }
+                            }
+                            catch (Exception e){
+
+                            }
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
@@ -77,6 +96,9 @@ public class Personel_Anasayfa extends AppCompatActivity {
                     }
                 });
         queue.add(jsonObjectRequest);
+    }
+    public void messageRedirect(){
+        redirectActivity(this,MessageActivity.class);
     }
     private void signOut() {
         mGoogleSignInClient.signOut()
@@ -131,7 +153,7 @@ public class Personel_Anasayfa extends AppCompatActivity {
             Toast.makeText(getApplicationContext(), "Gerekli Yetkiye Sahip Değilsiniz", Toast.LENGTH_LONG).show();
     }
 
-    public void CliackPersonelNotification(View view) {
+    public void ClickPersonelNotification(View view) {
         //  redirectActivity(this, Authorized_Notification.class);
     }
 
@@ -139,8 +161,11 @@ public class Personel_Anasayfa extends AppCompatActivity {
        // redirectActivity(this, Authorized_PersonelRegister.class);
     }
 
-    public void ClşckPersonelArea(View view) {
+    public void ClickPersonelArea(View view) {
         // redirectActivity(this, Authorized_Notification.class);
+    }
+    public void ClickPersonelMessage(View view) {
+         redirectActivity(this, MessageActivity.class);
     }
 
     // CIKIS

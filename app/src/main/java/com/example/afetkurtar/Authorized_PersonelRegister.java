@@ -280,10 +280,6 @@ public class Authorized_PersonelRegister extends AppCompatActivity {
         // redirectActivity(this, Authorized_Notification.class);
     }
 
-    //MESAJ
-    public void ClickAuthorizedMessage(View view) {
-
-    }
 
     // CIKIS
     public void ClickAuthorizedExit(View view) {

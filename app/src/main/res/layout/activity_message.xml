@@ -85,7 +85,7 @@
         android:layout_gravity="start"
         android:background="@color/white">
 
-        <include layout="@layout/activity_authorized_nav_drawer" />
+        <include layout="@layout/activity_personel_nav_drawer" />
 
     </RelativeLayout>
 </androidx.drawerlayout.widget.DrawerLayout>

@@ -94,10 +94,7 @@ public class Authorized_Anasayfa extends AppCompatActivity {
        // redirectActivity(this, Authorized_Notification.class);
     }
     //MESAJ
-    public void ClickAuthorizedMessage(View view) {
-        System.out.println("bastık mı tuşa ? ");
-        redirectActivity(this, MessageActivity.class);
-    }
+
     // CIKIS
     public void ClickAuthorizedExit(View view) {
         signOut();

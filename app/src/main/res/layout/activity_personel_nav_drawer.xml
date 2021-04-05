@@ -80,12 +80,39 @@
             android:layout_marginRight="48dp" />
 
     </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/MesajKutusu"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:onClick="ClickPersonelMessage">
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Mesaj Kutusu"
+            android:padding="12dp"
+            android:layout_marginStart="16dp"
+            tools:ignore="Suspicious0dp"
+            android:layout_marginLeft="16dp">
+
+        </TextView>
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="48dp"
+            android:src="@drawable/ic_message"
+            android:layout_marginRight="48dp" />
+
+    </LinearLayout>
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:gravity="center_vertical"
-        android:onClick="CliackPersonelNotification">
+        android:onClick="ClickPersonelNotification">
         <TextView
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -137,7 +164,7 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:gravity="center_vertical"
-        android:onClick="ClşckPersonelArea">
+        android:onClick="ClickPersonelArea">
         <TextView
             android:layout_width="0dp"
             android:layout_height="wrap_content"

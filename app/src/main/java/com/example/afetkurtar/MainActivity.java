@@ -50,6 +50,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public static int userID;
     public static JSONObject userInfo;
     Bundle bundle;
+
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -68,7 +71,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             if(!lastSignedInAccount.getDisplayName().equals("")){
                 try {
                     bundle = getIntent().getExtras();
-                    Toast.makeText(getApplicationContext(), "BURAYA GELDI " + bundle.getString("title"), Toast.LENGTH_LONG).show();
                 }catch (Exception e){
                 }
                 checkUser(lastSignedInAccount);
@@ -78,7 +80,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
 
 
-
+        System.out.println();
         System.out.println( FirebaseInstanceId.getInstance().getToken() + "**********************************");
         /*
         FirebaseMessaging.getInstance().getToken().addOnSuccessListener(new OnSuccessListener<String>() {
@@ -130,7 +132,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                                 Intent intentLogin = null;
                                 try {
                                     if ((bundle.getString("title")).equals("Yeni Mesaj")) {
-                                        intentLogin = new Intent(MainActivity.this, MessageActivity.class);
+                                        intentLogin = new Intent(MainActivity.this, Personel_Anasayfa.class);
+                                        intentLogin.putExtra("title",bundle.getString("title"));
                                     }
                                     else{
                                         printLoginError();
@@ -152,6 +155,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
                         } catch (JSONException e) {
                             e.printStackTrace();
+                            printLoginError();
                         }
 
                     }
@@ -263,7 +267,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 new Response.ErrorListener() { // the error listener
                     @Override
                     public void onErrorResponse(VolleyError error) {
-                        System.out.println(error);
+                       printLoginError();
 
                     }
                 });

@@ -1,26 +1,28 @@
 package com.example.afetkurtar;
 
-import android.app.Notification;
+import android.app.ActivityManager;
+
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.TaskStackBuilder;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
-import android.media.RingtoneManager;
-import android.net.Uri;
+
 import android.os.Build;
 import android.util.Log;
 
 import androidx.annotation.RequiresApi;
 import androidx.core.app.NotificationCompat;
-import androidx.core.app.NotificationManagerCompat;
+
 
 
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
 
+import java.util.List;
 import java.util.Random;
 
 public class MyFirebaseMessagingService extends FirebaseMessagingService {
@@ -102,21 +104,6 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
             Log.d(TAG, "Message Notification Body: " + remoteMessage.getNotification().getBody());
             // Burayı else if e alip Bunu da sendNotification a gonder. Yoksa bildirin cikmaz gibi (Test Edilmedi)
         }
-        System.out.println(" ");
-        System.out.println("remoteMessage.getCollapseKey(): " + remoteMessage.getCollapseKey());
-        System.out.println("remoteMessage.getData(): "+remoteMessage.getData());
-        System.out.println("remoteMessage.getFrom(): " + remoteMessage.getFrom());
-        System.out.println("remoteMessage.getMessageId(): " + remoteMessage.getMessageId());
-        System.out.println("remoteMessage.getMessageType(): " + remoteMessage.getMessageType());
-        System.out.println("remoteMessage.getNotification(): " + remoteMessage.getNotification());
-        System.out.println("remoteMessage.getOriginalPriority(): " + remoteMessage.getOriginalPriority());
-        System.out.println("remoteMessage.getRawData(): " + remoteMessage.getRawData());
-        System.out.println("remoteMessage.getSenderId(): " + remoteMessage.getSenderId());
-        System.out.println("remoteMessage.getSentTime(): " + remoteMessage.getSentTime());
-        System.out.println("remoteMessage.getTo(): " + remoteMessage.getTo());
-        System.out.println("remoteMessage.getTtl(): " + remoteMessage.getTtl());
-        System.out.println("remoteMessage.describeContents(): " + remoteMessage.describeContents());
-        System.out.println(" ");
 
     }
     // [END receive_message]
@@ -133,40 +120,59 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
         *   Channel i birden fazla kere oluşturmasi sikinti yaratabilir Test Edilmedi.
         *   Sorun çıkar ise channel yaratma isini bir kere yapip o kanali kullanmaya calis.
          */
+        ActivityManager am = (ActivityManager) this.getSystemService(ACTIVITY_SERVICE);
+        List<ActivityManager.RunningTaskInfo> taskInfo = am.getRunningTasks(1);
+        Log.d("topActivity", "CURRENT Activity ::" + taskInfo.get(0).topActivity.getClassName());
+        ComponentName componentInfo = taskInfo.get(0).topActivity;
+        componentInfo.getPackageName();
 
-        Random Rand = new Random();
-        int NOTIFICATION_ID = Rand.nextInt(9999);
-        NotificationManager notificationManager = (NotificationManager) this.getSystemService(Context.NOTIFICATION_SERVICE);
+        System.out.println("BURA BURA");
+        System.out.println("BURA BURA");
+        System.out.println(componentInfo.getClassName().substring(componentInfo.getClassName().lastIndexOf(".")+1));
+        System.out.println("BURA BURA");
+        System.out.println("BURA BURA");
 
-        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
-            String CHANNEL_ID = "my_channel_01";
-            CharSequence name = "my_channel";
-            String Description = "This is my channel";
-            int importance = NotificationManager.IMPORTANCE_HIGH;
-            NotificationChannel mChannel = new NotificationChannel(CHANNEL_ID, name, importance);
-            mChannel.setDescription(Description);
-            mChannel.enableLights(true);
-            mChannel.setLightColor(Color.RED);
-            mChannel.enableVibration(true);
-            mChannel.setVibrationPattern(new long[]{100, 200, 300, 400, 500, 400, 300, 200, 400});
-            mChannel.setShowBadge(false);
-            notificationManager.createNotificationChannel(mChannel);
+        if(componentInfo.getClassName().substring(componentInfo.getClassName().lastIndexOf(".")+1).equals("MessageActivity"))
+        {
+            Intent intent = new Intent();
+            intent.putExtra("extra", "Test");
+            intent.setAction("com.my.app.onMessageReceived");
+            sendBroadcast(intent);
         }
+        else{
+            Random Rand = new Random();
+            int NOTIFICATION_ID = Rand.nextInt(9999);
+            NotificationManager notificationManager = (NotificationManager) this.getSystemService(Context.NOTIFICATION_SERVICE);
 
-        NotificationCompat.Builder builder = new NotificationCompat.Builder(this, "my_channel_01")
-                .setSmallIcon(R.mipmap.ic_launcher)
-                .setContentTitle(remoteMessage.getNotification().getTitle())
-                .setContentText(remoteMessage.getNotification().getBody());
+            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+                String CHANNEL_ID = "my_channel_01";
+                CharSequence name = "my_channel";
+                String Description = "This is my channel";
+                int importance = NotificationManager.IMPORTANCE_HIGH;
+                NotificationChannel mChannel = new NotificationChannel(CHANNEL_ID, name, importance);
+                mChannel.setDescription(Description);
+                mChannel.enableLights(true);
+                mChannel.setLightColor(Color.RED);
+                mChannel.enableVibration(true);
+                mChannel.setVibrationPattern(new long[]{100, 200, 300, 400, 500, 400, 300, 200, 400});
+                mChannel.setShowBadge(false);
+                notificationManager.createNotificationChannel(mChannel);
+            }
 
-        Intent resultIntent = new Intent(this, MainActivity.class);
-        resultIntent.putExtra("title",remoteMessage.getData().get("title"));
-        resultIntent.putExtra("body",remoteMessage.getData().get("body"));
-        TaskStackBuilder stackBuilder = TaskStackBuilder.create(this);
-        stackBuilder.addParentStack(MainActivity.class);
-        stackBuilder.addNextIntent(resultIntent);
-        PendingIntent resultPendingIntent = stackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
-        builder.setContentIntent(resultPendingIntent);
-        notificationManager.notify(NOTIFICATION_ID, builder.build());
+            NotificationCompat.Builder builder = new NotificationCompat.Builder(this, "my_channel_01")
+                    .setSmallIcon(R.mipmap.ic_launcher)
+                    .setContentTitle(remoteMessage.getNotification().getTitle())
+                    .setContentText(remoteMessage.getNotification().getBody());
 
+            Intent resultIntent = new Intent(this, MainActivity.class);
+            resultIntent.putExtra("title", remoteMessage.getData().get("title"));
+            resultIntent.putExtra("body", remoteMessage.getData().get("body"));
+            TaskStackBuilder stackBuilder = TaskStackBuilder.create(this);
+            stackBuilder.addParentStack(MainActivity.class);
+            stackBuilder.addNextIntent(resultIntent);
+            PendingIntent resultPendingIntent = stackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
+            builder.setContentIntent(resultPendingIntent);
+            notificationManager.notify(NOTIFICATION_ID, builder.build());
+        }
     }
 }

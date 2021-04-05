@@ -1,8 +1,10 @@
 package com.example.afetkurtar;
 
 import android.app.Activity;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.PersistableBundle;
@@ -50,6 +52,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 public class MessageActivity extends AppCompatActivity {
+
     DrawerLayout drawerLayout;
     GoogleSignInClient mGoogleSignInClient;
     //private String messageID = "";
@@ -73,6 +76,15 @@ public class MessageActivity extends AppCompatActivity {
 
     JSONObject myUser;
     RequestQueue queue;
+     BroadcastReceiver rec = new BroadcastReceiver() {
+         @Override
+         public void onReceive(Context context, Intent intent) {
+             Bundle extras = intent.getExtras();
+             System.out.println("************************** 0000000000000000000000000000 2222222222222222222222222222222222222222");
+             String state = extras.getString("extra");
+             refreshActivity();
+         }
+     };
 
     ArrayList<String> personnelStringList = new ArrayList<String>();
     ArrayList<JSONObject> jsonPersonnelObjectList = new ArrayList<JSONObject>();
@@ -87,6 +99,10 @@ public class MessageActivity extends AppCompatActivity {
 
         notificationSender = new NotificationSender(getApplicationContext());
         drawerLayout = findViewById(R.id.message_drawer_layout);
+
+        IntentFilter intentFilter = new IntentFilter();
+        intentFilter.addAction("com.my.app.onMessageReceived");
+        registerReceiver(rec, intentFilter);
 
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestEmail()
@@ -103,7 +119,19 @@ public class MessageActivity extends AppCompatActivity {
 
         scrollDownMethod();
     }//on create end
+    @Override
+    protected void onStop() {
+        super.onStop();
+        System.out.println("Unregister YAPTI");
+       unregisterReceiver(rec);
+    }
+    public void refreshActivity(){  //BURADA GELEN BILDIRIM MESAJ EKRANINDA ISEK YENILENECEK
+        finish();
+        startActivity(getIntent());
 
+      //  ((LinearLayout)findViewById(R.id.message_lay_scroll)).removeAllViews();
+      //  findTeamIDFromPersonnelUserList(userID);
+    }
     public void viewMessageOnScreenSendMessage(){
                 //if the message created by us
                 LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -146,7 +174,8 @@ public class MessageActivity extends AppCompatActivity {
 
                 messageText.setText(messageData);
                 //messageSenderName.setText(senderNameForReadMessage);
-                messageSendTime.setText(timeForReadMessage);
+                //messageSendTime.setText(timeForReadMessage);
+                messageSendTime.setText(timeForReadMessage + " " +senderNameForReadMessage);
                 scroll.addView(view);
             }else{
                 //if the message created by us
@@ -160,6 +189,7 @@ public class MessageActivity extends AppCompatActivity {
 
                 messageText.setText(messageData);
                 //messageSenderName.setText(senderNameForReadMessage);
+
                 messageSendTime.setText(timeForReadMessage + " " +senderNameForReadMessage);
                 scroll.addView(view);
             }
@@ -215,7 +245,7 @@ public class MessageActivity extends AppCompatActivity {
                 if(!isTextEmpty()){
                     sendMessage();// send message data base and in this method, some variables initialize.
                     scrollDownMethod();
-                    notificationSender.sendToTeam(teamID);
+                    notificationSender.sendToTeam(teamID,messageData);
                     break;
                 }
         }
@@ -381,7 +411,7 @@ public class MessageActivity extends AppCompatActivity {
                 try {
                     JSONObject tmp = new JSONObject(x);
                         messageJsonObjectList.add(tmp);
-                        messageJsonObjectList = getMessageListToCompareTime(messageJsonObjectList);
+                   //     messageJsonObjectList = getMessageListToCompareTime(messageJsonObjectList);
 
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -555,39 +585,37 @@ public class MessageActivity extends AppCompatActivity {
     /*
      *************************************** ASAGIDAKI KISIMLAR YONLENDIRMELERI AYARLAR
      */
-    // IHBARLAR
-    public void ClickAuthorizedNotice(View view) {
-        redirectActivity(this, Authorized_Notification.class);
+
+    public void ClickTeamManagement(View view) {
+       // Yetki = "kaptan";  //*************************************************************************** TEST AMACLI KALDIRILACAK
+       // if(Yetki.equalsIgnoreCase("kaptan"))
+       //     redirectActivity(this, Personel_Progress.class);
+       // else
+       //     Toast.makeText(getApplicationContext(), "Gerekli Yetkiye Sahip Değilsiniz", Toast.LENGTH_LONG).show();
     }
-    // AKTIF AFET
-    public void ClickAuthorizeActiveDisaster(View view) {
-        redirectActivity(this, Authorized_ActiveDisasters.class);
+
+    public void CliackPersonelNotification(View view) {
+        //  redirectActivity(this, Authorized_Notification.class);
     }
-    // PERSONEL KAYIT
-    public void ClickAuthorizedPersonelRegistration(View view) {
-        redirectActivity(this, Authorized_PersonelRegister.class);
+
+    public void ClickPersonelInfo(View view) {
+        // redirectActivity(this, Authorized_PersonelRegister.class);
     }
-    // GONULLU ISTEKLERI
-    public void ClickAuthrizedVolunteerRequest(View view) {
+
+    public void ClickPersonelArea(View view) {
         // redirectActivity(this, Authorized_Notification.class);
     }
-    //MESAJ
-    public void ClickAuthorizedMessage(View view) {
-       // System.out.println("bastık mı tuşa ? ");
-       // redirectActivity(this, MessageActivity.class);
+    public void ClickPersonelMessage(View view) {
+        redirectActivity(this, MessageActivity.class);
     }
+
     // CIKIS
-    public void ClickAuthorizedExit(View view) {
+    public void ClickPersonelExit(View view) {
         signOut();
         redirectActivity(this, MainActivity.class );
     }
-    public void ClickNotificationSend(View view) {
-        redirectActivity(this, Authorized_Send_Notification.class );
-    }
-
     // ANA SAYFA
-    public void ClickAuthAnasayfa(View view) {
-        // ZATEN BU SAYFADA OLDUGUNDAN KAPALI
+    public void ClickPersonelAnasayfa(View view) {
         redirectActivity(this, Authorized_Anasayfa.class );
     }
 
