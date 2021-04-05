@@ -100,7 +100,9 @@ public class NotificationSender extends Activity {
                             for(String str : Strarr){
                                 System.out.println("BURAYADA GELDIK MIIIIIIII ****************************  " + str);
                                 if(str.length()>10) {
-                                    sendNotificationWithData("Yeni Mesaj", "Yeni Mesaj", "Yeni Mesaj", "Yeni Mesaj", str);
+                                    if(!str.equals(MainActivity.userInfo.getString("userToken"))) {
+                                        sendNotificationWithData("Yeni Mesaj", "Yeni Mesaj", "Yeni Mesaj", "Yeni Mesaj", str);
+                                    }
                                 }
                             }
 

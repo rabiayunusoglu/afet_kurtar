@@ -86,7 +86,7 @@ public class MessageActivity extends AppCompatActivity {
         findViewById(R.id.btn_send).setOnClickListener(this::onClick);
 
         notificationSender = new NotificationSender(getApplicationContext());
-        drawerLayout = findViewById(R.id.drawer_layout);
+        drawerLayout = findViewById(R.id.message_drawer_layout);
 
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestEmail()
@@ -544,7 +544,6 @@ public class MessageActivity extends AppCompatActivity {
             drawerLayout.closeDrawer(GravityCompat.START);
         }
     }
-
     public static void redirectActivity(Activity activity, Class aClass) {
         //initialize intent
         Intent intent = new Intent(activity, aClass);
@@ -553,8 +552,6 @@ public class MessageActivity extends AppCompatActivity {
         //Start activity
         activity.startActivity(intent);
     }
-
-
     /*
      *************************************** ASAGIDAKI KISIMLAR YONLENDIRMELERI AYARLAR
      */
@@ -562,41 +559,36 @@ public class MessageActivity extends AppCompatActivity {
     public void ClickAuthorizedNotice(View view) {
         redirectActivity(this, Authorized_Notification.class);
     }
-
     // AKTIF AFET
     public void ClickAuthorizeActiveDisaster(View view) {
         redirectActivity(this, Authorized_ActiveDisasters.class);
     }
-
     // PERSONEL KAYIT
     public void ClickAuthorizedPersonelRegistration(View view) {
         redirectActivity(this, Authorized_PersonelRegister.class);
     }
-
     // GONULLU ISTEKLERI
     public void ClickAuthrizedVolunteerRequest(View view) {
         // redirectActivity(this, Authorized_Notification.class);
     }
-
     //MESAJ
     public void ClickAuthorizedMessage(View view) {
-
+       // System.out.println("bastık mı tuşa ? ");
+       // redirectActivity(this, MessageActivity.class);
     }
-
     // CIKIS
     public void ClickAuthorizedExit(View view) {
         signOut();
-        redirectActivity(this, MainActivity.class);
+        redirectActivity(this, MainActivity.class );
     }
-
     public void ClickNotificationSend(View view) {
-        //redirectActivity(this, Authorized_Send_Notification.class );
+        redirectActivity(this, Authorized_Send_Notification.class );
     }
 
     // ANA SAYFA
     public void ClickAuthAnasayfa(View view) {
-        redirectActivity(this, Authorized_Anasayfa.class);
+        // ZATEN BU SAYFADA OLDUGUNDAN KAPALI
+        redirectActivity(this, Authorized_Anasayfa.class );
     }
-
 
 }// class end

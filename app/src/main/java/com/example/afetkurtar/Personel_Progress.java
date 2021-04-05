@@ -67,7 +67,7 @@ public class Personel_Progress extends AppCompatActivity  {
         findViewById(R.id.UpdateButton).setOnClickListener(this::onClick);
         findViewById(R.id.HistoryButton).setOnClickListener(this::onClick);
 
-        drawerLayout = findViewById(R.id.drawer_layout);
+        drawerLayout = findViewById(R.id.personnel_screen_drawer_layout);
 
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestEmail()
