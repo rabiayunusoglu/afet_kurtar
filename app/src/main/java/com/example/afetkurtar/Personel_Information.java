@@ -274,7 +274,7 @@ public class Personel_Information extends AppCompatActivity {
     }
 
     public void ClickPersonelArea(View view) {
-        // redirectActivity(this, Authorized_Notification.class);
+         redirectActivity(this, Team_Member_Locations.class);
     }
     public void ClickPersonelMessage(View view) {
         redirectActivity(this, MessageActivity.class);

@@ -54,6 +54,7 @@
 
         <activity android:name=".Volunteer_RegisterInfo" />
         <activity android:name=".Personel_Progress" />
+        <activity android:name=".Team_Member_Locations" />
         <activity android:name=".MapActivity" />
         <activity android:name=".Notification_Details" />
         <activity android:name=".Authorized_Notification" />

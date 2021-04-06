@@ -1,7 +1,11 @@
 package com.example.afetkurtar;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.view.GravityCompat;
+import androidx.drawerlayout.widget.DrawerLayout;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -16,6 +20,11 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
+import com.google.android.gms.auth.api.signin.GoogleSignIn;
+import com.google.android.gms.auth.api.signin.GoogleSignInClient;
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -27,37 +36,26 @@ import java.util.ArrayList;
 public class Authorized_Assign_Team extends AppCompatActivity {
     private static final String TAG = "Authorized_Assign_Team";
     RequestQueue queue;
-    JSONObject data = new JSONObject();
-    //static yapılabilir belki, create team içinden erişmek için ama kontrol et düzenle
+    DrawerLayout drawerLayout;
+    GoogleSignInClient mGoogleSignInClient;
+
     Spinner teamSpinner;
     Spinner subpartSpinner;
     ArrayAdapter adapter;
+
+    NotificationSender notificationSender;
     //
     ArrayList<String> subpartStringList = new ArrayList<String>();
 
     ArrayList<String> teamStringList = new ArrayList<String>();
-    ArrayList<JSONObject> jsonObjectList = new ArrayList<JSONObject>();
+    ArrayList<JSONObject> jsonObjectListForTeam = new ArrayList<JSONObject>();
+    ArrayList<JSONObject> jsonObjectListForSubpart = new ArrayList<JSONObject>();
 
     private ArrayList<JSONObject> teamMemberPersonnelObjectList = new ArrayList<JSONObject>();
-/*
-    ArrayList<String> personnel_ID_TeamMemberStringList = new ArrayList<String>();
-    ArrayList<String> personnel_Name_TeamMemberStringList = new ArrayList<String>();
-    ArrayList<String> personnel_Email_TeamMemberStringList = new ArrayList<String>();
-    ArrayList<String> personnel_Role_TeamMemberStringList = new ArrayList<String>();
-    ArrayList<String> personnel_Latitude_TeamMemberStringList = new ArrayList<String>();
-    ArrayList<String> personnel_Longitude_TeamMemberStringList = new ArrayList<String>();
-    ArrayList<String> personnel_Institution_TeamMemberStringList = new ArrayList<String>();
-    ArrayList<String> personnel_LocationTime_TeamMemberStringList = new ArrayList<String>();
-
-*/
-
     public static String teamID = "";
-    //public static String subpartID = "";
-    public static String needManPower = "";
-    public static String needEquipment = "";
+    public static String needManPower = "0";
+    public static String needEquipment = "0";
     public static String status = "";
-
-
     public static String selectedSubpartID = "0";
 
     static int teamStringListSize = 0;
@@ -72,6 +70,14 @@ public class Authorized_Assign_Team extends AppCompatActivity {
         findViewById(R.id.btn_team_create).setOnClickListener(this::onClick);
         findViewById(R.id.btn_team_edit).setOnClickListener(this::onClick);
         findViewById(R.id.btn_team_delete).setOnClickListener(this::onClick);
+        notificationSender = new NotificationSender(getApplicationContext());
+
+        drawerLayout = findViewById(R.id.authorized_assign_team_drawer_layout);
+
+        GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                .requestEmail()
+                .build();
+        mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
 
 
         teamSpinner = (Spinner) findViewById(R.id.assignTeamSpinner);
@@ -88,7 +94,7 @@ public class Authorized_Assign_Team extends AppCompatActivity {
                     //textAfetId.setText("seçilmedi");
                 } else {
 
-                    for (JSONObject x : jsonObjectList) {
+                    for (JSONObject x : jsonObjectListForTeam) {
                         try {
                             if (x.getString("teamID").equals(((Spinner) findViewById(R.id.assignTeamSpinner)).getSelectedItem().toString())) {
                                 teamID = (((Spinner) findViewById(R.id.assignTeamSpinner)).getSelectedItem().toString());
@@ -98,7 +104,6 @@ public class Authorized_Assign_Team extends AppCompatActivity {
                             e.getMessage();
                         }
                     }
-                    //textAfetId.setText(disasterID);
                 }
             }
 
@@ -117,7 +122,7 @@ public class Authorized_Assign_Team extends AppCompatActivity {
                     //textAfetId.setText("seçilmedi");
                 } else {
 
-                    for (JSONObject x : jsonObjectList) {
+                    for (JSONObject x : jsonObjectListForSubpart) {
                         try {
                             if (x.getString("subpartID").equals(((Spinner) findViewById(R.id.assignSubpartSpinner)).getSelectedItem().toString())) {
                                 selectedSubpartID = (((Spinner) findViewById(R.id.assignSubpartSpinner)).getSelectedItem().toString());
@@ -135,71 +140,45 @@ public class Authorized_Assign_Team extends AppCompatActivity {
 
             }
         });
-
         //if user come to this page from subpart page than auto selected
         //bu methodu ekleme sorun çıkartıyor
-        //setSubpartToSelectedSubpartID();
-
+        setSubpartToSelectedSubpartID();
     }//onCreate end
+
 
     //setSubpartToSelectedSubpartID methodu sonradan silinecek
     public void setSubpartToSelectedSubpartID(){
         this.selectedSubpartID = "Personel Seçin";
+        System.out.println("selectedS id : " + selectedSubpartID);
         try{
             this.selectedSubpartID = Disaster_Details.selectedSubpartID;
+            System.out.println("before set spinner selectedS id : " + selectedSubpartID);
+            setSpinnerValue(selectedSubpartID,subpartSpinner);
         }catch (Exception e){
             e.getMessage();
         }
-        ((Spinner) findViewById(R.id.assignSubpartSpinner)).setSelection(getIndexFromSpinner(subpartSpinner,selectedSubpartID));
-        /*
-        try{
-            this.selectedSubpartID = "Personel Seçin";
-            try{
-                this.selectedSubpartID = Disaster_Details.selectedSubpartID;
-            }catch (Exception e){
-                e.getMessage();
-            }
-            //System.out.println("selectedSubpart ID is what :  " + subpartSpinner.getSelectedItem().toString());
-            int spinnerCount = subpartSpinner.getCount();
-            System.out.println("spinnerCount = " + spinnerCount);
-            for(int i = 0; i<spinnerCount; i++){
-                subpartSpinner.setSelection(i);
-                System.out.println("out of if subpart selection =?????? " + subpartSpinner.getSelectedItem().toString());
-                if(this.selectedSubpartID.equalsIgnoreCase(subpartSpinner.getSelectedItem().toString())){
-                    System.out.println("in if subpart selection =?????? " + subpartSpinner.getSelectedItem().toString());
-                    return;
-                }
-            }
-            System.out.println("after for subpart selection =?????? " + subpartSpinner.getSelectedItem().toString());
-        }catch (Exception e){
-            e.getMessage();
-        }
-        */
     }
-
 
     //private method of your class
     private int getIndexFromSpinner(Spinner spinner, String myString){
         for (int i=0;i<spinner.getCount();i++){
             if (spinner.getItemAtPosition(i).toString().equalsIgnoreCase(myString)){
+                System.out.println("indexi neymiş :" + i);
                 return i;
             }
         }
-
         return 0;
     }
 
-
-
     public void calaculateSelectedTeamInformations(){
-        for(int i = 0; i<teamStringList.size(); i++){
+        for(int i = 0; i<jsonObjectListForTeam.size(); i++){
             if(teamStringList.get(i).equalsIgnoreCase(teamID)){
                 try {
-                    needManPower = jsonObjectList.get(i).getString("needManPower").toString();
+                    needManPower = jsonObjectListForTeam.get(i).getString("needManPower").toString();
                     System.out.println("needmanpower value ? : " + needManPower);
-                    needEquipment = jsonObjectList.get(i).getString("needEquipment").toString();
+                    needEquipment = jsonObjectListForTeam.get(i).getString("needEquipment").toString();
                     System.out.println("needEquipment value ? : " + needEquipment);
-                    status = jsonObjectList.get(i).getString("status").toString();
+                    status = jsonObjectListForTeam.get(i).getString("status").toString();
                     System.out.println("status value ? : " + status);
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -220,7 +199,7 @@ public class Authorized_Assign_Team extends AppCompatActivity {
                 openTeamCreatePage();
                 break;
             case R.id.btn_team_edit:
-                if(isTeamSelected() && isSubpartSelected()){
+                if(isTeamSelected()){
                     openTeamEditPage();
                 }
                 break;
@@ -239,7 +218,6 @@ public class Authorized_Assign_Team extends AppCompatActivity {
         Intent intent = new Intent(this, Authorized_Create_Team.class);
         startActivity(intent);
     }
-
     public void setTeamToSpinner() {
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest
                 (Request.Method.GET, "https://afetkurtar.site/api/team/read.php", null, new Response.Listener<JSONObject>() {
@@ -262,7 +240,6 @@ public class Authorized_Assign_Team extends AppCompatActivity {
                 });
         queue.add(jsonObjectRequest);
     }
-
     public void handleResponseForTeamTable(JSONObject a) {
         ArrayList<String> list = new ArrayList<String>();
         try {
@@ -281,7 +258,7 @@ public class Authorized_Assign_Team extends AppCompatActivity {
                 try {
                     JSONObject tmp = new JSONObject(x);
                     teamStringList.add(tmp.getString("teamID"));
-                    jsonObjectList.add(tmp);
+                    jsonObjectListForTeam.add(tmp);
                 } catch (Exception e) {
                     // e.printStackTrace();
                 }
@@ -297,7 +274,6 @@ public class Authorized_Assign_Team extends AppCompatActivity {
             e.printStackTrace();
         }
     }// handle response end
-    /////////////////////////////////
     public void setSubpartToSpinner() {
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest
                 (Request.Method.GET, "https://afetkurtar.site/api/subpart/read.php", null, new Response.Listener<JSONObject>() {
@@ -320,7 +296,6 @@ public class Authorized_Assign_Team extends AppCompatActivity {
                 });
         queue.add(jsonObjectRequest);
     }
-
     public void handleResponseForSubpartTable(JSONObject a) {
         ArrayList<String> list = new ArrayList<String>();
         try {
@@ -339,7 +314,7 @@ public class Authorized_Assign_Team extends AppCompatActivity {
                 try {
                     JSONObject tmp = new JSONObject(x);
                     subpartStringList.add(tmp.getString("subpartID"));
-                    jsonObjectList.add(tmp);
+                    jsonObjectListForSubpart.add(tmp);
                 } catch (Exception e) {
                     // e.printStackTrace();
                 }
@@ -354,7 +329,6 @@ public class Authorized_Assign_Team extends AppCompatActivity {
             e.printStackTrace();
         }
     }// handle response end
-    /////////////////////////////////
     public boolean isTeamSelected(){
         String teamString = (((Spinner) findViewById(R.id.assignTeamSpinner)).getSelectedItem().toString());
         if(!teamString.equalsIgnoreCase("Takım Seçin")){
@@ -374,6 +348,31 @@ public class Authorized_Assign_Team extends AppCompatActivity {
             return false;
         }
 
+    }
+    public void setSpinnerValue(String spinnerValue, Spinner mSpinner){
+        /*
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this, R.array.select_state, android.R.layout.simple_spinner_item);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        mSpinner.setAdapter(adapter);
+        if (spinnerValue != null) {
+            int spinnerPosition = adapter.getPosition(spinnerValue);
+            mSpinner.setSelection(spinnerPosition);
+        }
+
+         */
+        System.out.println("getIndexFromSpinner(subpartSpinner,selectedSubpartID) : " + getIndexFromSpinner(subpartSpinner,selectedSubpartID));
+        //((Spinner) findViewById(R.id.assignSubpartSpinner)).setSelection(getIndexFromSpinner(subpartSpinner,selectedSubpartID));
+        //mSpinner.setSelection(getIndex(mSpinner, spinnerValue));
+        ((Spinner) findViewById(R.id.assignSubpartSpinner)).setSelection(getIndex(mSpinner,spinnerValue));
+        //private method of your class
+    }
+    private int getIndex(Spinner spinner, String myString){
+        for (int i=0;i<spinner.getCount();i++){
+            if (spinner.getItemAtPosition(i).toString().equalsIgnoreCase(myString)){
+                return i;
+            }
+        }
+        return 0;
     }
 
     public void assignSelectedTeam(){
@@ -399,6 +398,7 @@ public class Authorized_Assign_Team extends AppCompatActivity {
         JsonObjectRequest request = new JsonObjectRequest(Request.Method.POST, "https://afetkurtar.site/api/team/update.php", obj, new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
+                refreshActivity();
                 System.out.println(response.toString());
             }
         }, new Response.ErrorListener() {
@@ -415,17 +415,7 @@ public class Authorized_Assign_Team extends AppCompatActivity {
         if(!isTeamSelected()){
             return;
         }
-
         findUsersListsForSelectedTeamID(); //for xreate lists
-
-        /*
-        Dikkat burası silme
-        işleminden sonra spinnerın resetlenmesi için düşündüm ancak istenildiği gibi çalışmıyor burayı sonra incele
-        teamStringList.clear();
-        setTeamToSpinner();
-
-        */
-
     }
     public void resetPersonnelTeamMemberLists(){
         teamMemberPersonnelObjectList.clear();
@@ -439,13 +429,10 @@ public class Authorized_Assign_Team extends AppCompatActivity {
                         try {
                             //  System.out.println(response.toString());
                             handleResponseFindUserListForSelectedTeamID(response);
-
                             updateTeamIDForPersonnelsInTeam(); // for update users in lists
-
                             removeTeamFromDB(); // remove team from DB
-
+                            refreshActivity();
                             //after delete reset String list
-
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
@@ -477,22 +464,10 @@ public class Authorized_Assign_Team extends AppCompatActivity {
                     JSONObject tmp = new JSONObject(x);
                     if(tmp.getString("teamID").equals(teamID)){
                         teamMemberPersonnelObjectList.add(tmp);
-                        /*
-                        personnel_ID_TeamMemberStringList.add(tmp.getString("personnelID").trim());
-                        personnel_Name_TeamMemberStringList.add(tmp.getString("personnelName").trim());
-                        personnel_Email_TeamMemberStringList.add(tmp.getString("personnelEmail").trim());
-                        personnel_Role_TeamMemberStringList.add(tmp.getString("personnelRole").trim());
-                        personnel_Latitude_TeamMemberStringList.add(tmp.getString("latitude").trim());
-                        personnel_Longitude_TeamMemberStringList.add(tmp.getString("longitude").trim());
-                        personnel_Institution_TeamMemberStringList.add(tmp.getString("institution").trim());
-                        personnel_LocationTime_TeamMemberStringList.add(tmp.getString("locationTime").trim());
-
-                         */
-
                     }
                     //jsonObjectList.add(tmp);
                 } catch (Exception e) {
-                    // e.printStackTrace();
+                     e.printStackTrace();
                 }
             }
 
@@ -506,7 +481,6 @@ public class Authorized_Assign_Team extends AppCompatActivity {
         }
     }
     public void changeTeamIDFromPersonel(JSONObject myObject){
-
         JSONObject obj = new JSONObject();
         try {
             obj.put("personnelID", myObject.getString("personnelID"));
@@ -524,9 +498,20 @@ public class Authorized_Assign_Team extends AppCompatActivity {
         }
         JsonObjectRequest request = new JsonObjectRequest(Request.Method.POST, "https://afetkurtar.site/api/personnelUser/update.php", obj, new Response.Listener<JSONObject>() {
             @Override
-            public void onResponse(JSONObject response) {
+            public void onResponse(JSONObject response)
+            {
                 System.out.println(response.toString());
-
+                try {
+                    System.out.println("############################################## personel ID : " + myObject.getString("personnelID"));
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                try {
+                    notificationSender.sendNotification("Takımdan Çıkarıldınız",
+                            "Yetkili yöneticilerden birisi sizi bulunduğunuz takımdan çıkardı.",myObject.getString("personnelID").trim());
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
             }
         }, new Response.ErrorListener() {
             @Override
@@ -537,7 +522,6 @@ public class Authorized_Assign_Team extends AppCompatActivity {
         queue.add(request);
         Toast.makeText(this, "Takım elemanlarının teamID leri güncellendi.", Toast.LENGTH_SHORT).show();
         //finish();
-
     }
     public void removeTeamFromDB(){
         JSONObject obj = new JSONObject();
@@ -546,10 +530,8 @@ public class Authorized_Assign_Team extends AppCompatActivity {
         } catch (JSONException e) {
             e.printStackTrace();
         }
-
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest
                 (Request.Method.POST, "https://afetkurtar.site/api/team/delete.php", obj, new Response.Listener<JSONObject>() {
-
                     @Override
                     public void onResponse(JSONObject response) {
                         try {
@@ -569,6 +551,90 @@ public class Authorized_Assign_Team extends AppCompatActivity {
                 });
         queue.add(jsonObjectRequest);
         Toast.makeText(this, "TakımID" + teamID + " silindi.", Toast.LENGTH_SHORT).show();
+    }
+    public void refreshActivity(){
+        finish();
+        startActivity(getIntent());
+    }
+
+    ///////////////////////////////////drawer işlemleri////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    private void signOut() {
+        mGoogleSignInClient.signOut()
+                .addOnCompleteListener(this, new OnCompleteListener<Void>() {
+                    public void onComplete(@NonNull Task<Void> task) {
+                        System.out.println("Cikis basarili");
+                    }
+                });
+    }
+
+    public void ClickMenu(View view) {
+        //open drawer
+        openDrawer(drawerLayout);
+    }
+
+    static void openDrawer(DrawerLayout drawerLayout) {
+        //Open drawer Layout
+        drawerLayout.openDrawer(GravityCompat.START);
+    }
+
+    public void ClickLogo(View view) {
+        //Close drawer
+        closeDrawer(drawerLayout);
+    }
+
+    public static void closeDrawer(DrawerLayout drawerLayout) {
+        //Close drawer layout
+        //check condition
+        if (drawerLayout.isDrawerOpen(GravityCompat.START)) {
+            //when driver is open
+            //close drawer
+            drawerLayout.closeDrawer(GravityCompat.START);
+        }
+    }
+    public static void redirectActivity(Activity activity, Class aClass) {
+        //initialize intent
+        Intent intent = new Intent(activity, aClass);
+        //Set flag
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        //Start activity
+        activity.startActivity(intent);
+    }
+    /*
+     *************************************** ASAGIDAKI KISIMLAR YONLENDIRMELERI AYARLAR
+     */
+    // IHBARLAR
+    public void ClickAuthorizedNotice(View view) {
+        redirectActivity(this, Authorized_Notification.class);
+    }
+    // AKTIF AFET
+    public void ClickAuthorizeActiveDisaster(View view) {
+        redirectActivity(this, Authorized_ActiveDisasters.class);
+    }
+    // PERSONEL KAYIT
+    public void ClickAuthorizedPersonelRegistration(View view) {
+        redirectActivity(this, Authorized_PersonelRegister.class);
+    }
+    // GONULLU ISTEKLERI
+    public void ClickAuthrizedVolunteerRequest(View view) {
+        // redirectActivity(this, Authorized_Notification.class);
+    }
+    //MESAJ
+    public void ClickAuthorizedMessage(View view) {
+        redirectActivity(this, MessageActivity.class);
+    }
+    // CIKIS
+    public void ClickAuthorizedExit(View view) {
+        signOut();
+        redirectActivity(this, MainActivity.class );
+    }
+    public void ClickNotificationSend(View view) {
+        redirectActivity(this, Authorized_Send_Notification.class );
+    }
+
+    // ANA SAYFA
+    public void ClickAuthAnasayfa(View view) {
+        // ZATEN BU SAYFADA OLDUGUNDAN KAPALI
+        redirectActivity(this, Authorized_Anasayfa.class );
     }
 
 

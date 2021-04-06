@@ -1,5 +1,6 @@
 package com.example.afetkurtar;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -16,7 +17,10 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.view.GravityCompat;
+import androidx.drawerlayout.widget.DrawerLayout;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -24,6 +28,11 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
+import com.google.android.gms.auth.api.signin.GoogleSignIn;
+import com.google.android.gms.auth.api.signin.GoogleSignInClient;
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -32,33 +41,25 @@ import java.util.ArrayList;
 
 public class Authorized_Create_Team extends AppCompatActivity {
     private static final String TAG = "Authorized_Create_Team";
-
-    //delete this tempString
-    String tmpString ="";
+    DrawerLayout drawerLayout;
+    GoogleSignInClient mGoogleSignInClient;
     LinearLayout scroll;
     String howManyNumberText = "";
     RequestQueue queue;
+    boolean control = false;
     RadioGroup radioGroupRoleOfTeamMembers;
     String createdTeamID = "0";
+    NotificationSender notificationSender;
     private RadioButton radioButtonRoleOfTeamMembers;
     private ArrayList<String> selectedPersonnelListWithID = new ArrayList<String>();
     private ArrayList<String> selectedPersonnelListWithRole = new ArrayList<String>();
-
     private ArrayList<String> afterCreateTeamStringList = new ArrayList<String>();
-
     private ArrayList<JSONObject> availablePersonnelObjectList = new ArrayList<JSONObject>();
 
-    JSONObject data = new JSONObject();
     ArrayAdapter adapter;
-    private static String personnelID = "";
-
     ArrayList<String> personnelAvailableStringList = new ArrayList<String>();
     ArrayList<View> viewList = new ArrayList<View>();
-    ArrayList<String> personnelTeamMemberStringList = new ArrayList<String>();
-
-
     ArrayList<JSONObject> jsonObjectList = new ArrayList<JSONObject>();
-    //ArrayList<JSONObject> jsonObjectListForTeam = new ArrayList<JSONObject>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,7 +68,15 @@ public class Authorized_Create_Team extends AppCompatActivity {
         queue = Volley.newRequestQueue(this);
         findViewById(R.id.btn_createTeam_calculateHowManyMember).setOnClickListener(this::onClick);
         findViewById(R.id.btn_createTeam_Create).setOnClickListener(this::onClick);
-        findViewById(R.id.btn_returnTo_assignTeam).setOnClickListener(this::onClick);
+        findViewById(R.id.btn_returnTo_assignTeam_fromCreateTeam).setOnClickListener(this::onClick);
+        notificationSender = new NotificationSender(getApplicationContext());
+
+        drawerLayout = findViewById(R.id.authorized_create_team_drawer_layout);
+
+        GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                .requestEmail()
+                .build();
+        mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
 
     }
     public void onClick(View v) {
@@ -87,19 +96,20 @@ public class Authorized_Create_Team extends AppCompatActivity {
                 break;
             case R.id.btn_createTeam_Create:
                 try{
-
-                    //deneme();
-                    //deneme2();
-                    //deneme3();
-                    //deneme4();
-                    //deneme5();
-                    //deneme6();
                     createTeamWithSelectedPersonnels();
+                    /*
+                    control = false;
+                    selectedPersonnelListWithID.clear();
+                    selectedPersonnelListWithRole.clear();
+                    afterCreateTeamStringList.clear();
+                    availablePersonnelObjectList.clear();
+                     */
+                    finish();
                 }catch (Exception e){
                     e.getMessage();
                 }
                 break;
-            case R.id.btn_returnTo_assignTeam:
+            case R.id.btn_returnTo_assignTeam_fromCreateTeam:
                 try{
                     //burada team id yi assign sayfasındaki spinner a bir şekilde ekleyelim
                     openTeamAssignPage();
@@ -109,135 +119,6 @@ public class Authorized_Create_Team extends AppCompatActivity {
                 break;
         }
     }
-    /*
-    public void deneme(){
-        for(int i = 0; i < viewList.size(); i++){
-            tmpString = "";
-            View v = viewList.get(i);
-            ((TextView) v.findViewById(R.id.tv_availablePersonnel_create_team)).setText("ASD" + i );
-
-
-
-
-            Spinner spinner = (Spinner) viewList.get(i).findViewById(R.id.create_team_availablePersonnelSpinner);
-            spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-
-                @Override
-                public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-
-                    if (((Spinner) findViewById(R.id.create_team_availablePersonnelSpinner)).getSelectedItem().toString().equalsIgnoreCase("Personel Seçin")) {
-                        //textAfetId.setText("seçilmedi");
-                    } else {
-
-                        for (JSONObject x : jsonObjectList) {
-                            try {
-                                String personelIDPart = ((Spinner) findViewById(R.id.create_team_availablePersonnelSpinner)).getSelectedItem().toString();
-                                personelIDPart = findPersonnelID(personelIDPart);
-                                //System.out.println("Personnel id " + personelIDPart);
-                                if (x.getString("personelID").equals(personelIDPart)) {
-                                    personnelID = (((Spinner) findViewById(R.id.create_team_availablePersonnelSpinner)).getSelectedItem().toString());
-                                    System.out.println("selectedPersonel ID: " + personnelID);
-                                    return;
-                                }
-                            } catch (Exception e) {
-                                e.getMessage();
-                            }
-                        }
-
-                    }
-                }
-
-                @Override
-                public void onNothingSelected(AdapterView<?> parent) {
-
-                }
-            });
-
-
-        }
-
-
-    }*/
-    /*
-    public void deneme2(){
-
-        System.out.println("LinearLayout scroll child at 0 : " + scroll.getChildAt(0));
-        System.out.println("LinearLayout scroll child at 0 with find by wiew id: " + (scroll.getChildAt(0).findViewById(R.id.tv_availablePersonnel_create_team)));
-        TextView tvDeneme = (TextView) scroll.getChildAt(0).findViewById(R.id.tv_availablePersonnel_create_team);
-        tvDeneme.setText("acb");
-        System.out.println("LinearLayout scroll child at 0 get id : " + scroll.getChildAt(0).getId());
-        System.out.println("LinearLayout scroll child at 1 : " + scroll.getChildAt(1));
-        TextView tvDeneme2 = (TextView) scroll.getChildAt(1).findViewById(R.id.tv_availablePersonnel_create_team);
-        tvDeneme2.setText("glb");
-        System.out.println("LinearLayout scroll child at 1 get id : " + scroll.getChildAt(0).getId());
-        System.out.println("LinearLayout scroll child at 2 : " + scroll.getChildAt(2));
-        System.out.println("LinearLayout scroll child at 0 (toString) : " + scroll.getChildAt(0).toString());
-
-
-    }
-    public void deneme3(){
-        System.out.println("How many child does scroll have : " + scroll.getChildCount());
-    }
-    public void deneme4(){
-        int count = scroll.getChildCount();
-        for(int i = 0; i< count ; i++){
-            Spinner linearSpinner = (Spinner) scroll.getChildAt(i).findViewById(R.id.create_team_availablePersonnelSpinner);
-            String tmpLS = linearSpinner.getSelectedItem().toString();
-
-            linearSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-
-                @Override
-                public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                    //System.out.println("Test Authorized Team onItemSelected");
-                    if (((Spinner) findViewById(R.id.create_team_availablePersonnelSpinner)).getSelectedItem().toString().equalsIgnoreCase("Personel Seçin")) {
-                        //System.out.println("Test Authorized Team : seçilmedi");
-                        //textAfetId.setText("seçilmedi");
-                    } else {
-                        // System.out.println("Test Authorized Team else");
-                        //System.out.println(jsonObjectList.toString());
-
-                        for (JSONObject x : jsonObjectList) {
-                            try {
-                                String personelIDPart = ((Spinner) findViewById(R.id.create_team_availablePersonnelSpinner)).getSelectedItem().toString();
-                                personelIDPart = findPersonnelID(personelIDPart);
-                                //System.out.println("Personnel id " + personelIDPart);
-                                //System.out.println("Personnel id ???????????????????????????????????????????????????????999" + personelIDPart);
-                                if (x.getString("personelID").equalsIgnoreCase(personelIDPart)) {
-                                    personnelID = (((Spinner) findViewById(R.id.create_team_availablePersonnelSpinner)).getSelectedItem().toString());
-                                    return;
-                                }
-                            } catch (Exception e) {
-                                e.getMessage();
-                            }
-                        }
-                        //textAfetId.setText(disasterID);
-                    }
-                }
-
-                @Override
-                public void onNothingSelected(AdapterView<?> parent) {
-                    System.out.println("Test Authorized Team on Nothing selected ");
-                }
-            });
-
-            System.out.println("tmpLS in deneme4() : " + tmpLS);
-            System.out.println("Personel ID in deneme4() : " + personnelID);
-        }
-    }
-    public void deneme5(){
-        int count = scroll.getChildCount();
-        for(int i = 0; i< count ; i++) {
-            radioGroupRoleOfTeamMembers = (RadioGroup) scroll.getChildAt(i).findViewById(R.id.groupForTeamRole);
-            int radioId = radioGroupRoleOfTeamMembers.getCheckedRadioButtonId();
-            radioButtonRoleOfTeamMembers = (RadioButton) scroll.getChildAt(i).findViewById(radioId);
-
-            String role = radioButtonRoleOfTeamMembers.getText().toString();
-
-            System.out.println("index"+ i+ " role : " +role );
-        }
-
-    }
-    */
     public void createTeamWithSelectedPersonnels(){
         createdTeamID = "0";
         selectedPersonnelListWithID.clear();
@@ -266,11 +147,7 @@ public class Authorized_Create_Team extends AppCompatActivity {
                     selectedPersonnelListWithRole.add("Normal");
                 }
             }
-
-            //System.out.println("index"+ i+ " role : " + selectedPersonnelRole );
         }//end of for
-
-        //controlPersonnelListWithID();
         if(!controlPersonnelListWithRole()){
             return;
         }
@@ -279,49 +156,27 @@ public class Authorized_Create_Team extends AppCompatActivity {
         }
 
         createTeamWithGivenInformationToDB();
-        /*
-        for(int i = 0; i< selectedPersonnelListWithID.size(); i++){
-            System.out.println("for entry selectedID: " +selectedPersonnelListWithID.get(i));
-        }
-        for(int i = 0; i< selectedPersonnelListWithRole.size(); i++){
-            System.out.println("for entry selectedRole: "+ selectedPersonnelListWithRole.get(i));
-        }
-        */
-
     }
-    ////////////////////////////////////////////////
     public void findCreatedTeamID(){
         readFromTeamTable();
-
-
-
     }
     public void readFromTeamTable() {
-        //System.out.println("is it in here Read From table ?");
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest
                 (Request.Method.GET, "https://afetkurtar.site/api/team/read.php", null, new Response.Listener<JSONObject>() {
                     @Override
                     public void onResponse(JSONObject response) {
                         try {
-                            //  System.out.println(response.toString());
                             handleResponseForTeamTable(response);
-
                             if(Authorized_Assign_Team.teamStringListSize == afterCreateTeamStringList.size()){
-                               // System.out.println("is it in here =????? Ifffff");
-                               // System.out.println("teamStringListSize : " + Authorized_Assign_Team.teamStringListSize);
                                 createdTeamID = "0";
                             }else{
-                               // System.out.println("is it in here =????? Elseeeee");
                                 // db de ıd ne olursa olsun hep son eleman
                                 // olarak eklenicek gibi olduğundan okuduğum verilerde en son elemanın team id sini team id olarak belirlerim
                                 createdTeamID = afterCreateTeamStringList.get(afterCreateTeamStringList.size()-1);
-                                //System.out.println("createdTeamID was updated :" + createdTeamID);
                             }
 
                             /// team id üretildi şimdi bu team id kullanılarak üyelerin assigned team id lerini burada güncelle
                             updateNewPersonnelsTeamID();
-
-
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
@@ -334,27 +189,11 @@ public class Authorized_Create_Team extends AppCompatActivity {
                     }
                 });
         queue.add(jsonObjectRequest);
-        /*
-        if(Authorized_Assign_Team.teamStringListSize == afterCreateTeamStringList.size()){
-            System.out.println("is it in here =????? Ifffff");
-            System.out.println("teamStringListSize : " + Authorized_Assign_Team.teamStringListSize);
-            createdTeamID = "0";
-        }else{
-            System.out.println("is it in here =????? Elseeeee");
-            // db de ıd ne olursa olsun hep son eleman
-            // olarak eklenicek gibi olduğundan okuduğum verilerde en son elemanın team id sini team id olarak belirlerim
-            createdTeamID = afterCreateTeamStringList.get(afterCreateTeamStringList.size()-1);
-            System.out.println("createdTeamID was updated :" + createdTeamID);
-        }
-
-        */
     }
 
     public void handleResponseForTeamTable(JSONObject a) {
-        //System.out.println("is it in here responsehandle teamtable ?");
         ArrayList<String> list = new ArrayList<String>();
         try {
-            //    System.out.println(response.toString());
             String cevap = a.getString("records");
             cevap = cevap.substring(1, cevap.length() - 1);
 
@@ -369,11 +208,9 @@ public class Authorized_Create_Team extends AppCompatActivity {
             for (String x : list) {
                 try {
                     JSONObject tmp = new JSONObject(x);
-                    //System.out.println("tmp.getString ===============???? : " + tmp.getString("teamID"));
                     afterCreateTeamStringList.add(tmp.getString("teamID"));
-                    //jsonObjectListForTeam.add(tmp);
                 } catch (Exception e) {
-                    // e.printStackTrace();
+                    e.printStackTrace();
                 }
             }
         } catch (Exception e) {
@@ -384,11 +221,6 @@ public class Authorized_Create_Team extends AppCompatActivity {
     public void createTeamWithGivenInformationToDB(){
         //create a team
         sendTeamTableDataToDB();
-        //to specify createdTeamID
-
-    }
-    public void updatePersonnelUserDataToDB(){
-
     }
     public void sendTeamTableDataToDB(){
         JSONObject obj = new JSONObject();
@@ -404,19 +236,7 @@ public class Authorized_Create_Team extends AppCompatActivity {
         JsonObjectRequest request = new JsonObjectRequest(Request.Method.POST, "https://afetkurtar.site/api/team/create.php", obj, new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
-                //rintln("OnResponse output : " + response.toString());
-               // System.out.println("before findeCreated ?");
                 findCreatedTeamID();
-
-                //System.out.println("after findeCreated ?");
-
-                //addTeamIDToAssignTeamSpinner();
-                //after create team, we need to update every personnel in this team with new roles and new assigned team id
-                //updatePersonnelUserDataToDB();
-
-                //finish();
-                //System.out.println("before openTeamAssignPage ?");
-                //openTeamAssignPage();
             }
         }, new Response.ErrorListener() {
             @Override
@@ -427,17 +247,8 @@ public class Authorized_Create_Team extends AppCompatActivity {
 
         queue.add(request);
         Toast.makeText(this, "Takım oluşturuldu.", Toast.LENGTH_LONG).show();
-        //addTeamIDToAssignTeamSpinner();
-        //finish();
     }
-    /*
-    public void addTeamIDToAssignTeamSpinner(){
-
-    }
-    */
-
     public void openTeamAssignPage(){
-        //System.out.println("is it in openTeamAssignPage ?");
         Intent intent = new Intent(this, Authorized_Assign_Team.class);
         startActivity(intent);
     }
@@ -468,7 +279,6 @@ public class Authorized_Create_Team extends AppCompatActivity {
                 }
             }
         }
-
         return true;
     }
 
@@ -506,44 +316,6 @@ public class Authorized_Create_Team extends AppCompatActivity {
          Spinner linearSpinner = (Spinner) view.findViewById(R.id.create_team_availablePersonnelSpinner);
 
          setPersonnelAvailableToSpinner(linearSpinner);
-         /*
-         linearSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-
-             @Override
-             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                 //System.out.println("Test Authorized Team onItemSelected");
-                 if (((Spinner) findViewById(R.id.create_team_availablePersonnelSpinner)).getSelectedItem().toString().equalsIgnoreCase("Personel Seçin")) {
-                     //System.out.println("Test Authorized Team : seçilmedi");
-                     //textAfetId.setText("seçilmedi");
-                 } else {
-                     // System.out.println("Test Authorized Team else");
-                     //System.out.println(jsonObjectList.toString());
-
-                     for (JSONObject x : jsonObjectList) {
-                         try {
-                             String personnelIDPart = ((Spinner) findViewById(R.id.create_team_availablePersonnelSpinner)).getSelectedItem().toString();
-                             personnelIDPart = findPersonnelID(personnelIDPart);
-                             System.out.println("Personnel id " + personnelIDPart);
-                             System.out.println("Personnel id ???????????????????????????????????????????????????????999" + personnelIDPart);
-                             if (x.getString("personnelID").equals(personnelIDPart)) {
-                                 personnelID = (((Spinner) findViewById(R.id.create_team_availablePersonnelSpinner)).getSelectedItem().toString());
-                                 return;
-                             }
-                         } catch (Exception e) {
-                             e.getMessage();
-                         }
-                     }
-                     //textAfetId.setText(disasterID);
-                 }
-             }
-
-             @Override
-             public void onNothingSelected(AdapterView<?> parent) {
-                 System.out.println("Test Authorized Team on Nothing selected ");
-             }
-         });
-         */
-         //viewList.add(view);
          scroll.addView(view);
      }// deneme end
     public void setPersonnelAvailableToSpinner(Spinner availableMembersSpinner) {
@@ -555,6 +327,7 @@ public class Authorized_Create_Team extends AppCompatActivity {
                         try {
                             //  System.out.println(response.toString());
                             handleResponseForPersonnelAvailableTable(response,availableMembersSpinner);
+                            //refreshActivity();
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
@@ -568,11 +341,15 @@ public class Authorized_Create_Team extends AppCompatActivity {
                 });
         queue.add(jsonObjectRequest);
     }
+    public void refreshActivity(){
+        finish();
+        startActivity(getIntent());
+    }
 
     public void handleResponseForPersonnelAvailableTable(JSONObject a,Spinner availableMembersSpinner) {
+
         ArrayList<String> list = new ArrayList<String>();
         try {
-            //    System.out.println(response.toString());
             String cevap = a.getString("records");
             cevap = cevap.substring(1, cevap.length() - 1);
 
@@ -584,23 +361,27 @@ public class Authorized_Create_Team extends AppCompatActivity {
 
             personnelAvailableStringList.add("Personel Seçin");
 
-            for (String x : list) {
-                try {
-                    JSONObject tmp = new JSONObject(x);
-                    if(tmp.getString("teamID").equals("0")){
-                        personnelAvailableStringList.add("PersonnelID: " + tmp.getString("personnelID") +", Personnel İsmi: "+ tmp.getString("personnelName"));
-                        availablePersonnelObjectList.add(tmp);
+                for (String x : list) {
+                    try {
+                        JSONObject tmp = new JSONObject(x);
+                        if(tmp.getString("teamID").equals("0")){
+                            personnelAvailableStringList.add("PersonnelID: " + tmp.getString("personnelID") +", Personnel İsmi: "+ tmp.getString("personnelName"));
+                            if(!control){
+                                availablePersonnelObjectList.add(tmp);
+                            }
+                        }
+                        jsonObjectList.add(tmp);
+                    } catch (Exception e) {
+                        e.printStackTrace();
                     }
-                    jsonObjectList.add(tmp);
-                } catch (Exception e) {
-                    // e.printStackTrace();
                 }
-            }
+                control = true;
+
+
+
 
             adapter = new ArrayAdapter<String>(getApplicationContext(), android.R.layout.simple_spinner_dropdown_item, personnelAvailableStringList);
             adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-            //((Spinner)findViewById(R.id.edit_team_available_personnelSpinner));
-            //availableMembersSpinner.removeAllViews();
             availableMembersSpinner.setAdapter(adapter);
             personnelAvailableStringList = new ArrayList<String>();
         } catch (Exception e) {
@@ -619,27 +400,22 @@ public class Authorized_Create_Team extends AppCompatActivity {
     }
     public void updateNewPersonnelsTeamID(){
         //burasi yeni personellerin team id lerinin güncellenmesi için
-        //System.out.println("bu methoda girdi mi update new personnel xxx");
-        //System.out.println("availablePersonnelObjectList.size():" + availablePersonnelObjectList.size());
-        //System.out.println("selectedPersonnelListWithID.size():" + selectedPersonnelListWithID.size());
-        for(int i = 0 ; i<availablePersonnelObjectList.size(); i++){
-            for(int j = 0 ; j < selectedPersonnelListWithID.size(); j++){
-                try {
-                   // System.out.println("available personnel ID : " + availablePersonnelObjectList.get(i).getString("personnelID"));
-                    //System.out.println("selected personnel ID : " + selectedPersonnelListWithID.get(j));
-                    if(availablePersonnelObjectList.get(i).getString("personnelID").trim().equalsIgnoreCase(selectedPersonnelListWithID.get(j).trim())){
-                      //  System.out.println("Update New Personnel team id and role icin for a girdi");
-                        updateTeamIDAndRole(availablePersonnelObjectList.get(i),selectedPersonnelListWithRole.get(j));
-                    }
-                } catch (JSONException e) {
-                    e.printStackTrace();
+
+        for(int i = 0; i < availablePersonnelObjectList.size(); i++){
+            try {
+
+                if(selectedPersonnelListWithID.contains(availablePersonnelObjectList.get(i).getString("personnelID"))){
+                    updateTeamIDAndRole(availablePersonnelObjectList.get(i),selectedPersonnelListWithRole
+                            .get( selectedPersonnelListWithID.indexOf((availablePersonnelObjectList.get(i).getString("personnelID")))));
                 }
+            } catch (JSONException e) {
+                e.printStackTrace();
             }
         }
+
+
     }
-    /////////////////////////////
     public void updateTeamIDAndRole(JSONObject myJsonObject,String role){
-        //System.out.println("jsonobject oluşturdu.");
         JSONObject obj = new JSONObject();
         try {
             obj.put("personnelID", myJsonObject.getString("personnelID"));
@@ -651,7 +427,6 @@ public class Authorized_Create_Team extends AppCompatActivity {
             obj.put("longitude", myJsonObject.getString("longitude"));
             obj.put("institution", myJsonObject.getString("institution"));
             obj.put("locationTime", myJsonObject.getString("locationTime"));
-            //System.out.println("oluşturduğumuz objenin to stringi : " + obj.toString());
 
         } catch (Exception e) {
             e.getMessage();
@@ -659,7 +434,22 @@ public class Authorized_Create_Team extends AppCompatActivity {
         JsonObjectRequest request = new JsonObjectRequest(Request.Method.POST, "https://afetkurtar.site/api/personnelUser/update.php", obj, new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
-                //System.out.println(response.toString());
+                System.out.println(response.toString());
+
+                /*
+                try {
+                    System.out.println("############################################## personel ID : " + myJsonObject.getString("personnelID"));
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
+                 */
+                try {
+                    notificationSender.sendNotification(createdTeamID + " takımına eklendiniz.",
+                            "Yetkili yöneticilerden birisi sizi " + createdTeamID + " takımına ekledi." , myJsonObject.getString("personnelID").trim());
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
             }
         }, new Response.ErrorListener() {
             @Override
@@ -670,8 +460,87 @@ public class Authorized_Create_Team extends AppCompatActivity {
         queue.add(request);
         Toast.makeText(this, "Takım elemanlarının teamID leri güncellendi.", Toast.LENGTH_SHORT).show();
         //finish();
-
     }
+    ///////////////////////////////////drawer işlemleri////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    private void signOut() {
+        mGoogleSignInClient.signOut()
+                .addOnCompleteListener(this, new OnCompleteListener<Void>() {
+                    public void onComplete(@NonNull Task<Void> task) {
+                        System.out.println("Cikis basarili");
+                    }
+                });
+    }
+
+    public void ClickMenu(View view) {
+        //open drawer
+        openDrawer(drawerLayout);
+    }
+
+    static void openDrawer(DrawerLayout drawerLayout) {
+        //Open drawer Layout
+        drawerLayout.openDrawer(GravityCompat.START);
+    }
+
+    public void ClickLogo(View view) {
+        //Close drawer
+        closeDrawer(drawerLayout);
+    }
+
+    public static void closeDrawer(DrawerLayout drawerLayout) {
+        //Close drawer layout
+        //check condition
+        if (drawerLayout.isDrawerOpen(GravityCompat.START)) {
+            //when driver is open
+            //close drawer
+            drawerLayout.closeDrawer(GravityCompat.START);
+        }
+    }
+    public static void redirectActivity(Activity activity, Class aClass) {
+        //initialize intent
+        Intent intent = new Intent(activity, aClass);
+        //Set flag
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        //Start activity
+        activity.startActivity(intent);
+    }
+    /*
+     *************************************** ASAGIDAKI KISIMLAR YONLENDIRMELERI AYARLAR
+     */
+    // IHBARLAR
+    public void ClickAuthorizedNotice(View view) {
+        redirectActivity(this, Authorized_Notification.class);
+    }
+    // AKTIF AFET
+    public void ClickAuthorizeActiveDisaster(View view) {
+        redirectActivity(this, Authorized_ActiveDisasters.class);
+    }
+    // PERSONEL KAYIT
+    public void ClickAuthorizedPersonelRegistration(View view) {
+        redirectActivity(this, Authorized_PersonelRegister.class);
+    }
+    // GONULLU ISTEKLERI
+    public void ClickAuthrizedVolunteerRequest(View view) {
+        //redirectActivity(this, Authorized_Notification.class);
+    }
+    //MESAJ
+    public void ClickAuthorizedMessage(View view) {
+        redirectActivity(this, MessageActivity.class);
+    }
+    // CIKIS
+    public void ClickAuthorizedExit(View view) {
+        signOut();
+        redirectActivity(this, MainActivity.class );
+    }
+    public void ClickNotificationSend(View view) {
+        redirectActivity(this, Authorized_Send_Notification.class );
+    }
+
+    // ANA SAYFA
+    public void ClickAuthAnasayfa(View view) {
+        // ZATEN BU SAYFADA OLDUGUNDAN KAPALI
+        redirectActivity(this, Authorized_Anasayfa.class );
+    }
+
 
 
 }//class end

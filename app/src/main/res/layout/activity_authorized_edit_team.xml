@@ -1,12 +1,26 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.drawerlayout.widget.DrawerLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
+    android:id="@+id/authorized_edit_team_drawer_layout"
     android:background="#BFBFBF"
     tools:context=".Authorized_Edit_Team">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:id="@+id/bar_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/white">
+            <include layout="@layout/activity_tool_bar"></include>
+        </LinearLayout>
 
     <Space
         android:layout_width="match_parent"
@@ -105,35 +119,6 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Takıma atanan afet parçası ID:"
-        android:paddingLeft="16dp"
-        android:textColor="#000"
-        android:textStyle="bold"
-        android:textSize="16sp">
-    </TextView>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="34dp"
-        android:layout_weight="0"
-        android:paddingLeft="16dp"
-        android:paddingRight="16dp"
-        tools:ignore="MissingConstraints">
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/tv_team_subpartID"
-            android:textSize="12dp"
-            android:textColor="#000"
-            android:background="#FFF"
-            android:layout_weight="1"
-            />
-    </LinearLayout>
-
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
         android:text="Uygun personeller listesi"
         android:paddingLeft="16dp"
         android:textColor="#000"
@@ -148,7 +133,6 @@
         android:paddingLeft="16dp"
         android:paddingRight="16dp"
         tools:ignore="MissingConstraints">
-
 
         <Spinner
             android:id="@+id/edit_team_available_personnelSpinner"
@@ -182,7 +166,6 @@
         android:paddingRight="16dp"
         tools:ignore="MissingConstraints">
 
-
         <Spinner
             android:id="@+id/edit_team_personnelMembersSpinner"
             android:layout_width="wrap_content"
@@ -190,9 +173,7 @@
             android:textColor="#000"
             android:background="#FFF"
             android:layout_weight="1"></Spinner>
-
     </LinearLayout>
-
 
     <Space
         android:layout_width="match_parent"
@@ -236,11 +217,46 @@
 
             android:id="@+id/btn_editTeam_removePersonnel">
         </Button>
+    </LinearLayout>
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="20dp">
+        </Space>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:layout_weight="0"
+            android:paddingLeft="16dp"
+            android:paddingRight="16dp"
+            tools:ignore="MissingConstraints">
+
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:text="Geri"
+                android:textSize="8dp"
+                android:textColor="#FFF"
+                android:layout_weight="1"
+                android:background="#000"
+                android:textStyle="bold"
+                android:id="@+id/btn_returnTo_assignTeam_fromEditTeam">
+            </Button>
+            <Space
+                android:layout_width="250dp"
+                android:layout_height="match_parent"
+                android:layout_weight="0">
+            </Space>
+        </LinearLayout>
 
     </LinearLayout>
 
+    <RelativeLayout
+        android:layout_width="300dp"
+        android:layout_height="match_parent"
+        android:layout_gravity="start"
+        android:background="@color/white">
+        <include
+            layout="@layout/activity_authorized_nav_drawer"/>
+    </RelativeLayout>
 
-
-
-
-</LinearLayout>
+</androidx.drawerlayout.widget.DrawerLayout>
