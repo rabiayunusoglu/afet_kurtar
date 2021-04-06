@@ -132,7 +132,8 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
         System.out.println("BURA BURA");
         System.out.println("BURA BURA");
 
-        if(componentInfo.getClassName().substring(componentInfo.getClassName().lastIndexOf(".")+1).equals("MessageActivity"))
+        if(componentInfo.getClassName().substring(componentInfo.getClassName().lastIndexOf(".")+1).equals("MessageActivity") &&
+                remoteMessage.getData().get("title").equals("Yeni Mesaj"))
         {
             Intent intent = new Intent();
             intent.putExtra("extra", "Test");

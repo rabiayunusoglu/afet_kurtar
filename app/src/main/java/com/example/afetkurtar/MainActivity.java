@@ -95,9 +95,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     private void checkUser(GoogleSignInAccount account) {
         String url = "https://afetkurtar.site/api/users/search.php";
-        System.out.println(account.getDisplayName() +"***************************");
-        System.out.println(account.getEmail() + "***************************");
-        System.out.println(account.getId() + "***************************************");
         Map<String, String> params = new HashMap<String, String>();
         params.put("email", account.getEmail());
 

@@ -158,7 +158,7 @@ public class Personel_Anasayfa extends AppCompatActivity {
     }
 
     public void ClickPersonelInfo(View view) {
-       // redirectActivity(this, Authorized_PersonelRegister.class);
+        redirectActivity(this, Personel_Information.class);
     }
 
     public void ClickPersonelArea(View view) {

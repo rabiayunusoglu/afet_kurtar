@@ -119,47 +119,42 @@ public class NotificationSender extends Activity {
         queue.add(jsonObjectRequest);
     }
 
+
+
     public void sendNotification(String Title, String Body, String ID){
+
+        JSONObject obj = new JSONObject();
         try {
-            JSONObject data = new JSONObject();
-
-            data.put("title", Title);
-            data.put("body", Body);
-
-            JSONObject data2 = new JSONObject();
-
-            data2.put("title", "");
-            data2.put("body", "");
-
-            JSONObject notification_data = new JSONObject();
-            notification_data.put("notification", data);
-            notification_data.put("data", data2);
-            // notification_data.put("to",MainActivity.userInfo.getString("userToken"));
-            notification_data.put("to",ID);
-
-            JsonObjectRequest request = new JsonObjectRequest(url, notification_data, new Response.Listener<JSONObject>() {
-                @Override
-                public void onResponse(JSONObject response) {
-                    System.out.println(response.toString());
-                }
-            }, new Response.ErrorListener() {
-                @Override
-                public void onErrorResponse(VolleyError error) {
-                    error.printStackTrace();
-                }
-            }) {
-                @Override
-                public Map<String, String> getHeaders() {
-                    Map<String, String> headers = new HashMap<>();
-                    headers.put("Content-Type", "application/json");
-                    headers.put("Authorization", api_key_header_value);
-                    return headers;
-                }
-            };
-            queue.add(request);
+            obj.put("userID",ID);
         } catch (JSONException e) {
             e.printStackTrace();
         }
+        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest
+                (Request.Method.GET, "https://afetkurtar.site/api/users/search.php", obj, new Response.Listener<JSONObject>() {
+
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        String cevap;
+                        try {
+                            cevap = response.getString("records");
+                            cevap = cevap.substring(1, cevap.length() - 1);
+
+                            JSONObject tmp = new JSONObject(cevap);
+                            if(tmp.getString("userToken").length()>10)
+                            sendNotificationWithData(Title,Body,"","",tmp.getString("userToken"));
+
+                        }catch (Exception e){
+
+                        }
+                    }
+                }, new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        // TODO: Handle error
+                        System.out.println(error);
+                    }
+                });
+        queue.add(jsonObjectRequest);
     }
     public void sendNotificationWithData(String Ntitle, String Nbody, String Dtitle, String Dbody, String ID){
         try {
