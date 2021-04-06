@@ -1,0 +1,277 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.drawerlayout.widget.DrawerLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:id="@+id/personel_info_layout"
+    tools:context=".Personel_Anasayfa"
+    android:background="#BFBFBF">
+
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        >
+        <include
+            layout="@layout/activity_tool_bar">
+        </include>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="#BFBFBF"
+            android:orientation="vertical"
+            android:paddingLeft="30dp"
+            android:paddingRight="30dp"
+
+
+            >
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="#BFBFBF"
+                android:orientation="horizontal"
+
+                >
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="#BFBFBF"
+                    android:orientation="vertical"
+
+                    >
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Takım No :"
+                        android:textColor="#050505"
+                        android:textSize="25sp"
+                        android:textStyle="bold" />
+                    <TextView
+                        android:id="@+id/Team_info_no"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Yok"
+                        android:layout_gravity="center"
+                        android:textColor="#050505"
+                        android:textSize="20sp"
+                        android:textStyle="bold" />
+                </LinearLayout>
+
+                <Space
+                    android:layout_width="100dp"
+                    android:layout_height="10dp">
+
+                </Space>
+
+                <LinearLayout
+                    android:layout_width="132dp"
+                    android:layout_height="wrap_content"
+                    android:background="#BFBFBF"
+                    android:orientation="vertical"
+
+                    >
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Afet No :"
+                        android:textColor="#050505"
+                        android:textSize="25sp"
+                        android:textStyle="bold" />
+                    <TextView
+                        android:id="@+id/Team_info_subpartno"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:text="Yok"
+                        android:textColor="#050505"
+                        android:textSize="20sp"
+                        android:textStyle="bold" />
+                </LinearLayout>
+            </LinearLayout>
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Takımdaki Rol :"
+                android:textColor="#050505"
+                android:textSize="25sp"
+                android:textStyle="bold" />
+            <TextView
+                android:id="@+id/Team_my_role"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:text="Yok"
+                android:textColor="#050505"
+                android:textSize="20sp"
+                android:textStyle="bold" />
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="#BFBFBF"
+                android:text="Adres :"
+                android:textColor="#050505"
+                android:textSize="25sp"
+                android:textStyle="bold" />
+            <ScrollView
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_gravity="center"
+                android:scrollbars="vertical"
+                android:background="#BFBFBF"
+                >
+                <TextView
+                    android:id="@+id/personnel_address"
+                    android:layout_width="match_parent"
+                    android:layout_height="fill_parent"
+                    android:text="Yok"
+                    android:background="#BFBFBF"
+                    android:textColor="#050505"
+                    android:textSize="20sp"
+                    android:textStyle="bold"
+                    android:scrollbars = "vertical"
+                    android:scrollbarAlwaysDrawVerticalTrack="true"
+                    android:fadeScrollbars="false"
+                    />
+            </ScrollView>
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="#BFBFBF"
+                android:text="En Son Durum :"
+                android:textColor="#050505"
+                android:textSize="25sp"
+                android:textStyle="bold" />
+            <ScrollView
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_gravity="center"
+                android:scrollbars="vertical"
+                android:background="#BFBFBF"
+                >
+                <TextView
+                    android:id="@+id/personel_team_status"
+                    android:layout_width="match_parent"
+                    android:layout_height="fill_parent"
+                    android:text="Yok"
+                    android:background="#BFBFBF"
+                    android:textColor="#050505"
+                    android:textSize="20sp"
+                    android:textStyle="bold"
+                    android:scrollbars = "vertical"
+                    android:scrollbarAlwaysDrawVerticalTrack="true"
+                    android:fadeScrollbars="false"
+                    />
+            </ScrollView>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="#BFBFBF"
+            android:orientation="vertical"
+            android:paddingLeft="30dp"
+            android:paddingRight="30dp"
+
+            >
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="#BFBFBF"
+                android:text="Kurtarılmış İnsan Sayısı :"
+                android:textColor="#050505"
+                android:textSize="25sp"
+                android:textStyle="bold" />
+            <TextView
+                android:id="@+id/Rescued_Person_info"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Yok"
+                android:layout_gravity="center"
+                android:background="#BFBFBF"
+                android:textColor="#050505"
+                android:textSize="20sp"
+                android:textStyle="bold" />
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Kayıp Insan Sayısı :"
+                android:textColor="#050505"
+                android:textSize="25sp"
+                android:textStyle="bold" />
+            <TextView
+                android:id="@+id/Missing_Person_info"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Yok"
+                android:layout_gravity="center"
+                android:textColor="#050505"
+                android:textSize="20sp"
+                android:textStyle="bold" />
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="#BFBFBF"
+            android:orientation="vertical"
+            android:paddingLeft="30dp"
+            android:paddingRight="30dp"
+            android:layout_weight="1"
+
+
+            >
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="#BFBFBF"
+                android:text="Takımdaki Elemanları :"
+                android:textColor="#050505"
+                android:textSize="25sp"
+                android:textStyle="bold" />
+            <ScrollView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:scrollbars="vertical"
+                android:background="#BFBFBF"
+                android:layout_weight="1"
+                >
+                <LinearLayout
+                    android:id="@+id/PersonnelNames"
+                    android:layout_width="match_parent"
+                    android:layout_height="fill_parent"
+                    android:text="Yok"
+                    android:background="#BFBFBF"
+                    android:textColor="#050505"
+                    android:textSize="20sp"
+                    android:textStyle="bold"
+                    android:scrollbars = "vertical"
+                    android:scrollbarAlwaysDrawVerticalTrack="true"
+                    android:fadeScrollbars="false"
+                    android:orientation="vertical">
+                </LinearLayout>
+            </ScrollView>
+
+        </LinearLayout>
+
+    </LinearLayout>
+    <RelativeLayout
+        android:layout_width="300dp"
+        android:layout_height="match_parent"
+        android:layout_gravity="start"
+        android:background="@color/white">
+        <include
+            layout="@layout/activity_personel_nav_drawer"/>
+    </RelativeLayout>
+
+
+
+
+</androidx.drawerlayout.widget.DrawerLayout>
