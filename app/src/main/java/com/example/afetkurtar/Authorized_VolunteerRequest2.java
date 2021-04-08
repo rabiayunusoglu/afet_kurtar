@@ -71,99 +71,18 @@ public class Authorized_VolunteerRequest2 extends AppCompatActivity {
         afet.setText(Authorized_VolunteerRequest.afetBolgesi);
         afet.setFocusableInTouchMode(false);
         loadSpinnerDataSubpart(urlSubpart);
-        try {
-            checkUser();
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
+
         submits = findViewById(R.id.gdrBtn);
         submits.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
-                try{
-                    JSONObject obj = new JSONObject();
-                    try {
-                        obj.put("volunteerID",volInfo.get("volunteerID"));
-                        obj.put("volunteerName", volInfo.get("volunteerName"));
-                        obj.put("address", volInfo.get("address"));
-                        obj.put("isExperienced",  volInfo.get("isExperienced"));
-                        obj.put("haveFirstAidCert",  volInfo.get("haveFirstAidCert"));
-                        obj.put("requestedSubpart",  dataSupartID);
-                        obj.put("latitude",  volInfo.get("latitude"));
-                        obj.put("longitude",  volInfo.get("longitude"));
-                        obj.put("locationTime",  volInfo.get("locationTime"));
-                        obj.put("tc", volInfo.get("tc"));
-                        obj.put("tel", volInfo.get("tel"));
-                        obj.put("birthDate", volInfo.get("birthDate"));
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
-
-                    JsonObjectRequest request = new JsonObjectRequest(
-                            Request.Method.POST, // the request method
-                            url1, // the URL
-                            obj, // the parameters for the php
-                            new Response.Listener<JSONObject>() { // the response listener
-                                @Override
-                                public void onResponse(JSONObject response) {
-                                    System.out.println(response.toString());
-                                }
-                            },
-                            new Response.ErrorListener() { // the error listener
-                                @Override
-                                public void onErrorResponse(VolleyError error) {
-                                    System.out.println(error);
-                                }
-                            });
-                    queuev.add(request);
-                    Toast.makeText(Authorized_VolunteerRequest2.this, "Kaydınız Başarıyla Gerçekleşti :)", Toast.LENGTH_SHORT).show();
-                    redirectActivity(Authorized_VolunteerRequest2.this,Authorized_Anasayfa.class);
-                }catch (Exception e){
-                    Toast.makeText(Authorized_VolunteerRequest2.this, "Tekrar Deneyiniz...", Toast.LENGTH_SHORT).show();
-                    redirectActivity(Authorized_VolunteerRequest2.this,Authorized_VolunteerRequest2.class);
-                }
+                redirectActivity(Authorized_VolunteerRequest2.this,Authorized_VolunteerRequest3.class);
             }
         });
 
 
     }
-    private void checkUser() throws JSONException {
-        String url = "https://afetkurtar.site/api/volunteerUser/search.php";
 
-        Map<String, Integer> params = new HashMap<String, Integer>();
-        params.put("volunteerID", MainActivity.userID);
-
-        JsonObjectRequest  request = new JsonObjectRequest(
-                Request.Method.POST, // the request method
-                url, // the URL
-                new JSONObject(params), // the parameters for the php
-                new Response.Listener<JSONObject>() { // the response listener
-                    @Override
-                    public void onResponse(JSONObject response){
-                        //  System.out.println("response dönüyor");
-                        System.out.println(response.toString());
-
-
-                        String type = "";
-                        try {
-                            String cevap = response.getString("records");
-                            cevap = cevap.substring(1, cevap.length() - 1);
-                            JSONObject tmpJson = new JSONObject(cevap);
-                            volInfo= new JSONObject(cevap);
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
-                    }
-                },
-                new Response.ErrorListener() { // the error listener
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        System.out.println(error);
-                    }
-                });
-        queuecheck.add(request);
-    }
 
 
     private void loadSpinnerDataSubpart(String url) {

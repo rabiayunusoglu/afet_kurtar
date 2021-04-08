@@ -69,7 +69,7 @@ public class Authorized_VolunteerRequest extends AppCompatActivity {
             public void onClick(View v) {
                 // setContentView(R.layout.activity_volunteer__participate_request2);
 
-                redirectActivity(Authorized_VolunteerRequest.this,Volunteer_ParticipateRequest2.class);
+                redirectActivity(Authorized_VolunteerRequest.this,Authorized_VolunteerRequest2.class);
             }
         });
 
