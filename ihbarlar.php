@@ -89,6 +89,17 @@ if (session_id() == '') {
             $context = stream_context_create($options);
             $response = json_decode(file_get_contents($url, false, $context), true);
 
+            $url = "http://afetkurtar.site/api/disasterEvents/read.php";
+
+            $options = ['http' => [
+                'method' => 'POST',
+                'header' => 'Content-type:application/json'
+                // 'content' => $json
+            ]];
+
+            $context = stream_context_create($options);
+            $disasters = json_decode(file_get_contents($url, false, $context), true);
+
             echo "<table class=\"table table-dark\">
             <tr>
             <th>İhbar Türü</th>
@@ -96,6 +107,7 @@ if (session_id() == '') {
             <th>İhbar Konumu</th>
             <th>Konum Fotoğrafı</th>
             <th>İhbar Fotoğrafı</th>
+            <th>Detay</th>
             </tr>";
 
             
@@ -110,6 +122,11 @@ if (session_id() == '') {
                 echo "<td class=\"td-element\">" . $address . "</td>";
                 echo "<td><img style=\"height: 150px;\" src=\"https://maps.googleapis.com/maps/api/staticmap?center=" . $row['latitude'] . "," . $row['longitude'] . "&zoom=12&size=200x200&key=AIzaSyCxLUKYaDqQEIIQGQGQmC0ipdS04IXRoRw\"/></td>";
                 echo "<td><img class=\"img-responsive\" style=\"height: 150px;\" src=\"" . $row['imageURL'] . "\"/></td>";
+                echo "<select class=\"td-element\" id=\"disasterForNotice\">";
+                foreach($disasters['records'] as $disaster){
+                    echo "<option>" . $disaster["disasterName"] . "</option>";
+                }
+                echo "<td class=\"td-element\"><input type=\"button\" value=\"Afet Bölgelerine Ekle\" onclick=\"addNoticeAsSubpart(this.id)\" class=\"btn btn-primary\"\></input></td>";
                 echo "</tr>";
             }
             echo "</table>";

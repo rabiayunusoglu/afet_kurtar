@@ -158,7 +158,7 @@ class Users{
         $stmt->bindParam(":userType", $this->userType);
         $stmt->bindParam(":userName", $this->userName);
         $stmt->bindParam(":email", $this->email);
-        $stmt->bindParam(":createTime", $this->createTime);
+      //  $stmt->bindParam(":createTime", $this->createTime);
         $stmt->bindParam(":userToken", $this->userToken);
 
     

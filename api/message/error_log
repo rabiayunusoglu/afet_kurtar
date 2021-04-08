@@ -1,0 +1,23 @@
+[04-Apr-2021 15:56:13 Europe/Istanbul] PHP Fatal error:  Uncaught Error: Class 'Message' not found in /home/u0025294/public_html/api/message/create.php:18
+Stack trace:
+#0 {main}
+  thrown in /home/u0025294/public_html/api/message/create.php on line 18
+[04-Apr-2021 15:56:34 Europe/Istanbul] PHP Fatal error:  Uncaught Error: Class 'Message' not found in /home/u0025294/public_html/api/message/create.php:18
+Stack trace:
+#0 {main}
+  thrown in /home/u0025294/public_html/api/message/create.php on line 18
+[04-Apr-2021 15:56:43 Europe/Istanbul] PHP Fatal error:  Uncaught Error: Class 'Message' not found in /home/u0025294/public_html/api/message/read.php:17
+Stack trace:
+#0 {main}
+  thrown in /home/u0025294/public_html/api/message/read.php on line 17
+[04-Apr-2021 15:56:47 Europe/Istanbul] PHP Fatal error:  Uncaught Error: Class 'Message' not found in /home/u0025294/public_html/api/message/read.php:17
+Stack trace:
+#0 {main}
+  thrown in /home/u0025294/public_html/api/message/read.php on line 17
+[04-Apr-2021 15:59:29 Europe/Istanbul] PHP Fatal error:  Uncaught Error: Class 'message' not found in /home/u0025294/public_html/api/message/read.php:17
+Stack trace:
+#0 {main}
+  thrown in /home/u0025294/public_html/api/message/read.php on line 17
+[04-Apr-2021 19:58:21 Europe/Istanbul] PHP Parse error:  syntax error, unexpected '{' in /home/u0025294/public_html/api/message/create.php on line 30
+[04-Apr-2021 19:59:15 Europe/Istanbul] PHP Parse error:  syntax error, unexpected '{', expecting ')' in /home/u0025294/public_html/api/message/create.php on line 30
+[04-Apr-2021 20:00:26 Europe/Istanbul] PHP Parse error:  syntax error, unexpected '{' in /home/u0025294/public_html/api/message/create.php on line 30
