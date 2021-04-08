@@ -5,8 +5,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:id="@+id/auth_drawer_layout"
-    tools:context=".Authorized_Anasayfa">
+    android:id="@+id/drawer_layoutautreg"
+    tools:context=".Authorized_VolunteerRequest">
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -14,16 +14,8 @@
         <include
             layout="@layout/activity_tool_bar">
         </include>
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:text="ANASAYFA"
-            android:textColor="#050505"
-            android:textSize="15sp"
-            android:textStyle="bold" />
 
-        <include layout="@layout/avtivity_tool_auth_anasayfa"></include>
+        <include layout="@layout/activity_aut_req1"></include>
 
         <LinearLayout
             android:layout_width="match_parent"

@@ -473,7 +473,7 @@ public class Authorized_Edit_Team extends AppCompatActivity {
     }
     // GONULLU ISTEKLERI
     public void ClickAuthrizedVolunteerRequest(View view) {
-        //redirectActivity(this, Authorized_Notification.class);
+        redirectActivity(this, Authorized_VolunteerRequest.class);
     }
     //MESAJ
     public void ClickAuthorizedMessage(View view) {

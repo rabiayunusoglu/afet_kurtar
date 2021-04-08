@@ -152,7 +152,7 @@ public class Authorized_Send_Notification extends AppCompatActivity {
     }
     // GONULLU ISTEKLERI
     public void ClickAuthrizedVolunteerRequest(View view) {
-        // redirectActivity(this, Authorized_Notification.class);
+        redirectActivity(this, Authorized_VolunteerRequest.class);
     }
 
 

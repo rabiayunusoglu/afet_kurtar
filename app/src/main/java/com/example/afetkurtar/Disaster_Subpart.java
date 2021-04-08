@@ -416,7 +416,7 @@ public class Disaster_Subpart extends AppCompatActivity implements OnMapReadyCal
             Toast.makeText(this, "Afet alt parçası güncellendi.", Toast.LENGTH_SHORT).show();
 
         } catch (Exception e) {
-            Toast.makeText(this, "Gönüllü İstek Talep Edebilme Durumunu Evet yada HAyır şeklinde belirleyiniz", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Gönüllü İstek Talep Edebilme Durumunu Açık yada Kapalı şeklinde belirleyiniz", Toast.LENGTH_SHORT).show();
 
         }
         JsonObjectRequest request = new JsonObjectRequest(Request.Method.POST, "https://afetkurtar.site/api/subpart/update.php", obj, new Response.Listener<JSONObject>() {

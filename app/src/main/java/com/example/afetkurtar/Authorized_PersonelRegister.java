@@ -100,85 +100,103 @@ public class Authorized_PersonelRegister extends AppCompatActivity {
 
     @RequiresApi(api = Build.VERSION_CODES.O)
     private void addUser() {
-        String url1 = "https://afetkurtar.site/api/users/create.php";
-        LocalDateTime now1 = LocalDateTime.now();
-        DateTimeFormatter formatter1 = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-        String formatDateTime1 = now1.format(formatter1);
-        Map<String, String> params1 = new HashMap<String, String>();
-        params1.put("userType", "personnelUser");
-        params1.put("userName", name.getText().toString());
-        params1.put("email", email.getText().toString());
-        params1.put("createTime", formatDateTime1);
-        JsonObjectRequest request1 = new JsonObjectRequest(
-                Request.Method.POST, // the request method
-                url1, // the URL
-                new JSONObject(params1), // the parameters for the php
-                new Response.Listener<JSONObject>() { // the response listener
+        try {
+            if (name.length() == 0 || !(email.getText().toString().contains("@gmail.com")) || email.length() == 0 || kurum.length() == 0 || rol.length() == 0)
+                throw new Exception("");
+            String url1 = "https://afetkurtar.site/api/users/create.php";
+            LocalDateTime now1 = LocalDateTime.now();
+            DateTimeFormatter formatter1 = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+            String formatDateTime1 = now1.format(formatter1);
+            Map<String, String> params1 = new HashMap<String, String>();
+            params1.put("userType", "personnelUser");
+            params1.put("userName", name.getText().toString());
+            params1.put("email", email.getText().toString());
+            params1.put("createTime", formatDateTime1);
+            JsonObjectRequest request1 = new JsonObjectRequest(
+                    Request.Method.POST, // the request method
+                    url1, // the URL
+                    new JSONObject(params1), // the parameters for the php
+                    new Response.Listener<JSONObject>() { // the response listener
 
-                    @Override
-                    public void onResponse(JSONObject response) {
-                        System.out.println(response.toString());
-                        String cevap = response.toString().substring(0, response.toString().lastIndexOf("\""));
-                        cevap = cevap.substring(cevap.toString().lastIndexOf("\"") + 1);
-                        perID = Integer.parseInt(cevap);
-                        System.out.println("perıd basiliyor**************************************="+perID);
-                        try {
-                            //Get current date time
-                            LocalDateTime now = LocalDateTime.now();
-                            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-                            String formatDateTime = now.format(formatter);
-                            if (name.length() == 0 || email.length() == 0 || kurum.length() == 0 || rol.length() == 0)
-                                throw new Exception("");
-                            JSONObject obj = new JSONObject();
+                        @Override
+                        public void onResponse(JSONObject response) {
+                            System.out.println(response.toString());
+                            String cevap = response.toString().substring(0, response.toString().lastIndexOf("\""));
+                            cevap = cevap.substring(cevap.toString().lastIndexOf("\"") + 1);
+                            perID = Integer.parseInt(cevap);
+                            System.out.println("perıd basiliyor**************************************=" + perID);
                             try {
-                                obj.put("personnelID", perID);
-                                obj.put("personnelName", name.getText().toString());
-                                obj.put("personnelEmail", email.getText().toString());
-                                obj.put("personnelRole", rol.getText().toString());
-                                obj.put("latitude", latitude);
-                                obj.put("teamID", 0);
-                                obj.put("longitude", longtitude);
-                                obj.put("locationTime", formatDateTime);
-                                obj.put("institution", kurum.getText().toString());
-                            } catch (JSONException e) {
-                                e.printStackTrace();
-                                System.out.println("user da hata*********************************************");
+                                //Get current date time
+                                LocalDateTime now = LocalDateTime.now();
+                                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+                                String formatDateTime = now.format(formatter);
+                                if (name.length() == 0 || !(email.getText().toString().contains("@gmail.com")) || email.length() == 0 || kurum.length() == 0 || rol.length() == 0)
+                                    throw new Exception("");
+                                JSONObject obj = new JSONObject();
+                                try {
+                                    obj.put("personnelID", perID);
+                                    obj.put("personnelName", name.getText().toString());
+                                    obj.put("personnelEmail", email.getText().toString());
+                                    obj.put("personnelRole", rol.getText().toString());
+                                    obj.put("latitude", latitude);
+                                    obj.put("teamID", 0);
+                                    obj.put("longitude", longtitude);
+                                    obj.put("locationTime", formatDateTime);
+                                    obj.put("institution", kurum.getText().toString());
+                                } catch (JSONException e) {
+                                    e.printStackTrace();
+                                    System.out.println("user da hata*********************************************");
+                                }
+                                JsonObjectRequest request = new JsonObjectRequest(Request.Method.POST, url, obj, new Response.Listener<JSONObject>() {
+                                    @Override
+                                    public void onResponse(JSONObject response) {
+                                        System.out.println(response.toString());
+                                    }
+                                }, new Response.ErrorListener() {
+                                    @Override
+                                    public void onErrorResponse(VolleyError error) {
+                                        System.out.println(error);
+                                    }
+                                });
+                                queue.add(request);
+                                Toast.makeText(Authorized_PersonelRegister.this, "Kaydınız Başarıyla Gerçekleşti :)", Toast.LENGTH_SHORT).show();
+                                redirectActivity(Authorized_PersonelRegister.this, Authorized_Anasayfa.class);
+                            } catch (Exception e) {
+                                System.out.println("hata burda");
+                                if (email.length() == 0)
+                                    Toast.makeText(Authorized_PersonelRegister.this, "Personel emalini girmelisiniz!", Toast.LENGTH_SHORT).show();
+                                else if (!(email.getText().toString().contains("@")))
+                                    Toast.makeText(Authorized_PersonelRegister.this, "Personel emalini doğru girmelisiniz!", Toast.LENGTH_SHORT).show();
+                                else if (name.length() == 0)
+                                    Toast.makeText(Authorized_PersonelRegister.this, "Personel ad ve soyadı tamamen girmelisiniz!", Toast.LENGTH_SHORT).show();
+                                else if (kurum.length() == 0)
+                                    Toast.makeText(Authorized_PersonelRegister.this, "Personel krumunu girmelisiniz!", Toast.LENGTH_SHORT).show();
+                                else if (rol.length() == 0)
+                                    Toast.makeText(Authorized_PersonelRegister.this, "Personel rolünü girmelisiniz!", Toast.LENGTH_SHORT).show();
                             }
-                            JsonObjectRequest request = new JsonObjectRequest(Request.Method.POST, url, obj, new Response.Listener<JSONObject>() {
-                                @Override
-                                public void onResponse(JSONObject response) {
-                                    System.out.println( response.toString());
-                                }
-                            }, new Response.ErrorListener() {
-                                @Override
-                                public void onErrorResponse(VolleyError error) {
-                                    System.out.println(error);
-                                }
-                            });
-                            queue.add(request);
-                            Toast.makeText(Authorized_PersonelRegister.this, "Kaydınız Başarıyla Gerçekleşti :)", Toast.LENGTH_SHORT).show();
-                            redirectActivity(Authorized_PersonelRegister.this, Authorized_Anasayfa.class);
-                        } catch (Exception e) {
-                            System.out.println("hata burda");
-                            if (email.length() == 0)
-                                Toast.makeText(Authorized_PersonelRegister.this, "Personel emalini girmelisiniz!", Toast.LENGTH_SHORT).show();
-                            else if (name.length() == 0)
-                                Toast.makeText(Authorized_PersonelRegister.this, "Personel ad ve soyadı tamamen girmelisiniz!", Toast.LENGTH_SHORT).show();
-                            else if (kurum.length() == 0)
-                                Toast.makeText(Authorized_PersonelRegister.this, "Personel krumunu girmelisiniz!", Toast.LENGTH_SHORT).show();
-                            else if (rol.length() == 0)
-                                Toast.makeText(Authorized_PersonelRegister.this, "Personel rolünü girmelisiniz!", Toast.LENGTH_SHORT).show();
                         }
-                    }
-                },
-                new Response.ErrorListener() { // the error listener
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        System.out.println(error.getStackTrace());
+                    },
+                    new Response.ErrorListener() { // the error listener
+                        @Override
+                        public void onErrorResponse(VolleyError error) {
+                            System.out.println(error.getStackTrace());
 
-                    }
-                });
-        queue1.add(request1);
+                        }
+                    });
+            queue1.add(request1);
+        }catch (Exception e){
+            System.out.println("hata burda");
+            if (email.length() == 0)
+                Toast.makeText(Authorized_PersonelRegister.this, "Personel emalini girmelisiniz!", Toast.LENGTH_SHORT).show();
+            else if (!(email.getText().toString().contains("@")))
+                Toast.makeText(Authorized_PersonelRegister.this, "Personel emalini doğru girmelisiniz!", Toast.LENGTH_SHORT).show();
+            else if (name.length() == 0)
+                Toast.makeText(Authorized_PersonelRegister.this, "Personel ad ve soyadı tamamen girmelisiniz!", Toast.LENGTH_SHORT).show();
+            else if (kurum.length() == 0)
+                Toast.makeText(Authorized_PersonelRegister.this, "Personel krumunu girmelisiniz!", Toast.LENGTH_SHORT).show();
+            else if (rol.length() == 0)
+                Toast.makeText(Authorized_PersonelRegister.this, "Personel rolünü girmelisiniz!", Toast.LENGTH_SHORT).show();
+        }
     }
 
 
@@ -283,7 +301,7 @@ public class Authorized_PersonelRegister extends AppCompatActivity {
 
     // GONULLU ISTEKLERI
     public void ClickAuthrizedVolunteerRequest(View view) {
-        // redirectActivity(this, Authorized_Notification.class);
+        redirectActivity(this, Authorized_VolunteerRequest.class);
     }
 
 

@@ -91,7 +91,7 @@ public class Authorized_Anasayfa extends AppCompatActivity {
     }
     // GONULLU ISTEKLERI
     public void ClickAuthrizedVolunteerRequest(View view) {
-       // redirectActivity(this, Authorized_Notification.class);
+        redirectActivity(this, Authorized_VolunteerRequest.class);
     }
     //MESAJ
 

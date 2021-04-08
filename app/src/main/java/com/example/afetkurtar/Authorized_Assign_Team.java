@@ -616,7 +616,7 @@ public class Authorized_Assign_Team extends AppCompatActivity {
     }
     // GONULLU ISTEKLERI
     public void ClickAuthrizedVolunteerRequest(View view) {
-        // redirectActivity(this, Authorized_Notification.class);
+        redirectActivity(this, Authorized_VolunteerRequest.class);
     }
     //MESAJ
     public void ClickAuthorizedMessage(View view) {
