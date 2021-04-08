@@ -1,8 +1,12 @@
+window.map = undefined;
+
+
+
 function onSignIn(googleUser) {
     // Useful data for your client-side scripts:
     var profile = googleUser.getBasicProfile();
     console.log("Email: " + profile.getEmail());
-    var idToken=profile.id_token;
+    var idToken = profile.id_token;
     googleUser.disconnect();
 
     // The ID token you need to pass to your backend:
@@ -181,16 +185,20 @@ function initMap() {
     setMarkers(map);
 
     map.addListener("click", (mapsMouseEvent) => {
-        var position = mapsMouseEvent.latLng;
+        var position = mapsMouseEvent.latLng.toJSON();
 
         var subpartAdd = document.getElementById("subpart-add-tab");
-        if(subpartAdd != null){
+        if (subpartAdd != null) {
             $(subpartAdd).tab('show');
+            console.log(position);
+            console.log(position.lat);
             document.getElementById("subpartLatitude").value = position.lat;
             document.getElementById("subpartLongitude").value = position.lng;
         }
-        
+
     });
+
+    window.map = map;
 }
 
 function setMarkers(map) {
@@ -276,19 +284,19 @@ function setMarkersForVolunteer(map) {
         type: "poly",
     };
 
-    var markers=[];
+    var markers = [];
     var infowindows = [];
     var names = [];
     var lats = [];
     var lngs = [];
     var userIDs = [];
-    var currentInfoWindow = null; 
+    var currentInfoWindow = null;
 
     for (let i = 0; i < subparts.length; i++) {
         //console.log(subparts[i]);
         lats[i] = parseFloat(subparts[i].getAttribute("latitude"));
         lngs[i] = parseFloat(subparts[i].getAttribute("longitude"));
-        
+
         names[i] = subparts[i].getAttribute("subpart-name");
 
         markers[i] = new google.maps.Marker({
@@ -308,43 +316,41 @@ function setMarkersForVolunteer(map) {
         });
 
         google.maps.event.addListener(markers[i], 'click', function() {
-            
 
-            if (currentInfoWindow != null) { 
-                currentInfoWindow.close(); 
-                } 
-                infowindows[this.index].open(map, markers[this.index]);
-                currentInfoWindow = infowindows[this.index]; 
+
+            if (currentInfoWindow != null) {
+                currentInfoWindow.close();
+            }
+            infowindows[this.index].open(map, markers[this.index]);
+            currentInfoWindow = infowindows[this.index];
         });
     }
 }
 
 function joinSubpart(subpartID, userID) {
 
-    $.post("https://afetkurtar.site/api/volunteerUser/search.php", JSON.stringify({ volunteerID: userID}))
+    $.post("https://afetkurtar.site/api/volunteerUser/search.php", JSON.stringify({ volunteerID: userID }))
         .done(function(data, status, xhr) {
             var volunteer = data.records[0];
-            if(volunteer.requestedSubpart == 0){
-                $.post("https://afetkurtar.site/api/volunteerUser/update.php", JSON.stringify({ volunteerID: userID, volunteerName : volunteer.volunteerName, address : volunteer.address, isExperienced : volunteer.isExperienced, haveFirstAidCert : volunteer.haveFirstAidCert, tc : volunteer.tc, tel : volunteer.tel, birthDate : volunteer.birthDate, requestedSubpart: subpartID }))
-                .done(function(data, status, xhr) {
-                    //window.alert("data:" + data);
-                    console.log(data);
-                    if (xhr.status == 200) {
-                        window.alert("Afete gönüllü katılım isteği başarıyla oluşturuldu.");
-                    }
-                })
-                .fail(function(data, xhr) {
-                    //window.alert("dataf:" + data.message);
-                    window.alert("Afete gönüllü katılım isteğinde hata oluştu");
-                    //window.alert("xhr:" + xhr.status);
-                    //document.getElementById('personnelForm').reset();
-                });
-            }
-
-            else{
+            if (volunteer.requestedSubpart == 0) {
+                $.post("https://afetkurtar.site/api/volunteerUser/update.php", JSON.stringify({ volunteerID: userID, volunteerName: volunteer.volunteerName, address: volunteer.address, isExperienced: volunteer.isExperienced, haveFirstAidCert: volunteer.haveFirstAidCert, tc: volunteer.tc, tel: volunteer.tel, birthDate: volunteer.birthDate, requestedSubpart: subpartID }))
+                    .done(function(data, status, xhr) {
+                        //window.alert("data:" + data);
+                        console.log(data);
+                        if (xhr.status == 200) {
+                            window.alert("Afete gönüllü katılım isteği başarıyla oluşturuldu.");
+                        }
+                    })
+                    .fail(function(data, xhr) {
+                        //window.alert("dataf:" + data.message);
+                        window.alert("Afete gönüllü katılım isteğinde hata oluştu");
+                        //window.alert("xhr:" + xhr.status);
+                        //document.getElementById('personnelForm').reset();
+                    });
+            } else {
                 window.alert("Zaten yakın bir tarihte arama kurtarma katılım isteği gönderdiniz. Lütfen sonucunu bekleyiniz.")
             }
-            
+
         })
         .fail(function(data, xhr) {
             window.alert("Gönüllü kullanıcının kaydı sistemde bulunamadı");
@@ -378,8 +384,9 @@ function updateEmergency(value) {
 }
 
 function updateSubpartEmergency(subpartID, value) {
-    $("#emergencyLevelValue"+ subpartID).text(value);
+    $("#emergencyLevelValue" + subpartID).text(value);
 }
+
 function sendDisaster() {
 
     var type = document.getElementById("disasterType").value.trim();
@@ -439,14 +446,19 @@ function sendDisaster() {
 $('#v-pills-tab a').on('click', function(e) {
     e.preventDefault();
     $(this).tab('show');
-    map = new google.maps.Map(document.getElementById('map'));
+    //map = new google.maps.Map(document.getElementById('map'));
 
-    if(map != null){
+
+
+    if (map != null && e.target.id != "subpart-add-tab") {
         var id = e.target.getAttribute("subpart-id");
         var latitude = parseFloat(document.getElementById("subpartLatitude" + id).value);
         var longitude = parseFloat(document.getElementById("subpartLongitude" + id).value);
         console.log(latitude);
         console.log(longitude);
+        const center = new google.maps.LatLng(latitude, longitude);
+        // using global variable:
+        window.map.panTo(center);
     }
     //map.setCenter(new google.maps.LatLng(-34.397, 150.644)); //degisecek
 })
@@ -517,16 +529,21 @@ function registerVolunteer() {
         });
 }
 
-function updateSubpart(id, rescuedPerson, status){
-    var subpartName = document.getElementById("subpartName"+id).value.trim();
-    var latitude = document.getElementById("subpartLatitude"+id).value.trim();
-    var longitude = document.getElementById("subpartLongitude"+id).value.trim();
-    var subpartMissingPerson = document.getElementById("subpartMissingPerson"+id).value.trim();
-    var isOpenForVolunteers = document.getElementById("subpartIsOpenForVolunteers"+id).value;
-    var emergencyLevel = document.getElementById("emergencyLevel"+id).value;
+function updateSubpart(id, rescuedPerson, status) {
+    var subpartName = document.getElementById("subpartName" + id).value.trim();
+    var latitude = document.getElementById("subpartLatitude" + id).value.trim();
+    var longitude = document.getElementById("subpartLongitude" + id).value.trim();
+    var subpartMissingPerson = document.getElementById("subpartMissingPerson" + id).value.trim();
+    var isOpenForVolunteersObject = document.getElementById("subpartIsOpenForVolunteers" + id);
+    var emergencyLevel = document.getElementById("emergencyLevel" + id).value;
     var disasterID = parseFloat(document.getElementById("map").getAttribute("disaster-id"));
     var disasterBase = parseFloat(document.getElementById("map").getAttribute("disaster-base"));
     var disasterName = parseFloat(document.getElementById("map").getAttribute("disaster-name"));
+
+    var isOpenForVolunteers = 0;
+    if (isOpenForVolunteersObject.checked) {
+        isOpenForVolunteers = 1;
+    }
 
     if (subpartName == '') {
         alert("Bölge adı boş bırakılamaz.");
@@ -534,12 +551,10 @@ function updateSubpart(id, rescuedPerson, status){
     } else if (isNaN(latitude) || latitude == "") {
         alert("Enlem bilgisini kontrol ediniz.");
         return false;
-    } 
-    else if (isNaN(longitude) || longitude == "") {
+    } else if (isNaN(longitude) || longitude == "") {
         alert("Boylam bilgisini kontrol ediniz.");
         return false;
-    }
-    else if (isNaN(subpartMissingPerson) || subpartMissingPerson == "") {
+    } else if (isNaN(subpartMissingPerson) || subpartMissingPerson == "") {
         alert("Kayıp insan sayısı bilgisini kontrol ediniz.");
         return false;
     }
@@ -561,10 +576,10 @@ function updateSubpart(id, rescuedPerson, status){
         }))
         .done(function(data, status, xhr) {
             if (xhr.status == 201) {
-                window.alert("Yeni bölge eklendi.");
+                window.alert("Bölge güncellendi.");
                 document.location.href = "https://afetkurtar.site/editDisaster.php?id=" + disasterID;
             } else {
-                window.alert("Bölge eklenirken hata oluştu.");
+                window.alert("Bölge güncellenirken hata oluştu.");
                 //document.getElementById('personnelForm').reset();
             }
         })
@@ -583,11 +598,16 @@ function addSubpart() {
     var latitude = document.getElementById("subpartLatitude").value.trim();
     var longitude = document.getElementById("subpartLongitude").value.trim();
     var subpartMissingPerson = document.getElementById("subpartMissingPerson").value.trim();
-    var isOpenForVolunteers = document.getElementById("subpartIsOpenForVolunteers").value;
+    var isOpenForVolunteersObject = document.getElementById("subpartIsOpenForVolunteers");
     var emergencyLevel = document.getElementById("emergencyLevel").value;
     var disasterID = parseFloat(document.getElementById("map").getAttribute("disaster-id"));
     var disasterBase = parseFloat(document.getElementById("map").getAttribute("disaster-base"));
     var disasterName = parseFloat(document.getElementById("map").getAttribute("disaster-name"));
+
+    var isOpenForVolunteers = 0;
+    if (isOpenForVolunteersObject.checked) {
+        isOpenForVolunteers = 1;
+    }
 
     if (subpartName == '') {
         alert("Bölge adı boş bırakılamaz.");
@@ -595,12 +615,10 @@ function addSubpart() {
     } else if (isNaN(latitude) || latitude == "") {
         alert("Enlem bilgisini kontrol ediniz.");
         return false;
-    } 
-    else if (isNaN(longitude) || longitude == "") {
+    } else if (isNaN(longitude) || longitude == "") {
         alert("Boylam bilgisini kontrol ediniz.");
         return false;
-    }
-    else if (isNaN(subpartMissingPerson) || subpartMissingPerson == "") {
+    } else if (isNaN(subpartMissingPerson) || subpartMissingPerson == "") {
         alert("Kayıp insan sayısı bilgisini kontrol ediniz.");
         return false;
     }

@@ -139,6 +139,11 @@ if (session_id() == '') {
     foreach($response['records'] as $row){
         echo '<div class="tab-pane fade" id="subpart-' . $row["subpartID"] . '" role="tabpanel" aria-labelledby="subpart-' . $row["subpartID"] . '-tab">';
         /////
+        $checkedString = "";
+        if($row["isOpenForVolunteers"] == 1){
+            $checkedString = " checked";
+        }
+        
 
         echo '<div class="container main-container" style="margin-left:75px;">';
         echo '<div class="row">';
@@ -163,7 +168,7 @@ if (session_id() == '') {
         echo '</div>';
         echo '<div class="form-group">';
         echo '<label for="subpartIsOpenForVolunteers'.$row["subpartID"].'" style="font-size: 20px; font-weight:bold; color: #ECF0F5">Gönüllü Kullanıcılara Açık Mı?</label>';
-        echo '<div><input type="checkbox" id="subpartIsOpenForVolunteers'.$row["subpartID"].'" value="'.$row["isOpenForVolunteers"].'"></div>';
+        echo '<div><input type="checkbox" id="subpartIsOpenForVolunteers'.$row["subpartID"].'" '.$checkedString.'></div>';
         echo '</div>';
         echo '<div class="form-group">';
         echo '<label id="emergencyLabel'.$row["subpartID"].'" for="emergencyLevel'.$row["subpartID"].'" style="font-size: 20px; font-weight:bold; color: #ECF0F5">Aciliyet Seviyesi</label>';
@@ -204,7 +209,7 @@ if (session_id() == '') {
     echo '</div>';
     echo '<div class="form-group">';
     echo '<label for="subpartIsOpenForVolunteers" style="font-size: 20px; font-weight:bold; color: #ECF0F5">Gönüllü Kullanıcılara Açık Mı?</label>';
-    echo '<div><input type="checkbox" id="subpartIsOpenForVolunteers" value="1"></div>';
+    echo '<div><input type="checkbox" id="subpartIsOpenForVolunteers"></div>';
     echo '</div>';
     echo '<div class="form-group">';
     echo '<label id="emergencyLabel" for="emergencyLevel" style="font-size: 20px; font-weight:bold; color: #ECF0F5">Aciliyet Seviyesi</label>';
