@@ -12,14 +12,17 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Looper;
@@ -100,11 +103,12 @@ public class Volunteer_Emergency extends AppCompatActivity {
     DrawerLayout drawerLayout;
     Spinner afetSpinner;
     RequestQueue queue;
-    static boolean resimKontrol = false, photoControl=true;
+    static boolean resimKontrol = false, photoControl = true;
     static File finalFile;
     String url = "https://afetkurtar.site/api/notice/create.php";
     public static final int CAMERA_PERM_CODE = 101;
     private static final int REQUEST_CODE_LOCATION_PERMISSION = 1;
+    public static final int MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE = 123;
     public static final int CAMERA_REQUEST_CODE = 102;
     public static final int GALLERY_REQUEST_CODE = 105;
     Double latitude, longtitude;
@@ -144,7 +148,7 @@ public class Volunteer_Emergency extends AppCompatActivity {
         message = (EditText) findViewById(R.id.message_disaster);
         afetSpinner = (Spinner) findViewById(R.id.spinnerAfetTipi);
         loadSpinnerDataAfet();
-
+        getCurrentLocation();
         submitBtn = findViewById(R.id.submit);
         queue = Volley.newRequestQueue(this);
         submitBtn.setOnClickListener(new View.OnClickListener() {
@@ -152,14 +156,14 @@ public class Volunteer_Emergency extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 try {
-                    if (message.getText().toString().length() == 0 || resimKontrol == false || photoControl==false)
+                    if (message.getText().toString().length() == 0 || resimKontrol == false || photoControl == false)
                         throw new Exception("");
 
                     UploadFile uploadFile = new UploadFile();
                     uploadFile.execute();
                     System.out.println("PHOTO URL:*********************************************************" + photoUrl);
                 } catch (Exception e) {
-                    if (resimKontrol == false| photoControl==false)
+                    if (resimKontrol == false | photoControl == false)
                         Toast.makeText(Volunteer_Emergency.this, "Afet bölgesinin resmini yüklemelisiniz.", Toast.LENGTH_LONG).show();
                     else if (message.getText().toString().length() == 0)
                         Toast.makeText(Volunteer_Emergency.this, "Detaylı bilgi kısmını doldurunuz...", Toast.LENGTH_LONG).show();
@@ -331,11 +335,62 @@ public class Volunteer_Emergency extends AppCompatActivity {
         resimKontrol = true;
     }
 
+    public boolean checkPermissionREAD_EXTERNAL_STORAGE(
+            final Context context) {
+        int currentAPIVersion = Build.VERSION.SDK_INT;
+        if (currentAPIVersion >= android.os.Build.VERSION_CODES.M) {
+            if (ContextCompat.checkSelfPermission(context,
+                    Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+                if (ActivityCompat.shouldShowRequestPermissionRationale(
+                        (Activity) context,
+                        Manifest.permission.READ_EXTERNAL_STORAGE)) {
+                    showDialog("External storage", context,
+                            Manifest.permission.READ_EXTERNAL_STORAGE);
+
+                } else {
+                    ActivityCompat
+                            .requestPermissions(
+                                    (Activity) context,
+                                    new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},
+                                    MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE);
+                }
+                return false;
+            } else {
+                return true;
+            }
+
+        } else {
+            return true;
+        }
+    }
+
+    /*
+    *
+                else{*/
+    public void showDialog(final String msg, final Context context,
+                           final String permission) {
+        AlertDialog.Builder alertBuilder = new AlertDialog.Builder(context);
+        alertBuilder.setCancelable(true);
+        alertBuilder.setTitle("Permission necessary");
+        alertBuilder.setMessage(msg + " permission is necessary");
+        alertBuilder.setPositiveButton(android.R.string.yes,
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        ActivityCompat.requestPermissions((Activity) context,
+                                new String[]{permission},
+                                MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE);
+                    }
+                });
+        AlertDialog alert = alertBuilder.create();
+        alert.show();
+    }
+
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         if (requestCode == CAMERA_PERM_CODE) {
             if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                getCurrentLocation();
                 openCamera();
             } else {
                 Toast.makeText(this, "Camera Permissin is required to Use Camera.", Toast.LENGTH_SHORT).show();
@@ -349,11 +404,63 @@ public class Volunteer_Emergency extends AppCompatActivity {
                 Toast.makeText(this, "permission denied!", Toast.LENGTH_SHORT).show();
             }
         }
+        switch (requestCode) {
+            case MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE:
+                if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    getCurrentLocation();
+                } else {
+                    Toast.makeText(Volunteer_Emergency.this, "GET_ACCOUNTS Denied",
+                            Toast.LENGTH_SHORT).show();
+                }
+                break;
+            default:
+                super.onRequestPermissionsResult(requestCode, permissions,
+                        grantResults);
+        }
     }
 
     @SuppressLint("MissingSuperCall")
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        if (checkPermissionREAD_EXTERNAL_STORAGE(this)) {
+            getCurrentLocation();
+            if (requestCode == CAMERA_REQUEST_CODE) {
+                if (resultCode == Activity.RESULT_OK) {
+                    Bitmap photo = (Bitmap) data.getExtras().get("data");
+                    selectedImage.setImageBitmap(photo);
+                    Uri tempUri = getImageUri(getApplicationContext(), photo);
+
+                    // CALL THIS METHOD TO GET THE ACTUAL PATH
+                    finalFile = new File(getRealPathFromURI(tempUri));
+                    System.out.println(finalFile + "***************************************************");
+
+                    try {
+                        SaveImage(photo, finalFile.getName());
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+
+
+                }
+
+            }
+            if (requestCode == GALLERY_REQUEST_CODE) {
+                if (resultCode == Activity.RESULT_OK) {
+                    Uri contentUri = data.getData();
+                    String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+                    String imageFileName = "JPEG_" + timeStamp + "." + getFileExt(contentUri);
+                    Log.d("tag", "onActivityResult: Gallery Image Uri:  " + imageFileName);
+                    selectedImage.setImageURI(contentUri);
+                    finalFile = new File(getRealPathFromURI(contentUri));
+                    System.out.println(finalFile + "***************************************************");
+
+                    //uploadImageToFirebase(imageFileName, contentUri);
+
+
+                }
+
+            }
+        }
         if (requestCode == CAMERA_REQUEST_CODE) {
             if (resultCode == Activity.RESULT_OK) {
                 Bitmap photo = (Bitmap) data.getExtras().get("data");
@@ -390,6 +497,7 @@ public class Volunteer_Emergency extends AppCompatActivity {
             }
 
         }
+
 
     }
 
@@ -428,6 +536,7 @@ public class Volunteer_Emergency extends AppCompatActivity {
         inImage.compress(Bitmap.CompressFormat.JPEG, 100, bytes);
         String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
         String imageFileName = "JPEG_" + timeStamp;
+
         String path = MediaStore.Images.Media.insertImage(inContext.getContentResolver(), inImage, imageFileName, null);
         return Uri.parse(path);
     }
@@ -480,15 +589,15 @@ public class Volunteer_Emergency extends AppCompatActivity {
 
                     HttpResponse response = httpclient.execute(httppost);
                     photoUrl = getStringContent(response);
-                    if(photoUrl==null || photoUrl.length()==0)
-                        photoControl=false;
+                    if (photoUrl == null || photoUrl.length() == 0)
+                        photoControl = false;
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
 
             } catch (Exception e) {
                 e.printStackTrace();
-                if (resimKontrol == false || photoControl==false)
+                if (resimKontrol == false || photoControl == false)
                     Toast.makeText(Volunteer_Emergency.this, "Afet bölgesinin resmini yüklemelisiniz.", Toast.LENGTH_LONG).show();
                 else if (message.getText().toString().length() == 0)
                     Toast.makeText(Volunteer_Emergency.this, "Detaylı bilgi kısmını doldurunuz...", Toast.LENGTH_LONG).show();
@@ -518,7 +627,8 @@ public class Volunteer_Emergency extends AppCompatActivity {
             if (photoUrl.length() != 0) {
                 try {
                     JSONObject obj = new JSONObject();
-                    if (message.getText().toString().length() == 0 || resimKontrol == false|| photoControl==false)
+
+                    if (message.getText().toString().length() == 0 || resimKontrol == false || photoControl == false)
                         throw new Exception("");
                     try {
 
@@ -547,7 +657,7 @@ public class Volunteer_Emergency extends AppCompatActivity {
                     Toast.makeText(Volunteer_Emergency.this, "Bildiriminiz iletilmiştir.", Toast.LENGTH_LONG).show();
                     finish();
                 } catch (Exception e) {
-                    if (resimKontrol == false|| photoControl==false)
+                    if (resimKontrol == false || photoControl == false)
                         Toast.makeText(Volunteer_Emergency.this, "Afet bölgesinin resmini yüklemelisiniz.", Toast.LENGTH_LONG).show();
                     else if (message.getText().toString().length() == 0)
                         Toast.makeText(Volunteer_Emergency.this, "Detaylı bilgi kısmını doldurunuz...", Toast.LENGTH_LONG).show();
