@@ -46,7 +46,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class Authorized_PersonelRegister extends AppCompatActivity {
-    RequestQueue queue;
+    RequestQueue queue, queue1;
     private static final int REQUEST_CODE_LOCATION_PERMISSION = 1;
     DrawerLayout drawerLayout;
     Double latitude, longtitude;
@@ -58,9 +58,11 @@ public class Authorized_PersonelRegister extends AppCompatActivity {
     static int perID;
     private static boolean controlmessage = false;
 
+    @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         queue = Volley.newRequestQueue(this);
+        queue1 = Volley.newRequestQueue(this);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_personel_register);
 
@@ -88,52 +90,8 @@ public class Authorized_PersonelRegister extends AppCompatActivity {
             @RequiresApi(api = Build.VERSION_CODES.O)
             @Override
             public void onClick(View v) {
-                addUser();
-                try {
-                    //Get current date time
-                    LocalDateTime now = LocalDateTime.now();
-                    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-                    String formatDateTime = now.format(formatter);
-                    if (name.length() == 0 || email.length() == 0 || kurum.length() == 0 || rol.length() == 0)
-                        throw new Exception("");
-                    JSONObject obj = new JSONObject();
-                    try {
-                        obj.put("personnelID", perID);
-                        obj.put("personnelName", name.getText().toString());
-                        obj.put("personnelEmail", email.getText().toString());
-                        obj.put("personnelRole", rol.getText().toString());
-                        obj.put("latitude", latitude);
-                        obj.put("longitude", longtitude);
-                        obj.put("locationTime", formatDateTime);
-                        obj.put("institution", kurum.getText().toString());
-
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
-                    JsonObjectRequest request = new JsonObjectRequest(Request.Method.POST, url, obj, new Response.Listener<JSONObject>() {
-                        @Override
-                        public void onResponse(JSONObject response) {
-                            System.out.println( response.toString());
-                        }
-                    }, new Response.ErrorListener() {
-                        @Override
-                        public void onErrorResponse(VolleyError error) {
-                            System.out.println(error);
-                        }
-                    });
-                    queue.add(request);
-                    Toast.makeText(Authorized_PersonelRegister.this, "Kaydınız Başarıyla Gerçekleşti :)", Toast.LENGTH_SHORT).show();
-                    redirectActivity(Authorized_PersonelRegister.this, Authorized_Anasayfa.class);
-                } catch (Exception e) {
-                    if (email.length() == 0)
-                        Toast.makeText(Authorized_PersonelRegister.this, "Personel emalini girmelisiniz!", Toast.LENGTH_SHORT).show();
-                    else if (name.length() == 0)
-                        Toast.makeText(Authorized_PersonelRegister.this, "Personel ad ve soyadı tamamen girmelisiniz!", Toast.LENGTH_SHORT).show();
-                    else if (kurum.length() == 0)
-                        Toast.makeText(Authorized_PersonelRegister.this, "Personel krumunu girmelisiniz!", Toast.LENGTH_SHORT).show();
-                    else if (rol.length() == 0)
-                        Toast.makeText(Authorized_PersonelRegister.this, "Personel rolünü girmelisiniz!", Toast.LENGTH_SHORT).show();
-                }
+                getCurrentLocation();
+               addUser();
             }
         });
 
@@ -141,20 +99,20 @@ public class Authorized_PersonelRegister extends AppCompatActivity {
     }
 
     @RequiresApi(api = Build.VERSION_CODES.O)
-    public void addUser() {
-        String url = "https://afetkurtar.site/api/users/create.php";
-        LocalDateTime now = LocalDateTime.now();
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-        String formatDateTime = now.format(formatter);
-        Map<String, String> params = new HashMap<String, String>();
-        params.put("userType", "personnelUser");
-        params.put("userName", name.getText().toString());
-        params.put("email", email.getText().toString());
-        params.put("createTime", formatDateTime);
-        JsonObjectRequest request = new JsonObjectRequest(
+    private void addUser() {
+        String url1 = "https://afetkurtar.site/api/users/create.php";
+        LocalDateTime now1 = LocalDateTime.now();
+        DateTimeFormatter formatter1 = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        String formatDateTime1 = now1.format(formatter1);
+        Map<String, String> params1 = new HashMap<String, String>();
+        params1.put("userType", "personnelUser");
+        params1.put("userName", name.getText().toString());
+        params1.put("email", email.getText().toString());
+        params1.put("createTime", formatDateTime1);
+        JsonObjectRequest request1 = new JsonObjectRequest(
                 Request.Method.POST, // the request method
-                url, // the URL
-                new JSONObject(params), // the parameters for the php
+                url1, // the URL
+                new JSONObject(params1), // the parameters for the php
                 new Response.Listener<JSONObject>() { // the response listener
 
                     @Override
@@ -163,7 +121,54 @@ public class Authorized_PersonelRegister extends AppCompatActivity {
                         String cevap = response.toString().substring(0, response.toString().lastIndexOf("\""));
                         cevap = cevap.substring(cevap.toString().lastIndexOf("\"") + 1);
                         perID = Integer.parseInt(cevap);
-
+                        System.out.println("perıd basiliyor**************************************="+perID);
+                        try {
+                            //Get current date time
+                            LocalDateTime now = LocalDateTime.now();
+                            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+                            String formatDateTime = now.format(formatter);
+                            if (name.length() == 0 || email.length() == 0 || kurum.length() == 0 || rol.length() == 0)
+                                throw new Exception("");
+                            JSONObject obj = new JSONObject();
+                            try {
+                                obj.put("personnelID", perID);
+                                obj.put("personnelName", name.getText().toString());
+                                obj.put("personnelEmail", email.getText().toString());
+                                obj.put("personnelRole", rol.getText().toString());
+                                obj.put("latitude", latitude);
+                                obj.put("teamID", 0);
+                                obj.put("longitude", longtitude);
+                                obj.put("locationTime", formatDateTime);
+                                obj.put("institution", kurum.getText().toString());
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                                System.out.println("user da hata*********************************************");
+                            }
+                            JsonObjectRequest request = new JsonObjectRequest(Request.Method.POST, url, obj, new Response.Listener<JSONObject>() {
+                                @Override
+                                public void onResponse(JSONObject response) {
+                                    System.out.println( response.toString());
+                                }
+                            }, new Response.ErrorListener() {
+                                @Override
+                                public void onErrorResponse(VolleyError error) {
+                                    System.out.println(error);
+                                }
+                            });
+                            queue.add(request);
+                            Toast.makeText(Authorized_PersonelRegister.this, "Kaydınız Başarıyla Gerçekleşti :)", Toast.LENGTH_SHORT).show();
+                            redirectActivity(Authorized_PersonelRegister.this, Authorized_Anasayfa.class);
+                        } catch (Exception e) {
+                            System.out.println("hata burda");
+                            if (email.length() == 0)
+                                Toast.makeText(Authorized_PersonelRegister.this, "Personel emalini girmelisiniz!", Toast.LENGTH_SHORT).show();
+                            else if (name.length() == 0)
+                                Toast.makeText(Authorized_PersonelRegister.this, "Personel ad ve soyadı tamamen girmelisiniz!", Toast.LENGTH_SHORT).show();
+                            else if (kurum.length() == 0)
+                                Toast.makeText(Authorized_PersonelRegister.this, "Personel krumunu girmelisiniz!", Toast.LENGTH_SHORT).show();
+                            else if (rol.length() == 0)
+                                Toast.makeText(Authorized_PersonelRegister.this, "Personel rolünü girmelisiniz!", Toast.LENGTH_SHORT).show();
+                        }
                     }
                 },
                 new Response.ErrorListener() { // the error listener
@@ -173,8 +178,9 @@ public class Authorized_PersonelRegister extends AppCompatActivity {
 
                     }
                 });
-        queue.add(request);
+        queue1.add(request1);
     }
+
 
     private void getCurrentLocation() {
 
