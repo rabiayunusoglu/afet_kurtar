@@ -264,44 +264,73 @@ function setMarkersForVolunteer(map) {
         type: "poly",
     };
 
+    var markers=[];
+    var infowindows = [];
+    var names = [];
+    var lats = [];
+    var lngs = [];
+    var userIDs = [];
+
     for (let i = 0; i < subparts.length; i++) {
         //console.log(subparts[i]);
-        var lat = parseFloat(subparts[i].getAttribute("latitude"));
-        var lng = parseFloat(subparts[i].getAttribute("longitude"));
-        var name = subparts[i].getAttribute("subpart-name");
-        var marker = new google.maps.Marker({
-            position: { lat: lat, lng: lng },
+        lats[i] = parseFloat(subparts[i].getAttribute("latitude"));
+        lngs[i] = parseFloat(subparts[i].getAttribute("longitude"));
+        
+        names[i] = subparts[i].getAttribute("subpart-name");
+
+        markers[i] = new google.maps.Marker({
+            position: { lat: lats[i], lng: lngs[i] },
             map,
             icon: image,
             shape: shape,
-            title: name
-        });
-        var userID = document.getElementById("user-info").getAttribute("user-id");
-        const infowindow = new google.maps.InfoWindow({
-            content: '<div>' + name + '</div>' + '<input type="submit" onclick="joinSubpart(' + subparts[i].getAttribute("subpart-id") + "," + userID + ')" class="btn btn-primary" id="button-' + subparts[i].id + '" value="Gönüllü İsteği Gönder"></input>'
+            title: names[i]
         });
 
-        marker.addListener("click", () => {
-            infowindow.open(map, marker);
+        markers[i].index = i;
+
+        userIDs[i] = document.getElementById("user-info").getAttribute("user-id");
+
+        infowindows[i] = new google.maps.InfoWindow({
+            content: '<div>' + names[i] + '</div>' + '<input type="submit" onclick="joinSubpart(' + subparts[i].getAttribute("subpart-id") + "," + userIDs[i] + ')" class="btn btn-primary" id="button-' + subparts[i].id + '" value="Gönüllü İsteği Gönder"></input>'
+        });
+
+        google.maps.event.addListener(markers[i], 'click', function() {
+            infowindows[this.index].open(map, markers[this.index]);
+            var lat = markers[this.index].getPosition().lat();
+            var lng = markers[this.index].getPosition().lng();
         });
     }
 }
 
 function joinSubpart(subpartID, userID) {
 
-    $.post("https://afetkurtar.site/api/volunteerUser/update.php", JSON.stringify({ volunteerID: userID, requestedSubpart: subpartID }))
+    $.post("https://afetkurtar.site/api/volunteerUser/search.php", JSON.stringify({ volunteerID: userID}))
         .done(function(data, status, xhr) {
-            //window.alert("data:" + data);
-            console.log(data);
-            if (xhr.status == 200) {
-                window.alert("Afete gönüllü katılım isteği başarıyla oluşturuldu.");
+            var volunteer = data.records[0];
+            if(volunteer.requestedSubpart == 0){
+                $.post("https://afetkurtar.site/api/volunteerUser/update.php", JSON.stringify({ volunteerID: userID, volunteerName : volunteer.volunteerName, address : volunteer.address, isExperienced : volunteer.isExperienced, haveFirstAidCert : volunteer.haveFirstAidCert, tc : volunteer.tc, tel : volunteer.tel, birthDate : volunteer.birthDate, requestedSubpart: subpartID }))
+                .done(function(data, status, xhr) {
+                    //window.alert("data:" + data);
+                    console.log(data);
+                    if (xhr.status == 200) {
+                        window.alert("Afete gönüllü katılım isteği başarıyla oluşturuldu.");
+                    }
+                })
+                .fail(function(data, xhr) {
+                    //window.alert("dataf:" + data.message);
+                    window.alert("Afete gönüllü katılım isteğinde hata oluştu");
+                    //window.alert("xhr:" + xhr.status);
+                    //document.getElementById('personnelForm').reset();
+                });
             }
+
+            else{
+                window.alert("Zaten yakın bir tarihte arama kurtarma katılım isteği gönderdiniz. Lütfen sonucunu bekleyiniz.")
+            }
+            
         })
         .fail(function(data, xhr) {
-            //window.alert("dataf:" + data.message);
-            window.alert("Afete gönüllü katılım isteğinde hata oluştu");
-            //window.alert("xhr:" + xhr.status);
-            //document.getElementById('personnelForm').reset();
+            window.alert("Gönüllü kullanıcının kaydı sistemde bulunamadı");
         });
 
 }
