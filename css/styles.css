@@ -142,7 +142,7 @@ body {
 .span9 {
     /*border: 1px solid #000;*/
     overflow-y: auto;
-    height: 100vh;
+    height: 93.97vh;
 }
 
 .header-mesaj-kutusu {
@@ -158,7 +158,7 @@ body {
 .span9 {
     /*border: 1px solid #000;*/
     overflow-y: auto;
-    height: 100vh;
+    height: 93.97vh;
 }
 
 .header-edit-disaster {
@@ -185,7 +185,7 @@ body {
 
 .vl {
     border-left: 8px solid #383B3E;
-    height: 100vh;
+    height: 93.97vh;
 }
 
 .nav-pills .nav-link:not(.active) {

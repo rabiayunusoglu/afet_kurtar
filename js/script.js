@@ -179,6 +179,18 @@ function initMap() {
         center: { lat: lat, lng: lng },
     });
     setMarkers(map);
+
+    map.addListener("click", (mapsMouseEvent) => {
+        var position = mapsMouseEvent.latLng;
+
+        var subpartAdd = document.getElementById("subpart-add-tab");
+        if(subpartAdd != null){
+            $(subpartAdd).tab('show');
+            document.getElementById("subpartLatitude").value = position.lat;
+            document.getElementById("subpartLongitude").value = position.lng;
+        }
+        
+    });
 }
 
 function setMarkers(map) {
@@ -270,6 +282,7 @@ function setMarkersForVolunteer(map) {
     var lats = [];
     var lngs = [];
     var userIDs = [];
+    var currentInfoWindow = null; 
 
     for (let i = 0; i < subparts.length; i++) {
         //console.log(subparts[i]);
@@ -295,9 +308,13 @@ function setMarkersForVolunteer(map) {
         });
 
         google.maps.event.addListener(markers[i], 'click', function() {
-            infowindows[this.index].open(map, markers[this.index]);
-            var lat = markers[this.index].getPosition().lat();
-            var lng = markers[this.index].getPosition().lng();
+            
+
+            if (currentInfoWindow != null) { 
+                currentInfoWindow.close(); 
+                } 
+                infowindows[this.index].open(map, markers[this.index]);
+                currentInfoWindow = infowindows[this.index]; 
         });
     }
 }
@@ -360,6 +377,9 @@ function updateEmergency(value) {
     $("#emergencyLevelValue").text(value);
 }
 
+function updateSubpartEmergency(subpartID, value) {
+    $("#emergencyLevelValue"+ subpartID).text(value);
+}
 function sendDisaster() {
 
     var type = document.getElementById("disasterType").value.trim();
@@ -417,14 +437,23 @@ function sendDisaster() {
 }
 
 $('#v-pills-tab a').on('click', function(e) {
-    e.preventDefault()
-    $(this).tab('show')
-        //map.setCenter(new google.maps.LatLng(-34.397, 150.644)); //degisecek
+    e.preventDefault();
+    $(this).tab('show');
+    map = new google.maps.Map(document.getElementById('map'));
+
+    if(map != null){
+        var id = e.target.getAttribute("subpart-id");
+        var latitude = parseFloat(document.getElementById("subpartLatitude" + id).value);
+        var longitude = parseFloat(document.getElementById("subpartLongitude" + id).value);
+        console.log(latitude);
+        console.log(longitude);
+    }
+    //map.setCenter(new google.maps.LatLng(-34.397, 150.644)); //degisecek
 })
 
 $('#v-pills-tab-subpart a').on('click', function(e) {
-    e.preventDefault()
-    $(this).tab('show')
+    e.preventDefault();
+    $(this).tab('show');
 })
 
 
@@ -488,18 +517,93 @@ function registerVolunteer() {
         });
 }
 
+function updateSubpart(id, rescuedPerson, status){
+    var subpartName = document.getElementById("subpartName"+id).value.trim();
+    var latitude = document.getElementById("subpartLatitude"+id).value.trim();
+    var longitude = document.getElementById("subpartLongitude"+id).value.trim();
+    var subpartMissingPerson = document.getElementById("subpartMissingPerson"+id).value.trim();
+    var isOpenForVolunteers = document.getElementById("subpartIsOpenForVolunteers"+id).value;
+    var emergencyLevel = document.getElementById("emergencyLevel"+id).value;
+    var disasterID = parseFloat(document.getElementById("map").getAttribute("disaster-id"));
+    var disasterBase = parseFloat(document.getElementById("map").getAttribute("disaster-base"));
+    var disasterName = parseFloat(document.getElementById("map").getAttribute("disaster-name"));
+
+    if (subpartName == '') {
+        alert("Bölge adı boş bırakılamaz.");
+        return false;
+    } else if (isNaN(latitude) || latitude == "") {
+        alert("Enlem bilgisini kontrol ediniz.");
+        return false;
+    } 
+    else if (isNaN(longitude) || longitude == "") {
+        alert("Boylam bilgisini kontrol ediniz.");
+        return false;
+    }
+    else if (isNaN(subpartMissingPerson) || subpartMissingPerson == "") {
+        alert("Kayıp insan sayısı bilgisini kontrol ediniz.");
+        return false;
+    }
+
+
+    $.post("https://afetkurtar.site/api/subpart/update.php", JSON.stringify({
+            subpartID: id,
+            subpartName: subpartName,
+            latitude: latitude,
+            longitude: longitude,
+            missingPerson: subpartMissingPerson,
+            isOpenForVolunteers: isOpenForVolunteers,
+            disasterID: disasterID,
+            address: disasterBase,
+            disasterName: disasterName,
+            emergencyLevel: emergencyLevel,
+            rescuedPerson: "0",
+            status: ""
+        }))
+        .done(function(data, status, xhr) {
+            if (xhr.status == 201) {
+                window.alert("Yeni bölge eklendi.");
+                document.location.href = "https://afetkurtar.site/editDisaster.php?id=" + disasterID;
+            } else {
+                window.alert("Bölge eklenirken hata oluştu.");
+                //document.getElementById('personnelForm').reset();
+            }
+        })
+        .fail(function(data, xhr) {
+            window.alert("dataf:" + data.message);
+            //window.alert("Kullanıcı kaydı esnasında bir hata ile karşılaşıldı z");
+            window.alert("xhr:" + xhr.status);
+            //document.getElementById('personnelForm').reset();
+        });
+}
+
 
 function addSubpart() {
 
     var subpartName = document.getElementById("subpartName").value.trim();
-    var latitude = document.getElementById("subpartLatitude").value;
-    var longitude = document.getElementById("subpartLongitude").value;
-    var subpartMissingPerson = document.getElementById("subpartMissingPerson").value;
+    var latitude = document.getElementById("subpartLatitude").value.trim();
+    var longitude = document.getElementById("subpartLongitude").value.trim();
+    var subpartMissingPerson = document.getElementById("subpartMissingPerson").value.trim();
     var isOpenForVolunteers = document.getElementById("subpartIsOpenForVolunteers").value;
     var emergencyLevel = document.getElementById("emergencyLevel").value;
     var disasterID = parseFloat(document.getElementById("map").getAttribute("disaster-id"));
     var disasterBase = parseFloat(document.getElementById("map").getAttribute("disaster-base"));
     var disasterName = parseFloat(document.getElementById("map").getAttribute("disaster-name"));
+
+    if (subpartName == '') {
+        alert("Bölge adı boş bırakılamaz.");
+        return false;
+    } else if (isNaN(latitude) || latitude == "") {
+        alert("Enlem bilgisini kontrol ediniz.");
+        return false;
+    } 
+    else if (isNaN(longitude) || longitude == "") {
+        alert("Boylam bilgisini kontrol ediniz.");
+        return false;
+    }
+    else if (isNaN(subpartMissingPerson) || subpartMissingPerson == "") {
+        alert("Kayıp insan sayısı bilgisini kontrol ediniz.");
+        return false;
+    }
 
 
 
