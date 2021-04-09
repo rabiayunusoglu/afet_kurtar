@@ -196,3 +196,16 @@ body {
     background-color: #222529;
     color: white;
 }
+
+table.dataTable tbody tr {
+    background-color: #ffffff;
+    vertical-align: middle;
+}
+
+#subpartSelect{
+    width: auto;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 10px;
+    margin-bottom: 10px;
+}

@@ -23,19 +23,19 @@ $volunteerUser->volunteerID = isset($data["volunteerID"]) ? $data["volunteerID"]
 
 // set volunteerUser property values
     $volunteerUser->volunteerName = isset($data["volunteerName"]) ? $data["volunteerName"] : "";
-    $volunteerUser->address = isset($data["address"]) ? $data["address"] : null;
-    $volunteerUser->isExperienced = isset($data["isExperienced"]) ? $data["isExperienced"] : null;
-    $volunteerUser->haveFirstAidCert = isset($data["haveFirstAidCert"]) ? $data["haveFirstAidCert"] : null;
-    $volunteerUser->requestedSubpart = isset($data["requestedSubpart"]) ? $data["requestedSubpart"] : null;
-    $volunteerUser->responseSubpart = isset($data["responseSubpart"]) ? $data["responseSubpart"] : null;
-    $volunteerUser->assignedTeamID = isset($data["assignedTeamID"]) ? $data["assignedTeamID"] : null;
-    $volunteerUser->role = isset($data["role"]) ? $data["role"] : null;
-    $volunteerUser->latitude = isset($data["latitude"]) ? $data["latitude"] : null;
-    $volunteerUser->longitude = isset($data["longitude"]) ? $data["longitude"] : null;
-    $volunteerUser->locationTime = isset($data["locationTime"]) ? $data["locationTime"] : null;
-    $volunteerUser->tc = isset($data["tc"]) ? $data["tc"] : null;
-    $volunteerUser->tel = isset($data["tel"]) ? $data["tel"] : null;
-    $volunteerUser->birthDate = isset($data["birthDate"]) ? $data["birthDate"] : null;
+    $volunteerUser->address = isset($data["address"]) ? $data["address"] : "";
+    $volunteerUser->isExperienced = isset($data["isExperienced"]) ? $data["isExperienced"] : "";
+    $volunteerUser->haveFirstAidCert = isset($data["haveFirstAidCert"]) ? $data["haveFirstAidCert"] : "";
+    $volunteerUser->requestedSubpart = isset($data["requestedSubpart"]) ? $data["requestedSubpart"] : "";
+    $volunteerUser->responseSubpart = isset($data["responseSubpart"]) ? $data["responseSubpart"] : "";
+    $volunteerUser->assignedTeamID = isset($data["assignedTeamID"]) ? $data["assignedTeamID"] : "";
+    $volunteerUser->role = isset($data["role"]) ? $data["role"] : "";
+    $volunteerUser->latitude = isset($data["latitude"]) ? $data["latitude"] : "";
+    $volunteerUser->longitude = isset($data["longitude"]) ? $data["longitude"] : "";
+    $volunteerUser->locationTime = isset($data["locationTime"]) ? $data["locationTime"] : "";
+    $volunteerUser->tc = isset($data["tc"]) ? $data["tc"] : "";
+    $volunteerUser->tel = isset($data["tel"]) ? $data["tel"] : "";
+    $volunteerUser->birthDate = isset($data["birthDate"]) ? $data["birthDate"] : "";
  // update the volunteerUser
 if($volunteerUser->update()){
   

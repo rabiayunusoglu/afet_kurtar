@@ -133,11 +133,28 @@ class Users{
     }
 
     function update(){
+        $setContent = "";
+
+        if($this->userType != ""){
+            $setContent .= "userType=:userType,";
+        }
+        if($this->userName != ""){
+            $setContent .= "userName=:userName,";
+        }
+        if($this->email != ""){
+            $setContent .= "email=:email,";
+        }
+        if($this->userToken != ""){
+            $setContent .= "userToken=:userToken,";
+        }
+
+        $setContent  = rtrim($setContent, ",");
+
         // update query
         $query = "UPDATE
                     " . $this->table_name . "
                 SET
-                    userType=:userType, userName=:userName, email=:email, userToken=:userToken
+                    " . $setContent . "
                 WHERE
                     userID=:userID";
     
@@ -152,14 +169,26 @@ class Users{
         $this->createTime=htmlspecialchars(strip_tags($this->createTime));
         $this->userToken=htmlspecialchars(strip_tags($this->userToken));
 
+        if($this->userType != ""){
+            $stmt->bindParam(":userType", $this->userType);
+        }
+        if($this->userName != ""){
+            $stmt->bindParam(":userName", $this->userName);
+        }
+        if($this->email != ""){
+            $stmt->bindParam(":email", $this->email);
+        }
+        if($this->userToken != ""){
+            $stmt->bindParam(":userToken", $this->userToken);
+        }
+
      
         // bind values
         $stmt->bindParam(":userID", $this->userID);
-        $stmt->bindParam(":userType", $this->userType);
-        $stmt->bindParam(":userName", $this->userName);
-        $stmt->bindParam(":email", $this->email);
-      //  $stmt->bindParam(":createTime", $this->createTime);
-        $stmt->bindParam(":userToken", $this->userToken);
+        
+        
+        
+        
 
     
     

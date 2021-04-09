@@ -190,12 +190,58 @@ class VolunteerUser{
 
     // update the volunteeruser
     function update(){
+        $setContent = "";
+
+        if($this->volunteerName != ""){
+            $setContent .= "volunteerName=:volunteerName,";
+        }
+        if($this->role != ""){
+            $setContent .= "`role`=:role,";
+        }
+        if($this->assignedTeamID != ""){
+            $setContent .= "assignedTeamID=:assignedTeamID,";
+        }
+        if($this->latitude != ""){
+            $setContent .= "latitude=:latitude,";
+        }
+        if($this->longitude != ""){
+            $setContent .= "longitude=:longitude,";
+        }
+        if($this->address != ""){
+            $setContent .= "`address`=:address,";
+        }
+        if($this->isExperienced != ""){
+            $setContent .= "isExperienced=:isExperienced,";
+        }
+        if($this->haveFirstAidCert != ""){
+            $setContent .= "haveFirstAidCert=:haveFirstAidCert,";
+        }
+        if($this->requestedSubpart != ""){
+            $setContent .= "requestedSubpart=:requestedSubpart,";
+        }
+        if($this->responseSubpart != ""){
+            $setContent .= "responseSubpart=:responseSubpart,";
+        }
+        if($this->locationTime != ""){
+            $setContent .= "locationTime=:locationTime,";
+        }
+        if($this->tc != ""){
+            $setContent .= "tc=:tc,";
+        }
+        if($this->tel != ""){
+            $setContent .= "tel=:tel,";
+        }
+        if($this->birthDate != ""){
+            $setContent .= "birthDate=:birthDate,";
+        }
+
+        $setContent  = rtrim($setContent, ",");
   
         // update query
         $query = "UPDATE
                     " . $this->table_name . "
                 SET
-                    volunteerName=:volunteerName, `role`=:role, assignedTeamID=:assignedTeamID, latitude=:latitude, longitude=:longitude, `address`=:address, isExperienced=:isExperienced, haveFirstAidCert=:haveFirstAidCert, requestedSubpart=:requestedSubpart, responseSubpart=:responseSubpart, locationTime=:locationTime, tc=:tc, tel=:tel, birthDate=:birthDate
+                    " . $setContent . "
                 WHERE
                     volunteerID=:volunteerID";
     
@@ -222,23 +268,50 @@ class VolunteerUser{
     
      
         // bind values
+        if($this->volunteerName != ""){
+            $stmt->bindParam(":volunteerName", $this->volunteerName);
+        }
+        if($this->role != ""){
+            $stmt->bindParam(":role", $this->role);
+        }
+        if($this->assignedTeamID != ""){
+            $stmt->bindParam(":assignedTeamID", $this->assignedTeamID);
+        }
+        if($this->latitude != ""){
+            $stmt->bindParam(":latitude", $this->latitude);
+        }
+        if($this->longitude != ""){
+            $stmt->bindParam(":longitude", $this->longitude);
+        }
+        if($this->address != ""){
+            $stmt->bindParam(":address", $this->address);
+        }
+        if($this->isExperienced != ""){
+            $stmt->bindParam(":isExperienced", $this->isExperienced);
+        }
+        if($this->haveFirstAidCert != ""){
+            $stmt->bindParam(":haveFirstAidCert", $this->haveFirstAidCert);
+        }
+        if($this->requestedSubpart != ""){
+            $stmt->bindParam(":requestedSubpart", $this->requestedSubpart);
+        }
+        if($this->responseSubpart != ""){
+            $stmt->bindParam(":responseSubpart", $this->responseSubpart);
+        }
+        if($this->locationTime != ""){
+            $stmt->bindParam(":locationTime", $this->locationTime);
+        }
+        if($this->tc != ""){
+            $stmt->bindParam(":tc", $this->tc);
+        }
+        if($this->tel != ""){
+            $stmt->bindParam(":tel", $this->tel);
+        }
+        if($this->birthDate != ""){
+            $stmt->bindParam(":birthDate", $this->birthDate);
+        }
         $stmt->bindParam(":volunteerID", $this->volunteerID);
-        $stmt->bindParam(":volunteerName", $this->volunteerName);
-        $stmt->bindParam(":role", $this->role);
-        $stmt->bindParam(":assignedTeamID", $this->assignedTeamID);
-        $stmt->bindParam(":latitude", $this->latitude);
-        $stmt->bindParam(":longitude", $this->longitude);
-        $stmt->bindParam(":address", $this->address);
-        $stmt->bindParam(":isExperienced", $this->isExperienced);
-        $stmt->bindParam(":haveFirstAidCert", $this->haveFirstAidCert);
-        $stmt->bindParam(":requestedSubpart", $this->requestedSubpart);
-        $stmt->bindParam(":responseSubpart", $this->responseSubpart);
-        $stmt->bindParam(":locationTime", $this->locationTime);
-        $stmt->bindParam(":tc", $this->tc);
-        $stmt->bindParam(":tel", $this->tel);
-        $stmt->bindParam(":birthDate", $this->birthDate);
-    
-     
+
         // execute query
         if($stmt->execute()){
             return true;
