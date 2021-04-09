@@ -41,14 +41,16 @@ public class Authorized_VolunteerRequest2 extends AppCompatActivity {
     ArrayAdapter<String> adapterSubpart;
     Button submits;
     public static JSONObject volInfo;
-    String urlSubpart = "https://afetkurtar.site/api/subpart/search.php";
+
     String url1 = "https://afetkurtar.site/api/volunteerUser/update.php";
     DrawerLayout drawerLayout;
     RequestQueue queuev,queue,queuecheck;
     static EditText afet;
     Spinner subpartSpinner;
+    static boolean controlresponce=false;
     int index = 0;
     static int dataSupartID=0;
+    String urlSubpart = "https://afetkurtar.site/api/subpart/search.php";
     static String responceStringSubpart = "", dataSupartName = "";
     GoogleSignInClient mGoogleSignInClient;
 
@@ -68,15 +70,24 @@ public class Authorized_VolunteerRequest2 extends AppCompatActivity {
 
         subpartSpinner = (Spinner) findViewById(R.id.spinnersubpartnew);
         afet =(EditText) findViewById(R.id.editAfet);
-        afet.setText(Authorized_VolunteerRequest.afetBolgesi);
+        afet.setText(String.valueOf(Authorized_VolunteerRequest.afetBolgesi));
         afet.setFocusableInTouchMode(false);
+        arrayListSubpart.add("Seçilmedi");
+        arrayListSubpartID.add(0);
         loadSpinnerDataSubpart(urlSubpart);
 
         submits = findViewById(R.id.gdrBtn);
         submits.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                redirectActivity(Authorized_VolunteerRequest2.this,Authorized_VolunteerRequest3.class);
+                if(controlresponce=false) {
+                    Toast.makeText(getApplicationContext(), "Seçili alt parçası gönüllüler için açık değildir! ", Toast.LENGTH_SHORT).show();
+                    finish();
+                }else  if(dataSupartName.equals("Seçilmedi")){
+                    Toast.makeText(getApplicationContext(), "Bir alt parça seçiniz!", Toast.LENGTH_SHORT).show();
+                }
+                else
+                    redirectActivity(Authorized_VolunteerRequest2.this,Authorized_VolunteerRequest3.class);
             }
         });
 
@@ -88,9 +99,12 @@ public class Authorized_VolunteerRequest2 extends AppCompatActivity {
     private void loadSpinnerDataSubpart(String url) {
         JSONObject obj = new JSONObject();
         try {
-
+            System.out.println("**********************************************************************************");
+            System.out.println(Authorized_VolunteerRequest.afetID);
+            System.out.println("**********************************************************************************");
             obj.put("isOpenForVolunteers", 1);
-            obj.put("disasterName", afet.getText().toString());
+            obj.put("disasterName", Authorized_VolunteerRequest.afetBolgesi);
+            System.out.println(Authorized_VolunteerRequest.afetID);
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -102,6 +116,8 @@ public class Authorized_VolunteerRequest2 extends AppCompatActivity {
                 new Response.Listener<JSONObject>() { // the response listener
                     @Override
                     public void onResponse(JSONObject response) {
+                       controlresponce=true;
+                        System.out.println(response.toString().length());
                         responceStringSubpart = response.toString();
                         responceStringSubpart = responceStringSubpart.substring(responceStringSubpart.indexOf("[") + 1, responceStringSubpart.length() - 2);
 
@@ -138,9 +154,13 @@ public class Authorized_VolunteerRequest2 extends AppCompatActivity {
                             @Override
                             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                                 dataSupartName = adapterSubpart.getItem(position).toString();
-                                index = position;
-                                dataSupartID=arrayListSubpartID.get(index);
-                                Toast.makeText(getApplicationContext(), dataSupartName, Toast.LENGTH_SHORT).show();
+                               if(dataSupartName.equals("Seçilmedi")){
+                                    Toast.makeText(getApplicationContext(), "Bir alt parça seçiniz!", Toast.LENGTH_SHORT).show();
+                                }else{
+                                    index = position;
+                                    dataSupartID=arrayListSubpartID.get(index);
+                                }
+
                             }
 
                             @Override
@@ -154,9 +174,16 @@ public class Authorized_VolunteerRequest2 extends AppCompatActivity {
                 new Response.ErrorListener() { // the error listener
                     @Override
                     public void onErrorResponse(VolleyError error) {
-                        System.out.println(error);
+                        controlresponce=false;
+                        Toast.makeText(getApplicationContext(), Authorized_VolunteerRequest.afetBolgesi+"de, gönüllüler için açık bir altparça mevcut değildir! ", Toast.LENGTH_SHORT).show();
+                        finish();
+                       // redirectActivity(Authorized_VolunteerRequest2.this,Authorized_VolunteerRequest.class);
                     }
                 });
+        if(controlresponce=false) {
+            Toast.makeText(getApplicationContext(), "Seçili afet bölgesinde, gönüllüler için açık bir altparça mevcut değildir! ", Toast.LENGTH_SHORT).show();
+            finish();
+        }
         queue.add(request);
     }
 

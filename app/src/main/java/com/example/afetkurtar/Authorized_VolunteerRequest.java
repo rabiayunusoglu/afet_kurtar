@@ -27,6 +27,7 @@ import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
@@ -35,14 +36,23 @@ public class Authorized_VolunteerRequest extends AppCompatActivity {
 
     ArrayList<String> arrayListAfet = new ArrayList<>();
     ArrayAdapter<String> adapterAfet;
+    ArrayList<String> arrayListSubpart = new ArrayList<>();
+    ArrayList<Integer> arrayListSubpartID = new ArrayList<Integer>();
+    ArrayAdapter<String> adapterSubpart;
     Button submit;
+    Spinner subpartSpinner;
+    static int dataSupartID = 0;
     String urlAfet = "https://afetkurtar.site/api/disasterEvents/search.php";
     String url1 = "https://afetkurtar.site/api/volunteerUser/update.php";
     DrawerLayout drawerLayout;
     RequestQueue queue;
     Spinner afetSpinner;
     int index = 0;
+    static boolean controlresponce = false;
     static String responceStringAfet = "", afetBolgesi = "";
+    static int afetID;
+    String urlSubpart = "https://afetkurtar.site/api/subpart/search.php";
+    static String responceStringSubpart = "", dataSupartName = "";
     GoogleSignInClient mGoogleSignInClient;
 
     @Override
@@ -68,8 +78,7 @@ public class Authorized_VolunteerRequest extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 // setContentView(R.layout.activity_volunteer__participate_request2);
-
-                redirectActivity(Authorized_VolunteerRequest.this,Authorized_VolunteerRequest2.class);
+                redirectActivity(Authorized_VolunteerRequest.this, Authorized_VolunteerRequest2.class);
             }
         });
 
@@ -106,16 +115,18 @@ public class Authorized_VolunteerRequest extends AppCompatActivity {
                             }
 
                         }
-
                         adapterAfet = new ArrayAdapter<String>(Authorized_VolunteerRequest.this, android.R.layout.simple_spinner_dropdown_item, arrayListAfet);
                         afetSpinner.setAdapter(adapterAfet);
                         afetSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
 
                             @Override
                             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                                afetBolgesi = adapterAfet.getItem(position).toString();
+
+                               // afetID = Integer.parseInt(adapterAfet.getItem(position).toString());
+                                afetBolgesi=adapterAfet.getItem(position).toString();
                                 index = position;
-                                Toast.makeText(getApplicationContext(), afetBolgesi, Toast.LENGTH_SHORT).show();
+                                //Toast.makeText(getApplicationContext(), afetBolgesi + "", Toast.LENGTH_SHORT).show();
+
                             }
 
                             @Override
@@ -124,6 +135,7 @@ public class Authorized_VolunteerRequest extends AppCompatActivity {
                             }
                         });
                         System.out.println(response.toString());
+
                     }
                 },
                 new Response.ErrorListener() { // the error listener
@@ -132,9 +144,12 @@ public class Authorized_VolunteerRequest extends AppCompatActivity {
                         System.out.println(error);
                     }
                 });
+
         queue.add(request);
 
+
     }
+
 
     private void signOut() {
         mGoogleSignInClient.signOut()
@@ -169,6 +184,7 @@ public class Authorized_VolunteerRequest extends AppCompatActivity {
             drawerLayout.closeDrawer(GravityCompat.START);
         }
     }
+
     public static void redirectActivity(Activity activity, Class aClass) {
         //initialize intent
         Intent intent = new Intent(activity, aClass);
@@ -177,6 +193,7 @@ public class Authorized_VolunteerRequest extends AppCompatActivity {
         //Start activity
         activity.startActivity(intent);
     }
+
     /*
      *************************************** ASAGIDAKI KISIMLAR YONLENDIRMELERI AYARLAR
      */
@@ -184,14 +201,17 @@ public class Authorized_VolunteerRequest extends AppCompatActivity {
     public void ClickAuthorizedNotice(View view) {
         redirectActivity(this, Authorized_Notification.class);
     }
+
     // AKTIF AFET
     public void ClickAuthorizeActiveDisaster(View view) {
         redirectActivity(this, Authorized_ActiveDisasters.class);
     }
+
     // PERSONEL KAYIT
     public void ClickAuthorizedPersonelRegistration(View view) {
         redirectActivity(this, Authorized_PersonelRegister.class);
     }
+
     // GONULLU ISTEKLERI
     public void ClickAuthrizedVolunteerRequest(View view) {
         redirectActivity(this, Authorized_VolunteerRequest.class);
@@ -201,10 +221,11 @@ public class Authorized_VolunteerRequest extends AppCompatActivity {
     // CIKIS
     public void ClickAuthorizedExit(View view) {
         signOut();
-        redirectActivity(this, MainActivity.class );
+        redirectActivity(this, MainActivity.class);
     }
+
     public void ClickNotificationSend(View view) {
-        redirectActivity(this, Authorized_Send_Notification.class );
+        redirectActivity(this, Authorized_Send_Notification.class);
     }
 
     // ANA SAYFA
@@ -212,7 +233,6 @@ public class Authorized_VolunteerRequest extends AppCompatActivity {
         // ZATEN BU SAYFADA OLDUGUNDAN KAPALI
         //redirectActivity(this, Authorized_Anasayfa.class );
     }
-
 
 
 }

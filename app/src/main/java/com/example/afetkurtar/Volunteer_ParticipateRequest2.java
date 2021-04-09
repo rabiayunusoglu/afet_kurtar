@@ -119,7 +119,7 @@ public class Volunteer_ParticipateRequest2 extends AppCompatActivity {
                                }
                            });
                    queuev.add(request);
-                   Toast.makeText(Volunteer_ParticipateRequest2.this, "Kaydınız Başarıyla Gerçekleşti :)", Toast.LENGTH_SHORT).show();
+                   Toast.makeText(Volunteer_ParticipateRequest2.this, "İsteğiniz Başarıyla İletildi.", Toast.LENGTH_SHORT).show();
                    redirectActivity(Volunteer_ParticipateRequest2.this,Volunteer_Anasayfa.class);
                }catch (Exception e){
                    Toast.makeText(Volunteer_ParticipateRequest2.this, "Tekrar Deneyiniz...", Toast.LENGTH_SHORT).show();

@@ -432,7 +432,6 @@ public class Disaster_Update extends AppCompatActivity implements OnMapReadyCall
         adapterAfetType.add("Sel");
         adapterAfetType.add("Heyelan");
         adapterAfetType.add("Çığ");
-        adapterAfetType.add("COVID-19");
         type.setAdapter(adapterAfetType);
         int spinnerPosition = adapterAfetType.getPosition(Authorized_ActiveDisasters.disasterType);
         type.setSelection(spinnerPosition);
