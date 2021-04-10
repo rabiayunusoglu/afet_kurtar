@@ -20,6 +20,7 @@ if (session_id() == '') {
     <meta name="google-signin-client_id" content="984932517689-26548cubtdd33uu95vqc4t3ciq1u2os0.apps.googleusercontent.com">
     <title>Afet Kurtar</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-BmbxuPwQa2lc/FVzBcNJ7UAyJxM6wuqIj61tLrc4wSX0szH/Ev+nYRRuWlolflfl" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.24/css/jquery.dataTables.css">
     <link rel="stylesheet" href="css/styles.css">
     <link rel="preconnect" href="https://fonts.gstatic.com">
     <link href="https://fonts.googleapis.com/css2?family=Newsreader&display=swap" rel="stylesheet">
@@ -145,7 +146,7 @@ if (session_id() == '') {
         }
         
 
-        echo '<div class="container main-container" style="margin-left:75px;">';
+        echo '<div class="container main-container" style="margin-left:0px;">';
         echo '<div class="row">';
         echo '<div class="col-lg-12 col-md-8"></div>';
         echo '<div class="col-lg-12 col-md-8 form-box">';
@@ -154,39 +155,113 @@ if (session_id() == '') {
         echo '<label for="subpartName'.$row["subpartID"].'" style="font-size: 20px; font-weight:bold; color: #ECF0F5">Bölge Adı</label>';
         echo '<input type="email" class="form-control" id="subpartName'.$row["subpartID"].'" value="'.$row["subpartName"].'">';
         echo '</div>';
-        echo '<div class="form-group">';
+        echo '<div class="form-group row">';
+        echo '<div class="col-lg-6 col-md-4">';
         echo '<label for="subpartLatitude'.$row["subpartID"].'" style="font-size: 20px; font-weight:bold; color: #ECF0F5">Enlem</label>';
         echo '<input type="text" class="form-control" id="subpartLatitude'.$row["subpartID"].'" value="'.$row["latitude"].'">';
         echo '</div>';
-        echo '<div class="form-group">';
+        //echo '</div>';
+        //echo '<div class="form-group">';
+        echo '<div class="col-lg-6 col-md-4">';
         echo '<label for="subpartLongitude'.$row["subpartID"].'" style="font-size: 20px; font-weight:bold; color: #ECF0F5">Boylam</label>';
         echo '<input type="text" class="form-control" id="subpartLongitude'.$row["subpartID"].'" value="'.$row["longitude"].'">';
         echo '</div>';
-        echo '<div class="form-group">';
+        echo '</div>';
+        echo '<div class="form-group row">';
+        echo '<div class="col-lg-6 col-md-4">';
         echo '<label for="subpartMissingPerson'.$row["subpartID"].'" style="font-size: 20px; font-weight:bold; color: #ECF0F5">Kayıp İnsan Sayısı</label>';
         echo '<input type="text" class="form-control" id="subpartMissingPerson'.$row["subpartID"].'" value="'.$row["missingPerson"].'">';
         echo '</div>';
-        echo '<div class="form-group">';
-        echo '<label for="subpartIsOpenForVolunteers'.$row["subpartID"].'" style="font-size: 20px; font-weight:bold; color: #ECF0F5">Gönüllü Kullanıcılara Açık Mı?</label>';
+        //echo '</div>';
+        //echo '<div class="form-group">';
+        echo '<div class="col-lg-6 col-md-4">';
+        echo '<label for="subpartRescuedPerson'.$row["subpartID"].'" style="font-size: 20px; font-weight:bold; color: #ECF0F5">Kurtarılan İnsan Sayısı</label>';
+        echo '<input type="text" class="form-control" id="subpartRescuedPerson'.$row["subpartID"].'" value="'.$row["rescuedPerson"].'">';
+        echo '</div>';
+        echo '</div>';
+        echo '<div class="form-group row">';
+        echo '<div class="col-lg-6 col-md-4">';
+        echo '<label for="subpartIsOpenForVolunteers'.$row["subpartID"].'" style="font-size: 20px; font-weight:bold; color: #ECF0F5">Gönüllü Katılım</label>';
         echo '<div><input type="checkbox" id="subpartIsOpenForVolunteers'.$row["subpartID"].'" '.$checkedString.'></div>';
         echo '</div>';
-        echo '<div class="form-group">';
-        echo '<label id="emergencyLabel'.$row["subpartID"].'" for="emergencyLevel'.$row["subpartID"].'" style="font-size: 20px; font-weight:bold; color: #ECF0F5">Aciliyet Seviyesi</label>';
-        echo '<input id="emergencyLevel'.$row["subpartID"].'" onchange="updateSubpartEmergency('.$row["subpartID"].',this.value)" name="emergencyLevel" type="range" data-slider-min="1" data-slider-max="10" data-slider-step="1" data-slider-value="'.$row["emergencyLevel"].'">';
-        echo '<span id="emergencyLevelValue'.$row["subpartID"].'" style="color:white;">'.$row["emergencyLevel"].'</span>';
+        //echo '</div>';
+        //echo '<div class="form-group">';
+        echo '<div class="col-lg-6 col-md-4">';
+        echo '<label for="emergencyLevel'.$row["subpartID"].'" style="font-size: 20px; font-weight:bold; color: #ECF0F5">Aciliyet Seviyesi</label>';
+        echo '<div><input type="text" id="emergencyLevel'.$row["subpartID"].'" onchange="updateSubpartEmergency('.$row["subpartID"].',this.value)" name="emergencyLevel" data-slider-min="1" data-slider-max="10" data-slider-step="1" data-slider-value="'.$row["emergencyLevel"].'">';
+        echo '<span id="emergencyLevelValue'.$row["subpartID"].'" style="color:white;">'.$row["emergencyLevel"].'</span></div>';
         echo '</div>';
-        echo '<input type="button" onclick="updateSubpart('.$row["subpartID"].', '.$row["rescuedPerson"].', \''.$row["status"].'\')" class="btn btn-primary" id="registerBtn" value="Güncelle"></input>';
+        echo '</div>';
+        echo '<input type="button" onclick="updateSubpart('.$row["subpartID"].', \''.$row["status"].'\')" class="btn btn-primary" id="registerBtn" style="margin-right:5px;" value="Güncelle"></input>';
+        echo '<input type="button" onclick="deleteSubpart('.$row["subpartID"].')" class="btn btn-danger" id="registerBtn" style="margin-left:5px;" value="Kaldır"></input>';
         echo '</form>';
+
+        
+
+        $url = "https://afetkurtar.site/api/team/search.php";
+
+        $body = '{
+            "assignedSubpartID":'.$row["subpartID"].'
+        }';
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL, $url);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+        curl_setopt($ch, CURLOPT_HTTPHEADER, array("Content-Type: application/json"));
+        curl_setopt($ch, CURLOPT_POST, 1);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, $body);
+        $responseTeam = json_decode(curl_exec($ch),true);
+        $teamID = -1;
+
+        if(count($responseTeam['records']) != 0)
+            $teamID = $responseTeam['records'][0]["teamID"];
+
+        $url = "https://afetkurtar.site/api/personnelUser/search.php";
+
+        $body = '{
+            "teamID":'.$teamID.'
+        }';
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL, $url);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+        curl_setopt($ch, CURLOPT_HTTPHEADER, array("Content-Type: application/json"));
+        curl_setopt($ch, CURLOPT_POST, 1);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, $body);
+        $personnelUsers = json_decode(curl_exec($ch),true);
+
+        echo "<table id=\"personnel-table\" class=\"table table-dark table-striped table-bordered\" style=\"text-align:center\">
+            <thead>
+            <tr>
+            <th>Personel İsmi</th>
+            <th>Personel Emaili</th>
+            <th>Personel Rolü</th>
+            <th>Detay</th>
+            </tr>
+            <thead>
+            <tbody>";
+        
+        foreach ($personnelUsers['records'] as $personnel) {
+            echo "<tr>";
+            echo "<td class=\"td-element\">" . $personnel['personnelName'] . "</td>";
+            echo "<td class=\"td-element\">" . $personnel['personnelEmail'] . "</td>";
+            echo "<td class=\"td-element\">" . $personnel['personnelRole'] . "</td>";
+            //echo "<td class=\"td-element\">" . $personnel['institution'] . "</td>";
+            echo "<td class=\"td-element\"><input type=\"button\" value=\"Çıkar\" onclick=\"removePersonnel(" . $personnel['personnelID']. ")\" class=\"btn btn-danger\" id=\"" . $row['disasterID'] . "\"\></input></td>";
+            echo "</tr>";
+        }
+        echo "<tbody>";
+        echo "</table>";
+
         echo '</div>';
         echo '</div>';
         echo '</div>';
+        
 
         /////
         echo '</div>';
     }
     /////
     echo '<div class="tab-pane fade" id="subpart-add" role="tabpanel" aria-labelledby="subpart-add-tab">';
-    echo '<div class="container main-container" style="margin-left:75px; margin-top:20px;">';
+    echo '<div class="container main-container" style="margin-left:0px; margin-top:0px;">';
     echo '<div class="row">';
     echo '<div class="col-lg-12 col-md-8"></div>';
     echo '<div class="col-lg-12 col-md-8 form-box">';
@@ -208,12 +283,12 @@ if (session_id() == '') {
     echo '<input type="text" class="form-control" id="subpartMissingPerson" placeholder="Tahmin edilen kayıp insan sayısını giriniz...">';
     echo '</div>';
     echo '<div class="form-group">';
-    echo '<label for="subpartIsOpenForVolunteers" style="font-size: 20px; font-weight:bold; color: #ECF0F5">Gönüllü Kullanıcılara Açık Mı?</label>';
+    echo '<label for="subpartIsOpenForVolunteers" style="font-size: 20px; font-weight:bold; color: #ECF0F5">Gönüllü Katılım</label>';
     echo '<div><input type="checkbox" id="subpartIsOpenForVolunteers"></div>';
     echo '</div>';
     echo '<div class="form-group">';
     echo '<label id="emergencyLabel" for="emergencyLevel" style="font-size: 20px; font-weight:bold; color: #ECF0F5">Aciliyet Seviyesi</label>';
-    echo '<input id="emergencyLevel" onchange="updateEmergency(this.value)" name="emergencyLevel" type="range" data-slider-min="1" data-slider-max="10" data-slider-step="1" data-slider-value="5">';
+    echo '<input id="emergencyLevel" onchange="updateEmergency(this.value)" name="emergencyLevel" type="text" data-slider-min="1" data-slider-max="10" data-slider-step="1" data-slider-value="5">';
     echo '<span id="emergencyLevelValue" style="color:white;">5</span>';
     echo '</div>';
     echo '<input type="button" onclick="addSubpart()" class="btn btn-primary" id="registerBtn" value="Bölgeyi Ekle"></input>';
@@ -226,12 +301,32 @@ if (session_id() == '') {
     echo '</div>';
 
     echo '</ul>';
+
+    echo '<script src="https://code.jquery.com/jquery-3.5.1.min.js" integrity="sha256-9/aliU8dGd2tb6OSsuzixeV4y/faTqgFtohetphbbj0=" crossorigin="anonymous"></script>';
+    echo '<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/js/bootstrap.bundle.min.js" integrity="sha384-b5kHyXgcpbZJO/tY9Ul7kGkf1S0CWuKcCD38l8YkeH8z8QjE0GmW1gYU5S9FOnJ0" crossorigin="anonymous"></script>';
+    echo '<script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.24/js/jquery.dataTables.js"></script>';
+    echo '<script src="js/script.js"></script>';
+    echo '<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-slider/10.0.0/bootstrap-slider.min.js"></script>';
+    echo '<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCxLUKYaDqQEIIQGQGQmC0ipdS04IXRoRw&callback=initMap&libraries=&v=weekly" async></script>';
+    
+
+    foreach($response['records'] as $row){
+        echo '<script>';
+        echo 'var slider = new Slider("#emergencyLevel'.$row["subpartID"].'", {';
+        echo 'tooltip: "always"';
+        echo '});';
+        echo '</script>';
+    }
+
+    echo '<script>';
+        echo 'var slider = new Slider("#emergencyLevel", {';
+        echo 'tooltip: \'always\'';
+        echo '});';
+        echo '</script>';
+
+
     ?>
 
-    <script src="https://code.jquery.com/jquery-3.5.1.min.js" integrity="sha256-9/aliU8dGd2tb6OSsuzixeV4y/faTqgFtohetphbbj0=" crossorigin="anonymous"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/js/bootstrap.bundle.min.js" integrity="sha384-b5kHyXgcpbZJO/tY9Ul7kGkf1S0CWuKcCD38l8YkeH8z8QjE0GmW1gYU5S9FOnJ0" crossorigin="anonymous"></script>
-    <script src="js/script.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-slider/10.0.0/bootstrap-slider.min.js"></script>
-    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCxLUKYaDqQEIIQGQGQmC0ipdS04IXRoRw&callback=initMap&libraries=&v=weekly" async></script>
+
 </body>
 </html>

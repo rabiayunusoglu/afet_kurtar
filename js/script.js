@@ -524,11 +524,12 @@ function registerVolunteer() {
         });
 }
 
-function updateSubpart(id, rescuedPerson, status) {
+function updateSubpart(id, status) {
     var subpartName = document.getElementById("subpartName" + id).value.trim();
     var latitude = document.getElementById("subpartLatitude" + id).value.trim();
     var longitude = document.getElementById("subpartLongitude" + id).value.trim();
     var subpartMissingPerson = document.getElementById("subpartMissingPerson" + id).value.trim();
+    var subpartRescuedPerson = document.getElementById("subpartRescuedPerson" + id).value.trim();
     var isOpenForVolunteersObject = document.getElementById("subpartIsOpenForVolunteers" + id);
     var emergencyLevel = document.getElementById("emergencyLevel" + id).value;
     var disasterID = parseFloat(document.getElementById("map").getAttribute("disaster-id"));
@@ -553,6 +554,10 @@ function updateSubpart(id, rescuedPerson, status) {
         alert("Kayıp insan sayısı bilgisini kontrol ediniz.");
         return false;
     }
+    else if (isNaN(subpartRescuedPerson) || subpartRescuedPerson == "") {
+        alert("Kurtarılan insan sayısı bilgisini kontrol ediniz.");
+        return false;
+    }
 
 
     $.post("https://afetkurtar.site/api/subpart/update.php", JSON.stringify({
@@ -566,8 +571,8 @@ function updateSubpart(id, rescuedPerson, status) {
             address: disasterBase,
             disasterName: disasterName,
             emergencyLevel: emergencyLevel,
-            rescuedPerson: "0",
-            status: ""
+            rescuedPerson: subpartRescuedPerson,
+            status: status
         }))
         .done(function(data, status, xhr) {
             if (xhr.status == 201) {
@@ -586,6 +591,28 @@ function updateSubpart(id, rescuedPerson, status) {
         });
 }
 
+function deleteSubpart(id) {
+
+    $.post("https://afetkurtar.site/api/subpart/delete.php", JSON.stringify({
+            subpartID: id
+        }))
+        .done(function(data, status, xhr) {
+            if (xhr.status == 201) {
+                window.alert("Bölge silindi.");
+                //document.location.href = "https://afetkurtar.site/editDisaster.php?id=" + disasterID;
+                document.location.reload();
+            } else {
+                window.alert("Bölge silinirken hata oluştu.");
+                //document.getElementById('personnelForm').reset();
+            }
+        })
+        .fail(function(data, xhr) {
+            window.alert("dataf:" + data.message);
+            //window.alert("Kullanıcı kaydı esnasında bir hata ile karşılaşıldı z");
+            window.alert("xhr:" + xhr.status);
+            //document.getElementById('personnelForm').reset();
+        });
+}
 
 function addSubpart() {
 
