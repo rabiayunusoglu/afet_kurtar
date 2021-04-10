@@ -78,7 +78,10 @@ public class Authorized_VolunteerRequest extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 // setContentView(R.layout.activity_volunteer__participate_request2);
-                redirectActivity(Authorized_VolunteerRequest.this, Authorized_VolunteerRequest2.class);
+                if (afetBolgesi.equals("Seçilmedi")) {
+                    Toast.makeText(getApplicationContext(), "Afet bölgesi seçiniz." + "", Toast.LENGTH_SHORT).show();
+                } else
+                    redirectActivity(Authorized_VolunteerRequest.this, Authorized_VolunteerRequest2.class);
             }
         });
 
@@ -86,7 +89,7 @@ public class Authorized_VolunteerRequest extends AppCompatActivity {
     }
 
     private void loadSpinnerDataAfet(String url) {
-
+        arrayListAfet.add("Seçilmedi");
         JsonObjectRequest request = new JsonObjectRequest(
                 Request.Method.GET, // the request method
                 url, // the URL
@@ -122,9 +125,12 @@ public class Authorized_VolunteerRequest extends AppCompatActivity {
                             @Override
                             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
 
-                               // afetID = Integer.parseInt(adapterAfet.getItem(position).toString());
-                                afetBolgesi=adapterAfet.getItem(position).toString();
-                                index = position;
+                                // afetID = Integer.parseInt(adapterAfet.getItem(position).toString());
+                                afetBolgesi = adapterAfet.getItem(position).toString();
+                                if (afetBolgesi.equals("Seçilmedi")) {
+                                    Toast.makeText(getApplicationContext(), "Afet bölgesi seçiniz." + "", Toast.LENGTH_SHORT).show();
+                                } else
+                                    index = position;
                                 //Toast.makeText(getApplicationContext(), afetBolgesi + "", Toast.LENGTH_SHORT).show();
 
                             }
