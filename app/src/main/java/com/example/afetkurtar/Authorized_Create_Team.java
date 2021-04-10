@@ -104,7 +104,7 @@ public class Authorized_Create_Team extends AppCompatActivity {
                     afterCreateTeamStringList.clear();
                     availablePersonnelObjectList.clear();
                      */
-                    finish();
+
                 }catch (Exception e){
                     e.getMessage();
                 }
@@ -167,16 +167,19 @@ public class Authorized_Create_Team extends AppCompatActivity {
                     public void onResponse(JSONObject response) {
                         try {
                             handleResponseForTeamTable(response);
+                            /*
                             if(Authorized_Assign_Team.teamStringListSize == afterCreateTeamStringList.size()){
                                 createdTeamID = "0";
                             }else{
                                 // db de ıd ne olursa olsun hep son eleman
                                 // olarak eklenicek gibi olduğundan okuduğum verilerde en son elemanın team id sini team id olarak belirlerim
-                                createdTeamID = afterCreateTeamStringList.get(afterCreateTeamStringList.size()-1);
+                                //createdTeamID = afterCreateTeamStringList.get(afterCreateTeamStringList.size()-1);
                             }
 
+                             */
                             /// team id üretildi şimdi bu team id kullanılarak üyelerin assigned team id lerini burada güncelle
                             updateNewPersonnelsTeamID();
+                            refreshActivity(); // dikkat burada refresh atsın diye bu methodu çağırttım
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
@@ -236,7 +239,16 @@ public class Authorized_Create_Team extends AppCompatActivity {
         JsonObjectRequest request = new JsonObjectRequest(Request.Method.POST, "https://afetkurtar.site/api/team/create.php", obj, new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
+
+                System.out.println("YYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYY==" + response.toString() + "==YYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYY");
+                try {
+                    createdTeamID = response.getString("id");
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
                 findCreatedTeamID();
+
+                //finish(); // Dikkat finish i takım oluşturunca yapsın diye buraya koydum
             }
         }, new Response.ErrorListener() {
             @Override
@@ -319,8 +331,14 @@ public class Authorized_Create_Team extends AppCompatActivity {
          scroll.addView(view);
      }// deneme end
     public void setPersonnelAvailableToSpinner(Spinner availableMembersSpinner) {
+        JSONObject obj = new JSONObject();
+        try {
+            obj.put("teamID", "0");
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest
-                (Request.Method.GET, "https://afetkurtar.site/api/personnelUser/read.php", null, new Response.Listener<JSONObject>() {
+                (Request.Method.POST, "https://afetkurtar.site/api/personnelUser/search.php", obj, new Response.Listener<JSONObject>() {
 
                     @Override
                     public void onResponse(JSONObject response) {
@@ -364,12 +382,12 @@ public class Authorized_Create_Team extends AppCompatActivity {
                 for (String x : list) {
                     try {
                         JSONObject tmp = new JSONObject(x);
-                        if(tmp.getString("teamID").equals("0")){
+                        //if(tmp.getString("teamID").equals("0")){
                             personnelAvailableStringList.add("PersonnelID: " + tmp.getString("personnelID") +", Personnel İsmi: "+ tmp.getString("personnelName"));
                             if(!control){
                                 availablePersonnelObjectList.add(tmp);
                             }
-                        }
+                        //}
                         jsonObjectList.add(tmp);
                     } catch (Exception e) {
                         e.printStackTrace();

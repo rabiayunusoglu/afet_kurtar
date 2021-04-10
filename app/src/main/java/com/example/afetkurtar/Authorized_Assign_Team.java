@@ -51,7 +51,7 @@ public class Authorized_Assign_Team extends AppCompatActivity {
     ArrayList<JSONObject> jsonObjectListForTeam = new ArrayList<JSONObject>();
     ArrayList<JSONObject> jsonObjectListForSubpart = new ArrayList<JSONObject>();
 
-    private ArrayList<JSONObject> teamMemberPersonnelObjectList = new ArrayList<JSONObject>();
+    //private ArrayList<JSONObject> teamMemberPersonnelObjectList = new ArrayList<JSONObject>();
     public static String teamID = "";
     public static String needManPower = "0";
     public static String needEquipment = "0";
@@ -415,12 +415,128 @@ public class Authorized_Assign_Team extends AppCompatActivity {
         if(!isTeamSelected()){
             return;
         }
-        findUsersListsForSelectedTeamID(); //for xreate lists
+        //findUsersListsForSelectedTeamID(); //for xreate lists
+        removeTeamFromDB();
+
     }
+/*
     public void resetPersonnelTeamMemberLists(){
         teamMemberPersonnelObjectList.clear();
     }
-    public void findUsersListsForSelectedTeamID() {
+
+ */
+    //*************************************************************************************090909
+    public void findUsersInPersonnelUserTable() {
+        JSONObject obj = new JSONObject();
+
+        try {
+            obj.put("teamID", teamID.trim());
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest
+                (Request.Method.POST, "https://afetkurtar.site/api/personnelUser/search.php", obj, new Response.Listener<JSONObject>() {
+
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        try {
+
+                            ArrayList<JSONObject> personnelObjectsList = handlePersonnelObject(response);
+                            for(int i = 0; i< personnelObjectsList.size(); i++){
+                                updateTeamIDInPersonnelUserTable(personnelObjectsList.get(i));
+                            }
+
+                            findUsersInVolunteerUserTable();
+
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }, new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        // TODO: Handle error
+                        System.out.println(error);
+                    }
+                });
+        queue.add(jsonObjectRequest);
+    }
+
+    public ArrayList<JSONObject> handlePersonnelObject(JSONObject a) {
+        ArrayList<String> list = new ArrayList<String>();
+        ArrayList<JSONObject> teamMembersInPersonnelList = new ArrayList<JSONObject>();
+        try {
+
+            String cevap = a.getString("records");
+            cevap = cevap.substring(1, cevap.length() - 1);
+
+            while (cevap.indexOf(",{") > -1) {
+                list.add(cevap.substring(0, cevap.indexOf(",{")));
+                cevap = cevap.substring(cevap.indexOf(",{") + 1);
+            }
+            list.add(cevap);
+
+            for (String x : list) {
+                try {
+                    JSONObject tmp = new JSONObject(x);
+                    teamMembersInPersonnelList.add(tmp);
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+            return teamMembersInPersonnelList;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }// handle response end
+    public void updateTeamIDInPersonnelUserTable(JSONObject personnelObject) {
+
+        JSONObject obj = new JSONObject();
+        try {
+
+            obj.put("personnelID", personnelObject.getString("personnelID"));
+            obj.put("personnelName", personnelObject.getString("personnelName"));
+            obj.put("personnelEmail", personnelObject.getString("personnelEmail"));
+            obj.put("personnelRole", "Belirlenmedi");
+            obj.put("teamID", "0"); // teamID set to 0 to clear assignment on team
+            obj.put("latitude", personnelObject.getString("latitude"));
+            obj.put("longitude", personnelObject.getString("longitude"));
+            obj.put("institution", personnelObject.getString("institution"));
+            obj.put("locationTime", personnelObject.getString("locationTime"));
+
+
+        } catch (Exception e) {
+            e.getMessage();
+        }
+        System.out.println("-----------------------Our personnel user update object: " + obj.toString());
+        JsonObjectRequest request = new JsonObjectRequest(Request.Method.POST, "https://afetkurtar.site/api/personnelUser/update.php", obj, new Response.Listener<JSONObject>() {
+            @Override
+            public void onResponse(JSONObject response) {
+                System.out.println(response.toString());
+
+                try {
+                    notificationSender.sendNotification("Takımdan Çıkarıldınız",
+                            "Yetkili yöneticilerden birisi sizi bulunduğunuz takımdan çıkardı.",personnelObject.getString("personnelID").trim());
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                System.out.println(error);
+            }
+        });
+        queue.add(request);
+        //Toast.makeText(this, "Personelin lokasyonu güncellendi.", Toast.LENGTH_SHORT).show();
+
+    }
+    //*************************************************************************************090909
+    /*
+   public void findUsersListsForSelectedTeamID() {
+
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest
                 (Request.Method.GET, "https://afetkurtar.site/api/personnelUser/read.php", null, new Response.Listener<JSONObject>() {
 
@@ -428,10 +544,14 @@ public class Authorized_Assign_Team extends AppCompatActivity {
                     public void onResponse(JSONObject response) {
                         try {
                             //  System.out.println(response.toString());
-                            handleResponseFindUserListForSelectedTeamID(response);
-                            updateTeamIDForPersonnelsInTeam(); // for update users in lists
-                            removeTeamFromDB(); // remove team from DB
-                            refreshActivity();
+
+                            //handleResponseFindUserListForSelectedTeamID(response);
+                            //updateTeamIDForPersonnelsInTeam(); // for update users in lists
+                            //findUsersInVolunteerUserTable();
+
+
+
+
                             //after delete reset String list
                         } catch (Exception e) {
                             e.printStackTrace();
@@ -446,6 +566,123 @@ public class Authorized_Assign_Team extends AppCompatActivity {
                 });
         queue.add(jsonObjectRequest);
     }
+     */
+    ////////////////////////////////////////////////////////////-------------------------------------------
+    public void findUsersInVolunteerUserTable() {
+        JSONObject obj = new JSONObject();
+
+        try {
+            obj.put("teamID", teamID.trim());
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest
+                (Request.Method.POST, "https://afetkurtar.site/api/volunteerUser/search.php", obj, new Response.Listener<JSONObject>() {
+
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        try {
+
+                            ArrayList<JSONObject> volunteerObjectsList = handleVolunteerObject(response);
+                            for(int i = 0; i< volunteerObjectsList.size(); i++){
+                                updateTeamIDInVolunteerUserTable(volunteerObjectsList.get(i));
+                            }
+                            //removeTeamFromDB(); // remove team from DB
+                            //refreshActivity();// refresh the activity
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }, new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        // TODO: Handle error
+                        System.out.println(error);
+                    }
+                });
+        queue.add(jsonObjectRequest);
+    }
+
+    public ArrayList<JSONObject> handleVolunteerObject(JSONObject a) {
+        ArrayList<String> list = new ArrayList<String>();
+        ArrayList<JSONObject> teamMembersInVolunteerList = new ArrayList<JSONObject>();
+        try {
+
+            String cevap = a.getString("records");
+            cevap = cevap.substring(1, cevap.length() - 1);
+
+            while (cevap.indexOf(",{") > -1) {
+                list.add(cevap.substring(0, cevap.indexOf(",{")));
+                cevap = cevap.substring(cevap.indexOf(",{") + 1);
+            }
+            list.add(cevap);
+
+            for (String x : list) {
+                try {
+                    JSONObject tmp = new JSONObject(x);
+                    teamMembersInVolunteerList.add(tmp);
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+            return teamMembersInVolunteerList;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }// handle response end
+    public void updateTeamIDInVolunteerUserTable(JSONObject volunteerObject) {
+
+        JSONObject obj = new JSONObject();
+        try {
+
+            obj.put("volunteerID", volunteerObject.getString("volunteerID"));
+            obj.put("volunteerName", volunteerObject.getString("volunteerName"));
+            obj.put("address", volunteerObject.getString("address"));
+            obj.put("isExperienced", volunteerObject.getString("isExperienced"));
+            obj.put("haveFirstAidCert", volunteerObject.getString("haveFirstAidCert"));
+            obj.put("requestedSubpart", volunteerObject.getString("requestedSubpart"));
+            obj.put("responseSubpart", volunteerObject.getString("responseSubpart"));
+            obj.put("assignedTeamID", "0"); // reset Team id
+            obj.put("role", volunteerObject.getString("role"));
+            obj.put("latitude", volunteerObject.getString("latitude"));
+            obj.put("longitude", volunteerObject.getString("longitude"));
+            obj.put("locationTime", volunteerObject.getString("locationTime"));
+            obj.put("tc", volunteerObject.getString("tc"));
+            obj.put("tel", volunteerObject.getString("tel"));
+            obj.put("birthDate", volunteerObject.getString("birthDate"));
+
+        } catch (Exception e) {
+            e.getMessage();
+        }
+        System.out.println("-----------------------Our volunteer user update object: " + obj.toString());
+        JsonObjectRequest request = new JsonObjectRequest(Request.Method.POST, "https://afetkurtar.site/api/volunteerUser/update.php", obj, new Response.Listener<JSONObject>() {
+            @Override
+            public void onResponse(JSONObject response) {
+                System.out.println(response.toString());
+
+                try {
+                    notificationSender.sendNotification("Takımdan Çıkarıldınız",
+                            "Yetkili yöneticilerden birisi sizi bulunduğunuz takımdan çıkardı.",volunteerObject.getString("volunteerID").trim());
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
+
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                System.out.println(error);
+            }
+        });
+        queue.add(request);
+        //Toast.makeText(this, "Personelin lokasyonu güncellendi.", Toast.LENGTH_SHORT).show();
+
+    }
+    ////////////////////////////////////////////////////////////--------------------------------------------------------
+    /*
     public void handleResponseFindUserListForSelectedTeamID(JSONObject a) {
         ArrayList<String> list = new ArrayList<String>();
         try {
@@ -512,6 +749,8 @@ public class Authorized_Assign_Team extends AppCompatActivity {
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
+
+
             }
         }, new Response.ErrorListener() {
             @Override
@@ -523,6 +762,8 @@ public class Authorized_Assign_Team extends AppCompatActivity {
         Toast.makeText(this, "Takım elemanlarının teamID leri güncellendi.", Toast.LENGTH_SHORT).show();
         //finish();
     }
+
+     */
     public void removeTeamFromDB(){
         JSONObject obj = new JSONObject();
         try {
@@ -536,8 +777,10 @@ public class Authorized_Assign_Team extends AppCompatActivity {
                     public void onResponse(JSONObject response) {
                         try {
                             System.out.println(response.toString());
-                            resetPersonnelTeamMemberLists();
+                            findUsersInPersonnelUserTable();
+                            //resetPersonnelTeamMemberLists();
                             //ReturnBack();
+                            refreshActivity();
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
