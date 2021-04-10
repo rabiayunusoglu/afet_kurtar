@@ -126,12 +126,13 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
         ComponentName componentInfo = taskInfo.get(0).topActivity;
         componentInfo.getPackageName();
 
+        /*
         System.out.println("BURA BURA");
         System.out.println("BURA BURA");
         System.out.println(componentInfo.getClassName().substring(componentInfo.getClassName().lastIndexOf(".")+1));
         System.out.println("BURA BURA");
         System.out.println("BURA BURA");
-
+        */
         if(componentInfo.getClassName().substring(componentInfo.getClassName().lastIndexOf(".")+1).equals("MessageActivity") &&
                 remoteMessage.getData().get("title").equals("Yeni Mesaj"))
         {

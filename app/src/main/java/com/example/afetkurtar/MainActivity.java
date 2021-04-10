@@ -133,7 +133,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                                         intentLogin.putExtra("title",bundle.getString("title"));
                                     }
                                     else{
-                                        printLoginError();
+                                        if (type.equals("authorizedUser")) {
+                                            intentLogin = new Intent(MainActivity.this, Authorized_Anasayfa.class);
+                                        } else if (type.equals("personnelUser")) {
+                                            intentLogin = new Intent(MainActivity.this, Personel_Anasayfa.class);
+                                        } else {
+                                            intentLogin = new Intent(MainActivity.this, Volunteer_Anasayfa.class);
+                                        }
                                     }
                                 }catch (Exception e){
                                     if (type.equals("authorizedUser")) {

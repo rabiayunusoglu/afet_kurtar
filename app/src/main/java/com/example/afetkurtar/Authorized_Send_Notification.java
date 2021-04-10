@@ -11,6 +11,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.Spinner;
+import android.widget.Toast;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -29,6 +30,7 @@ import com.google.firebase.messaging.RemoteMessage;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -44,7 +46,7 @@ public class Authorized_Send_Notification extends AppCompatActivity {
 
         queue = Volley.newRequestQueue(this);
 
-        findViewById(R.id.textHata).setVisibility(View.INVISIBLE);
+
 
 
 
@@ -74,20 +76,69 @@ public class Authorized_Send_Notification extends AppCompatActivity {
             e.printStackTrace();
         }
         */
+        String title = ((EditText)findViewById(R.id.NotificationHeader)).getText().toString();
+        String body = ((EditText)findViewById(R.id.NotificationBody)).getText().toString();
+
         NotificationSender send = new NotificationSender(getApplicationContext());
-        try {
-            //send.testGrup( MainActivity.userInfo.getString("userToken"));
-           // send.sendToTeam("0");
-        } catch (Exception e) {
-            e.printStackTrace();
+        if(title.length()>0 && body.length()>0) {
+            JsonObjectRequest jsonObjectRequest = new JsonObjectRequest
+                    (Request.Method.POST, "https://afetkurtar.site/api/users/read.php", null, new Response.Listener<JSONObject>() {
+
+                        @Override
+                        public void onResponse(JSONObject response) {
+                            String cevap;
+                            ArrayList<JSONObject> list = new ArrayList<JSONObject>();
+                            try {
+                                cevap = response.getString("records");
+                                cevap = cevap.substring(1, cevap.length() - 1);
+
+                                while (cevap.indexOf(",{") > -1) {
+                                    list.add(new JSONObject(cevap.substring(0, cevap.indexOf(",{"))));
+                                    cevap = cevap.substring(cevap.indexOf(",{") + 1);
+                                }
+                                list.add(new JSONObject(cevap));
+
+                                for (JSONObject x : list) {
+                                    if (!x.getString("userType").equals("authorizedUser") && x.getString("userToken").length()>5) {
+                                      //  System.out.println(x.getString("userID"));
+                                        send.sendNotification(title,body,x.getString("userID"));
+                                    }
+                                }
+                                showToast(true);
+                                ((EditText)findViewById(R.id.NotificationHeader)).setText("");
+                                ((EditText)findViewById(R.id.NotificationBody)).setText("");
+                            } catch (Exception e) {
+
+                            }
+                        }
+                    }, new Response.ErrorListener() {
+                        @Override
+                        public void onErrorResponse(VolleyError error) {
+                            // TODO: Handle error
+                            System.out.println(error);
+                        }
+                    });
+            queue.add(jsonObjectRequest);
+
+        }
+        else{
+            showToast(false);
         }
     }
+    public void showToast(boolean a){
+        if(a){
+            Toast.makeText(getApplicationContext(), "Tum Kullanicilara Bildirim Gönderildi", Toast.LENGTH_LONG).show();
+        }
+        else{
+            Toast.makeText(getApplicationContext(), "Lütfen Bilgileri Doldurunuz", Toast.LENGTH_LONG).show();
+        }
+    }
+
 
     public void onClick(View v) {
         switch (v.getId()) {
 
             case R.id.SendNotificationButton:
-                System.out.println("BILDIRIM GONDERILIYOR");
                 sendButton();
                 break;
 

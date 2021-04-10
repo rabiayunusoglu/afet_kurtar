@@ -57,7 +57,8 @@ public class NotificationSender extends Activity {
                                 cevap = cevap.substring(cevap.indexOf(",{") + 1);
                             }
                             list.add(new JSONObject(cevap));
-                            getTokensandSend(list,ID,mesaj);
+                           // getTokensandSend(list,ID,mesaj);
+                            addVolunteer(list,ID,mesaj);
                         }catch (Exception e){
 
                         }
@@ -72,7 +73,50 @@ public class NotificationSender extends Activity {
         queue.add(jsonObjectRequest);
 
     }
-    public void getTokensandSend(ArrayList<JSONObject> perarr,String ID,String mesaj){
+
+    public void addVolunteer(ArrayList<JSONObject> perarr,String ID,String mesaj){
+        JSONObject obj = new JSONObject();
+        try {
+            obj.put("assignedTeamID",ID); //DEGISECEK
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        // ASAGISI DEGISECEK -- TEST AMACLI YAPILDI
+
+        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest
+                (Request.Method.POST, "https://afetkurtar.site/api/volunteerUser/search.php", obj, new Response.Listener<JSONObject>() {
+
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        String cevap;
+                        ArrayList<JSONObject> list = new ArrayList<JSONObject>();
+                        try {
+                            cevap = response.getString("records");
+                            cevap = cevap.substring(1, cevap.length() - 1);
+
+                            while (cevap.indexOf(",{") > -1) {
+                                list.add(new JSONObject(cevap.substring(0, cevap.indexOf(",{"))));
+                                cevap = cevap.substring(cevap.indexOf(",{") + 1);
+                            }
+                            list.add(new JSONObject(cevap));
+                            getTokensandSend(perarr,list,ID,mesaj);
+                        }catch (Exception e){
+
+                        }
+                    }
+                }, new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        // TODO: Handle error
+                        System.out.println(error);
+                    }
+                });
+        queue.add(jsonObjectRequest);
+
+    }
+
+    public void getTokensandSend(ArrayList<JSONObject> perarr,ArrayList<JSONObject> perarr2,String ID,String mesaj){
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest
                 (Request.Method.GET, "https://afetkurtar.site/api/users/read.php", null, new Response.Listener<JSONObject>() {
 
@@ -90,10 +134,28 @@ public class NotificationSender extends Activity {
                             }
                             list.add(new JSONObject(cevap));
                             ArrayList<String> Strarr = new ArrayList<>();
+                            /*
                             for(JSONObject x: perarr){
                                 for(JSONObject y: list){
                                     if(x.getString("personnelID").equals(y.getString("userID"))){
                                         Strarr.add(y.getString("userToken"));
+                                    }
+                                }
+                            }
+                            */
+                            for(JSONObject y: list) {
+                                boolean check = true;
+                                for (JSONObject x : perarr) {
+                                    if (x.getString("personnelID").equals(y.getString("userID"))) {
+                                        Strarr.add(y.getString("userToken"));
+                                        check=false;
+                                    }
+                                }
+                                if(check) {
+                                    for (JSONObject x : perarr2) {
+                                        if (x.getString("volunteerID").equals(y.getString("userID"))) {
+                                            Strarr.add(y.getString("userToken"));
+                                        }
                                     }
                                 }
                             }
@@ -130,7 +192,7 @@ public class NotificationSender extends Activity {
             e.printStackTrace();
         }
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest
-                (Request.Method.GET, "https://afetkurtar.site/api/users/search.php", obj, new Response.Listener<JSONObject>() {
+                (Request.Method.POST, "https://afetkurtar.site/api/users/search.php", obj, new Response.Listener<JSONObject>() {
 
                     @Override
                     public void onResponse(JSONObject response) {
@@ -140,7 +202,8 @@ public class NotificationSender extends Activity {
                             cevap = cevap.substring(1, cevap.length() - 1);
 
                             JSONObject tmp = new JSONObject(cevap);
-                            if(tmp.getString("userToken").length()>10)
+                            System.out.println(response.toString() + "*****************************************");
+                            if(tmp.getString("userToken").length()>10 && tmp.getString("userID").equals(ID))
                             sendNotificationWithData(Title,Body,"","",tmp.getString("userToken"));
 
                         }catch (Exception e){
