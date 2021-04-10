@@ -61,6 +61,7 @@ public class Volunteer_ParticipateRequest extends AppCompatActivity {
 
 
         afetSpinner = (Spinner) findViewById(R.id.spinnerAfet);
+        arrayListAfet.add("Seçilmedi");
         loadSpinnerDataAfet(urlAfet);
 
 
@@ -69,9 +70,11 @@ public class Volunteer_ParticipateRequest extends AppCompatActivity {
 
             @Override
             public void onClick(View v) {
-               // setContentView(R.layout.activity_volunteer__participate_request2);
-
-redirectActivity(Volunteer_ParticipateRequest.this,Volunteer_ParticipateRequest2.class);
+                // setContentView(R.layout.activity_volunteer__participate_request2);
+                if (afetBolgesi.equals("Seçilmedi")) {
+                    Toast.makeText(getApplicationContext(), "Afet bölgesi seçiniz!", Toast.LENGTH_SHORT).show();
+                } else
+                    redirectActivity(Volunteer_ParticipateRequest.this, Volunteer_ParticipateRequest2.class);
             }
         });
 
@@ -116,8 +119,12 @@ redirectActivity(Volunteer_ParticipateRequest.this,Volunteer_ParticipateRequest2
                             @Override
                             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                                 afetBolgesi = adapterAfet.getItem(position).toString();
-                                index = position;
-                                Toast.makeText(getApplicationContext(), afetBolgesi, Toast.LENGTH_SHORT).show();
+                                if (afetBolgesi.equals("Seçilmedi")) {
+                                    Toast.makeText(getApplicationContext(), "Afet bölgesi seçiniz!", Toast.LENGTH_SHORT).show();
+                                } else {
+                                    index = position;
+                                    Toast.makeText(getApplicationContext(), afetBolgesi, Toast.LENGTH_SHORT).show();
+                                }
                             }
 
                             @Override
@@ -199,7 +206,7 @@ redirectActivity(Volunteer_ParticipateRequest.this,Volunteer_ParticipateRequest2
 
     public void ClickParticipateForm(View view) {
         //redirect activity to emergency
-        redirectActivity(this, Volunteer_RegisterInfo.class );
+        redirectActivity(this, Volunteer_RegisterInfo.class);
     }
 
     public void ClickExit(View view) {

@@ -155,19 +155,24 @@ public class Volunteer_Emergency extends AppCompatActivity {
 
             @Override
             public void onClick(View v) {
-                try {
-                    if (message.getText().toString().length() == 0 || resimKontrol == false || photoControl == false)
-                        throw new Exception("");
+                if (afetBolgesi.equals("Seçilmedi")) {
+                    Toast.makeText(getApplicationContext(), "Afet bölgesi seçiniz!", Toast.LENGTH_SHORT).show();
+                } else {
+                    try {
+                        if (message.getText().toString().length() == 0 || resimKontrol == false || photoControl == false)
+                            throw new Exception("");
 
-                    UploadFile uploadFile = new UploadFile();
-                    uploadFile.execute();
-                    System.out.println("PHOTO URL:*********************************************************" + photoUrl);
-                } catch (Exception e) {
-                    if (resimKontrol == false | photoControl == false)
-                        Toast.makeText(Volunteer_Emergency.this, "Afet bölgesinin resmini yüklemelisiniz.", Toast.LENGTH_LONG).show();
-                    else if (message.getText().toString().length() == 0)
-                        Toast.makeText(Volunteer_Emergency.this, "Detaylı bilgi kısmını doldurunuz...", Toast.LENGTH_LONG).show();
+                        UploadFile uploadFile = new UploadFile();
+                        uploadFile.execute();
+                        System.out.println("PHOTO URL:*********************************************************" + photoUrl);
+                    } catch (Exception e) {
+                        if (resimKontrol == false | photoControl == false)
+                            Toast.makeText(Volunteer_Emergency.this, "Afet bölgesinin resmini yüklemelisiniz.", Toast.LENGTH_LONG).show();
+                        else if (message.getText().toString().length() == 0)
+                            Toast.makeText(Volunteer_Emergency.this, "Detaylı bilgi kısmını doldurunuz...", Toast.LENGTH_LONG).show();
+                    }
                 }
+
             }
         });
 
@@ -175,6 +180,7 @@ public class Volunteer_Emergency extends AppCompatActivity {
 
     private void loadSpinnerDataAfet() {
         adapterAfet = new ArrayAdapter<String>(Volunteer_Emergency.this, android.R.layout.simple_spinner_dropdown_item, arrayListAfet);
+        adapterAfet.add("Seçilmedi");
         adapterAfet.add("Deprem");
         adapterAfet.add("Yangın");
         adapterAfet.add("Sel");
@@ -186,8 +192,12 @@ public class Volunteer_Emergency extends AppCompatActivity {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 afetBolgesi = adapterAfet.getItem(position).toString();
-                index = position;
-                Toast.makeText(getApplicationContext(), afetBolgesi, Toast.LENGTH_SHORT).show();
+                if (afetBolgesi.equals("Seçilmedi")) {
+                    Toast.makeText(getApplicationContext(), "Afet bölgesi seçiniz!", Toast.LENGTH_SHORT).show();
+                } else {
+                    index = position;
+                    Toast.makeText(getApplicationContext(), afetBolgesi, Toast.LENGTH_SHORT).show();
+                }
             }
 
             @Override

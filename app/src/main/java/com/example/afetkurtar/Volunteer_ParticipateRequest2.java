@@ -73,6 +73,8 @@ public class Volunteer_ParticipateRequest2 extends AppCompatActivity {
         afet.setText(Volunteer_ParticipateRequest.afetBolgesi);
         afet.setFocusableInTouchMode(false);
         loadSpinnerDataSubpart(urlSubpart);
+        arrayListSubpart.add("Seçilmedi");
+        arrayListSubpartID.add(0);
         try {
             checkUser();
         } catch (JSONException e) {
@@ -82,49 +84,53 @@ public class Volunteer_ParticipateRequest2 extends AppCompatActivity {
         submits.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if(dataSupartName.equals("Seçilmedi")){
+                    Toast.makeText(getApplicationContext(), "Afet alt parçası seçiniz!", Toast.LENGTH_SHORT).show();
+                }else{
+                    try{
+                        JSONObject obj = new JSONObject();
+                        try {
+                            obj.put("volunteerID",volInfo.get("volunteerID"));
+                            obj.put("volunteerName", volInfo.get("volunteerName"));
+                            obj.put("address", volInfo.get("address"));
+                            obj.put("isExperienced",  volInfo.get("isExperienced"));
+                            obj.put("haveFirstAidCert",  volInfo.get("haveFirstAidCert"));
+                            obj.put("requestedSubpart",  dataSupartID);
+                            obj.put("latitude",  volInfo.get("latitude"));
+                            obj.put("longitude",  volInfo.get("longitude"));
+                            obj.put("locationTime",  volInfo.get("locationTime"));
+                            obj.put("tc", volInfo.get("tc"));
+                            obj.put("tel", volInfo.get("tel"));
+                            obj.put("birthDate", volInfo.get("birthDate"));
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
 
-               try{
-                   JSONObject obj = new JSONObject();
-                   try {
-                       obj.put("volunteerID",volInfo.get("volunteerID"));
-                       obj.put("volunteerName", volInfo.get("volunteerName"));
-                       obj.put("address", volInfo.get("address"));
-                       obj.put("isExperienced",  volInfo.get("isExperienced"));
-                       obj.put("haveFirstAidCert",  volInfo.get("haveFirstAidCert"));
-                       obj.put("requestedSubpart",  dataSupartID);
-                       obj.put("latitude",  volInfo.get("latitude"));
-                       obj.put("longitude",  volInfo.get("longitude"));
-                       obj.put("locationTime",  volInfo.get("locationTime"));
-                       obj.put("tc", volInfo.get("tc"));
-                       obj.put("tel", volInfo.get("tel"));
-                       obj.put("birthDate", volInfo.get("birthDate"));
-                   } catch (JSONException e) {
-                       e.printStackTrace();
-                   }
+                        JsonObjectRequest request = new JsonObjectRequest(
+                                Request.Method.POST, // the request method
+                                url1, // the URL
+                                obj, // the parameters for the php
+                                new Response.Listener<JSONObject>() { // the response listener
+                                    @Override
+                                    public void onResponse(JSONObject response) {
+                                        System.out.println(response.toString());
+                                    }
+                                },
+                                new Response.ErrorListener() { // the error listener
+                                    @Override
+                                    public void onErrorResponse(VolleyError error) {
+                                        System.out.println(error);
+                                    }
+                                });
+                        queuev.add(request);
+                        Toast.makeText(Volunteer_ParticipateRequest2.this, "İsteğiniz Başarıyla İletildi.", Toast.LENGTH_SHORT).show();
+                        redirectActivity(Volunteer_ParticipateRequest2.this,Volunteer_Anasayfa.class);
+                    }catch (Exception e){
+                        Toast.makeText(Volunteer_ParticipateRequest2.this, "Tekrar Deneyiniz...", Toast.LENGTH_SHORT).show();
+                        redirectActivity(Volunteer_ParticipateRequest2.this,Volunteer_ParticipateRequest2.class);
+                    }
+                }
 
-                   JsonObjectRequest request = new JsonObjectRequest(
-                           Request.Method.POST, // the request method
-                           url1, // the URL
-                           obj, // the parameters for the php
-                           new Response.Listener<JSONObject>() { // the response listener
-                               @Override
-                               public void onResponse(JSONObject response) {
-                                   System.out.println(response.toString());
-                               }
-                           },
-                           new Response.ErrorListener() { // the error listener
-                               @Override
-                               public void onErrorResponse(VolleyError error) {
-                                   System.out.println(error);
-                               }
-                           });
-                   queuev.add(request);
-                   Toast.makeText(Volunteer_ParticipateRequest2.this, "İsteğiniz Başarıyla İletildi.", Toast.LENGTH_SHORT).show();
-                   redirectActivity(Volunteer_ParticipateRequest2.this,Volunteer_Anasayfa.class);
-               }catch (Exception e){
-                   Toast.makeText(Volunteer_ParticipateRequest2.this, "Tekrar Deneyiniz...", Toast.LENGTH_SHORT).show();
-                   redirectActivity(Volunteer_ParticipateRequest2.this,Volunteer_ParticipateRequest2.class);
-               }
             }
         });
 
@@ -221,9 +227,14 @@ public class Volunteer_ParticipateRequest2 extends AppCompatActivity {
                             @Override
                             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                                 dataSupartName = adapterSubpart.getItem(position).toString();
-                                index = position;
-                                dataSupartID=arrayListSubpartID.get(index);
-                                Toast.makeText(getApplicationContext(), dataSupartName, Toast.LENGTH_SHORT).show();
+                                if(dataSupartName.equals("Seçilmedi")){
+                                    Toast.makeText(getApplicationContext(), "Afet alt parçası seçiniz!", Toast.LENGTH_SHORT).show();
+                                }else{
+                                    index = position;
+                                    dataSupartID=arrayListSubpartID.get(index);
+                                    Toast.makeText(getApplicationContext(), dataSupartName, Toast.LENGTH_SHORT).show();
+                                }
+
                             }
 
                             @Override
