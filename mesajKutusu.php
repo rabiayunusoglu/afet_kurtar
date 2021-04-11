@@ -88,10 +88,10 @@ if (session_id() == '') {
 
             echo '<ul class="nav nav-tabs">';
 
-            echo '<div class="container-fluid-mesaj-kutusu">';
+            echo '<div class="container-fluid-mesaj-kutusu" style="background-color: #383B3E;">';
             echo '<div class="row-fluid-mesaj-kutusu">';
             echo '<div class="span9" id="content">';
-            echo '<div class="header-mesaj-kutusu">Afet</div>';
+            echo '<div class="header-mesaj-kutusu" style="padding-left:10px; padding-top:10px; padding-bottom:5px; padding-right:10px;">Afet</div>';
             echo '<div class="nav flex-column nav-pills" id="v-pills-tab" role="tablist" aria-orientation="vertical">';
             foreach($responseDisaster['records'] as $row){
                 echo '<a class="nav-link" id="disaster-' . $row["disasterID"] . '-tab" data-toggle="tab" href="#disaster-' . $row["disasterID"] . '" role="tab" aria-controls="disaster-' . $row["disasterID"] . '" aria-selected="false">' . $row["disasterName"] . '</a>';
@@ -106,56 +106,105 @@ if (session_id() == '') {
             echo '<div class="tab-content" id="v-pills-tabContent">';
             foreach($responseDisaster['records'] as $row){
                 echo '<div class="tab-pane fade" id="disaster-' . $row["disasterID"] . '" role="tabpanel" aria-labelledby="disaster' . $row["disasterID"] . '-tab">';
-                
-                echo '<ul class="nav nav-pills">';
+                if(count($responseSubpart['records']) != 0){
+                    echo '<ul class="nav nav-pills">';
 
-                echo '<div class="container-fluid-mesaj-kutusu">';
-                echo '<div class="row-fluid-mesaj-kutusu">';
-                echo '<div class="span9" id="content">';
-                echo '<div class="header-mesaj-kutusu">Bölge</div>';
-                echo '<div class="nav flex-column nav-pills" id="v-pills-tab-subpart" role="tablist" aria-orientation="vertical">';
-                foreach($responseSubpart['records'] as $rowSubpart){
-                    if ($row["disasterID"] == $rowSubpart["disasterID"]) {
-                        echo '<a class="nav-link" id="subpart-' . $rowSubpart["subpartID"] . '-tab" data-toggle="tab" href="#subpart-' . $rowSubpart["subpartID"] . '" role="tab" aria-controls="subpart-' . $rowSubpart["subpartID"] . '" aria-selected="false">' . $rowSubpart["subpartName"] . '</a>';
-                    }
-                }
-                echo '</div>';
-                echo '</div>';
-                echo '</div>';
-                echo '</div>';
-
-                echo '<div class="vl"></div>';
-
-                echo '<div class="tab-content" id="v-pills-tabContent">';
-                foreach($responseSubpart['records'] as $rowSubpart){
-                    if ($row["disasterID"] == $rowSubpart["disasterID"]) {
-                        echo '<div class="tab-pane fade" id="subpart-' . $rowSubpart["subpartID"] . '" role="tabpanel" aria-labelledby="subpart' . $rowSubpart["subpartID"] . '-tab">';
-                        // echo $rowSubpart["subpartName"];
-                        echo "<table class=\"table table-dark\">
-                        <tr>
-                        <th>Bildiren Takım</th>
-                        <th>Durum</th>
-                        <th>Tarih</th>
-                        </tr>";
-
-                        foreach($responseStatus['records'] as $rowStatus)
-                        {
-                            if ($rowStatus["subpartID"] == $rowSubpart["subpartID"]) {
-                                echo "<tr>";
-                                echo "<td class=\"td-element\">" . $rowStatus['teamID'] . "</td>";
-                                echo "<td class=\"td-element\">" . $rowStatus['statusMessage'] . "</td>";
-                                echo "<td class=\"td-element\">" . $rowStatus['statusTime'] . "</td>";
-                                echo "</tr>";
-                            }
-                            
+                    echo '<div class="container-fluid-mesaj-kutusu" style="background-color: #383B3E;">';
+                    echo '<div class="row-fluid-mesaj-kutusu">';
+                    echo '<div class="span9" id="content">';
+                    echo '<div class="header-mesaj-kutusu" style="padding-left:10px; padding-top:10px; padding-bottom:5px; padding-right:10px;">Bölge</div>';
+                    echo '<div class="nav flex-column nav-pills" id="v-pills-tab-subpart" role="tablist" aria-orientation="vertical">';
+                    foreach($responseSubpart['records'] as $rowSubpart){
+                        if ($row["disasterID"] == $rowSubpart["disasterID"]) {
+                            echo '<a class="nav-link" id="subpart-' . $rowSubpart["subpartID"] . '-tab" data-toggle="tab" href="#subpart-' . $rowSubpart["subpartID"] . '" role="tab" aria-controls="subpart-' . $rowSubpart["subpartID"] . '" aria-selected="false">' . $rowSubpart["subpartName"] . '</a>';
                         }
-                        echo "</table>";
-                        echo '</div>';
                     }
-                    
+                    echo '</div>';
+                    echo '</div>';
+                    echo '</div>';
+                    echo '</div>';
+
+                    echo '<div class="vl"></div>';
+
+                    echo '<div class="tab-content" id="v-pills-tabContent">';
+                    foreach($responseSubpart['records'] as $rowSubpart){
+                        if ($row["disasterID"] == $rowSubpart["disasterID"]) {
+                            echo '<div class="tab-pane fade" id="subpart-' . $rowSubpart["subpartID"] . '" role="tabpanel" aria-labelledby="subpart' . $rowSubpart["subpartID"] . '-tab">';
+                            // echo $rowSubpart["subpartName"];
+                            echo '<div style="height: 93.97vh;">';
+                            echo '<div class="container-fluid-mesaj-kutusu">';
+                            echo '<div class="row-fluid-mesaj-kutusu">';
+                            echo '<div class="span9" id="content">';
+
+                            // echo "<table class=\"table table-dark\">
+                            // <tr>
+                            // <th>Bildiren Takım</th>
+                            // <th>Durum</th>
+                            // <th>Tarih</th>
+                            // </tr>";
+
+                            // foreach($responseStatus['records'] as $rowStatus)
+                            // {
+                            //     if ($rowStatus["subpartID"] == $rowSubpart["subpartID"]) {
+                            //         echo "<tr>";
+                            //         echo "<td class=\"td-element\">" . $rowStatus['teamID'] . "</td>";
+                            //         echo "<td class=\"td-element\">" . $rowStatus['statusMessage'] . "</td>";
+                            //         echo "<td class=\"td-element\">" . $rowStatus['statusTime'] . "</td>";
+                            //         echo "</tr>";
+                            //     }
+                                
+                            // }
+                            // echo "</table>";
+                            ///////////////////////////////////
+                            foreach($responseStatus['records'] as $rowStatus)
+                            {
+                                if ($rowStatus["subpartID"] == $rowSubpart["subpartID"]) {
+                                    echo'<section id="cd-timeline" class="cd-container" style="width:80vw;">';
+                                    break;
+                                }
+                            }
+
+                            foreach($responseStatus['records'] as $rowStatus)
+                            {
+                                if ($rowStatus["subpartID"] == $rowSubpart["subpartID"]) {
+                                    echo '<div class="cd-timeline-block">';
+                                    echo '<div class="cd-timeline-img cd-picture">';
+                                    echo '</div>';
+                                    echo '<div class="cd-timeline-content">';
+                                    echo '<h2>Takım '. $rowStatus['teamID'] .'</h2>';
+                                    echo '<div class="timeline-content-info">';
+                                    echo '<span class="timeline-content-info-date">';
+                                    echo '<i class="fa fa-calendar-o" aria-hidden="true"></i>';
+                                    echo $rowStatus['statusTime'];
+                                    echo '</span>';
+                                    echo '</div>';
+                                    echo '<p>'. $rowStatus['statusMessage'] .'</p>';
+                                    echo '</div> <!-- cd-timeline-content -->';
+                                    echo '</div> <!-- cd-timeline-block -->';
+                                }
+                            }
+                            foreach($responseStatus['records'] as $rowStatus)
+                            {
+                                if ($rowStatus["subpartID"] == $rowSubpart["subpartID"]) {
+                                    echo '</section> <!-- cd-timeline -->';
+                                    break;
+                                }
+                            }
+                            ///////////////////////////////////
+
+                            echo '</div>';
+
+                            echo '</div>';
+                            echo '</div>';
+                            echo '</div>';
+                            echo '</div>';
+                        }
+                        
+                    }
+                    echo '</div>';
+                    echo '</ul>';
+
                 }
-                echo '</div>';
-                echo '</ul>';
                 echo '</div>';
             }
             echo '</div>';

@@ -154,11 +154,41 @@ class PersonnelUser{
     }
 
     function update(){
+
+        $setContent = "";
+
+        if($this->institution != ""){
+            $setContent .= "institution=:institution,";
+        }
+        if($this->latitude != ""){
+            $setContent .= "latitude=:latitude,";
+        }
+        if($this->longitude != ""){
+            $setContent .= "longitude=:longitude,";
+        }
+        if($this->personnelName != ""){
+            $setContent .= "personnelName=:personnelName,";
+        }
+        if($this->personnelEmail != ""){
+            $setContent .= "personnelEmail=:personnelEmail,";
+        }
+        if($this->personnelRole != ""){
+            $setContent .= "personnelRole=:personnelRole,";
+        }
+        if($this->teamID != ""){
+            $setContent .= "teamID=:teamID,";
+        }
+        if($this->locationTime != ""){
+            $setContent .= "locationTime=:locationTime,";
+        }
+
+        $setContent  = rtrim($setContent, ",");
+
         // update query
         $query = "UPDATE
                     " . $this->table_name . "
                 SET
-                    personnelID=:personnelID, institution=:institution, latitude=:latitude, longitude=:longitude, personnelName=:personnelName,personnelEmail=:personnelEmail, personnelRole=:personnelRole, teamID=:teamID, locationTime=:locationTime
+                    " . $setContent . "
                 WHERE
                     personnelID=:personnelID";
     
@@ -176,17 +206,33 @@ class PersonnelUser{
         $this->teamID=htmlspecialchars(strip_tags($this->teamID));
         $this->locationTime=htmlspecialchars(strip_tags($this->locationTime));
     
-        
+        if($this->institution != ""){
+            $stmt->bindParam(":institution", $this->institution);
+        }
+        if($this->latitude != ""){
+            $stmt->bindParam(":latitude", $this->latitude);
+        }
+        if($this->longitude != ""){
+            $stmt->bindParam(":longitude", $this->longitude);
+        }
+        if($this->personnelName != ""){
+            $stmt->bindParam(":personnelName", $this->personnelName);
+        }
+        if($this->personnelEmail != ""){
+            $stmt->bindParam(":personnelEmail", $this->personnelEmail);
+        }
+        if($this->personnelRole != ""){
+            $stmt->bindParam(":personnelRole", $this->personnelRole);
+        }
+        if($this->teamID != ""){
+            $stmt->bindParam(":teamID", $this->teamID);
+        }
+        if($this->locationTime != ""){
+            $stmt->bindParam(":locationTime", $this->locationTime);
+        }
+
         // bind values
         $stmt->bindParam(":personnelID", $this->personnelID);
-        $stmt->bindParam(":institution", $this->institution);
-        $stmt->bindParam(":latitude", $this->latitude);
-        $stmt->bindParam(":longitude", $this->longitude);
-        $stmt->bindParam(":personnelName", $this->personnelName);
-        $stmt->bindParam(":personnelEmail", $this->personnelEmail);
-        $stmt->bindParam(":personnelRole", $this->personnelRole);
-        $stmt->bindParam(":teamID", $this->teamID);
-        $stmt->bindParam(":locationTime", $this->locationTime);
     
     
         // execute the query

@@ -342,7 +342,7 @@ function joinSubpart(subpartID, userID) {
             window.alert("Afete gönüllü katılım isteğinde hata oluştu");
             //window.alert("xhr:" + xhr.status);
             //document.getElementById('personnelForm').reset();
-    });
+        });
 
 }
 
@@ -358,18 +358,70 @@ function addDisaster() {
     window.location.href = "../addDisaster.php";
 }
 
+function kisiEkle(subpartID, disasterID) {
+    window.location.href = "../kisiEkle.php?id=" + subpartID + "&&disasterID=" + disasterID;
+}
+
 $(document).ready(function() {
     var disasterTable = $('#disaster-table');
     if (disasterTable.length) {
         $('#disaster-table').DataTable({
-            "pagingType": "full_numbers"
+            "pagingType": "full_numbers",
+            "language": {
+                "decimal": "",
+                "emptyTable": "Tabloda veri bulunmamaktadır",
+                "info": "_TOTAL_ öğeden _START_ - _END_ arası gösteriliyor",
+                "infoEmpty": "0 öğe gösteriliyor",
+                "infoFiltered": "(Toplam _MAX_ öğe arasından filtrelenmiştir)",
+                "infoPostFix": "",
+                "thousands": ",",
+                "lengthMenu": "_MENU_ öğe göster",
+                "loadingRecords": "Yükleniyor...",
+                "processing": "İşleniyor...",
+                "search": "Ara:",
+                "zeroRecords": "Eşleşen öğe bulunamadı",
+                "paginate": {
+                    "first": "İlk",
+                    "last": "Son",
+                    "next": "İleri",
+                    "previous": "Geri"
+                },
+                "aria": {
+                    "sortAscending": ": Artan sırada sırala",
+                    "sortDescending": ": Azalan sırada sırala"
+                }
+            }
         });
     }
 
     var volunteerTable = $('#volunteer-table');
     if (volunteerTable.length) {
         $('#volunteer-table').DataTable({
-            "pagingType": "full_numbers"
+            "pagingType": "full_numbers",
+            "language": {
+                "decimal": "",
+                "emptyTable": "Tabloda veri bulunmamaktadır",
+                "info": "_TOTAL_ öğeden _START_ - _END_ arası gösteriliyor",
+                "infoEmpty": "0 öğe gösteriliyor",
+                "infoFiltered": "(Toplam _MAX_ öğe arasından filtrelenmiştir)",
+                "infoPostFix": "",
+                "thousands": ",",
+                "lengthMenu": "_MENU_ öğe göster",
+                "loadingRecords": "Yükleniyor...",
+                "processing": "İşleniyor...",
+                "search": "Ara:",
+                "zeroRecords": "Eşleşen öğe bulunamadı",
+                "paginate": {
+                    "first": "İlk",
+                    "last": "Son",
+                    "next": "İleri",
+                    "previous": "Geri"
+                },
+                "aria": {
+                    "sortAscending": ": Artan sırada sırala",
+                    "sortDescending": ": Azalan sırada sırala"
+                }
+            }
         });
     }
 });
@@ -553,8 +605,7 @@ function updateSubpart(id, status) {
     } else if (isNaN(subpartMissingPerson) || subpartMissingPerson == "") {
         alert("Kayıp insan sayısı bilgisini kontrol ediniz.");
         return false;
-    }
-    else if (isNaN(subpartRescuedPerson) || subpartRescuedPerson == "") {
+    } else if (isNaN(subpartRescuedPerson) || subpartRescuedPerson == "") {
         alert("Kurtarılan insan sayısı bilgisini kontrol ediniz.");
         return false;
     }
@@ -591,27 +642,108 @@ function updateSubpart(id, status) {
         });
 }
 
-function deleteSubpart(id) {
-
-    $.post("https://afetkurtar.site/api/subpart/delete.php", JSON.stringify({
-            subpartID: id
-        }))
+function deleteSubpart(subpartID) {
+    $.post("https://afetkurtar.site/api/team/search.php", JSON.stringify({ assignedSubpartID: subpartID }))
         .done(function(data, status, xhr) {
-            if (xhr.status == 201) {
-                window.alert("Bölge silindi.");
-                //document.location.href = "https://afetkurtar.site/editDisaster.php?id=" + disasterID;
-                document.location.reload();
-            } else {
-                window.alert("Bölge silinirken hata oluştu.");
-                //document.getElementById('personnelForm').reset();
+            if (xhr.status == 200) {
+                if (data.records.length != 0) {
+                    var team = data.records[0];
+                    var teamID = team.teamID;
+                    $.post("https://afetkurtar.site/api/personnelUser/search.php", JSON.stringify({ teamID: teamID }))
+                        .done(function(data, status, xhr) {
+                            if (xhr.status == 200) {
+                                if (data.records.length != 0) {
+                                    var personnelUsers = data.records;
+                                    personnelUsers.forEach(personnelUser => {
+                                        $.post("https://afetkurtar.site/api/personnelUser/update.php", JSON.stringify({ personnelID: personnelUser.personnelID, teamID: 1 }))
+                                            .done(function(data, status, xhr) {
+                                                if (xhr.status == 201) {
+                                                    //window.alert("Personel bölgeden çıkarıldı.");
+                                                }
+                                            })
+                                            .fail(function(data, xhr) {
+                                                //window.alert("Bölge silinirken hata oluştu 6.");
+                                            });
+                                    });
+
+                                }
+                            }
+                        })
+                        .fail(function(data, xhr) {
+                            window.alert("Bölge silinirken hata oluştu 7.");
+                        });
+
+                    $.post("https://afetkurtar.site/api/volunteerUser/search.php", JSON.stringify({ assignedTeamID: teamID }))
+                        .done(function(data, status, xhr) {
+                            if (xhr.status == 200) {
+                                if (data.records.length != 0) {
+                                    var volunteerUsers = data.records;
+                                    volunteerUsers.forEach(volunteerUser => {
+                                        $.post("https://afetkurtar.site/api/volunteerUser/update.php", JSON.stringify({ volunteerID: volunteerUser.volunteerID, assignedTeamID: 1 }))
+                                            .done(function(data, status, xhr) {
+                                                if (xhr.status == 201) {
+                                                    $.post("https://afetkurtar.site/api/users/update.php", JSON.stringify({ userID: volunteerUser.volunteerID, userType: "volunteerUser" }))
+                                                        .done(function(data, status, xhr) {
+                                                            if (xhr.status == 201) {
+                                                                //window.alert("Gönüllü bölgeden çıkarıldı.");
+                                                            }
+                                                        })
+                                                        .fail(function(data, xhr) {
+                                                            //window.alert("Bölge silinirken hata oluştu 3.");
+                                                        });
+                                                }
+                                            })
+                                            .fail(function(data, xhr) {
+                                                //window.alert("Bölge silinirken hata oluştu 4.");
+                                            });
+                                    });
+
+                                }
+                            }
+                        })
+                        .fail(function(data, xhr) {
+                            //window.alert("Bölge silinirken hata oluştu 5.");
+                        });
+
+                    $.post("https://afetkurtar.site/api/subpart/delete.php", JSON.stringify({ subpartID: subpartID }))
+                        .done(function(data, status, xhr) {
+                            if (xhr.status == 201) {
+                                window.alert("Bölge silindi.");
+                                //document.location.href = "https://afetkurtar.site/editDisaster.php?id=" + disasterID;
+                                document.location.reload();
+                            } else {
+                                window.alert("Bölge silinirken hata oluştu.");
+                                //document.getElementById('personnelForm').reset();
+                            }
+                        })
+                        .fail(function(data, xhr) {
+                            window.alert("Bölge silinirken hata oluştu 2.");
+                        });
+                }
+
             }
         })
         .fail(function(data, xhr) {
-            window.alert("dataf:" + data.message);
-            //window.alert("Kullanıcı kaydı esnasında bir hata ile karşılaşıldı z");
-            window.alert("xhr:" + xhr.status);
-            //document.getElementById('personnelForm').reset();
+            $.post("https://afetkurtar.site/api/subpart/delete.php", JSON.stringify({
+                    subpartID: subpartID
+                }))
+                .done(function(data, status, xhr) {
+                    if (xhr.status == 201) {
+                        window.alert("Bölge silindi.");
+                        //document.location.href = "https://afetkurtar.site/editDisaster.php?id=" + disasterID;
+                        document.location.reload();
+                    } else {
+                        window.alert("Bölge silinirken hata oluştu. 0");
+                        //document.getElementById('personnelForm').reset();
+                    }
+                })
+                .fail(function(data, xhr) {
+                    window.alert("Bölge silinirken hata oluştu. 00");
+                });
+
         });
+
+
 }
 
 function addSubpart() {
@@ -674,7 +806,7 @@ function addSubpart() {
         });
 }
 
-function searchVolunteers(){
+function searchVolunteers() {
     var volunteerTable = $('#volunteer-table').DataTable();
     volunteerTable.clear().draw();
 
@@ -682,30 +814,30 @@ function searchVolunteers(){
 
     console.log(subpartID);
 
-    $.post("https://afetkurtar.site/api/volunteerUser/search.php", JSON.stringify({requestedSubpart: subpartID}))
+    $.post("https://afetkurtar.site/api/volunteerUser/search.php", JSON.stringify({ requestedSubpart: subpartID }))
         .done(function(data, status, xhr) {
             if (xhr.status == 200) {
-                
+
                 var volunteers = data.records;
-                
-                for(let i = 0; i < volunteers.length; i++){
+
+                for (let i = 0; i < volunteers.length; i++) {
                     var experienced = "";
                     var firstAid = "";
 
-                    if(volunteers[i].isExperienced == 1)
+                    if (volunteers[i].isExperienced == 1)
                         experienced = "Var";
                     else
                         experienced = "Yok";
 
-                    if(volunteers[i].haveFirstAidCert == 1)
+                    if (volunteers[i].haveFirstAidCert == 1)
                         firstAid = "Var";
                     else
                         firstAid = "Yok";
-                    
-                    volunteerTable.row.add([volunteers[i].volunteerName, volunteers[i].tc, volunteers[i].tel, volunteers[i].address, experienced, firstAid, '<input type="button" onclick="addVolunteerToSubpart('+ volunteers[i].volunteerID + "," + subpartID + ')" class="btn btn-primary" id="registerBtn" value="Afet Bölgesine Ata"></input>']).draw(false);
-                    
+
+                    volunteerTable.row.add([volunteers[i].volunteerName, volunteers[i].tc, volunteers[i].tel, volunteers[i].address, experienced, firstAid, '<input type="button" onclick="addVolunteerToSubpart(' + volunteers[i].volunteerID + "," + subpartID + ')" class="btn btn-primary" id="registerBtn" value="Afet Bölgesine Ata"></input>']).draw(false);
+
                 }
-            } 
+            }
         })
         .fail(function(data, xhr) {
             window.alert("Bu afet bölgesi için gönüllü katılım isteği bulunamadı.");
@@ -713,47 +845,20 @@ function searchVolunteers(){
 
 }
 
-function addVolunteerToSubpart(volunteerID, subpartID){
+function addVolunteerToSubpart(volunteerID, subpartID) {
 
     console.log(volunteerID);
-    $.post("https://afetkurtar.site/api/team/search.php", JSON.stringify({assignedSubpartID: subpartID}))
+    $.post("https://afetkurtar.site/api/team/search.php", JSON.stringify({ assignedSubpartID: subpartID }))
         .done(function(data, status, xhr) {
             if (xhr.status == 200) {
-                if(data.records.length != 0){
+                if (data.records.length != 0) {
                     var team = data.records[0];
                     var teamID = team.teamID;
-                    
-                    $.post("https://afetkurtar.site/api/volunteerUser/update.php", JSON.stringify({volunteerID: volunteerID, responseSubpart: subpartID, assignedTeamID: teamID,requestedSubpart: 1}))
-                    .done(function(data, status, xhr) {
-                        if (xhr.status == 200) {
-                            $.post("https://afetkurtar.site/api/users/update.php", JSON.stringify({userID: volunteerID, userType: "personnelUser"}))
-                            .done(function(data, status, xhr) {
-                                window.alert("Gönüllü kullanıcı başarıyla göreve atandı.");
-                                window.location.href = "https://afetkurtar.site/gonulluIstekleri.php";
-                            })
-                            .fail(function(data, xhr) {
-                                window.alert("Gönüllü kullanıcı, personel olarak atanamadı.");
-                            });
-                                    
-                        } 
-                        })
-                        .fail(function(data, xhr) {
-                                window.alert("Gönüllü kullanıcı güncellenemedi.");
-                            });
-                        }
-                
-            } 
-        })
-        .fail(function(data, xhr) {
 
-            $.post("https://afetkurtar.site/api/team/create.php", JSON.stringify({assignedSubpartID: subpartID}))
-                    .done(function(data, status, xhr) {
-                            var teamID = data.id;
-
-                            $.post("https://afetkurtar.site/api/volunteerUser/update.php", JSON.stringify({volunteerID: volunteerID, responseSubpart: subpartID, assignedTeamID: teamID, requestedSubpart: 1}))
-                            .done(function(data, status, xhr) {
-                                if (xhr.status == 200) {
-                                    $.post("https://afetkurtar.site/api/users/update.php", JSON.stringify({userID: volunteerID, userType: "personnelUser"}))
+                    $.post("https://afetkurtar.site/api/volunteerUser/update.php", JSON.stringify({ volunteerID: volunteerID, responseSubpart: subpartID, assignedTeamID: teamID, requestedSubpart: 1 }))
+                        .done(function(data, status, xhr) {
+                            if (xhr.status == 200) {
+                                $.post("https://afetkurtar.site/api/users/update.php", JSON.stringify({ userID: volunteerID, userType: "personnelUser" }))
                                     .done(function(data, status, xhr) {
                                         window.alert("Gönüllü kullanıcı başarıyla göreve atandı.");
                                         window.location.href = "https://afetkurtar.site/gonulluIstekleri.php";
@@ -761,17 +866,124 @@ function addVolunteerToSubpart(volunteerID, subpartID){
                                     .fail(function(data, xhr) {
                                         window.alert("Gönüllü kullanıcı, personel olarak atanamadı.");
                                     });
-                                            
-                                } 
-                                })
-                            .fail(function(data, xhr) {
-                                window.alert("Gönüllü kullanıcı güncellenemedi.");
-                            });
+
+                            }
                         })
+                        .fail(function(data, xhr) {
+                            window.alert("Gönüllü kullanıcı güncellenemedi.");
+                        });
+                }
+
+            }
+        })
+        .fail(function(data, xhr) {
+
+            $.post("https://afetkurtar.site/api/team/create.php", JSON.stringify({ assignedSubpartID: subpartID }))
+                .done(function(data, status, xhr) {
+                    var teamID = data.id;
+
+                    $.post("https://afetkurtar.site/api/volunteerUser/update.php", JSON.stringify({ volunteerID: volunteerID, responseSubpart: subpartID, assignedTeamID: teamID, requestedSubpart: 1 }))
+                        .done(function(data, status, xhr) {
+                            if (xhr.status == 200) {
+                                $.post("https://afetkurtar.site/api/users/update.php", JSON.stringify({ userID: volunteerID, userType: "personnelUser" }))
+                                    .done(function(data, status, xhr) {
+                                        window.alert("Gönüllü kullanıcı başarıyla göreve atandı.");
+                                        window.location.href = "https://afetkurtar.site/gonulluIstekleri.php";
+                                    })
+                                    .fail(function(data, xhr) {
+                                        window.alert("Gönüllü kullanıcı, personel olarak atanamadı.");
+                                    });
+
+                            }
+                        })
+                        .fail(function(data, xhr) {
+                            window.alert("Gönüllü kullanıcı güncellenemedi.");
+                        });
+                })
+                .fail(function(data, xhr) {
+                    window.alert("Gönüllü eklenirken yeni takım oluşturulamadı.");
+                });
+
+        });
+
+}
+
+function addPersonnelToSubpart(personnelID, subpartID, disasterID) {
+
+    $.post("https://afetkurtar.site/api/team/search.php", JSON.stringify({ assignedSubpartID: subpartID }))
+        .done(function(data, status, xhr) {
+            if (xhr.status == 200) {
+                if (data.records.length != 0) {
+                    var team = data.records[0];
+                    var teamID = team.teamID;
+
+                    $.post("https://afetkurtar.site/api/personnelUser/update.php", JSON.stringify({ personnelID: personnelID, teamID: teamID }))
+                        .done(function(data, status, xhr) {
+                            if (xhr.status == 201) {
+                                window.alert("Personel başarıyla göreve atandı.");
+                                window.location.href = "https://afetkurtar.site/editDisaster.php?id=" + disasterID;
+                            }
+                        })
+                        .fail(function(data, xhr) {
+                            window.alert("Personel atanırken hata oluştu.");
+                        });
+                }
+            }
+        })
+        .fail(function(data, xhr) {
+
+            $.post("https://afetkurtar.site/api/team/create.php", JSON.stringify({ assignedSubpartID: subpartID }))
+                .done(function(data, status, xhr) {
+                    var teamID = data.id;
+
+                    $.post("https://afetkurtar.site/api/personnelUser/update.php", JSON.stringify({ personnelID: personnelID, teamID: teamID }))
+                        .done(function(data, status, xhr) {
+                            if (xhr.status == 201) {
+                                window.alert("Personel başarıyla göreve atandı.");
+                                window.location.href = "https://afetkurtar.site/editDisaster.php?id=" + disasterID;
+                            }
+                        })
+                        .fail(function(data, xhr) {
+                            window.alert("Personel atanırken hata oluştu.");
+                        });
+                })
+                .fail(function(data, xhr) {
+                    window.alert("Personel eklenirken yeni takım oluşturulamadı.");
+                });
+
+        });
+
+}
+
+function removePersonnelFromTeam(personnelID) {
+    $.post("https://afetkurtar.site/api/personnelUser/update.php", JSON.stringify({ personnelID: personnelID, teamID: 1 }))
+        .done(function(data, status, xhr) {
+            if (xhr.status == 201) {
+                window.alert("Personel takımdan çıkarıldı.");
+                document.location.reload();
+            }
+        })
+        .fail(function(data, xhr) {
+            window.alert("Personel takımdan çıkarılırken hata oluştu.");
+        });
+}
+
+function removeVolunteerFromTeam(volunteerID) {
+    $.post("https://afetkurtar.site/api/volunteerUser/update.php", JSON.stringify({ volunteerID: volunteerID, responseSubpart: 1, assignedTeamID: 1, requestedSubpart: 1 }))
+        .done(function(data, status, xhr) {
+            if (xhr.status == 200) {
+                $.post("https://afetkurtar.site/api/users/update.php", JSON.stringify({ userID: volunteerID, userType: "volunteerUser" }))
+                    .done(function(data, status, xhr) {
+                        window.alert("Gönüllü kullanıcı takımdan çıkarıldı.");
+
+                    })
                     .fail(function(data, xhr) {
-                        window.alert("Gönüllü eklenirken yeni takım oluşturulamadı.");
+                        window.alert("Gönüllü kullanıcı takımdan çıkarılamadı.");
                     });
-            
+            }
+        })
+        .fail(function(data, xhr) {
+            window.alert("Gönüllü kullanıcı takımdan çıkarılamadı.");
         });
 
 }

@@ -32,11 +32,11 @@ if(
     $personnelUser->personnelName = isset($data["personnelName"]) ? $data["personnelName"] : "";
     $personnelUser->personnelEmail = isset($data["personnelEmail"]) ? $data["personnelEmail"]: "";
     $personnelUser->personnelRole = isset($data["personnelRole"]) ? $data["personnelRole"] : "";
-    $personnelUser->teamID = isset($data["teamID"]) ? $data["teamID"] : null;
-    $personnelUser->latitude = isset($data["latitude"]) ? $data["latitude"] : null;
-    $personnelUser->longitude = isset($data["longitude"]) ? $data["longitude"] : null;
+    $personnelUser->teamID = isset($data["teamID"]) ? $data["teamID"] : "";
+    $personnelUser->latitude = isset($data["latitude"]) ? $data["latitude"] : "";
+    $personnelUser->longitude = isset($data["longitude"]) ? $data["longitude"] : "";
     $personnelUser->institution = isset($data["institution"]) ? $data["institution"] : "";
-    $personnelUser->locationTime = isset($data["locationTime"]) ? $data["locationTime"] : null;
+    $personnelUser->locationTime = isset($data["locationTime"]) ? $data["locationTime"] : "";
         
  
     // create the product

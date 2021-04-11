@@ -27,6 +27,8 @@ if (session_id() == '') {
     <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-slider/10.0.0/css/bootstrap-slider.min.css">
     <script src="https://apis.google.com/js/platform.js" async defer></script>
+    <link href="https://gitcdn.github.io/bootstrap-toggle/2.2.2/css/bootstrap-toggle.min.css" rel="stylesheet">
+    
 </head>
 
 <body>
@@ -118,10 +120,10 @@ if (session_id() == '') {
 
     echo "<div id=\"map\" style=\"width:50vw;height:93.97vh\" disaster-id=\"" . $disasterID . "\" disaster-type=\"" . $disasterType . "\" disaster-base=\"" . $disasterBase . "\" disaster-name=\"" . $disasterName . "\" latitude=\"" . $latitude . "\" longitude=\"" . $longitude . "\"></div>";
 
-    echo '<div class="container-fluid-edit-disaster">';
+    echo '<div class="container-fluid-edit-disaster" style="background-color: #383B3E;">';
     echo '<div class="row-fluid-edit-disaster">';
     echo '<div class="span9" id="content">';
-    echo '<div class="header-edit-disaster">Bölge</div>';
+    echo '<div class="header-edit-disaster" style="padding-left:10px; padding-top:10px; padding-bottom:5px; padding-right:10px;">Bölge</div>';
 
     echo '<div class="nav flex-column nav-pills" id="v-pills-tab" role="tablist" aria-orientation="vertical">';
     foreach($response['records'] as $row){
@@ -136,9 +138,16 @@ if (session_id() == '') {
 
     echo '<div class="vl"></div>';
 
-    echo '<div class="tab-content" id="v-pills-tabContent">';
+    echo '<div class="tab-content" id="v-pills-tabContent" >';
     foreach($response['records'] as $row){
+        
+
         echo '<div class="tab-pane fade" id="subpart-' . $row["subpartID"] . '" role="tabpanel" aria-labelledby="subpart-' . $row["subpartID"] . '-tab">';
+
+        echo '<div style="height: 93.97vh;">';
+        echo '<div class="container-fluid-edit-disaster">';
+        echo '<div class="row-fluid-edit-disaster">';
+        echo '<div class="span9" id="content">';
         /////
         $checkedString = "";
         if($row["isOpenForVolunteers"] == 1){
@@ -183,17 +192,19 @@ if (session_id() == '') {
         echo '<div class="col-lg-6 col-md-4">';
         echo '<label for="subpartIsOpenForVolunteers'.$row["subpartID"].'" style="font-size: 20px; font-weight:bold; color: #ECF0F5">Gönüllü Katılım</label>';
         echo '<div><input type="checkbox" id="subpartIsOpenForVolunteers'.$row["subpartID"].'" '.$checkedString.'></div>';
+        //echo '<div><input type="checkbox" data-toggle="toggle" data-on="Açık" data-off="Kapalı" data-onstyle="success" data-offstyle="danger" id="subpartIsOpenForVolunteers'.$row["subpartID"].'" '.$checkedString.'></div>';
         echo '</div>';
         //echo '</div>';
         //echo '<div class="form-group">';
         echo '<div class="col-lg-6 col-md-4">';
         echo '<label for="emergencyLevel'.$row["subpartID"].'" style="font-size: 20px; font-weight:bold; color: #ECF0F5">Aciliyet Seviyesi</label>';
         echo '<div><input type="text" id="emergencyLevel'.$row["subpartID"].'" onchange="updateSubpartEmergency('.$row["subpartID"].',this.value)" name="emergencyLevel" data-slider-min="1" data-slider-max="10" data-slider-step="1" data-slider-value="'.$row["emergencyLevel"].'">';
-        echo '<span id="emergencyLevelValue'.$row["subpartID"].'" style="color:white;">'.$row["emergencyLevel"].'</span></div>';
+        echo '<span id="emergencyLevelValue'.$row["subpartID"].'" style="color:white; margin-left:3px;">'.$row["emergencyLevel"].'</span></div>';
         echo '</div>';
         echo '</div>';
-        echo '<input type="button" onclick="updateSubpart('.$row["subpartID"].', \''.$row["status"].'\')" class="btn btn-primary" id="registerBtn" style="margin-right:5px;" value="Güncelle"></input>';
-        echo '<input type="button" onclick="deleteSubpart('.$row["subpartID"].')" class="btn btn-danger" id="registerBtn" style="margin-left:5px;" value="Kaldır"></input>';
+        echo '<input type="button" onclick="updateSubpart('.$row["subpartID"].', \''.$row["status"].'\')" class="btn btn-primary" id="registerBtn" style="margin-right:0px;" value="Güncelle"></input>';
+        echo '<input type="button" onclick="deleteSubpart('.$row["subpartID"].')" class="btn btn-danger" id="registerBtn" style="margin-left:10px;" value="Kaldır"></input>';
+        echo '<input type="button" onclick="kisiEkle('.$row["subpartID"].','.$_GET["id"].')" class="btn btn-success" id="registerBtn" style="margin-left:10px;" value="Kişi Ekle"></input>';
         echo '</form>';
 
         
@@ -228,28 +239,80 @@ if (session_id() == '') {
         curl_setopt($ch, CURLOPT_POSTFIELDS, $body);
         $personnelUsers = json_decode(curl_exec($ch),true);
 
-        echo "<table id=\"personnel-table\" class=\"table table-dark table-striped table-bordered\" style=\"text-align:center\">
-            <thead>
-            <tr>
-            <th>Personel İsmi</th>
-            <th>Personel Emaili</th>
-            <th>Personel Rolü</th>
-            <th>Detay</th>
-            </tr>
-            <thead>
-            <tbody>";
-        
+
+        if(count($personnelUsers['records']) != 0){
+            echo "<table id=\"personnel-table\" class=\"table table-dark table-striped table-bordered\" style=\"text-align:center\">
+                <thead>
+                <tr>
+                <th>Personel İsmi</th>
+                <th>Personel Emaili</th>
+                <th>Personel Rolü</th>
+                <th>İşlem</th>
+                </tr>
+                <thead>
+                <tbody>";
+        }
+
         foreach ($personnelUsers['records'] as $personnel) {
             echo "<tr>";
             echo "<td class=\"td-element\">" . $personnel['personnelName'] . "</td>";
             echo "<td class=\"td-element\">" . $personnel['personnelEmail'] . "</td>";
             echo "<td class=\"td-element\">" . $personnel['personnelRole'] . "</td>";
             //echo "<td class=\"td-element\">" . $personnel['institution'] . "</td>";
-            echo "<td class=\"td-element\"><input type=\"button\" value=\"Çıkar\" onclick=\"removePersonnel(" . $personnel['personnelID']. ")\" class=\"btn btn-danger\" id=\"" . $row['disasterID'] . "\"\></input></td>";
+            echo "<td class=\"td-element\"><input type=\"button\" value=\"Çıkar\" onclick=\"removePersonnelFromTeam(" . $personnel['personnelID']. ")\" class=\"btn btn-danger\" ></input></td>";
             echo "</tr>";
         }
-        echo "<tbody>";
-        echo "</table>";
+        if(count($personnelUsers['records']) != 0){
+            echo "<tbody>";
+            echo "</table>";
+        }
+
+
+
+
+        $url = "https://afetkurtar.site/api/volunteerUser/search.php";
+
+        $body = '{
+            "assignedTeamID":'.$teamID.'
+        }';
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL, $url);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+        curl_setopt($ch, CURLOPT_HTTPHEADER, array("Content-Type: application/json"));
+        curl_setopt($ch, CURLOPT_POST, 1);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, $body);
+        $volunteerUsers = json_decode(curl_exec($ch),true);
+
+
+        if(count($volunteerUsers['records']) != 0){
+            echo "<table id=\"personnel-table\" class=\"table table-dark table-striped table-bordered\" style=\"text-align:center\">
+                <thead>
+                <tr>
+                <th>Gönüllü İsmi</th>
+                <th>Telefon Numarası</th>
+                <th>Gönüllü Rolü</th>
+                <th>İşlem</th>
+                </tr>
+                <thead>
+                <tbody>";
+        }
+
+        foreach ($volunteerUsers['records'] as $volunteer) {
+            echo "<tr>";
+            echo "<td class=\"td-element\">" . $volunteer['volunteerName'] . "</td>";
+            echo "<td class=\"td-element\">" . $volunteer['tel'] . "</td>";
+            echo "<td class=\"td-element\">" . $volunteer['role'] . "</td>";
+            //echo "<td class=\"td-element\">" . $personnel['institution'] . "</td>";
+            echo "<td class=\"td-element\"><input type=\"button\" value=\"Çıkar\" onclick=\"removeVolunteerFromTeam(" . $volunteer['volunteerID']. ")\" class=\"btn btn-danger\" ></input></td>";
+            echo "</tr>";
+        }
+        if(count($volunteerUsers['records']) != 0){
+            echo "<tbody>";
+            echo "</table>";
+        }
+
+
+
 
         echo '</div>';
         echo '</div>';
@@ -257,6 +320,11 @@ if (session_id() == '') {
         
 
         /////
+        echo '</div>';
+
+        echo '</div>';
+        echo '</div>';
+        echo '</div>';
         echo '</div>';
     }
     /////
@@ -270,26 +338,31 @@ if (session_id() == '') {
     echo '<label for="subpartName" style="font-size: 20px; font-weight:bold; color: #ECF0F5">Bölge Adı</label>';
     echo '<input type="email" class="form-control" id="subpartName" placeholder="Bölge adını giriniz...">';
     echo '</div>';
-    echo '<div class="form-group">';
+    echo '<div class="form-group row">';
+    echo '<div class="col-lg-6 col-md-4">';
     echo '<label for="subpartLatitude" style="font-size: 20px; font-weight:bold; color: #ECF0F5">Enlem</label>';
     echo '<input type="text" class="form-control" id="subpartLatitude" placeholder="Enlemi giriniz...">';
     echo '</div>';
-    echo '<div class="form-group">';
+    echo '<div class="col-lg-6 col-md-4">';
     echo '<label for="subpartLongitude" style="font-size: 20px; font-weight:bold; color: #ECF0F5">Boylam</label>';
     echo '<input type="text" class="form-control" id="subpartLongitude" placeholder="Boylamı giriniz...">';
+    echo '</div>';
     echo '</div>';
     echo '<div class="form-group">';
     echo '<label for="subpartMissingPerson" style="font-size: 20px; font-weight:bold; color: #ECF0F5">Kayıp İnsan Sayısı</label>';
     echo '<input type="text" class="form-control" id="subpartMissingPerson" placeholder="Tahmin edilen kayıp insan sayısını giriniz...">';
     echo '</div>';
-    echo '<div class="form-group">';
+    echo '<div class="form-group row">';
+    echo '<div class="col-lg-6 col-md-4">';
     echo '<label for="subpartIsOpenForVolunteers" style="font-size: 20px; font-weight:bold; color: #ECF0F5">Gönüllü Katılım</label>';
     echo '<div><input type="checkbox" id="subpartIsOpenForVolunteers"></div>';
+    //echo '<div><input type="checkbox" data-toggle="toggle" id="subpartIsOpenForVolunteers" data-on="Açık" data-off="Kapalı" data-onstyle="success" data-offstyle="danger"></div>';
     echo '</div>';
-    echo '<div class="form-group">';
+    echo '<div class="col-lg-6 col-md-4">';
     echo '<label id="emergencyLabel" for="emergencyLevel" style="font-size: 20px; font-weight:bold; color: #ECF0F5">Aciliyet Seviyesi</label>';
     echo '<input id="emergencyLevel" onchange="updateEmergency(this.value)" name="emergencyLevel" type="text" data-slider-min="1" data-slider-max="10" data-slider-step="1" data-slider-value="5">';
-    echo '<span id="emergencyLevelValue" style="color:white;">5</span>';
+    echo '<span id="emergencyLevelValue" style="color:white; margin-left:3px;">5</span>';
+    echo '</div>';
     echo '</div>';
     echo '<input type="button" onclick="addSubpart()" class="btn btn-primary" id="registerBtn" value="Bölgeyi Ekle"></input>';
     echo '</form>';
@@ -308,7 +381,7 @@ if (session_id() == '') {
     echo '<script src="js/script.js"></script>';
     echo '<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-slider/10.0.0/bootstrap-slider.min.js"></script>';
     echo '<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCxLUKYaDqQEIIQGQGQmC0ipdS04IXRoRw&callback=initMap&libraries=&v=weekly" async></script>';
-    
+    echo '<script src="https://gitcdn.github.io/bootstrap-toggle/2.2.2/js/bootstrap-toggle.min.js"></script>';
 
     foreach($response['records'] as $row){
         echo '<script>';
@@ -316,14 +389,31 @@ if (session_id() == '') {
         echo 'tooltip: "always"';
         echo '});';
         echo '</script>';
+
+        // echo '<script>';
+        // echo '$(function() {';
+        // echo '$("#subpartIsOpenForVolunteers'.$row["subpartID"].'").bootstrapToggle({';
+        // echo 'on: \'Açık\',';
+        // echo 'off: \'Kapalı\'';
+        // echo '});';
+        // echo '})';
+        // echo '</script>';
     }
 
     echo '<script>';
-        echo 'var slider = new Slider("#emergencyLevel", {';
-        echo 'tooltip: \'always\'';
-        echo '});';
-        echo '</script>';
+    echo 'var slider = new Slider("#emergencyLevel", {';
+    echo 'tooltip: \'always\'';
+    echo '});';
+    echo '</script>';
 
+    // echo '<script>';
+    // echo '$(function() {';
+    // echo '$("#subpartIsOpenForVolunteers").bootstrapToggle({';
+    // echo 'on: \'Açık\',';
+    // echo 'off: \'Kapalı\'';
+    // echo '});';
+    // echo '})';
+    // echo '</script>';
 
     ?>
 

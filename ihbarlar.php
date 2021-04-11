@@ -122,11 +122,11 @@ if (session_id() == '') {
                 echo "<td class=\"td-element\">" . $address . "</td>";
                 echo "<td><img style=\"height: 150px;\" src=\"https://maps.googleapis.com/maps/api/staticmap?center=" . $row['latitude'] . "," . $row['longitude'] . "&zoom=12&size=200x200&key=AIzaSyCxLUKYaDqQEIIQGQGQmC0ipdS04IXRoRw\"/></td>";
                 echo "<td><img class=\"img-responsive\" style=\"height: 150px;\" src=\"" . $row['imageURL'] . "\"/></td>";
-                echo "<select class=\"td-element\" id=\"disasterForNotice\">";
+                echo "<td class=\"td-element\"><select class=\"td-element\" id=\"disasterForNotice\">";
                 foreach($disasters['records'] as $disaster){
                     echo "<option>" . $disaster["disasterName"] . "</option>";
                 }
-                echo "<td class=\"td-element\"><input type=\"button\" value=\"Afet Bölgelerine Ekle\" onclick=\"addNoticeAsSubpart(this.id)\" class=\"btn btn-primary\"\></input></td>";
+                echo "<input type=\"button\" value=\"Afet Bölgelerine Ekle\" onclick=\"addNoticeAsSubpart(this.id)\" class=\"btn btn-primary\"\></input></td>";
                 echo "</tr>";
             }
             echo "</table>";
