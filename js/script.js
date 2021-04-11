@@ -655,7 +655,7 @@ function deleteSubpart(subpartID) {
                                 if (data.records.length != 0) {
                                     var personnelUsers = data.records;
                                     personnelUsers.forEach(personnelUser => {
-                                        $.post("https://afetkurtar.site/api/personnelUser/update.php", JSON.stringify({ personnelID: personnelUser.personnelID, teamID: 1 }))
+                                        $.post("https://afetkurtar.site/api/personnelUser/update.php", JSON.stringify({ personnelID: personnelUser.personnelID, teamID: "0" }))
                                             .done(function(data, status, xhr) {
                                                 if (xhr.status == 201) {
                                                     //window.alert("Personel bölgeden çıkarıldı.");
@@ -679,7 +679,7 @@ function deleteSubpart(subpartID) {
                                 if (data.records.length != 0) {
                                     var volunteerUsers = data.records;
                                     volunteerUsers.forEach(volunteerUser => {
-                                        $.post("https://afetkurtar.site/api/volunteerUser/update.php", JSON.stringify({ volunteerID: volunteerUser.volunteerID, assignedTeamID: 1 }))
+                                        $.post("https://afetkurtar.site/api/volunteerUser/update.php", JSON.stringify({ volunteerID: volunteerUser.volunteerID, assignedTeamID: "0" }))
                                             .done(function(data, status, xhr) {
                                                 if (xhr.status == 201) {
                                                     $.post("https://afetkurtar.site/api/users/update.php", JSON.stringify({ userID: volunteerUser.volunteerID, userType: "volunteerUser" }))
@@ -855,7 +855,7 @@ function addVolunteerToSubpart(volunteerID, subpartID) {
                     var team = data.records[0];
                     var teamID = team.teamID;
 
-                    $.post("https://afetkurtar.site/api/volunteerUser/update.php", JSON.stringify({ volunteerID: volunteerID, responseSubpart: subpartID, assignedTeamID: teamID, requestedSubpart: 1 }))
+                    $.post("https://afetkurtar.site/api/volunteerUser/update.php", JSON.stringify({ volunteerID: volunteerID, responseSubpart: subpartID, assignedTeamID: teamID, requestedSubpart: "0" }))
                         .done(function(data, status, xhr) {
                             if (xhr.status == 200) {
                                 $.post("https://afetkurtar.site/api/users/update.php", JSON.stringify({ userID: volunteerID, userType: "personnelUser" }))
@@ -956,7 +956,7 @@ function addPersonnelToSubpart(personnelID, subpartID, disasterID) {
 }
 
 function removePersonnelFromTeam(personnelID) {
-    $.post("https://afetkurtar.site/api/personnelUser/update.php", JSON.stringify({ personnelID: personnelID, teamID: 1 }))
+    $.post("https://afetkurtar.site/api/personnelUser/update.php", JSON.stringify({ personnelID: personnelID, teamID: "0" }))
         .done(function(data, status, xhr) {
             if (xhr.status == 201) {
                 window.alert("Personel takımdan çıkarıldı.");
@@ -969,7 +969,7 @@ function removePersonnelFromTeam(personnelID) {
 }
 
 function removeVolunteerFromTeam(volunteerID) {
-    $.post("https://afetkurtar.site/api/volunteerUser/update.php", JSON.stringify({ volunteerID: volunteerID, responseSubpart: 1, assignedTeamID: 1, requestedSubpart: 1 }))
+    $.post("https://afetkurtar.site/api/volunteerUser/update.php", JSON.stringify({ volunteerID: volunteerID, responseSubpart: "0", assignedTeamID: "0", requestedSubpart: "0" }))
         .done(function(data, status, xhr) {
             if (xhr.status == 200) {
                 $.post("https://afetkurtar.site/api/users/update.php", JSON.stringify({ userID: volunteerID, userType: "volunteerUser" }))
