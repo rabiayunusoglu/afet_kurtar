@@ -8,6 +8,7 @@ import androidx.drawerlayout.widget.DrawerLayout;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.location.Geocoder;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
@@ -28,6 +29,13 @@ import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
+import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.iid.FirebaseInstanceId;
@@ -41,7 +49,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-public class Authorized_VolunteerRequest3 extends AppCompatActivity {
+public class Authorized_VolunteerRequest3 extends AppCompatActivity  implements OnMapReadyCallback{
 
     ArrayList<String> arrayListSubpart = new ArrayList<>();
     ArrayList<String> arrayListSubpartAdres = new ArrayList<>();
@@ -72,7 +80,8 @@ public class Authorized_VolunteerRequest3 extends AppCompatActivity {
     static boolean dataSupartAid = false;
     static String responceStringSubpart = "", dataSupartName = "", dataSupartAddress = "", dataSupartrole = "", dataSuparttel = "", dataSuparttc = "", dataSupartbirthdate = "";
     GoogleSignInClient mGoogleSignInClient;
-
+    private GoogleMap mMap;
+    private Geocoder geocoder;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -183,7 +192,23 @@ public class Authorized_VolunteerRequest3 extends AppCompatActivity {
         });
 
 
+        geocoder = new Geocoder(this);
+        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.aut_subpart_Detail_map);
+        mapFragment.getMapAsync((OnMapReadyCallback) Authorized_VolunteerRequest3.this);
     }
+    @Override
+    public void onMapReady(GoogleMap googleMap) {
+        mMap = googleMap;
+        LatLng latLng = null;
+        try {
+            latLng = new LatLng(Authorized_VolunteerRequest2.lat,Authorized_VolunteerRequest2.longt);
+            Marker marker = mMap.addMarker(new MarkerOptions().position(latLng).title(Authorized_VolunteerRequest2.dataSupartName));
+            mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 10));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
 
 
     private void loadSpinnerDataREquest(String url) {

@@ -7,6 +7,7 @@ import androidx.drawerlayout.widget.DrawerLayout;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.location.Geocoder;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
@@ -24,6 +25,13 @@ import com.android.volley.toolbox.Volley;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
+import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 
@@ -32,14 +40,17 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 
-public class Authorized_VolunteerRequest extends AppCompatActivity {
+public class Authorized_VolunteerRequest extends AppCompatActivity  implements OnMapReadyCallback{
 
     ArrayList<String> arrayListAfet = new ArrayList<>();
     ArrayAdapter<String> adapterAfet;
-    ArrayList<String> arrayListSubpart = new ArrayList<>();
-    ArrayList<Integer> arrayListSubpartID = new ArrayList<Integer>();
-    ArrayAdapter<String> adapterSubpart;
+    ArrayList<Double> arrayListLat = new ArrayList<>();
+    ArrayList<Double> arrayListLog = new ArrayList<>();
+    ArrayAdapter<String> adapterlat;
+    ArrayAdapter<String> adapterlog;
     Button submit;
+    private GoogleMap mMap;
+    private Geocoder geocoder;
     Spinner subpartSpinner;
     static int dataSupartID = 0;
     String urlAfet = "https://afetkurtar.site/api/disasterEvents/search.php";
@@ -48,6 +59,7 @@ public class Authorized_VolunteerRequest extends AppCompatActivity {
     RequestQueue queue;
     Spinner afetSpinner;
     int index = 0;
+    static double lat=0.0,longt=0.0;
     static boolean controlresponce = false;
     static String responceStringAfet = "", afetBolgesi = "";
     static int afetID;
@@ -90,6 +102,13 @@ public class Authorized_VolunteerRequest extends AppCompatActivity {
             }
         });
 
+        geocoder = new Geocoder(this);
+        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.aut_disaster_Detail_map);
+        mapFragment.getMapAsync((OnMapReadyCallback) Authorized_VolunteerRequest.this);
+    }
+    @Override
+    public void onMapReady(GoogleMap googleMap) {
+        mMap = googleMap;
 
     }
 
@@ -107,6 +126,10 @@ public class Authorized_VolunteerRequest extends AppCompatActivity {
 
                         while (responceStringAfet.indexOf("}") > 1) {
                             if (responceStringAfet.contains("{")) {
+
+                                String subpartlat = responceStringAfet.substring(responceStringAfet.indexOf("{"), responceStringAfet.indexOf("}") + 1);
+                                String subpartlog= responceStringAfet.substring(responceStringAfet.indexOf("{"), responceStringAfet.indexOf("}") + 1);
+
                                 String subpart = responceStringAfet.substring(responceStringAfet.indexOf("{"), responceStringAfet.indexOf("}") + 1);
                                 if (responceStringAfet.contains("},"))
                                     responceStringAfet = responceStringAfet.substring(responceStringAfet.indexOf("}") + 2);
@@ -114,12 +137,35 @@ public class Authorized_VolunteerRequest extends AppCompatActivity {
                                     responceStringAfet = responceStringAfet.substring(responceStringAfet.indexOf("}") + 1);
                                 }
                                 String value = "\"disasterName\":\"";
+                                String valuelat = "\"latitude\":\"";
+                                String valuelog = "\"longitude\":\"";
                                 String flag = "\"";
                                 String result = "";
+                                Double resultlat =0.0;
+                                Double resultlog = 0.0;
                                 subpart = subpart.substring(subpart.indexOf(value) + value.length());
                                 result = subpart.substring(0, subpart.indexOf(flag));
                                 subpart = subpart.substring(subpart.indexOf("},") + 1);
+                                System.out.println("result");
                                 arrayListAfet.add(result);
+                                subpartlat = subpartlat.substring(subpartlat.indexOf(valuelat) + valuelat.length());
+                                resultlat = Double.parseDouble(subpartlat.substring(0, subpartlat.indexOf(flag)));
+                               // subpart = subpart.substring(subpart.indexOf("},") + 1);
+                                System.out.println(resultlat);
+                                arrayListLat.add(resultlat);
+                                subpartlog = subpartlog.substring(subpartlog.indexOf(valuelog) + valuelog.length());
+                                resultlog = Double.parseDouble(subpartlog.substring(0, subpartlog.indexOf(flag)));
+                                subpartlog = subpartlog.substring(subpartlog.indexOf("},") + 1);
+                                System.out.println(resultlog);
+                                arrayListLog.add(resultlog);
+                                LatLng latLng = null;
+                                try {
+                                    latLng = new LatLng(resultlat,resultlog);
+                                    Marker marker = mMap.addMarker(new MarkerOptions().position(latLng).title(result));
+                                    mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 5));
+                                } catch (Exception e) {
+                                    e.printStackTrace();
+                                }
                             }
 
                         }
@@ -134,8 +180,19 @@ public class Authorized_VolunteerRequest extends AppCompatActivity {
                                 afetBolgesi = adapterAfet.getItem(position).toString();
                                 if (afetBolgesi.equals("Seçilmedi")) {
                                     Toast.makeText(getApplicationContext(), "Afet bölgesi seçiniz." + "", Toast.LENGTH_SHORT).show();
-                                } else
+                                } else{
                                     index = position;
+                                    lat=(arrayListLat.get(index-1));
+                                    longt=(arrayListLog.get(index-1));
+                                    LatLng latLng = null;
+                                    try {
+                                        latLng = new LatLng(lat,longt);
+                                        Marker marker = mMap.addMarker(new MarkerOptions().position(latLng).title(afetBolgesi));
+                                        mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 10));
+                                    } catch (Exception e) {
+                                        e.printStackTrace();
+                                    }
+                                }
                                 //Toast.makeText(getApplicationContext(), afetBolgesi + "", Toast.LENGTH_SHORT).show();
 
                             }

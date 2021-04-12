@@ -7,6 +7,7 @@ import androidx.drawerlayout.widget.DrawerLayout;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.location.Geocoder;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
@@ -25,6 +26,13 @@ import com.android.volley.toolbox.Volley;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
+import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 
@@ -35,11 +43,16 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-public class Authorized_VolunteerRequest2 extends AppCompatActivity {
+public class Authorized_VolunteerRequest2 extends AppCompatActivity implements OnMapReadyCallback{
     ArrayList<String> arrayListSubpart = new ArrayList<>();
     ArrayList<Integer> arrayListSubpartID = new ArrayList<Integer>();
     ArrayAdapter<String> adapterSubpart;
+    ArrayList<Double> arrayListLat = new ArrayList<>();
+    ArrayList<Double> arrayListLog = new ArrayList<>();
+    ArrayAdapter<String> adapterlat;
+    ArrayAdapter<String> adapterlog;
     Button submits;
+    static double lat=0.0,longt=0.0;
     public static JSONObject volInfo;
 
     String url1 = "https://afetkurtar.site/api/volunteerUser/update.php";
@@ -53,7 +66,8 @@ public class Authorized_VolunteerRequest2 extends AppCompatActivity {
     String urlSubpart = "https://afetkurtar.site/api/subpart/search.php";
     static String responceStringSubpart = "", dataSupartName = "";
     GoogleSignInClient mGoogleSignInClient;
-
+    private GoogleMap mMap;
+    private Geocoder geocoder;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -92,6 +106,13 @@ public class Authorized_VolunteerRequest2 extends AppCompatActivity {
         });
 
 
+        geocoder = new Geocoder(this);
+        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.aut_subpart_Detail_map);
+        mapFragment.getMapAsync((OnMapReadyCallback) Authorized_VolunteerRequest2.this);
+    }
+    @Override
+    public void onMapReady(GoogleMap googleMap) {
+        mMap = googleMap;
     }
 
 
@@ -123,6 +144,9 @@ public class Authorized_VolunteerRequest2 extends AppCompatActivity {
 
                         while (responceStringSubpart.indexOf("}") > 1) {
                             if (responceStringSubpart.contains("{")) {
+
+                                String subpartlat = responceStringSubpart.substring(responceStringSubpart.indexOf("{"), responceStringSubpart.indexOf("}") + 1);
+                                String subpartlog = responceStringSubpart.substring(responceStringSubpart.indexOf("{"), responceStringSubpart.indexOf("}") + 1);
                                 String subpart = responceStringSubpart.substring(responceStringSubpart.indexOf("{"), responceStringSubpart.indexOf("}") + 1);
                                 String subpartID = responceStringSubpart.substring(responceStringSubpart.indexOf("{"), responceStringSubpart.indexOf("}") + 1);
                                 if (responceStringSubpart.contains("},"))
@@ -132,17 +156,39 @@ public class Authorized_VolunteerRequest2 extends AppCompatActivity {
                                 }
                                 String value = "\"subpartName\":\"";
                                 String valueID="\"subpartID\":\"";
+                                String valuelat = "\"latitude\":\"";
+                                String valuelog = "\"longitude\":\"";
                                 String flag = "\"";
                                 String result = "";
+                                Double resultlat =0.0;
+                                Double resultlog = 0.0;
                                 int resultID=0;
                                 subpart = subpart.substring(subpart.indexOf(value) + value.length());
                                 result = subpart.substring(0, subpart.indexOf(flag));
                                 subpart = subpart.substring(subpart.indexOf("},") + 1);
                                 arrayListSubpart.add(result);
+                                subpartlat = subpartlat.substring(subpartlat.indexOf(valuelat) + valuelat.length());
+                                resultlat = Double.parseDouble(subpartlat.substring(0, subpartlat.indexOf(flag)));
+                                // subpart = subpart.substring(subpart.indexOf("},") + 1);
+                                System.out.println(resultlat);
+                                arrayListLat.add(resultlat);
+                                subpartlog = subpartlog.substring(subpartlog.indexOf(valuelog) + valuelog.length());
+                                resultlog = Double.parseDouble(subpartlog.substring(0, subpartlog.indexOf(flag)));
+                                subpartlog = subpartlog.substring(subpartlog.indexOf("},") + 1);
+                                System.out.println(resultlog);
+                                arrayListLog.add(resultlog);
                                 subpartID = subpartID.substring(subpartID.indexOf(valueID) + valueID.length());
                                 resultID = Integer.parseInt(subpartID.substring(0, subpartID.indexOf(flag)));
                                 subpartID= subpartID.substring(subpartID.indexOf("},") + 1);
                                 arrayListSubpartID.add(resultID);
+                                LatLng latLng = null;
+                                try {
+                                    latLng = new LatLng(resultlat,resultlog);
+                                    Marker marker = mMap.addMarker(new MarkerOptions().position(latLng).title(result));
+                                    mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 5));
+                                } catch (Exception e) {
+                                    e.printStackTrace();
+                                }
                             }
 
                         }
@@ -159,6 +205,16 @@ public class Authorized_VolunteerRequest2 extends AppCompatActivity {
                                 }else{
                                     index = position;
                                     dataSupartID=arrayListSubpartID.get(index);
+                                   lat=(arrayListLat.get(index-1));
+                                   longt=(arrayListLog.get(index-1));
+                                   LatLng latLng = null;
+                                   try {
+                                       latLng = new LatLng(lat,longt);
+                                       Marker marker = mMap.addMarker(new MarkerOptions().position(latLng).title(dataSupartName));
+                                       mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 10));
+                                   } catch (Exception e) {
+                                       e.printStackTrace();
+                                   }
                                 }
 
                             }

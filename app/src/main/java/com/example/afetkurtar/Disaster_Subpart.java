@@ -295,7 +295,7 @@ public class Disaster_Subpart extends AppCompatActivity implements OnMapReadyCal
                     public void onResponse(JSONObject response) {
                         try {
                             //  System.out.println(response.toString());
-                            ReturnBack();
+                           redirectActivity(Disaster_Subpart.this,Authorized_ActiveDisasters.class);
                         } catch (Exception e) {
                             e.printStackTrace();
                         }

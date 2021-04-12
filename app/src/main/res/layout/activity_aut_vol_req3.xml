@@ -48,7 +48,7 @@
         tools:ignore="MissingConstraints">
 
         <fragment
-            android:id="@+id/disaster_Detail_map"
+            android:id="@+id/aut_subpart_Detail_map"
             android:name="com.google.android.gms.maps.SupportMapFragment"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

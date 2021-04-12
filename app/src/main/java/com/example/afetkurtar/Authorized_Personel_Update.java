@@ -106,7 +106,7 @@ public class Authorized_Personel_Update extends AppCompatActivity {
                     deletePer();//perden silicez, userdanda silicez
                     deleteUser();
                      }
-                redirectActivity(Authorized_Personel_Update.this, Authorized_Personeller.class);
+                redirectActivity(Authorized_Personel_Update.this, Authorized_Anasayfa.class);
             }
 
 
