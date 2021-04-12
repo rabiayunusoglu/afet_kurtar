@@ -36,26 +36,25 @@ import java.util.List;
 import java.util.Locale;
 
 public class Authorized_Personeller extends AppCompatActivity {
-    RequestQueue queue;
+    RequestQueue queue,queue5;
     GoogleSignInClient mGoogleSignInClient;
     public static int disasterID;
-    public static String disasterName,time,
-            disasterrole,
-            disasteremail,
-            disasterTeamid,
-            emergencyins,
-            disasterlatitude,
-            disasterlongitude;
+    public static String disasterName, time, emergencyins, disasterTeamid, disasterrole,
+            disasteremail;
+
     public static Double latitude, longtitude;
     static int k = 0;
+    JSONObject perInfo;
     ArrayList<JSONObject> list2 = new ArrayList<JSONObject>();
     DrawerLayout drawerLayout;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_authorized__personeller);
         drawerLayout = findViewById(R.id.per);
         queue = Volley.newRequestQueue(this);
+        queue5 = Volley.newRequestQueue(this);
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestEmail()
                 .build();
@@ -63,6 +62,7 @@ public class Authorized_Personeller extends AppCompatActivity {
         list2 = new ArrayList<JSONObject>();
         getData("");
     }
+
     protected void onRestart() {
         super.onRestart();
 
@@ -75,7 +75,7 @@ public class Authorized_Personeller extends AppCompatActivity {
         JSONObject obj = new JSONObject();
 
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest
-                (Request.Method.GET, "https://afetkurtar.site/api/personnelUser/read.php", obj, new Response.Listener<JSONObject>() {
+                (Request.Method.GET, "https://afetkurtar.site/api/users/read.php", obj, new Response.Listener<JSONObject>() {
 
                     @Override
                     public void onResponse(JSONObject response) {
@@ -113,8 +113,8 @@ public class Authorized_Personeller extends AppCompatActivity {
             for (int x = list.size() - 1; x >= 0; x--) {
                 try {
                     JSONObject tmp = new JSONObject(list.get(x));
-
-                    list2.add(tmp);
+                    if (tmp.getString("userType").equals("personnelUser"))
+                        list2.add(tmp);
                 } catch (Exception e) {
                     // e.printStackTrace();
                 }
@@ -149,7 +149,7 @@ public class Authorized_Personeller extends AppCompatActivity {
                     addres = addresses.get(0).getAddressLine(0);
                 } catch (Exception e) {
                 }
-                linear.setText("ID: " + x.getString("personnelID") + "\n" + "İsim : " + x.getString("personnelName")+"\n" + "Mail : " + x.getString("personnelEmail"));
+                linear.setText("ID: " + x.getString("userID") + "\n" + "İsim : " + x.getString("userName") + "\n" + "Mail : " + x.getString("email"));
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -162,6 +162,53 @@ public class Authorized_Personeller extends AppCompatActivity {
 
     public void ClickPerCreate(View view) {
         redirectActivity(this, Authorized_PersonelRegister.class);
+    }
+
+    private void getPersonel() {
+        JSONObject obj = new JSONObject();
+
+        //JSONObject personnelObject = new JSONObject();
+
+        try {
+            obj.put("personnelID", Authorized_Personeller.disasterID);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest
+                (Request.Method.POST, "https://afetkurtar.site/api/personnelUser/search.php", obj, new Response.Listener<JSONObject>() {
+
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        try {
+                            System.out.println(response.toString());
+
+
+                            String type = "";
+                            try {
+                                String cevap = response.getString("records");
+                                cevap = cevap.substring(1, cevap.length() - 1);
+                                JSONObject tmpJson = new JSONObject(cevap);
+                                perInfo = new JSONObject(cevap);
+                                emergencyins = perInfo.getString("institution");
+                                disasterTeamid = perInfo.getString("teamID");
+                                disasterrole = perInfo.getString("personnelRole");
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }, new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        // TODO: Handle error
+                        System.out.println(error);
+                    }
+                });
+        queue5.add(jsonObjectRequest);
+
     }
 
     public void onClick(View v) {
@@ -178,16 +225,11 @@ public class Authorized_Personeller extends AppCompatActivity {
                 JSONObject json = new JSONObject();
                 for (JSONObject x : list2) {
                     try {
-                        if (x.getString("personnelID").equals(tmp.trim())) {
-                            disasterID = Integer.parseInt(x.getString("personnelID"));
-                            disasterName = x.getString("personnelName");
-                            disasteremail = x.getString("personnelEmail");
-                            disasterrole = x.getString("personnelRole");
-                            disasterTeamid = x.getString("teamID");
-                            emergencyins = x.getString("institution");
-                            time=x.getString("locationTime");
-                            disasterlatitude = x.getString("latitude");
-                            disasterlongitude = x.getString("longitude");
+                        if (x.getString("userID").equals(tmp.trim())) {
+                            disasterID = Integer.parseInt(x.getString("userID"));
+                            disasteremail = x.getString("email");
+                            disasterName = x.getString("userName");
+                            getPersonel();
                             json = x;
                         }
                     } catch (JSONException e) {
@@ -210,6 +252,7 @@ public class Authorized_Personeller extends AppCompatActivity {
         //open drawer
         openDrawer(drawerLayout);
     }
+
     static void openDrawer(DrawerLayout drawerLayout) {
         //Open drawer Layout
         drawerLayout.openDrawer(GravityCompat.START);
@@ -277,8 +320,9 @@ public class Authorized_Personeller extends AppCompatActivity {
     // ANA SAYFA
     public void ClickAuthAnasayfa(View view) {
         // ZATEN BU SAYFADA OLDUGUNDAN KAPALI
-        redirectActivity(this, Authorized_Anasayfa.class );
+        redirectActivity(this, Authorized_Anasayfa.class);
     }
+
     public static void redirectActivity(Activity activity, Class aClass) {
         //initialize intent
         Intent intent = new Intent(activity, aClass);
@@ -288,15 +332,17 @@ public class Authorized_Personeller extends AppCompatActivity {
         activity.startActivity(intent);
 
     }
+
     public void ClickAuthorizedPersoneller(View view) {
-        redirectActivity(this, Authorized_Personeller.class );
+        redirectActivity(this, Authorized_Personeller.class);
     }
+
     public void ClickAuthorizedEkipman(View view) {
-        redirectActivity(this, Authorized_Anasayfa.class );
+        redirectActivity(this, Authorized_Anasayfa.class);
     }
 
     public void ClickAuthorizedTeam(View view) {
-        redirectActivity(this, Authorized_Anasayfa.class );
+        redirectActivity(this, Authorized_Anasayfa.class);
     }
 
 }

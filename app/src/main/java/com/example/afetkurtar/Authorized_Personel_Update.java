@@ -47,7 +47,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class Authorized_Personel_Update extends AppCompatActivity {
-    RequestQueue queue, queue1,queue2,queue3;
+    RequestQueue queue, queue1, queue2, queue3, queue5;
     private static final int REQUEST_CODE_LOCATION_PERMISSION = 1;
     DrawerLayout drawerLayout;
     Double latitude, longtitude;
@@ -56,8 +56,11 @@ public class Authorized_Personel_Update extends AppCompatActivity {
     private EditText email, name, kurum, rol;
     Button register, delete;
     long locationTime;
+    static JSONObject perInfo, volInfo;
     static int perID;
     static boolean temp = false;
+    static String emergencyins, adrres, exp, aid, bdate, lat, log, tc, tel, lotime;
+    static String disasterTeamid, disasterrole;
     private static boolean controlmessage = false;
 
     @Override
@@ -66,6 +69,7 @@ public class Authorized_Personel_Update extends AppCompatActivity {
         queue1 = Volley.newRequestQueue(this);
         queue2 = Volley.newRequestQueue(this);
         queue3 = Volley.newRequestQueue(this);
+        queue5 = Volley.newRequestQueue(this);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_authorized__personel__update);
         drawerLayout = findViewById(R.id.drawer_layout_per_updat);
@@ -82,14 +86,15 @@ public class Authorized_Personel_Update extends AppCompatActivity {
             controlmessage = true;
             getCurrentLocation();
         }
+        getPersonel();
         email = findViewById(R.id.per_email);
         email.setText(Authorized_Personeller.disasteremail);
         name = findViewById(R.id.per_name);
         name.setText(Authorized_Personeller.disasterName);
         kurum = findViewById(R.id.per_kurum);
-        kurum.setText(Authorized_Personeller.emergencyins);
+        kurum.setText(emergencyins);
         rol = findViewById(R.id.per_rol);
-        rol.setText(Authorized_Personeller.disasterrole);
+        rol.setText(disasterrole);
         delete = findViewById(R.id.delete_per_Btn);
         register = findViewById(R.id.kayit_btn);
         checkVOL();
@@ -100,12 +105,12 @@ public class Authorized_Personel_Update extends AppCompatActivity {
                 if (temp) {
                     deleteTurnType();//perden silinip,  userdaki type vol yapıcaz,volun req ve response tema ıd ve role sıfırlancak
                     updateVol();
-                    deletePer();
-                }
-                else{
+                    // deletePer();
+                } else {
                     deletePer();//perden silicez, userdanda silicez
                     deleteUser();
-                     }
+                }
+                Toast.makeText(getApplicationContext(), "Silindi.", Toast.LENGTH_SHORT).show();
                 redirectActivity(Authorized_Personel_Update.this, Authorized_Anasayfa.class);
             }
 
@@ -144,6 +149,17 @@ public class Authorized_Personel_Update extends AppCompatActivity {
             obj.put("latitude", latitude);
             obj.put("longitude", longtitude);
             obj.put("role", "Belirlenmedi");
+            obj.put("address", volInfo.getString("address"));
+            obj.put("isExperienced", volInfo.getString("isExperienced"));
+            obj.put("haveFirstAidCert", volInfo.getString("haveFirstAidCert"));
+            obj.put("tc", volInfo.getString("tc"));
+            obj.put("tel", volInfo.getString("tel"));
+            obj.put("birthDate", volInfo.getString("birthDate"));
+            obj.put("requestedSubpart", "0");
+            obj.put("responseSubpart", "0");
+            obj.put("assignedTeamID", "0");
+
+
         } catch (Exception e) {
             Toast.makeText(getApplicationContext(), "hata", Toast.LENGTH_SHORT).show();
         }
@@ -199,7 +215,8 @@ public class Authorized_Personel_Update extends AppCompatActivity {
         updateUser();
 
     }
-    public void updateUser(){
+
+    public void updateUser() {
 //vole çevircez artik personel değli
         JSONObject tmp = new JSONObject();
         try {
@@ -214,30 +231,31 @@ public class Authorized_Personel_Update extends AppCompatActivity {
         }
         try {
 
-                //   System.out.println(tmp.toString() + "**********************************************************");
-                JsonObjectRequest request = new JsonObjectRequest(
-                        Request.Method.POST, // the request method
-                        "https://afetkurtar.site/api/users/update.php", // the URL
-                        tmp, // the parameters for the php
-                        new Response.Listener<JSONObject>() { // the response listener
-                            @Override
-                            public void onResponse(JSONObject response) {
+            //   System.out.println(tmp.toString() + "**********************************************************");
+            JsonObjectRequest request = new JsonObjectRequest(
+                    Request.Method.POST, // the request method
+                    "https://afetkurtar.site/api/users/update.php", // the URL
+                    tmp, // the parameters for the php
+                    new Response.Listener<JSONObject>() { // the response listener
+                        @Override
+                        public void onResponse(JSONObject response) {
 
-                            }
-                        },
-                        new Response.ErrorListener() { // the error listener
-                            @Override
-                            public void onErrorResponse(VolleyError error) {
-                                System.out.println(error.getMessage());
-                                error.printStackTrace();
+                        }
+                    },
+                    new Response.ErrorListener() { // the error listener
+                        @Override
+                        public void onErrorResponse(VolleyError error) {
+                            System.out.println(error.getMessage());
+                            error.printStackTrace();
 
-                            }
-                        });
-                queue3.add(request);
-        }catch (Exception e){
+                        }
+                    });
+            queue3.add(request);
+        } catch (Exception e) {
             System.out.println("eror");
         }
     }
+
     private void checkVOL() {
         JSONObject obj = new JSONObject();
 
@@ -254,7 +272,29 @@ public class Authorized_Personel_Update extends AppCompatActivity {
                     @Override
                     public void onResponse(JSONObject response) {
                         try {
-                            temp=true;
+                            temp = true;
+                            System.out.println(response.toString());
+
+
+                            String type = "";
+                            try {
+                                String cevap = response.getString("records");
+                                cevap = cevap.substring(1, cevap.length() - 1);
+                                JSONObject tmpJson = new JSONObject(cevap);
+                                volInfo = new JSONObject(cevap);
+                                adrres = volInfo.getString("address");
+                                exp = volInfo.getString("isExperienced");
+                                aid = volInfo.getString("haveFirstAidCert");
+                                lat = volInfo.getString("latitude");
+                                log = volInfo.getString("longitude");
+                                lotime = volInfo.getString("locationTime");
+                                tc = volInfo.getString("tc");
+                                tel = volInfo.getString("tel");
+                                bdate = volInfo.getString("birthDate");
+
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
 
                         } catch (Exception e) {
                             e.printStackTrace();
@@ -264,7 +304,7 @@ public class Authorized_Personel_Update extends AppCompatActivity {
                     @Override
                     public void onErrorResponse(VolleyError error) {
                         // TODO: Handle error
-                        temp=false;
+                        temp = false;
                         System.out.println(error);
                     }
                 });
@@ -288,7 +328,7 @@ public class Authorized_Personel_Update extends AppCompatActivity {
                         try {
                             //  System.out.println(response.toString());
 
-                                //redirectActivity(Authorized_Personel_Update.this, Authorized_Personeller.class);
+                            //redirectActivity(Authorized_Personel_Update.this, Authorized_Personeller.class);
 
                         } catch (Exception e) {
                             e.printStackTrace();
@@ -339,18 +379,19 @@ public class Authorized_Personel_Update extends AppCompatActivity {
                                     throw new Exception("");
                                 JSONObject obj = new JSONObject();
                                 try {
+                                    getPersonel();
                                     obj.put("personnelID", Authorized_Personeller.disasterID);
                                     obj.put("personnelName", name.getText().toString());
                                     obj.put("personnelEmail", email.getText().toString());
                                     obj.put("personnelRole", rol.getText().toString());
                                     obj.put("latitude", latitude);
-                                    obj.put("teamID", Authorized_Personeller.disasterTeamid);
+                                    obj.put("teamID", disasterTeamid);
                                     obj.put("longitude", longtitude);
                                     obj.put("locationTime", formatDateTime);
                                     obj.put("institution", kurum.getText().toString());
                                 } catch (JSONException e) {
                                     e.printStackTrace();
-                                    System.out.println("user da hata*********************************************");
+                                    Toast.makeText(Authorized_Personel_Update.this, "Güncellemede user hata oldu.", Toast.LENGTH_SHORT).show();
                                 }
                                 JsonObjectRequest request = new JsonObjectRequest(Request.Method.POST, url, obj, new Response.Listener<JSONObject>() {
                                     @Override
@@ -360,7 +401,7 @@ public class Authorized_Personel_Update extends AppCompatActivity {
                                 }, new Response.ErrorListener() {
                                     @Override
                                     public void onErrorResponse(VolleyError error) {
-                                        System.out.println(error);
+                                        Toast.makeText(Authorized_Personel_Update.this, "Güncellemede hata oldu.", Toast.LENGTH_SHORT).show();
                                     }
                                 });
                                 queue.add(request);
@@ -401,6 +442,54 @@ public class Authorized_Personel_Update extends AppCompatActivity {
             else if (rol.length() == 0)
                 Toast.makeText(Authorized_Personel_Update.this, "Personel rolünü girmelisiniz!", Toast.LENGTH_SHORT).show();
         }
+    }
+
+    private void getPersonel() {
+        JSONObject obj = new JSONObject();
+
+        //JSONObject personnelObject = new JSONObject();
+
+        try {
+            obj.put("personnelID", Authorized_Personeller.disasterID);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest
+                (Request.Method.POST, "https://afetkurtar.site/api/personnelUser/search.php", obj, new Response.Listener<JSONObject>() {
+
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        try {
+                            System.out.println(response.toString());
+
+
+                            String type = "";
+                            try {
+                                String cevap = response.getString("records");
+                                cevap = cevap.substring(1, cevap.length() - 1);
+                                JSONObject tmpJson = new JSONObject(cevap);
+                                perInfo = new JSONObject(cevap);
+                                emergencyins = perInfo.getString("institution");
+                                disasterTeamid = perInfo.getString("teamID");
+                                disasterrole = perInfo.getString("personnelRole");
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }, new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        // TODO: Handle error
+                        temp = false;
+                        System.out.println(error);
+                    }
+                });
+        queue5.add(jsonObjectRequest);
+
     }
 
 
@@ -530,7 +619,7 @@ public class Authorized_Personel_Update extends AppCompatActivity {
     }
 
     public void ClickAuthorizedTeam(View view) {
-        redirectActivity(this, Authorized_Assign_Team.class );
+        redirectActivity(this, Authorized_Assign_Team.class);
     }
 
 }

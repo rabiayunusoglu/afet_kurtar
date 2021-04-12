@@ -179,6 +179,7 @@ public class Disaster_Update extends AppCompatActivity implements OnMapReadyCall
                     public void onResponse(JSONObject response) {
                         try {
                             //  System.out.println(response.toString());
+                            Toast.makeText(getApplicationContext(), "Silindi.", Toast.LENGTH_SHORT).show();
                             redirectActivity(Disaster_Update.this, Authorized_ActiveDisasters.class);
                         } catch (Exception e) {
                             e.printStackTrace();

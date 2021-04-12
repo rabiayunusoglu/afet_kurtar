@@ -156,11 +156,11 @@ public class Authorized_VolunteerRequest3 extends AppCompatActivity  implements 
                     JsonObjectRequest request = new JsonObjectRequest(Request.Method.POST, "https://afetkurtar.site/api/volunteerUser/update.php", obj, new Response.Listener<JSONObject>() {
                         @Override
                         public void onResponse(JSONObject response) {
-                            //userda type değiştir, pere id ile kayıt et
+                            //userda type değiştir, (pere id ile kayıt et)artık etmiyozpere kayıt
                             System.out.println("YAZZZZZ++++++++++++++++++++");
                             checkUser();
                             updateUserTable();
-                            addPersonel();
+                          //  addPersonel();
                             System.out.println(response.toString());
                         }
                     }, new Response.ErrorListener() {
