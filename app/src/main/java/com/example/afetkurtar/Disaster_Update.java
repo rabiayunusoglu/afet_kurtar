@@ -506,8 +506,6 @@ public class Disaster_Update extends AppCompatActivity implements OnMapReadyCall
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
-        System.out.println("test : map is ready");
-        Toast.makeText(this, "map is ready", Toast.LENGTH_SHORT).show();
         LatLng latLng1 = null;
         try {
             latLng1 = new LatLng(Double.parseDouble(data.getString("latitude")), Double.parseDouble(data.getString("longitude")));

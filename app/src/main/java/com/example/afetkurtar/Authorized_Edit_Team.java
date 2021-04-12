@@ -1387,7 +1387,7 @@ public class Authorized_Edit_Team extends AppCompatActivity {
     }
 
     public void ClickAuthorizedTeam(View view) {
-        redirectActivity(this, Authorized_Anasayfa.class );
+        redirectActivity(this, Authorized_Assign_Team.class );
     }
 
 }// class end

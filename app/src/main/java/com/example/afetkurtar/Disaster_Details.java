@@ -94,7 +94,7 @@ public class Disaster_Details extends AppCompatActivity implements OnMapReadyCal
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
-        Toast.makeText(this, "map is ready", Toast.LENGTH_SHORT).show();
+
         LatLng latLng = null;
         try {
             latLng = new LatLng(Double.parseDouble(Authorized_ActiveDisasters.disasterlatitude), Double.parseDouble(Authorized_ActiveDisasters.disasterlongitude));

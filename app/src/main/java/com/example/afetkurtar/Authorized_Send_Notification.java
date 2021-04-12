@@ -228,6 +228,6 @@ public class Authorized_Send_Notification extends AppCompatActivity {
     }
 
     public void ClickAuthorizedTeam(View view) {
-        redirectActivity(this, Authorized_Anasayfa.class );
+        redirectActivity(this, Authorized_Assign_Team.class );
     }
 }

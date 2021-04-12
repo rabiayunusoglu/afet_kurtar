@@ -213,7 +213,6 @@ public class Disaster_Subpart extends AppCompatActivity implements OnMapReadyCal
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
-        Toast.makeText(this, "map is ready", Toast.LENGTH_SHORT).show();
         LatLng latLng = null;
         try {
             latLng = new LatLng(Double.parseDouble(Authorized_ActiveDisasters.disasterlatitude), Double.parseDouble(Authorized_ActiveDisasters.disasterlongitude));
@@ -423,33 +422,40 @@ public class Disaster_Subpart extends AppCompatActivity implements OnMapReadyCal
             else if (isvol.getText().toString().trim().toLowerCase().equals("kapalı") || isvol.getText().toString().trim().toLowerCase().equals("kapali"))
                 obj.put("isOpenForVolunteers", false);
             else
-                throw new Exception("");
+                throw new Exception("Gönüllü İstek Talep Edebilme Durumunu Açık yada Kapalı şeklinde belirleyiniz");
+            if (Integer.parseInt(level.getText().toString()) > 10)
+                throw new Exception("Level Seviyesi 1 ile 10 arasında olmalıdır!");
+
+            JsonObjectRequest request = new JsonObjectRequest(Request.Method.POST, "https://afetkurtar.site/api/subpart/update.php", obj, new Response.Listener<JSONObject>() {
+                @Override
+                public void onResponse(JSONObject response) {
+                    System.out.println(response.toString());
+                }
+            }, new Response.ErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError error) {
+                    System.out.println(error);
+                }
+            });
+            queue.add(request);
             Toast.makeText(this, "Afet alt parçası güncellendi.", Toast.LENGTH_SHORT).show();
+            redirectActivity(this, Disaster_Details.class);
 
         } catch (Exception e) {
-            Toast.makeText(this, "Gönüllü İstek Talep Edebilme Durumunu Açık yada Kapalı şeklinde belirleyiniz", Toast.LENGTH_SHORT).show();
+            if (Integer.parseInt(level.getText().toString()) > 10)
+            Toast.makeText(this,"Level Seviyesi 1 ile 10 arasında olmalıdır!", Toast.LENGTH_SHORT).show();
+            else
+                Toast.makeText(this,"Gönüllü İstek Talep Edebilme Durumunu Açık yada Kapalı şeklinde belirleyiniz", Toast.LENGTH_SHORT).show();
 
         }
-        JsonObjectRequest request = new JsonObjectRequest(Request.Method.POST, "https://afetkurtar.site/api/subpart/update.php", obj, new Response.Listener<JSONObject>() {
-            @Override
-            public void onResponse(JSONObject response) {
-                System.out.println(response.toString());
-            }
-        }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                System.out.println(error);
-            }
-        });
-        queue.add(request);
-        Toast.makeText(Disaster_Subpart.this, "Afet Güncellendi.", Toast.LENGTH_SHORT).show();
-        finish();
+
 
     }
 
     public void clickSubpartsil(View view) {
         delete();
     }
+
     public void ClickMenu(View view) {
         //open drawer
         openDrawer(drawerLayout);
@@ -522,16 +528,18 @@ public class Disaster_Subpart extends AppCompatActivity implements OnMapReadyCal
     // ANA SAYFA
     public void ClickAuthAnasayfa(View view) {
         // ZATEN BU SAYFADA OLDUGUNDAN KAPALI
-        redirectActivity(this, Authorized_Anasayfa.class );
+        redirectActivity(this, Authorized_Anasayfa.class);
     }
+
     public void ClickAuthorizedPersoneller(View view) {
-        redirectActivity(this, Authorized_Personeller.class );
+        redirectActivity(this, Authorized_Personeller.class);
     }
+
     public void ClickAuthorizedEkipman(View view) {
-        redirectActivity(this, Authorized_Anasayfa.class );
+        redirectActivity(this, Authorized_Anasayfa.class);
     }
 
     public void ClickAuthorizedTeam(View view) {
-        redirectActivity(this, Authorized_Anasayfa.class );
+        redirectActivity(this, Authorized_Anasayfa.class);
     }
 }

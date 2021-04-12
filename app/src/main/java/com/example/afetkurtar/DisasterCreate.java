@@ -221,8 +221,7 @@ public class DisasterCreate extends AppCompatActivity implements OnMapReadyCallb
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
-        System.out.println("test : map is ready");
-        Toast.makeText(this, "map is ready", Toast.LENGTH_SHORT).show();
+       
 
         mMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
             @Override

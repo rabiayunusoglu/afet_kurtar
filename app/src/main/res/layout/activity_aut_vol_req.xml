@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:id="@+id/detail_dis"
+    android:orientation="vertical"
+    tools:context=".Authorized_VolunteerRequest">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <include
+            layout="@layout/activity_vol_req_tool_bar">
+        </include>
+
+    </LinearLayout>
+
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/LayoutSubpart"
+        android:layout_width="match_parent"
+        android:layout_height="250dp"
+        android:layout_marginTop="2dp"
+        android:background="@drawable/notification_layout_background"
+        app:layout_constraintTop_toBottomOf="@id/history_geri_button"
+        tools:ignore="MissingConstraints">
+
+
+        <include layout="@layout/activity_aut_req1">
+
+        </include>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <Space
+        android:layout_width="0dp"
+        android:layout_height="8dp"
+        android:layout_weight="0"></Space>
+
+    <LinearLayout
+
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:orientation="vertical"
+        tools:ignore="MissingConstraints">
+
+        <fragment
+            android:id="@+id/disaster_Detail_map"
+            android:name="com.google.android.gms.maps.SupportMapFragment"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="0"
+            android:gravity="center"
+            android:text="KONUM"
+            android:textSize="10sp"></TextView>
+
+    </LinearLayout>
+
+</LinearLayout>
