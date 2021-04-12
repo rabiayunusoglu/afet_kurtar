@@ -23,7 +23,7 @@
             <LinearLayout
                 android:id="@+id/layoutaktifafetler"
                 android:layout_width="180dp"
-                android:layout_height="190dp"
+                android:layout_height="180dp"
                 android:layout_marginTop="16dp"
                 android:background="@color/white"
                 android:gravity="center"
@@ -31,7 +31,7 @@
                 android:padding="15dp"
                 app:layout_constraintDimensionRatio="H,1:1"
                 app:layout_constraintEnd_toStartOf="@id/layoutpersonelkaydi"
-                app:layout_constraintHorizontal_bias="0.509"
+                app:layout_constraintHorizontal_bias="0.457"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent">
 
@@ -49,7 +49,7 @@
                     android:layout_height="37dp"
                     android:layout_gravity="center"
                     android:onClick="ClickAuthorizeActiveDisaster"
-                    android:text="         Aktif Afetler"
+                    android:text="             Aktif Afetler"
                     android:textColor="@color/black"
                     android:textSize="15sp"
                     android:textStyle="bold"></TextView>
@@ -57,10 +57,10 @@
             </LinearLayout>
 
             <LinearLayout
-                android:id="@+id/layoutpersonelkaydi"
+                android:id="@+id/layoutpersoneller"
                 android:layout_width="180dp"
-                android:layout_height="190dp"
-                android:layout_marginTop="16dp"
+                android:layout_height="180dp"
+                android:layout_marginTop="22dp"
                 android:layout_marginEnd="16dp"
                 android:layout_marginRight="16dp"
                 android:background="@color/white"
@@ -73,55 +73,55 @@
                 app:layout_constraintTop_toTopOf="parent">
 
                 <ImageView
-                    android:layout_width="90dp"
-                    android:layout_height="119dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
                     android:layout_margin="8dp"
                     android:contentDescription="@string/app_name"
-                    android:onClick="ClickAuthorizedPersonelRegistration"
+                    android:onClick="ClickAuthorizedPersoneller"
                     android:padding="8dp"
-                    android:src="@drawable/personel_kaydi"></ImageView>
+                    android:src="@drawable/per"></ImageView>
 
                 <TextView
                     android:layout_width="match_parent"
-                    android:onClick="ClickAuthorizedPersonelRegistration"
                     android:layout_height="37dp"
                     android:layout_gravity="center"
-                    android:text="       Personel Kaydı"
+                    android:onClick="ClickAuthorizedPersoneller"
+                    android:text="             Personeller"
                     android:textColor="@color/black"
                     android:textSize="15sp"
                     android:textStyle="bold"></TextView>
-
             </LinearLayout>
 
             <LinearLayout
                 android:id="@+id/layoutihbar"
-                android:layout_width="0dp"
-                android:layout_height="190dp"
-                android:layout_marginTop="22dp"
+                android:layout_width="180dp"
+                android:layout_height="180dp"
+                android:layout_marginTop="20dp"
                 android:background="@color/white"
                 android:gravity="center"
                 android:orientation="vertical"
                 android:padding="15dp"
                 app:layout_constraintDimensionRatio="H,1:1"
-                app:layout_constraintEnd_toStartOf="@id/layoutpersonelkaydi"
+                app:layout_constraintEnd_toStartOf="@id/layoutequipment"
+                app:layout_constraintHorizontal_bias="0.466"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/layoutaktifafetler">>
+                app:layout_constraintTop_toBottomOf="@id/layoutteam">>
 
                 <ImageView
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_margin="8dp"
-                    android:onClick="ClickAuthorizedNotice"
                     android:contentDescription="@string/app_name"
+                    android:onClick="ClickAuthorizedNotice"
                     android:padding="8dp"
-                    android:src="@drawable/notice"></ImageView>
+                    android:src="@drawable/duyuru"></ImageView>
 
                 <TextView
-                    android:onClick="ClickAuthorizedNotice"
                     android:layout_width="match_parent"
                     android:layout_height="37dp"
                     android:layout_gravity="center"
-                    android:text="               İhbarlar"
+                    android:onClick="ClickAuthorizedNotice"
+                    android:text="                İhbarlar"
                     android:textColor="@color/black"
                     android:textSize="15sp"
                     android:textStyle="bold"></TextView>
@@ -130,7 +130,7 @@
             <LinearLayout
                 android:id="@+id/layoutistek"
                 android:layout_width="180dp"
-                android:layout_height="190dp"
+                android:layout_height="180dp"
                 android:layout_marginTop="22dp"
                 android:background="@color/white"
                 android:gravity="center"
@@ -139,7 +139,7 @@
                 app:layout_constraintDimensionRatio="H,1:1"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@+id/layoutihbar"
-                app:layout_constraintTop_toBottomOf="@id/layoutaktifafetler">
+                app:layout_constraintTop_toBottomOf="@id/layoutteam">
 
                 <ImageView
                     android:layout_width="match_parent"
@@ -155,17 +155,92 @@
                     android:layout_height="37dp"
                     android:onClick="ClickAuthrizedVolunteerRequest"
                     android:layout_gravity="center"
-                    android:text="       Gönüllü İstekleri"
+                    android:text="          Gönüllü İstekleri"
                     android:textColor="@color/black"
                     android:textSize="15sp"
                     android:textStyle="bold"></TextView>
 
             </LinearLayout>
+
+            <LinearLayout
+
+                android:id="@+id/layoutteam"
+                android:layout_width="180dp"
+                android:layout_height="180dp"
+                android:layout_marginTop="20dp"
+                android:layout_marginEnd="16dp"
+                android:layout_marginRight="16dp"
+                android:background="@color/white"
+                android:gravity="center"
+                android:orientation="vertical"
+                android:padding="15dp"
+                app:layout_constraintDimensionRatio="H,1:1"
+                app:layout_constraintEnd_toStartOf="@id/layoutpersoneller"
+                app:layout_constraintHorizontal_bias="0.631"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/layoutaktifafetler">>
+
+
+                <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_margin="8dp"
+                    android:contentDescription="@string/app_name"
+                    android:onClick="ClickAuthorizedTeam"
+                    android:padding="8dp"
+                    android:src="@drawable/team"></ImageView>
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="37dp"
+                    android:layout_gravity="center"
+                    android:onClick="ClickAuthorizedTeam"
+                    android:text="               Takımlar"
+                    android:textColor="@color/black"
+                    android:textSize="15sp"
+                    android:textStyle="bold"></TextView>
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/layoutequipment"
+                android:layout_width="180dp"
+                android:layout_height="180dp"
+                android:layout_marginTop="22dp"
+                android:background="@color/white"
+                android:gravity="center"
+                android:orientation="vertical"
+                android:padding="15dp"
+                app:layout_constraintDimensionRatio="H,1:1"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/layoutteam"
+                app:layout_constraintTop_toBottomOf="@id/layoutpersoneller">
+
+                <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_margin="8dp"
+                    android:onClick="ClickAuthorizedEkipman"
+                    android:contentDescription="@string/app_name"
+                    android:padding="8dp"
+                    android:src="@drawable/ekipman"></ImageView>
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="37dp"
+                    android:layout_gravity="center"
+                    android:onClick="ClickAuthorizedEkipman"
+                    android:text="            Ekipmanlar"
+                    android:textColor="@color/black"
+                    android:textSize="15sp"
+                    android:textStyle="bold"></TextView>
+
+            </LinearLayout>
+
             <LinearLayout
                 android:id="@+id/layoutmessage"
                 android:layout_width="0dp"
-                android:layout_height="190dp"
-                android:layout_marginTop="22dp"
+                android:layout_height="180dp"
+                android:layout_marginTop="24dp"
                 android:background="@color/white"
                 android:gravity="center"
                 android:orientation="vertical"
@@ -179,35 +254,79 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_margin="8dp"
-                    android:onClick="ClickAuthorizedMessage"
+                    android:background="@color/white"
                     android:contentDescription="@string/app_name"
+                    android:onClick="ClickNotificationSend"
                     android:padding="8dp"
-                    android:src="@drawable/message"></ImageView>
+                    android:scrollbarThumbVertical="@drawable/background_right"
+                    android:src="@drawable/ic_baseline_notification_add_24"
+                    android:tint="@color/black"></ImageView>
 
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="37dp"
-                    android:onClick="ClickAuthorizedMessage"
                     android:layout_gravity="center"
-                    android:text="           Mesaj Kutusu"
+                    android:onClick="ClickNotificationSend"
+                    android:text="         Bildirim Oluştur"
                     android:textColor="@color/black"
                     android:textSize="15sp"
                     android:textStyle="bold"></TextView>
             </LinearLayout>
 
             <LinearLayout
-                android:id="@+id/layoutlogout"
+
+                android:id="@+id/layoutpersonelkaydi"
                 android:layout_width="180dp"
-                android:layout_height="190dp"
-                android:layout_marginTop="22dp"
+                android:layout_height="180dp"
+                android:layout_marginTop="20dp"
+                android:layout_marginEnd="16dp"
+                android:layout_marginRight="16dp"
                 android:background="@color/white"
                 android:gravity="center"
                 android:orientation="vertical"
                 android:padding="15dp"
                 app:layout_constraintDimensionRatio="H,1:1"
+
                 app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="1.0"
                 app:layout_constraintStart_toEndOf="@+id/layoutmessage"
                 app:layout_constraintTop_toBottomOf="@id/layoutistek">
+
+                <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_margin="8dp"
+                    android:contentDescription="@string/app_name"
+                    android:onClick="ClickAuthorizedPersonelRegistration"
+                    android:padding="8dp"
+                    android:src="@drawable/personel_kaydi"></ImageView>
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="37dp"
+                    android:layout_gravity="center"
+                    android:onClick="ClickAuthorizedPersonelRegistration"
+                    android:text="      Personel Kaydı"
+                    android:textColor="@color/black"
+                    android:textSize="15sp"
+                    android:textStyle="bold"></TextView>
+
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/layoutlogout"
+                android:layout_width="0dp"
+                android:layout_height="180dp"
+                android:layout_marginTop="24dp"
+                android:background="@color/white"
+                android:gravity="center"
+                android:orientation="vertical"
+                android:padding="15dp"
+                app:layout_constraintDimensionRatio="H,1:1"
+                app:layout_constraintEnd_toStartOf="@id/layoutpersonelkaydi"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/layoutmessage">
 
                 <ImageView
                     android:layout_width="match_parent"
@@ -229,6 +348,7 @@
                     android:textStyle="bold"></TextView>
 
             </LinearLayout>
+
         </androidx.constraintlayout.widget.ConstraintLayout>
     </ScrollView>
 </ScrollView>

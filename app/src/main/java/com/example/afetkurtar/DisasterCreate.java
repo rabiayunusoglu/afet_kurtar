@@ -1,9 +1,13 @@
 package com.example.afetkurtar;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 
+import android.app.Activity;
+import android.content.Intent;
 import android.location.Address;
 import android.location.Geocoder;
 import android.os.Build;
@@ -23,6 +27,9 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
+import com.google.android.gms.auth.api.signin.GoogleSignIn;
+import com.google.android.gms.auth.api.signin.GoogleSignInClient;
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -30,6 +37,8 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -49,6 +58,7 @@ public class DisasterCreate extends AppCompatActivity implements OnMapReadyCallb
     private Geocoder geocoder;
     ArrayAdapter<String> adapterAfetType;
     Spinner afetTypeSpinner;
+    GoogleSignInClient mGoogleSignInClient;
     DrawerLayout drawerLayout;
     Marker clickMarker;
     ArrayList<String> arrayListEmergencyLevel = new ArrayList<>();
@@ -70,6 +80,11 @@ public class DisasterCreate extends AppCompatActivity implements OnMapReadyCallb
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_disaster_create);
         queue = Volley.newRequestQueue(this);
+        drawerLayout = findViewById(R.id.drawer_layout_disaster_create);
+        GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                .requestEmail()
+                .build();
+        mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
         afetTypeSpinner = findViewById(R.id.afetlistner);
         emergencyLevelSpinner = findViewById(R.id.emergencylevellistliner);
         afetBaseSpinner = findViewById(R.id.disasterBaseListliner);
@@ -81,7 +96,6 @@ public class DisasterCreate extends AppCompatActivity implements OnMapReadyCallb
         afetName = findViewById(R.id.disasterNameBtn);
         afetName.setText(afetussu + " " + afetTipi + " " + "Bölgesi");
         gonder = findViewById(R.id.afetolusturBTN);
-        geri = findViewById(R.id.disaster_create_geri_button);
         /*
         try {
 
@@ -101,12 +115,6 @@ public class DisasterCreate extends AppCompatActivity implements OnMapReadyCallb
         */
 
         initMap();
-        geri.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                finish();
-            }
-        });
         gonder.setOnClickListener(new View.OnClickListener() {
 
             @RequiresApi(api = Build.VERSION_CODES.O)
@@ -509,5 +517,96 @@ public class DisasterCreate extends AppCompatActivity implements OnMapReadyCallb
         System.out.println("line " + line);
         return line;
     }
+    public void ClickMenu(View view) {
+        //open drawer
+        openDrawer(drawerLayout);
+    }
+    static void openDrawer(DrawerLayout drawerLayout) {
+        //Open drawer Layout
+        drawerLayout.openDrawer(GravityCompat.START);
+    }
 
+    public void ClickLogo(View view) {
+        //Close drawer
+        System.out.println("logo");
+    }
+
+    public static void closeDrawer(DrawerLayout drawerLayout) {
+        //Close drawer layout
+        //check condition
+        if (drawerLayout.isDrawerOpen(GravityCompat.START)) {
+            //when driver is open
+            //close drawer
+            drawerLayout.closeDrawer(GravityCompat.START);
+        }
+    }
+
+
+    /*
+     *************************************** ASAGIDAKI KISIMLAR YONLENDIRMELERI AYARLAR
+     */
+    private void signOut() {
+        mGoogleSignInClient.signOut()
+                .addOnCompleteListener(this, new OnCompleteListener<Void>() {
+                    public void onComplete(@NonNull Task<Void> task) {
+                        System.out.println("Cikis basarili");
+                    }
+                });
+    }
+
+    // IHBARLAR
+    public void ClickAuthorizedNotice(View view) {
+        redirectActivity(this, Authorized_Notification.class);
+    }
+
+    // AKTIF AFET
+    public void ClickAuthorizeActiveDisaster(View view) {
+        redirectActivity(this, Authorized_ActiveDisasters.class);
+    }
+
+    // PERSONEL KAYIT
+    public void ClickAuthorizedPersonelRegistration(View view) {
+        redirectActivity(this, Authorized_PersonelRegister.class);
+    }
+
+    // GONULLU ISTEKLERI
+    public void ClickAuthrizedVolunteerRequest(View view) {
+        redirectActivity(this, Authorized_VolunteerRequest.class);
+    }
+    //MESAJ
+
+    // CIKIS
+    public void ClickAuthorizedExit(View view) {
+        signOut();
+        redirectActivity(this, MainActivity.class);
+    }
+
+    public void ClickNotificationSend(View view) {
+        redirectActivity(this, Authorized_Send_Notification.class);
+    }
+
+    // ANA SAYFA
+    public void ClickAuthAnasayfa(View view) {
+        // ZATEN BU SAYFADA OLDUGUNDAN KAPALI
+        redirectActivity(this, Authorized_Anasayfa.class );
+    }
+    public static void redirectActivity(Activity activity, Class aClass) {
+        //initialize intent
+        Intent intent = new Intent(activity, aClass);
+        //Set flag
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        //Start activity
+        activity.startActivity(intent);
+
+    }
+    public void ClickAuthorizedPersoneller(View view) {
+        redirectActivity(this, Authorized_Anasayfa.class );
+    }
+    public void ClickAuthorizedEkipman(View view) {
+        redirectActivity(this, Authorized_Anasayfa.class );
+    }
+
+    public void ClickAuthorizedTeam(View view) {
+        redirectActivity(this, Authorized_Anasayfa.class );
+    }
 }

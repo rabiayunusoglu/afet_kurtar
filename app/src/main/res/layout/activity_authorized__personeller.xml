@@ -4,8 +4,10 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".Authorized_ActiveDisasters"
-    android:id="@+id/activedisaster">
+    android:id="@+id/per"
+    tools:context=".Authorized_Personeller">
+
+
 
 
 
@@ -15,34 +17,34 @@
         android:layout_height="match_parent"
         android:orientation="vertical">
         <include
-            layout="@layout/activity_navdrawer_active_disaster"
+            layout="@layout/activity_tool_per_bar"
             tools:layout_editor_absoluteX="-113dp"
             tools:layout_editor_absoluteY="0dp"></include>
 
-    <ScrollView
+        <ScrollView
 
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_marginTop="0dp"
-        android:background="@color/white"
-        app:layout_constraintTop_toBottomOf="@id/history_geri_button"
-        tools:ignore="MissingConstraints">
-
-        <LinearLayout
-            android:id="@+id/auth_lay_DisasterScroll"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="10dp"
-            android:layout_marginRight="10dp"
-            android:gravity="center_vertical"
-            android:orientation="vertical">
+            android:layout_height="match_parent"
+            android:layout_marginTop="0dp"
+            android:background="@color/white"
+            app:layout_constraintTop_toBottomOf="@id/history_geri_button"
+            tools:ignore="MissingConstraints">
 
-        </LinearLayout>
+            <LinearLayout
+                android:id="@+id/auth_lay_perScroll"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:gravity="center_vertical"
+                android:orientation="vertical">
+
+            </LinearLayout>
 
 
-    </ScrollView>
+        </ScrollView>
 
-</LinearLayout>
+    </LinearLayout>
 
 
 

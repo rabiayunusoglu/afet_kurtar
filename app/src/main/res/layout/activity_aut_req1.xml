@@ -38,6 +38,7 @@
         android:layout_width="151dp"
         android:layout_height="57dp"
         android:text="Seç"
+        android:textColor="#FFFFFF"
         app:backgroundTint="@color/black"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"

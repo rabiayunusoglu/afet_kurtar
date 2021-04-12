@@ -14,14 +14,7 @@
         <include
             layout="@layout/activity_tool_bar">
         </include>
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:text="ANASAYFA"
-            android:textColor="#050505"
-            android:textSize="15sp"
-            android:textStyle="bold" />
+        
 
         <include layout="@layout/avtivity_tool_auth_anasayfa"></include>
 

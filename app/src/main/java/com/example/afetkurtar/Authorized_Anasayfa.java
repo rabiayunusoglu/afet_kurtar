@@ -109,7 +109,16 @@ public class Authorized_Anasayfa extends AppCompatActivity {
         // ZATEN BU SAYFADA OLDUGUNDAN KAPALI
         //redirectActivity(this, Authorized_Anasayfa.class );
     }
+    public void ClickAuthorizedPersoneller(View view) {
+        redirectActivity(this, Authorized_Personeller.class );
+    }
+    public void ClickAuthorizedEkipman(View view) {
+        redirectActivity(this, Authorized_Anasayfa.class );
+    }
 
+    public void ClickAuthorizedTeam(View view) {
+        redirectActivity(this, Authorized_Anasayfa.class );
+    }
 
 
 }

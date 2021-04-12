@@ -1,6 +1,9 @@
 package com.example.afetkurtar;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.view.GravityCompat;
+import androidx.drawerlayout.widget.DrawerLayout;
 
 import android.app.Activity;
 import android.content.Context;
@@ -20,6 +23,9 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
+import com.google.android.gms.auth.api.signin.GoogleSignIn;
+import com.google.android.gms.auth.api.signin.GoogleSignInClient;
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -27,6 +33,8 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -38,6 +46,7 @@ import java.util.Locale;
 public class Disaster_Details extends AppCompatActivity implements OnMapReadyCallback {
     RequestQueue queue;
     public static int subpartID,disID;
+    GoogleSignInClient mGoogleSignInClient;
     public static String isOpenForVolunteer;
     public static String subpartName,disname,missingPerson,rescuedPerson,status,level,
             subpartAdres,
@@ -50,13 +59,17 @@ public class Disaster_Details extends AppCompatActivity implements OnMapReadyCal
     ArrayList<JSONObject> list2 = new ArrayList<JSONObject>();
     static ArrayList<JSONObject> subpartList = new ArrayList<JSONObject>();
     static String selectedSubpartID = "";
-
+    DrawerLayout drawerLayout;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_disaster__details);
+        drawerLayout = findViewById(R.id.detail_dis);
+        GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                .requestEmail()
+                .build();
+        mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
         queue = Volley.newRequestQueue(this);
-        findViewById(R.id.disaster_detail_geri_button).setOnClickListener(this::onClick);
         // findViewById(R.id.Create_new_Subpart).setOnClickListener(this::onClick);
         queue = Volley.newRequestQueue(this);
         list2 = new ArrayList<JSONObject>();
@@ -102,11 +115,6 @@ public class Disaster_Details extends AppCompatActivity implements OnMapReadyCal
 
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.disaster_detail_geri_button:
-                //  Intent intent = new Intent(this, Authorized_Notification.class); //DEGISECEK
-                //  startActivity(intent);
-                finish();
-                break;
             case R.id.afetolusturBTN:
                 Intent intent = new Intent(this, Create_Subpart_On_Map.class);
                 intent.putExtra("json", data.toString());
@@ -349,5 +357,91 @@ public class Disaster_Details extends AppCompatActivity implements OnMapReadyCal
         }
 
         return markerList;
+    }
+
+
+    public void ClickMenu(View view) {
+        //open drawer
+        openDrawer(drawerLayout);
+    }
+
+    static void openDrawer(DrawerLayout drawerLayout) {
+        //Open drawer Layout
+        drawerLayout.openDrawer(GravityCompat.START);
+    }
+
+    public void ClickLogo(View view) {
+        //Close drawer
+        System.out.println("logo");
+    }
+
+    public static void closeDrawer(DrawerLayout drawerLayout) {
+        //Close drawer layout
+        //check condition
+        if (drawerLayout.isDrawerOpen(GravityCompat.START)) {
+            //when driver is open
+            //close drawer
+            drawerLayout.closeDrawer(GravityCompat.START);
+        }
+    }
+
+
+    /*
+     *************************************** ASAGIDAKI KISIMLAR YONLENDIRMELERI AYARLAR
+     */
+    private void signOut() {
+        mGoogleSignInClient.signOut()
+                .addOnCompleteListener(this, new OnCompleteListener<Void>() {
+                    public void onComplete(@NonNull Task<Void> task) {
+                        System.out.println("Cikis basarili");
+                    }
+                });
+    }
+
+    // IHBARLAR
+    public void ClickAuthorizedNotice(View view) {
+        redirectActivity(this, Authorized_Notification.class);
+    }
+
+    // AKTIF AFET
+    public void ClickAuthorizeActiveDisaster(View view) {
+        redirectActivity(this, Authorized_ActiveDisasters.class);
+    }
+
+    // PERSONEL KAYIT
+    public void ClickAuthorizedPersonelRegistration(View view) {
+        redirectActivity(this, Authorized_PersonelRegister.class);
+    }
+
+    // GONULLU ISTEKLERI
+    public void ClickAuthrizedVolunteerRequest(View view) {
+        redirectActivity(this, Authorized_VolunteerRequest.class);
+    }
+    //MESAJ
+
+    // CIKIS
+    public void ClickAuthorizedExit(View view) {
+        signOut();
+        redirectActivity(this, MainActivity.class);
+    }
+
+    public void ClickNotificationSend(View view) {
+        redirectActivity(this, Authorized_Send_Notification.class);
+    }
+
+    // ANA SAYFA
+    public void ClickAuthAnasayfa(View view) {
+        // ZATEN BU SAYFADA OLDUGUNDAN KAPALI
+        redirectActivity(this, Authorized_Anasayfa.class );
+    }
+    public void ClickAuthorizedPersoneller(View view) {
+        redirectActivity(this, Authorized_Anasayfa.class );
+    }
+    public void ClickAuthorizedEkipman(View view) {
+        redirectActivity(this, Authorized_Anasayfa.class );
+    }
+
+    public void ClickAuthorizedTeam(View view) {
+        redirectActivity(this, Authorized_Anasayfa.class );
     }
 }

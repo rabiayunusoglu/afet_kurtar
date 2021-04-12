@@ -1379,6 +1379,15 @@ public class Authorized_Edit_Team extends AppCompatActivity {
     }
 
 
+    public void ClickAuthorizedPersoneller(View view) {
+        redirectActivity(this, Authorized_Anasayfa.class );
+    }
+    public void ClickAuthorizedEkipman(View view) {
+        redirectActivity(this, Authorized_Anasayfa.class );
+    }
 
+    public void ClickAuthorizedTeam(View view) {
+        redirectActivity(this, Authorized_Anasayfa.class );
+    }
 
 }// class end

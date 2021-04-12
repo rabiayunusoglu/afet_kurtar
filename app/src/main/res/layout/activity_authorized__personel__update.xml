@@ -4,18 +4,15 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:id="@+id/drawer_layout_disaster_create"
-    tools:context=".DisasterCreate">
-
+    android:id="@+id/drawer_layout_per_updat"
+    tools:context=".Authorized_Personel_Update">
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
-
         <include
-            layout="@layout/activity_aut_create_dis">
-
+            layout="@layout/activity_aut_per_up">
         </include>
+
     </LinearLayout>
     <RelativeLayout
         android:layout_width="300dp"
@@ -26,6 +23,4 @@
         <include
             layout="@layout/activity_authorized_nav_drawer"/>
     </RelativeLayout>
-
-
 </androidx.drawerlayout.widget.DrawerLayout>

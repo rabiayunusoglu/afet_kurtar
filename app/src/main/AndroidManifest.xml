@@ -6,6 +6,8 @@
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
@@ -19,7 +21,6 @@
         android:maxSdkVersion="18" />
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
 
-
     <uses-feature
         android:name="android.hardware.Camera"
         android:required="true" />
@@ -30,8 +31,10 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/Theme.AfetKurtar">
-        <activity android:name=".Authorized_VolunteerRequest3"></activity>
+        android:theme="@style/Theme.AppCompat.Light.NoActionBar">
+        <activity android:name=".Authorized_Personel_Update"></activity>
+        <activity android:name=".Authorized_Personeller" />
+        <activity android:name=".Authorized_VolunteerRequest3" />
         <activity android:name=".Authorized_VolunteerRequest2" />
         <activity android:name=".Authorized_VolunteerRequest" />
         <activity android:name=".Personel_Information" />
@@ -107,8 +110,7 @@
                 <action android:name="com.google.firebase.INSTANCE_ID_EVENT" />
             </intent-filter>
         </service>
-
-        <service android:name=".GetLocationService"></service>
+        <service android:name=".GetLocationService" />
     </application>
 
 </manifest>

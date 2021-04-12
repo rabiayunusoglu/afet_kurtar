@@ -220,5 +220,14 @@ public class Authorized_Send_Notification extends AppCompatActivity {
     public void ClickAuthAnasayfa(View view) {
         redirectActivity(this, Authorized_Anasayfa.class );
     }
+    public void ClickAuthorizedPersoneller(View view) {
+        redirectActivity(this, Authorized_Anasayfa.class );
+    }
+    public void ClickAuthorizedEkipman(View view) {
+        redirectActivity(this, Authorized_Anasayfa.class );
+    }
 
+    public void ClickAuthorizedTeam(View view) {
+        redirectActivity(this, Authorized_Anasayfa.class );
+    }
 }

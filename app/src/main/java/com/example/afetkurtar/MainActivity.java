@@ -223,7 +223,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         } catch (Exception e) {
             e.getMessage();
         }
-        System.out.println("++++++++++++++++++++++++++Our personnel update object: " + obj.toString());
+       // System.out.println("++++++++++++++++++++++++++Our personnel update object: " + obj.toString());
         JsonObjectRequest request = new JsonObjectRequest(Request.Method.POST, "https://afetkurtar.site/api/personnelUser/update.php", obj, new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
@@ -330,7 +330,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         } catch (Exception e) {
             e.getMessage();
         }
-        System.out.println("++++++++++++++++++++++++++Our volunteer user update object: " + obj.toString());
+        //System.out.println("++++++++++++++++++++++++++Our volunteer user update object: " + obj.toString());
         JsonObjectRequest request = new JsonObjectRequest(Request.Method.POST, "https://afetkurtar.site/api/volunteerUser/update.php", obj, new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
@@ -498,7 +498,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
                             if(tmpJson.getString("userToken").equals(FirebaseInstanceId.getInstance().getToken())){
                                 // ****************************************************************************************** TEST ICIN USER TYPE AYARLAMA YERI
-                                type = "personnelUser";
+                                type = "authorizedUser";
                                 // ****************************************************************************************** TEST ICIN USER TYPE AYARLAMA YERI
                                 Intent intentLogin = null;
                                 try {

@@ -1,7 +1,9 @@
 package com.example.afetkurtar;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 
 import android.app.Activity;
@@ -24,6 +26,9 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
+import com.google.android.gms.auth.api.signin.GoogleSignIn;
+import com.google.android.gms.auth.api.signin.GoogleSignInClient;
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -31,6 +36,8 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -44,6 +51,7 @@ import java.util.List;
 public class Disaster_Update extends AppCompatActivity implements OnMapReadyCallback {
     ArrayList<String> arrayListAfetType = new ArrayList<>();
     ArrayAdapter<String> adapterAfetType;
+    GoogleSignInClient mGoogleSignInClient;
     ArrayList<String> arrayListEmergencyLevel = new ArrayList<>();
     ArrayAdapter<String> adapterEmergencyLevel;
     ArrayList<String> arrayListAfetBase = new ArrayList<>();
@@ -68,11 +76,17 @@ public class Disaster_Update extends AppCompatActivity implements OnMapReadyCall
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_disaster__update);
+        drawerLayout = findViewById(R.id.drawer_layout_disaster_update);
+        GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                .requestEmail()
+                .build();
+        mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
         queue = Volley.newRequestQueue(this);
         type = findViewById(R.id.disastertypeBtnUpdate);
         levell = findViewById(R.id.disasterlevelBtnUpdate);
         base = findViewById(R.id.disasterussuBtnUpdate);
         latitude = findViewById(R.id.latitudeBtnUpdate);
+
         longtitude = findViewById(R.id.longtitudeBtnUpdate);
         afetName = findViewById(R.id.disasterNameBtnUpdate);
         loadSpinnerAfetBase();
@@ -84,7 +98,6 @@ public class Disaster_Update extends AppCompatActivity implements OnMapReadyCall
         longtitude.setText(Authorized_ActiveDisasters.disasterlongitude);
         afetName.setText(Authorized_ActiveDisasters.disasterName);
         gonder = findViewById(R.id.afetupdateBTN);
-        geri = findViewById(R.id.disaster_update_geri_button);
         sil = findViewById(R.id.delete_disasater_Btn);
         try {
 
@@ -107,12 +120,6 @@ public class Disaster_Update extends AppCompatActivity implements OnMapReadyCall
             @Override
             public void onClick(View v) {
                 delete();
-            }
-        });
-        geri.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                finish();
             }
         });
         gonder.setOnClickListener(new View.OnClickListener() {
@@ -151,7 +158,7 @@ public class Disaster_Update extends AppCompatActivity implements OnMapReadyCall
                 });
                 queue.add(request);
                 Toast.makeText(Disaster_Update.this, "Afet Güncellendi.", Toast.LENGTH_SHORT).show();
-                finish();
+                redirectActivity(Disaster_Update.this, Authorized_ActiveDisasters.class);
             }
         });
     }
@@ -188,8 +195,9 @@ public class Disaster_Update extends AppCompatActivity implements OnMapReadyCall
     }
 
     public void ReturnBack() {
-        redirectActivity(this,Authorized_ActiveDisasters.class);
+        redirectActivity(this, Authorized_ActiveDisasters.class);
     }
+
     public static void redirectActivity(Activity activity, Class aClass) {
         //initialize intent
         Intent intent = new Intent(activity, aClass);
@@ -544,4 +552,90 @@ public class Disaster_Update extends AppCompatActivity implements OnMapReadyCall
         }
 
     }
+
+    public void ClickMenu(View view) {
+        //open drawer
+        openDrawer(drawerLayout);
+    }
+
+    static void openDrawer(DrawerLayout drawerLayout) {
+        //Open drawer Layout
+        drawerLayout.openDrawer(GravityCompat.START);
+    }
+
+    public void ClickLogo(View view) {
+        //Close drawer
+        System.out.println("logo");
+    }
+
+    public static void closeDrawer(DrawerLayout drawerLayout) {
+        //Close drawer layout
+        //check condition
+        if (drawerLayout.isDrawerOpen(GravityCompat.START)) {
+            //when driver is open
+            //close drawer
+            drawerLayout.closeDrawer(GravityCompat.START);
+        }
+    }
+
+
+    /*
+     *************************************** ASAGIDAKI KISIMLAR YONLENDIRMELERI AYARLAR
+     */
+    private void signOut() {
+        mGoogleSignInClient.signOut()
+                .addOnCompleteListener(this, new OnCompleteListener<Void>() {
+                    public void onComplete(@NonNull Task<Void> task) {
+                        System.out.println("Cikis basarili");
+                    }
+                });
+    }
+
+    // IHBARLAR
+    public void ClickAuthorizedNotice(View view) {
+        redirectActivity(this, Authorized_Notification.class);
+    }
+
+    // AKTIF AFET
+    public void ClickAuthorizeActiveDisaster(View view) {
+        redirectActivity(this, Authorized_ActiveDisasters.class);
+    }
+
+    // PERSONEL KAYIT
+    public void ClickAuthorizedPersonelRegistration(View view) {
+        redirectActivity(this, Authorized_PersonelRegister.class);
+    }
+
+    // GONULLU ISTEKLERI
+    public void ClickAuthrizedVolunteerRequest(View view) {
+        redirectActivity(this, Authorized_VolunteerRequest.class);
+    }
+    //MESAJ
+
+    // CIKIS
+    public void ClickAuthorizedExit(View view) {
+        signOut();
+        redirectActivity(this, MainActivity.class);
+    }
+
+    public void ClickNotificationSend(View view) {
+        redirectActivity(this, Authorized_Send_Notification.class);
+    }
+
+    // ANA SAYFA
+    public void ClickAuthAnasayfa(View view) {
+        // ZATEN BU SAYFADA OLDUGUNDAN KAPALI
+        redirectActivity(this, Authorized_Anasayfa.class);
+    }
+    public void ClickAuthorizedPersoneller(View view) {
+        redirectActivity(this, Authorized_Personeller.class );
+    }
+    public void ClickAuthorizedEkipman(View view) {
+        redirectActivity(this, Authorized_Anasayfa.class );
+    }
+
+    public void ClickAuthorizedTeam(View view) {
+        redirectActivity(this, Authorized_Anasayfa.class );
+    }
 }
+

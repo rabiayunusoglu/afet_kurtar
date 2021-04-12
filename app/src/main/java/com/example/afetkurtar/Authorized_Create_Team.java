@@ -559,6 +559,15 @@ public class Authorized_Create_Team extends AppCompatActivity {
         redirectActivity(this, Authorized_Anasayfa.class );
     }
 
+    public void ClickAuthorizedPersoneller(View view) {
+        redirectActivity(this, Authorized_Anasayfa.class );
+    }
+    public void ClickAuthorizedEkipman(View view) {
+        redirectActivity(this, Authorized_Anasayfa.class );
+    }
 
+    public void ClickAuthorizedTeam(View view) {
+        redirectActivity(this, Authorized_Anasayfa.class );
+    }
 
 }//class end

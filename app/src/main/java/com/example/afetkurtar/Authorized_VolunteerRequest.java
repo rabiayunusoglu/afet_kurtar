@@ -237,8 +237,17 @@ public class Authorized_VolunteerRequest extends AppCompatActivity {
     // ANA SAYFA
     public void ClickAuthAnasayfa(View view) {
         // ZATEN BU SAYFADA OLDUGUNDAN KAPALI
-        //redirectActivity(this, Authorized_Anasayfa.class );
+        redirectActivity(this, Authorized_Anasayfa.class );
+    }
+    public void ClickAuthorizedPersoneller(View view) {
+        redirectActivity(this, Authorized_Anasayfa.class );
+    }
+    public void ClickAuthorizedEkipman(View view) {
+        redirectActivity(this, Authorized_Anasayfa.class );
     }
 
+    public void ClickAuthorizedTeam(View view) {
+        redirectActivity(this, Authorized_Anasayfa.class );
+    }
 
 }

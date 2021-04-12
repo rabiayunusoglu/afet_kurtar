@@ -2,24 +2,19 @@ package com.example.afetkurtar;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 
 import android.app.Activity;
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.location.Address;
 import android.location.Geocoder;
-import android.os.AsyncTask;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -33,58 +28,45 @@ import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 
-import org.apache.http.HttpResponse;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.entity.mime.HttpMultipartMode;
-import org.apache.http.entity.mime.MultipartEntity;
-import org.apache.http.entity.mime.content.FileBody;
-import org.apache.http.impl.client.DefaultHttpClient;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
-public class Authorized_ActiveDisasters extends AppCompatActivity {
+public class Authorized_Personeller extends AppCompatActivity {
     RequestQueue queue;
     GoogleSignInClient mGoogleSignInClient;
     public static int disasterID;
-    public static String disasterName,
-            disasterBase,
-            disasterDate,
-            disasterType,
-            emergencyLevel,
+    public static String disasterName,time,
+            disasterrole,
+            disasteremail,
+            disasterTeamid,
+            emergencyins,
             disasterlatitude,
             disasterlongitude;
     public static Double latitude, longtitude;
     static int k = 0;
     ArrayList<JSONObject> list2 = new ArrayList<JSONObject>();
     DrawerLayout drawerLayout;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_authorized__active_disasters);
+        setContentView(R.layout.activity_authorized__personeller);
+        drawerLayout = findViewById(R.id.per);
         queue = Volley.newRequestQueue(this);
-        drawerLayout = findViewById(R.id.activedisaster);
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestEmail()
                 .build();
         mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
-
         list2 = new ArrayList<JSONObject>();
         getData("");
     }
-
-    @Override
     protected void onRestart() {
         super.onRestart();
 
-        ((LinearLayout) findViewById(R.id.auth_lay_DisasterScroll)).removeAllViews();
+        ((LinearLayout) findViewById(R.id.auth_lay_perScroll)).removeAllViews();
         list2 = new ArrayList<JSONObject>();
         getData("");
     }
@@ -93,7 +75,7 @@ public class Authorized_ActiveDisasters extends AppCompatActivity {
         JSONObject obj = new JSONObject();
 
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest
-                (Request.Method.GET, "https://afetkurtar.site/api/disasterEvents/read.php", obj, new Response.Listener<JSONObject>() {
+                (Request.Method.GET, "https://afetkurtar.site/api/personnelUser/read.php", obj, new Response.Listener<JSONObject>() {
 
                     @Override
                     public void onResponse(JSONObject response) {
@@ -148,7 +130,7 @@ public class Authorized_ActiveDisasters extends AppCompatActivity {
         for (JSONObject x : list2) {
             LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             View view = inflater.inflate(R.layout.activity_personel_history_addlayout, null);
-            LinearLayout scroll = findViewById(R.id.auth_lay_DisasterScroll);
+            LinearLayout scroll = findViewById(R.id.auth_lay_perScroll);
             TextView linear = (TextView) view.findViewById(R.id.HistoryText); // personel_history ile ayni addlayout'u kullaniyor
             linear.setTextSize(20);
 
@@ -167,7 +149,7 @@ public class Authorized_ActiveDisasters extends AppCompatActivity {
                     addres = addresses.get(0).getAddressLine(0);
                 } catch (Exception e) {
                 }
-                linear.setText("ID: " + x.getString("disasterID") + "\n" + "İsim : " + x.getString("disasterName"));
+                linear.setText("ID: " + x.getString("personnelID") + "\n" + "İsim : " + x.getString("personnelName")+"\n" + "Mail : " + x.getString("personnelEmail"));
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -178,8 +160,8 @@ public class Authorized_ActiveDisasters extends AppCompatActivity {
 
     }
 
-    public void ClickDisasterCreate(View view) {
-        redirectActivity(this, DisasterCreate.class);
+    public void ClickPerCreate(View view) {
+        redirectActivity(this, Authorized_PersonelRegister.class);
     }
 
     public void onClick(View v) {
@@ -192,17 +174,18 @@ public class Authorized_ActiveDisasters extends AppCompatActivity {
                 // tmp = tmp.substring(0,tmp.indexOf(" ")).trim(); // **************************************** MESAJI DEGISTIRIRSEN BURAYI AYARLA
                 // System.out.println(tmp);
 
-                Intent asd = new Intent(this, Disaster_Details.class);
+                Intent asd = new Intent(this, Authorized_Personel_Update.class);
                 JSONObject json = new JSONObject();
                 for (JSONObject x : list2) {
                     try {
-                        if (x.getString("disasterID").equals(tmp.trim())) {
-                            disasterID = Integer.parseInt(x.getString("disasterID"));
-                            disasterName = x.getString("disasterName");
-                            disasterBase = x.getString("disasterBase");
-                            disasterDate = x.getString("disasterDate");
-                            disasterType = x.getString("disasterType");
-                            emergencyLevel = x.getString("emergencyLevel");
+                        if (x.getString("personnelID").equals(tmp.trim())) {
+                            disasterID = Integer.parseInt(x.getString("personnelID"));
+                            disasterName = x.getString("personnelName");
+                            disasteremail = x.getString("personnelEmail");
+                            disasterrole = x.getString("personnelRole");
+                            disasterTeamid = x.getString("teamID");
+                            emergencyins = x.getString("institution");
+                            time=x.getString("locationTime");
                             disasterlatitude = x.getString("latitude");
                             disasterlongitude = x.getString("longitude");
                             json = x;
@@ -223,22 +206,10 @@ public class Authorized_ActiveDisasters extends AppCompatActivity {
 
     }
 
-    public static void redirectActivity(Activity activity, Class aClass) {
-        //initialize intent
-        Intent intent = new Intent(activity, aClass);
-        //Set flag
-        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        //Start activity
-        activity.startActivity(intent);
-
-    }
-
-
     public void ClickMenu(View view) {
         //open drawer
         openDrawer(drawerLayout);
     }
-
     static void openDrawer(DrawerLayout drawerLayout) {
         //Open drawer Layout
         drawerLayout.openDrawer(GravityCompat.START);
@@ -308,6 +279,15 @@ public class Authorized_ActiveDisasters extends AppCompatActivity {
         // ZATEN BU SAYFADA OLDUGUNDAN KAPALI
         redirectActivity(this, Authorized_Anasayfa.class );
     }
+    public static void redirectActivity(Activity activity, Class aClass) {
+        //initialize intent
+        Intent intent = new Intent(activity, aClass);
+        //Set flag
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        //Start activity
+        activity.startActivity(intent);
+
+    }
     public void ClickAuthorizedPersoneller(View view) {
         redirectActivity(this, Authorized_Personeller.class );
     }
@@ -318,4 +298,5 @@ public class Authorized_ActiveDisasters extends AppCompatActivity {
     public void ClickAuthorizedTeam(View view) {
         redirectActivity(this, Authorized_Anasayfa.class );
     }
+
 }

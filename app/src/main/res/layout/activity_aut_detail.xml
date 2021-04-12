@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:id="@+id/detail_dis"
+    android:orientation="vertical"
+    tools:context=".Disaster_Details">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <include
+            layout="@layout/activity_tool_bar">
+        </include>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_gravity="center_horizontal"
+        android:orientation="horizontal">
+
+
+
+        <Button
+            android:id="@+id/Create_update_afet"
+            android:layout_width="157dp"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
+            android:layout_weight="1"
+            android:onClick="ClickUpdateAfetBilgisi"
+            android:text="Afet Bilgisini Güncelle"
+            android:textColor="@color/black"
+            app:backgroundTint="#9CCC65">
+
+        </Button>
+        <Space
+            android:layout_width="10dp"
+            android:layout_height="8dp"
+            android:layout_weight="1"></Space>
+
+        <Button
+            android:id="@+id/afetolusturBTN"
+            android:layout_width="164dp"
+            android:layout_height="match_parent"
+            android:layout_gravity="right"
+            android:layout_weight="1"
+            android:onClick="ClickCreateSubpart"
+            android:text="Afet Parçası Oluştur"
+            android:textColor="@color/white"
+            app:backgroundTint="@color/purple_500"
+            app:iconTint="#FFFFFF"
+            tools:ignore="OnClick">
+
+        </Button>
+    </LinearLayout>
+
+
+    <ScrollView
+        android:id="@+id/LayoutSubpart"
+        android:layout_width="match_parent"
+        android:layout_height="300dp"
+        android:layout_marginTop="2dp"
+        android:background="#BFBFBF"
+        app:layout_constraintTop_toBottomOf="@id/history_geri_button"
+        tools:ignore="MissingConstraints">
+
+        <LinearLayout
+            android:id="@+id/auth_lay_SubpartScroll"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:gravity="center_vertical"
+            android:orientation="vertical">
+
+        </LinearLayout>
+
+
+    </ScrollView>
+
+    <Space
+        android:layout_width="0dp"
+        android:layout_height="8dp"
+        android:layout_weight="0"></Space>
+
+    <LinearLayout
+
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:orientation="vertical"
+        tools:ignore="MissingConstraints">
+
+        <fragment xmlns:android="http://schemas.android.com/apk/res/android"
+            xmlns:tools="http://schemas.android.com/tools"
+            android:id="@+id/disaster_Detail_map"
+            android:name="com.google.android.gms.maps.SupportMapFragment"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="0"
+            android:gravity="center"
+            android:text="KONUM"
+            android:textSize="10sp"></TextView>
+
+    </LinearLayout>
+
+</LinearLayout>
