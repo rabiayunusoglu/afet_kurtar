@@ -74,15 +74,21 @@ public class Personel_Anasayfa extends AppCompatActivity {
                             String cevap = response.getString("records");
                             cevap = cevap.substring(1, cevap.length() - 1);
                             JSONObject tmpJson = new JSONObject(cevap);
-                           PersonelInfo = tmpJson;
-                           Yetki = tmpJson.getString("personnelRole");
-                            try {
-                                if((bundle.getString("title")).equals("Yeni Mesaj")){
-                                    messageRedirect();
+                            if(tmpJson.getString("personnelID").equals(MainActivity.userInfo.getString("userID"))) {
+                                PersonelInfo = tmpJson;
+                                Yetki = tmpJson.getString("personnelRole");
+                                try {
+                                    if((bundle.getString("title")).equals("Yeni Mesaj")){
+                                        messageRedirect();
+                                    }
                                 }
-                            }
-                            catch (Exception e){
+                                catch (Exception e){
 
+                                }
+
+                            }
+                            else{
+                            printError();
                             }
                         } catch (Exception e) {
                             e.printStackTrace();
@@ -97,6 +103,10 @@ public class Personel_Anasayfa extends AppCompatActivity {
                 });
         queue.add(jsonObjectRequest);
     }
+    public void printError(){
+        Toast.makeText(getApplicationContext(), "Bir Hata İle Karşılaşıldı Lütfen Tekrar Deneyin", Toast.LENGTH_LONG).show();
+    }
+
     public void messageRedirect(){
         redirectActivity(this,MessageActivity.class);
     }
@@ -146,7 +156,7 @@ public class Personel_Anasayfa extends AppCompatActivity {
      */
 
     public void ClickTeamManagement(View view) {
-       Yetki = "kaptan";  //*************************************************************************** TEST AMACLI KALDIRILACAK
+     //  Yetki = "kaptan";  //*************************************************************************** TEST AMACLI KALDIRILACAK
         if(Yetki.equalsIgnoreCase("kaptan"))
         redirectActivity(this, Personel_Progress.class);
         else

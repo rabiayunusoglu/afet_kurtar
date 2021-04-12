@@ -136,6 +136,7 @@ public class Personel_Progress extends AppCompatActivity  {
                 ******************************** GET TEM ID YERINE PERSONEL ANASAYFADA PERSONEL BILGILERI PUBLIC OLARAK TUTULACAK( GUNCELLENECEK)
      */
     public void getTeamID(){
+        /*
         String id = "";
     //    id = "3";
         JSONObject obj = new JSONObject();
@@ -159,8 +160,13 @@ public class Personel_Progress extends AppCompatActivity  {
                                 String cevap = response.getString("records");
                                 cevap = cevap.substring(1,cevap.length()-1);
                                 JSONObject tmp = new JSONObject(cevap);
-                                cevap = tmp.getString("personnelID");
-                                getTeamInfo(cevap);
+                                if(tmp.getString("personnelID").equals(MainActivity.userInfo.getString("userID"))) {
+                                    cevap = tmp.getString("teamID");
+                                    getTeamInfo(cevap);
+                                }
+                                else{
+                                  printError();
+                                }
                             } catch (JSONException e) {
                                 e.printStackTrace();
                             }
@@ -176,13 +182,26 @@ public class Personel_Progress extends AppCompatActivity  {
                     }
                 });
         queue.add(request);
+
+         */
+        try {
+
+                getTeamInfo(Personel_Anasayfa.PersonelInfo.getString("TeamID"));
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
+    public void printError(){
+        Toast.makeText(getApplicationContext(), "Bir Hata İle Karşılaşıldı Lütfen Tekrar Deneyin", Toast.LENGTH_LONG).show();
+    }
+
     public void getTeamInfo(String id){
 
         JSONObject obj = new JSONObject();
         try {
            // obj.put("teamID", id);
-            obj.put("teamID", 1); // TEST ETMEK ICIN KULLANILABILIR
+            obj.put("teamID", id); // TEST ETMEK ICIN KULLANILABILIR
         }catch (Exception e){
         }
 
@@ -219,7 +238,7 @@ public class Personel_Progress extends AppCompatActivity  {
         JSONObject obj = new JSONObject();
         try {
             // obj.put("teamID", id);
-            obj.put("subpartID", 1); // TEST AMACLI subID olarak degisecek *****************************************************
+            obj.put("subpartID", subID); // TEST AMACLI subID olarak degisecek *****************************************************
         }catch (Exception e){
         }
 
@@ -422,7 +441,12 @@ public class Personel_Progress extends AppCompatActivity  {
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.UpdateButton:
-                HandleUpdate();
+                try{
+                    TeamInfo.getString("teamID");
+                    HandleUpdate();
+                }catch (Exception e){
+                    printError();
+                }
 
                 break;
             case R.id.HistoryButton:
@@ -432,7 +456,7 @@ public class Personel_Progress extends AppCompatActivity  {
                     intent.putExtra("Sub_id", TeamInfo.getString("assignedSubpartID"));
                     startActivity(intent);
                 }catch (Exception e){
-
+                    printError();
                 }
                 break;
 
@@ -477,16 +501,20 @@ public class Personel_Progress extends AppCompatActivity  {
 
     }
 
-    public void CliackPersonelNotification(View view) {
+    public void ClickPersonelNotification(View view) {
         //  redirectActivity(this, Authorized_Notification.class);
     }
 
     public void ClickPersonelInfo(View view) {
-        // redirectActivity(this, Authorized_PersonelRegister.class);
+        redirectActivity(this, Personel_Information.class);
     }
 
-    public void ClşckPersonelArea(View view) {
-        // redirectActivity(this, Authorized_Notification.class);
+    public void ClickPersonelArea(View view) {
+        redirectActivity(this, Team_Member_Locations.class);
+    }
+    public void ClickPersonelMessage(View view) {
+
+        redirectActivity(this, MessageActivity.class);
     }
 
     // CIKIS
@@ -496,9 +524,10 @@ public class Personel_Progress extends AppCompatActivity  {
     }
     // ANA SAYFA
     public void ClickPersonelAnasayfa(View view) {
-
+        // ZATEN BU SAYFADA OLDUGUNDAN KAPALI
         redirectActivity(this, Personel_Anasayfa.class );
     }
+
 
     public static void redirectActivity(Activity activity, Class aClass) {
         //initialize intent

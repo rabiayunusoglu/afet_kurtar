@@ -52,7 +52,7 @@ public class Personel_Information extends AppCompatActivity {
         ((TextView)findViewById(R.id.Team_my_role)).setText(Personel_Anasayfa.Yetki);
         try {
             ((TextView)findViewById(R.id.Team_info_no)).setText(Personel_Anasayfa.PersonelInfo.getString("teamID"));
-        } catch (JSONException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
         setData();
@@ -62,44 +62,50 @@ public class Personel_Information extends AppCompatActivity {
 
     public void setData(){
         JSONObject obj = new JSONObject();
-
+        String id = "0";
         try {
-
-            obj.put("teamID", Personel_Anasayfa.PersonelInfo.getString("teamID"));
-        } catch (JSONException e) {
+            id = Personel_Anasayfa.PersonelInfo.getString("teamID");
+            obj.put("teamID", id);
+        } catch (Exception e) {
             e.printStackTrace();
         }
         // ASAGISI DEGISECEK -- TEST AMACLI YAPILDI
+        if(!id.equals("0")) {
+            JsonObjectRequest jsonObjectRequest = new JsonObjectRequest
+                    (Request.Method.POST, "https://afetkurtar.site/api/team/search.php", obj, new Response.Listener<JSONObject>() {
 
-        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest
-                (Request.Method.POST, "https://afetkurtar.site/api/team/search.php", obj, new Response.Listener<JSONObject>() {
+                        @Override
+                        public void onResponse(JSONObject response) {
+                            try {
+                                //  System.out.println(response.toString());
+                                String cevap = response.getString("records");
+                                cevap = cevap.substring(1, cevap.length() - 1);
+                                JSONObject tmpJson = new JSONObject(cevap);
 
-                    @Override
-                    public void onResponse(JSONObject response) {
-                        try {
-                            //  System.out.println(response.toString());
-                            String cevap = response.getString("records");
-                            cevap = cevap.substring(1, cevap.length() - 1);
-                            JSONObject tmpJson = new JSONObject(cevap);
-
-                            ((TextView)findViewById(R.id.Team_info_subpartno)).setText(tmpJson.getString("assignedSubpartID"));
-                            ((TextView)findViewById(R.id.personel_team_status)).setText(tmpJson.getString("status"));
-                            getSubpart(tmpJson.getString("assignedSubpartID"));
-                            getTeamNames();
-                        } catch (Exception e) {
-                            e.printStackTrace();
+                                ((TextView) findViewById(R.id.Team_info_subpartno)).setText(tmpJson.getString("assignedSubpartID"));
+                                ((TextView) findViewById(R.id.personel_team_status)).setText(tmpJson.getString("status"));
+                                getSubpart(tmpJson.getString("assignedSubpartID"));
+                                getTeamNames();
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
                         }
-                    }
-                }, new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        // TODO: Handle error
-                        System.out.println(error);
-                    }
-                });
-        queue.add(jsonObjectRequest);
+                    }, new Response.ErrorListener() {
+                        @Override
+                        public void onErrorResponse(VolleyError error) {
+                            // TODO: Handle error
+                            System.out.println(error);
+                        }
+                    });
+            queue.add(jsonObjectRequest);
+        }
+        else{
+            printError();
+        }
     }
-
+    public void printError(){
+        Toast.makeText(getApplicationContext(), "Takım Bulunamadı", Toast.LENGTH_LONG).show();
+    }
     public void getSubpart(String part){
         JSONObject obj = new JSONObject();
         try {
