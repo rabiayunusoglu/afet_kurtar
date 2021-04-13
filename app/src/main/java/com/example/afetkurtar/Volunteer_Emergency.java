@@ -177,6 +177,10 @@ public class Volunteer_Emergency extends AppCompatActivity {
         });
 
     }
+    @Override
+    public void onBackPressed() {
+        redirectActivity(this,Volunteer_Anasayfa.class);
+    }
 
     private void loadSpinnerDataAfet() {
         adapterAfet = new ArrayAdapter<String>(Volunteer_Emergency.this, android.R.layout.simple_spinner_dropdown_item, arrayListAfet);

@@ -111,12 +111,7 @@ public class MessageActivity extends AppCompatActivity {
 
         sv = ((ScrollView)findViewById(R.id.message_main_scroll));
 
-
-        //////AFTER INITALIZE necessary variables etc///////////////////////
-
         getUserInfo(); // this method get userID and userName
-
-
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             readMessage();// for Read oldest messages
@@ -128,9 +123,18 @@ public class MessageActivity extends AppCompatActivity {
     @Override
     protected void onStop() {
         super.onStop();
-        System.out.println("Unregister YAPTI");
-       unregisterReceiver(rec);
+
+        try {
+            unregisterReceiver(rec);
+        }catch (Exception e){
+
+        }
     }
+    @Override
+    public void onBackPressed() {
+        redirectActivity(this,Personel_Anasayfa.class);
+    }
+
     public void refreshActivity(){  //BURADA GELEN BILDIRIM MESAJ EKRANINDA ISEK YENILENECEK
         handleNewMessages();
     }
@@ -378,7 +382,7 @@ public class MessageActivity extends AppCompatActivity {
         queue.add(jsonObjectRequest);
     }
     public void handleResponseGetMessageDataFromDB(JSONObject a) {
-        //System.out.println("handleResponseGetMessageDataFromDB'e girdi");
+
         ArrayList<String> list = new ArrayList<String>();
         try {
 
@@ -404,8 +408,8 @@ public class MessageActivity extends AppCompatActivity {
         } catch (Exception e) {
             e.printStackTrace();
         }
-    }// handle response end
-    /////////////////////////////////////////////////burasi ve altındakiler drawer işlemleri için ancak drawer da bir kata mevcut onu sonra düzelt
+    }
+
     private void signOut() {
         LogoutHandler lout = new LogoutHandler(getApplicationContext());
         lout.updateUser();
@@ -473,7 +477,7 @@ public class MessageActivity extends AppCompatActivity {
         redirectActivity(this, Team_Member_Locations.class);
     }
     public void ClickPersonelMessage(View view) {
-        redirectActivity(this, MessageActivity.class);
+       // redirectActivity(this, MessageActivity.class);
     }
 
     // CIKIS

@@ -6,6 +6,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:id="@+id/personnel_screen_drawer_layout"
+
    >
 
 
@@ -13,15 +14,17 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
+
         >
 
         <include layout="@layout/activity_tool_bar"></include>
 
 
         <LinearLayout
+
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/white"
+            android:background="#BFBFBF"
             android:orientation="vertical"
             android:paddingLeft="30dp"
             android:paddingRight="30dp"
@@ -30,22 +33,23 @@
             <TextView
             android:layout_width="wrap_content"
             android:layout_height="18dp"
-            android:background="@color/white"
+                android:background="#BFBFBF"
             android:text="En Son Durum :"
             android:textColor="#050505"
             android:textSize="15sp"
             android:textStyle="bold" />
             <ScrollView
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="42dp"
                 android:layout_gravity="center"
+                android:background="@color/white"
                 android:scrollbars="vertical">
                  <TextView
                     android:id="@+id/personel_current_status"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="fill_parent"
                     android:text="Yok"
-                    android:background="@color/white"
+
                     android:textColor="#050505"
                     android:textSize="18sp"
                     android:textStyle="bold"
@@ -63,19 +67,20 @@
             android:textStyle="bold" />
         <TextView
             android:id="@+id/personel_current_needManPower"
-            android:layout_width="wrap_content"
-            android:layout_height="22dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
             android:text="Yok"
-            android:layout_gravity="center"
+            android:background="@drawable/background_round"
+            android:gravity="center"
             android:textColor="#050505"
             android:textSize="18sp"
             android:textStyle="bold" />
         </LinearLayout>
 
         <LinearLayout
+            android:background="#BFBFBF"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/white"
             android:orientation="vertical"
             android:paddingLeft="30dp"
             android:paddingRight="30dp"
@@ -84,18 +89,19 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:background="@color/white"
+                android:background="#BFBFBF"
                 android:text="Kurtarılmış İnsan Sayısı :"
                 android:textColor="#050505"
                 android:textSize="15sp"
                 android:textStyle="bold" />
             <TextView
                 android:id="@+id/Rescued_Person"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="Yok"
-                android:layout_gravity="center"
-                android:background="@color/white"
+
+                android:gravity="center"
+                android:background="@drawable/background_round"
                 android:textColor="#050505"
                 android:textSize="18sp"
                 android:textStyle="bold" />
@@ -108,10 +114,11 @@
                 android:textStyle="bold" />
             <TextView
                 android:id="@+id/Missing_Person"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="Yok"
-                android:layout_gravity="center"
+                android:background="@drawable/background_round"
+                android:gravity="center"
                 android:textColor="#050505"
                 android:textSize="18sp"
                 android:textStyle="bold" />
@@ -120,7 +127,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/white"
+        android:background="#BFBFBF"
         android:orientation="vertical"
         android:paddingLeft="30dp"
         android:paddingRight="30dp"
@@ -131,7 +138,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
 
-            android:background="@color/white"
+            android:background="#BFBFBF"
             android:text="Afet Bolgesi Durum Güncelleme :"
             android:textColor="@color/black"
             android:textSize="18sp"
@@ -148,6 +155,7 @@
             android:scrollbars="vertical"
             android:ems="10"
             android:inputType="text"
+            android:background="@color/white"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -157,7 +165,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/white"
+        android:background="#BFBFBF"
         android:orientation="vertical"
         android:paddingLeft="30dp"
         android:paddingRight="30dp"
@@ -168,7 +176,7 @@
             android:layout_width="281dp"
             android:layout_height="26dp"
 
-            android:background="@color/white"
+            android:background="#BFBFBF"
             android:text="Talep Edilen Ek İnsan Gücü :"
             android:textColor="@color/black"
             android:textSize="18sp"
@@ -185,6 +193,7 @@
             android:scrollbars="vertical"
             android:ems="10"
             android:inputType="number"
+            android:background="@color/white"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -195,23 +204,24 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/white"
+        android:background="#BFBFBF"
         android:orientation="vertical"
         android:layout_weight="1"
         >
         <LinearLayout
             android:layout_width="480dp"
             android:layout_height="wrap_content"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:background="#BFBFBF">
 
             <TextView
                 android:id="@+id/text3"
                 android:layout_width="129dp"
                 android:layout_height="26dp"
+                android:background="#BFBFBF"
                 android:layout_marginStart="36dp"
                 android:layout_marginLeft="36dp"
                 android:layout_marginTop="30dp"
-                android:background="@color/white"
                 android:text="Miktarı :"
                 android:textColor="@color/black"
                 android:textSize="18sp" />
@@ -224,7 +234,7 @@
                 android:layout_marginLeft="50dp"
                 android:layout_marginTop="30dp"
                 android:layout_toRightOf="@id/text3"
-                android:background="@color/white"
+                android:background="#BFBFBF"
                 android:text="Ekipman :"
                 android:textColor="@color/black"
                 android:textSize="18sp"
@@ -242,6 +252,7 @@
                 android:layout_width="158dp"
                 android:layout_height="60dp"
                 android:ems="10"
+                android:background="@color/white"
                 android:inputType="number"
                 android:scrollbars="vertical"
                 app:layout_constraintBottom_toBottomOf="parent"
@@ -253,6 +264,7 @@
             <Spinner
                 android:id="@+id/listOfEquipment"
                 android:layout_width="246dp"
+                android:background="@color/white"
                 android:layout_height="match_parent"
                 android:layout_marginHorizontal="0.9dp"
                 />
@@ -261,21 +273,20 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/white"
-        android:orientation="vertical"
+        android:background="#BFBFBF"
+        android:orientation="horizontal"
         android:layout_weight="1"
         >
-        <LinearLayout
+        <Space
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:orientation="horizontal">
+            android:layout_weight="1"
+            ></Space>
             <Button
                 android:id="@+id/UpdateButton"
-                android:layout_width="150dp"
-                android:layout_height="46dp"
-                android:layout_marginStart="36dp"
-                android:layout_marginLeft="36dp"
-                android:layout_marginTop="30dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
                 android:background="@color/white"
                 android:text="İstek Oluştur Güncelle"
                 android:textColor="@color/black"
@@ -286,13 +297,16 @@
                 app:layout_constraintTop_toBottomOf="parent"
                 app:layout_constraintVertical_bias="0.5" />
 
+            <Space
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="3"
+                ></Space>
             <Button
                 android:id="@+id/HistoryButton"
-                android:layout_width="150dp"
-                android:layout_height="46dp"
-                android:layout_marginStart="36dp"
-                android:layout_marginLeft="36dp"
-                android:layout_marginTop="30dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
                 android:background="@color/white"
                 android:text="Durum Geçmişi"
                 android:textColor="@color/black"
@@ -303,7 +317,11 @@
                 app:layout_constraintTop_toBottomOf="parent"
                 app:layout_constraintVertical_bias="0.5" />
 
-        </LinearLayout>
+        <Space
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            ></Space>
     </LinearLayout>
 
     </LinearLayout>

@@ -77,6 +77,10 @@ public class Personel_Progress extends AppCompatActivity  {
 
         getTeamID();
     }
+    @Override
+    public void onBackPressed() {
+        redirectActivity(this,Personel_Anasayfa.class);
+    }
 
     JSONObject Equip;
     public void handleResponse(JSONObject a){

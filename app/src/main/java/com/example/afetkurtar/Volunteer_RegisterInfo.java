@@ -223,6 +223,10 @@ public class Volunteer_RegisterInfo extends AppCompatActivity {
             e.printStackTrace();
         }
     }
+    @Override
+    public void onBackPressed() {
+        redirectActivity(this,Volunteer_Anasayfa.class);
+    }
 
 
     private void checkUser() throws JSONException {

@@ -164,9 +164,10 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
             NotificationCompat.Builder builder = new NotificationCompat.Builder(this, "my_channel_01")
                     .setSmallIcon(R.mipmap.ic_launcher)
                     .setContentTitle(remoteMessage.getNotification().getTitle())
-                    .setContentText(remoteMessage.getNotification().getBody());
+                    .setContentText(remoteMessage.getNotification().getBody())
+                    .setAutoCancel(true);
 
-            Intent resultIntent = new Intent(this, MainActivity.class);
+           Intent resultIntent = new Intent();
             resultIntent.putExtra("title", remoteMessage.getData().get("title"));
             resultIntent.putExtra("body", remoteMessage.getData().get("body"));
             TaskStackBuilder stackBuilder = TaskStackBuilder.create(this);

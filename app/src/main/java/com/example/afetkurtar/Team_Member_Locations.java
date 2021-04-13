@@ -1,9 +1,13 @@
 package com.example.afetkurtar;
 
+
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.drawable.Drawable;
+
+import android.content.Intent;
+
 import android.location.Geocoder;
 import android.os.Bundle;
 import android.util.Log;
@@ -70,6 +74,14 @@ public class Team_Member_Locations extends AppCompatActivity implements OnMapRea
         }
 
     }//on map ready end
+
+    @Override
+    public void onBackPressed() {
+        Intent intent = new Intent(this,Personel_Anasayfa.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        startActivity(intent);
+    }
+
     public void initMap(){
         Log.d(TAG, "initMap: initializeing map");
         System.out.println("initMap içinde");

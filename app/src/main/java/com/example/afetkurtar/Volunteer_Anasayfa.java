@@ -53,6 +53,11 @@ public class Volunteer_Anasayfa extends AppCompatActivity {
 
 
     }
+    @Override
+    public void onBackPressed() {
+      //  redirectActivity(this,Volunteer_Anasayfa.class);
+    }
+
     public void ClickRegisterInfo(){
         redirectActivity(this,Volunteer_RegisterInfo.class);
     }

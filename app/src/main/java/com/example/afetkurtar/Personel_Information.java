@@ -58,7 +58,10 @@ public class Personel_Information extends AppCompatActivity {
         setData();
 
     }
-
+    @Override
+    public void onBackPressed() {
+        redirectActivity(this,Personel_Anasayfa.class);
+    }
 
     public void setData(){
         JSONObject obj = new JSONObject();

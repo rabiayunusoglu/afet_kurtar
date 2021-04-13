@@ -120,7 +120,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
 
     }
-
+    @Override
+    public void onBackPressed() {
+        Intent intent = new Intent();
+        intent.setAction(Intent.ACTION_MAIN);
+        intent.addCategory(Intent.CATEGORY_HOME);
+        startActivity(intent);
+    }
 
     private void checkUser(GoogleSignInAccount account) {
         String url = "https://afetkurtar.site/api/users/search.php";

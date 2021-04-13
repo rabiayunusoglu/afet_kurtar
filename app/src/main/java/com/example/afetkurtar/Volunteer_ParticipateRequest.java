@@ -101,6 +101,10 @@ public class Volunteer_ParticipateRequest extends AppCompatActivity  implements 
         mMap = googleMap;
 
     }
+    @Override
+    public void onBackPressed() {
+        redirectActivity(this,Volunteer_Anasayfa.class);
+    }
 
 
     private void loadSpinnerDataAfet(String url) {
