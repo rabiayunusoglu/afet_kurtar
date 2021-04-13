@@ -7,6 +7,7 @@ import androidx.drawerlayout.widget.DrawerLayout;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.location.Geocoder;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
@@ -26,6 +27,13 @@ import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
+import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 
@@ -36,11 +44,18 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-public class Volunteer_ParticipateRequest2 extends AppCompatActivity {
+public class Volunteer_ParticipateRequest2 extends AppCompatActivity implements OnMapReadyCallback{
 
     ArrayList<String> arrayListSubpart = new ArrayList<>();
     ArrayList<Integer> arrayListSubpartID = new ArrayList<Integer>();
     ArrayAdapter<String> adapterSubpart;
+    ArrayList<Double> arrayListLat = new ArrayList<>();
+    ArrayList<Double> arrayListLog = new ArrayList<>();
+    ArrayAdapter<String> adapterlat;
+    ArrayAdapter<String> adapterlog;
+    static double lat=0.0,longt=0.0;
+    private GoogleMap mMap;
+    private Geocoder geocoder;
     Button submits;
     public static JSONObject volInfo;
     String urlSubpart = "https://afetkurtar.site/api/subpart/search.php";
@@ -72,8 +87,8 @@ public class Volunteer_ParticipateRequest2 extends AppCompatActivity {
         afet =(EditText) findViewById(R.id.editAfet);
         afet.setText(Volunteer_ParticipateRequest.afetBolgesi);
         afet.setFocusableInTouchMode(false);
-        loadSpinnerDataSubpart(urlSubpart);
         arrayListSubpart.add("Seçilmedi");
+        loadSpinnerDataSubpart(urlSubpart);
         arrayListSubpartID.add(0);
         try {
             checkUser();
@@ -134,8 +149,15 @@ public class Volunteer_ParticipateRequest2 extends AppCompatActivity {
             }
         });
 
-
+        geocoder = new Geocoder(this);
+        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.vol_disaster_Detail_map2);
+        mapFragment.getMapAsync((OnMapReadyCallback) Volunteer_ParticipateRequest2.this);
     }
+    @Override
+    public void onMapReady(GoogleMap googleMap) {
+        mMap = googleMap;
+    }
+
     private void checkUser() throws JSONException {
         String url = "https://afetkurtar.site/api/volunteerUser/search.php";
 
@@ -196,6 +218,8 @@ public class Volunteer_ParticipateRequest2 extends AppCompatActivity {
 
                         while (responceStringSubpart.indexOf("}") > 1) {
                             if (responceStringSubpart.contains("{")) {
+                                String subpartlat = responceStringSubpart.substring(responceStringSubpart.indexOf("{"), responceStringSubpart.indexOf("}") + 1);
+                                String subpartlog = responceStringSubpart.substring(responceStringSubpart.indexOf("{"), responceStringSubpart.indexOf("}") + 1);
                                 String subpart = responceStringSubpart.substring(responceStringSubpart.indexOf("{"), responceStringSubpart.indexOf("}") + 1);
                                 String subpartID = responceStringSubpart.substring(responceStringSubpart.indexOf("{"), responceStringSubpart.indexOf("}") + 1);
                                 if (responceStringSubpart.contains("},"))
@@ -205,17 +229,39 @@ public class Volunteer_ParticipateRequest2 extends AppCompatActivity {
                                 }
                                 String value = "\"subpartName\":\"";
                                 String valueID="\"subpartID\":\"";
+                                String valuelat = "\"latitude\":\"";
+                                String valuelog = "\"longitude\":\"";
                                 String flag = "\"";
                                 String result = "";
+                                Double resultlat =0.0;
+                                Double resultlog = 0.0;
                                 int resultID=0;
                                 subpart = subpart.substring(subpart.indexOf(value) + value.length());
                                 result = subpart.substring(0, subpart.indexOf(flag));
                                 subpart = subpart.substring(subpart.indexOf("},") + 1);
                                 arrayListSubpart.add(result);
+                                subpartlat = subpartlat.substring(subpartlat.indexOf(valuelat) + valuelat.length());
+                                resultlat = Double.parseDouble(subpartlat.substring(0, subpartlat.indexOf(flag)));
+                                // subpart = subpart.substring(subpart.indexOf("},") + 1);
+                                System.out.println(resultlat);
+                                arrayListLat.add(resultlat);
+                                subpartlog = subpartlog.substring(subpartlog.indexOf(valuelog) + valuelog.length());
+                                resultlog = Double.parseDouble(subpartlog.substring(0, subpartlog.indexOf(flag)));
+                                subpartlog = subpartlog.substring(subpartlog.indexOf("},") + 1);
+                                System.out.println(resultlog);
+                                arrayListLog.add(resultlog);
                                 subpartID = subpartID.substring(subpartID.indexOf(valueID) + valueID.length());
                                 resultID = Integer.parseInt(subpartID.substring(0, subpartID.indexOf(flag)));
                                 subpartID= subpartID.substring(subpartID.indexOf("},") + 1);
                                 arrayListSubpartID.add(resultID);
+                                LatLng latLng = null;
+                                try {
+                                    latLng = new LatLng(resultlat,resultlog);
+                                    Marker marker = mMap.addMarker(new MarkerOptions().position(latLng).title(result));
+                                    mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 5));
+                                } catch (Exception e) {
+                                    e.printStackTrace();
+                                }
                             }
 
                         }
@@ -228,11 +274,20 @@ public class Volunteer_ParticipateRequest2 extends AppCompatActivity {
                             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                                 dataSupartName = adapterSubpart.getItem(position).toString();
                                 if(dataSupartName.equals("Seçilmedi")){
-                                    Toast.makeText(getApplicationContext(), "Afet alt parçası seçiniz!", Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(getApplicationContext(), "Bir alt parça seçiniz!", Toast.LENGTH_SHORT).show();
                                 }else{
                                     index = position;
                                     dataSupartID=arrayListSubpartID.get(index);
-                                    Toast.makeText(getApplicationContext(), dataSupartName, Toast.LENGTH_SHORT).show();
+                                    lat=(arrayListLat.get(index-1));
+                                    longt=(arrayListLog.get(index-1));
+                                    LatLng latLng = null;
+                                    try {
+                                        latLng = new LatLng(lat,longt);
+                                        Marker marker = mMap.addMarker(new MarkerOptions().position(latLng).title(dataSupartName));
+                                        mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 10));
+                                    } catch (Exception e) {
+                                        e.printStackTrace();
+                                    }
                                 }
 
                             }
@@ -248,7 +303,8 @@ public class Volunteer_ParticipateRequest2 extends AppCompatActivity {
                 new Response.ErrorListener() { // the error listener
                     @Override
                     public void onErrorResponse(VolleyError error) {
-                        System.out.println(error);
+                        Toast.makeText(getApplicationContext(), Volunteer_ParticipateRequest.afetBolgesi+"de, gönüllüler için açık bir altparça mevcut değildir! Başka bir afet bölgesi seçebilirsiniz. ", Toast.LENGTH_LONG).show();
+                        finish();
                     }
                 });
         queue.add(request);

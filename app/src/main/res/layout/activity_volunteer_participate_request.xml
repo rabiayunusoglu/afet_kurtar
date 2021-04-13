@@ -11,16 +11,10 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical">
-        <include
-            layout="@layout/activity_tool_bar">
-        </include>
 
-        <include layout="@layout/activity_tool_participate_request"></include>
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical"></LinearLayout>
+        <include layout="@layout/activity_vol_req"></include>
+
 
     </LinearLayout>
     <RelativeLayout

@@ -7,6 +7,7 @@ import androidx.drawerlayout.widget.DrawerLayout;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.location.Geocoder;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
@@ -26,6 +27,13 @@ import com.android.volley.toolbox.Volley;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
+import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 
@@ -34,10 +42,15 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 
-public class Volunteer_ParticipateRequest extends AppCompatActivity {
+public class Volunteer_ParticipateRequest extends AppCompatActivity  implements OnMapReadyCallback{
     ArrayList<String> arrayListAfet = new ArrayList<>();
     ArrayAdapter<String> adapterAfet;
     Button submit;
+    ArrayList<Double> arrayListLat = new ArrayList<>();
+    ArrayList<Double> arrayListLog = new ArrayList<>();
+    ArrayAdapter<String> adapterlat;
+    ArrayAdapter<String> adapterlog;
+    static double lat=0.0,longt=0.0;
     String urlAfet = "https://afetkurtar.site/api/disasterEvents/search.php";
     String url1 = "https://afetkurtar.site/api/volunteerUser/update.php";
     DrawerLayout drawerLayout;
@@ -46,7 +59,8 @@ public class Volunteer_ParticipateRequest extends AppCompatActivity {
     int index = 0;
     static String responceStringAfet = "", afetBolgesi = "";
     GoogleSignInClient mGoogleSignInClient;
-
+    private GoogleMap mMap;
+    private Geocoder geocoder;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -78,8 +92,16 @@ public class Volunteer_ParticipateRequest extends AppCompatActivity {
             }
         });
 
+        geocoder = new Geocoder(this);
+        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.vol_disaster_Detail_map);
+        mapFragment.getMapAsync((OnMapReadyCallback) Volunteer_ParticipateRequest.this);
+    }
+    @Override
+    public void onMapReady(GoogleMap googleMap) {
+        mMap = googleMap;
 
     }
+
 
     private void loadSpinnerDataAfet(String url) {
 
@@ -95,6 +117,9 @@ public class Volunteer_ParticipateRequest extends AppCompatActivity {
 
                         while (responceStringAfet.indexOf("}") > 1) {
                             if (responceStringAfet.contains("{")) {
+                                String subpartlat = responceStringAfet.substring(responceStringAfet.indexOf("{"), responceStringAfet.indexOf("}") + 1);
+                                String subpartlog= responceStringAfet.substring(responceStringAfet.indexOf("{"), responceStringAfet.indexOf("}") + 1);
+
                                 String subpart = responceStringAfet.substring(responceStringAfet.indexOf("{"), responceStringAfet.indexOf("}") + 1);
                                 if (responceStringAfet.contains("},"))
                                     responceStringAfet = responceStringAfet.substring(responceStringAfet.indexOf("}") + 2);
@@ -102,12 +127,35 @@ public class Volunteer_ParticipateRequest extends AppCompatActivity {
                                     responceStringAfet = responceStringAfet.substring(responceStringAfet.indexOf("}") + 1);
                                 }
                                 String value = "\"disasterName\":\"";
+                                String valuelat = "\"latitude\":\"";
+                                String valuelog = "\"longitude\":\"";
                                 String flag = "\"";
                                 String result = "";
+                                Double resultlat =0.0;
+                                Double resultlog = 0.0;
                                 subpart = subpart.substring(subpart.indexOf(value) + value.length());
                                 result = subpart.substring(0, subpart.indexOf(flag));
                                 subpart = subpart.substring(subpart.indexOf("},") + 1);
+                                System.out.println("result");
                                 arrayListAfet.add(result);
+                                subpartlat = subpartlat.substring(subpartlat.indexOf(valuelat) + valuelat.length());
+                                resultlat = Double.parseDouble(subpartlat.substring(0, subpartlat.indexOf(flag)));
+                                // subpart = subpart.substring(subpart.indexOf("},") + 1);
+                                System.out.println(resultlat);
+                                arrayListLat.add(resultlat);
+                                subpartlog = subpartlog.substring(subpartlog.indexOf(valuelog) + valuelog.length());
+                                resultlog = Double.parseDouble(subpartlog.substring(0, subpartlog.indexOf(flag)));
+                                subpartlog = subpartlog.substring(subpartlog.indexOf("},") + 1);
+                                System.out.println(resultlog);
+                                arrayListLog.add(resultlog);
+                                LatLng latLng = null;
+                                try {
+                                    latLng = new LatLng(resultlat,resultlog);
+                                    Marker marker = mMap.addMarker(new MarkerOptions().position(latLng).title(result));
+                                    mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 5));
+                                } catch (Exception e) {
+                                    e.printStackTrace();
+                                }
                             }
 
                         }
@@ -123,7 +171,16 @@ public class Volunteer_ParticipateRequest extends AppCompatActivity {
                                     Toast.makeText(getApplicationContext(), "Afet bölgesi seçiniz!", Toast.LENGTH_SHORT).show();
                                 } else {
                                     index = position;
-                                    Toast.makeText(getApplicationContext(), afetBolgesi, Toast.LENGTH_SHORT).show();
+                                    lat=(arrayListLat.get(index-1));
+                                    longt=(arrayListLog.get(index-1));
+                                    LatLng latLng = null;
+                                    try {
+                                        latLng = new LatLng(lat,longt);
+                                        Marker marker = mMap.addMarker(new MarkerOptions().position(latLng).title(afetBolgesi));
+                                        mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 10));
+                                    } catch (Exception e) {
+                                        e.printStackTrace();
+                                    }
                                 }
                             }
 

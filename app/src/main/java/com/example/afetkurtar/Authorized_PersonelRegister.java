@@ -36,6 +36,7 @@ import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.iid.FirebaseInstanceId;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -54,7 +55,9 @@ public class Authorized_PersonelRegister extends AppCompatActivity {
     GoogleSignInClient mGoogleSignInClient;
     private EditText email, name, kurum, rol;
     Button register;
+    JSONObject userInfo;
     long locationTime;
+    static boolean checkUser = false;
     static int perID;
     private static boolean controlmessage = false;
 
@@ -91,11 +94,33 @@ public class Authorized_PersonelRegister extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 getCurrentLocation();
-               addUser();
+                //eğer userda bu peridli biri varsa usera yensini ekleme bilgileri güncelle, user da yoksa pere ve usera ekle
+                checkUser();
             }
         });
 
 
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.O)
+    public void uygula() {
+        Toast.makeText(Authorized_PersonelRegister.this, checkUser+"", Toast.LENGTH_SHORT).show();
+      /*if (checkUser == false)
+            addUser();//userada perede eklencek
+        else{
+            try {
+                if(userInfo.getString("userType").equals("personnelUser")){
+                    Toast.makeText(Authorized_PersonelRegister.this, "Personel zaten kayıtlı.", Toast.LENGTH_SHORT).show();
+                }
+                else{
+                    //usertype per olcak sonra pere eklencek
+                    updateUser(userInfo);
+                    addpersonel();
+                }
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }*/
     }
 
     @RequiresApi(api = Build.VERSION_CODES.O)
@@ -184,7 +209,7 @@ public class Authorized_PersonelRegister extends AppCompatActivity {
                         }
                     });
             queue1.add(request1);
-        }catch (Exception e){
+        } catch (Exception e) {
             System.out.println("hata burda");
             if (email.length() == 0)
                 Toast.makeText(Authorized_PersonelRegister.this, "Personel emalini girmelisiniz!", Toast.LENGTH_SHORT).show();
@@ -198,7 +223,148 @@ public class Authorized_PersonelRegister extends AppCompatActivity {
                 Toast.makeText(Authorized_PersonelRegister.this, "Personel rolünü girmelisiniz!", Toast.LENGTH_SHORT).show();
         }
     }
+@RequiresApi(api = Build.VERSION_CODES.O)
+private void addpersonel(){
+    try {
+        //Get current date time
+        LocalDateTime now = LocalDateTime.now();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        String formatDateTime = now.format(formatter);
+        if (name.length() == 0 || !(email.getText().toString().contains("@gmail.com")) || email.length() == 0 || kurum.length() == 0 || rol.length() == 0)
+            throw new Exception("");
+        JSONObject obj = new JSONObject();
+        try {
+            obj.put("personnelID", userInfo.get("userID"));
+            obj.put("personnelName", name.getText().toString());
+            obj.put("personnelEmail", email.getText().toString());
+            obj.put("personnelRole", rol.getText().toString());
+            obj.put("latitude", latitude);
+            obj.put("teamID", 0);
+            obj.put("longitude", longtitude);
+            obj.put("locationTime", formatDateTime);
+            obj.put("institution", kurum.getText().toString());
+        } catch (JSONException e) {
+            e.printStackTrace();
+            System.out.println("user da hata*********************************************");
+        }
+        JsonObjectRequest request = new JsonObjectRequest(Request.Method.POST, url, obj, new Response.Listener<JSONObject>() {
+            @Override
+            public void onResponse(JSONObject response) {
+                System.out.println(response.toString());
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                System.out.println(error);
+            }
+        });
+        queue.add(request);
+        updateUser(userInfo);
+        Toast.makeText(Authorized_PersonelRegister.this, "Kaydınız Başarıyla Gerçekleşti :)", Toast.LENGTH_SHORT).show();
+        redirectActivity(Authorized_PersonelRegister.this, Authorized_Anasayfa.class);
+    } catch (Exception e) {
+        System.out.println("hata burda");
+        if (email.length() == 0)
+            Toast.makeText(Authorized_PersonelRegister.this, "Personel emalini girmelisiniz!", Toast.LENGTH_SHORT).show();
+        else if (!(email.getText().toString().contains("@")))
+            Toast.makeText(Authorized_PersonelRegister.this, "Personel emalini doğru girmelisiniz!", Toast.LENGTH_SHORT).show();
+        else if (name.length() == 0)
+            Toast.makeText(Authorized_PersonelRegister.this, "Personel ad ve soyadı tamamen girmelisiniz!", Toast.LENGTH_SHORT).show();
+        else if (kurum.length() == 0)
+            Toast.makeText(Authorized_PersonelRegister.this, "Personel krumunu girmelisiniz!", Toast.LENGTH_SHORT).show();
+        else if (rol.length() == 0)
+            Toast.makeText(Authorized_PersonelRegister.this, "Personel rolünü girmelisiniz!", Toast.LENGTH_SHORT).show();
+    }
+}
+    public void updateUser(JSONObject obj){
 
+        JSONObject tmp = new JSONObject();
+        try {
+            tmp.put("userID", obj.getString("userID"));
+            tmp.put("userType", "personnelUser");
+            tmp.put("userName", obj.getString("userName"));
+            tmp.put("email", obj.getString("email"));
+            tmp.put("createTime", obj.getString("createTime"));
+            tmp.put("userToken", "");
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        try {
+                JsonObjectRequest request = new JsonObjectRequest(
+                        Request.Method.POST, // the request method
+                        "https://afetkurtar.site/api/users/update.php", // the URL
+                        tmp, // the parameters for the php
+                        new Response.Listener<JSONObject>() { // the response listener
+                            @Override
+                            public void onResponse(JSONObject response) {
+                                System.out.println(response.toString());
+                            }
+                        },
+                        new Response.ErrorListener() { // the error listener
+                            @Override
+                            public void onErrorResponse(VolleyError error) {
+                                System.out.println(error.getMessage());
+
+                                error.printStackTrace();
+
+                            }
+                        });
+                queue.add(request);
+            } catch (Exception e){
+            System.out.println("hata");
+        }
+
+    }
+    private void checkUser() {
+        String url = "https://afetkurtar.site/api/users/search.php";
+        Map<String, String> params = new HashMap<String, String>();
+        params.put("email", email.getText().toString());
+
+        JsonObjectRequest request = new JsonObjectRequest(
+                Request.Method.POST, // the request method
+                url, // the URL
+                new JSONObject(params), // the parameters for the php
+                new Response.Listener<JSONObject>() { // the response listener
+                    @RequiresApi(api = Build.VERSION_CODES.O)
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        //  System.out.println("response dönüyor");
+                        System.out.println(response.toString());
+                        checkUser = true;
+                        JSONObject tmpJson = null;
+                        String type = "";
+                        try {
+                            String cevap = response.getString("records");
+                            cevap = cevap.substring(1, cevap.length() - 1);
+                            tmpJson = new JSONObject(cevap);
+                            userInfo = new JSONObject(cevap);
+                            if(userInfo.getString("userType").equals("personnelUser")){
+                                Toast.makeText(Authorized_PersonelRegister.this, "Personel zaten kayıtlı.", Toast.LENGTH_SHORT).show();
+                            }
+                            else{
+                                //usertype per olcak sonra pere eklencek
+                                addpersonel();
+
+
+                            }
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+
+
+                    }
+                },
+                new Response.ErrorListener() { // the error listener
+                    @RequiresApi(api = Build.VERSION_CODES.O)
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        System.out.println("hata");
+                        checkUser = false;
+                        addUser();
+                    }
+                });
+        queue.add(request);
+    }
 
     private void getCurrentLocation() {
 
@@ -291,7 +457,7 @@ public class Authorized_PersonelRegister extends AppCompatActivity {
 
     // AKTIF AFET
     public void ClickAuthorizeActiveDisaster(View view) {
-          redirectActivity(this, Authorized_ActiveDisasters.class);
+        redirectActivity(this, Authorized_ActiveDisasters.class);
     }
 
     // PERSONEL KAYIT
@@ -314,17 +480,19 @@ public class Authorized_PersonelRegister extends AppCompatActivity {
     // ANA SAYFA
     public void ClickAuthAnasayfa(View view) {
         // ZATEN BU SAYFADA OLDUGUNDAN KAPALI
-        redirectActivity(this, Authorized_Anasayfa.class );
+        redirectActivity(this, Authorized_Anasayfa.class);
     }
+
     public void ClickAuthorizedPersoneller(View view) {
-        redirectActivity(this, Authorized_Anasayfa.class );
+        redirectActivity(this, Authorized_Anasayfa.class);
     }
+
     public void ClickAuthorizedEkipman(View view) {
-        redirectActivity(this, Authorized_Anasayfa.class );
+        redirectActivity(this, Authorized_Anasayfa.class);
     }
 
     public void ClickAuthorizedTeam(View view) {
-        redirectActivity(this, Authorized_Assign_Team.class );
+        redirectActivity(this, Authorized_Assign_Team.class);
     }
 
 }
