@@ -98,7 +98,7 @@ if (session_id() == '') {
         echo "<td class=\"td-element\">" . $row['emergencyLevel'] . "</td>";
         echo "<td class=\"td-element\">" . $row['disasterBase'] . "</td>";
         echo "<td class=\"td-element\">" . $row['disasterDate'] . "</td>";
-        echo "<td class=\"td-element\"><input type=\"button\" value=\"Afet Bölgelerini Gör\" onclick=\"editDisaster(this.id)\" class=\"btn btn-primary\" id=\"" . $row['disasterID'] . "\"\></input></td>";
+        echo "<td class=\"td-element\"><input type=\"button\" value=\"Afet Bölgelerini Gör\" onclick=\"editDisaster(this.id)\" class=\"btn btn-primary\" id=\"" . $row['disasterID'] . "\"\></input><input type=\"button\" style=\"margin-left:20px;\" value=\"Sil\" onclick=\"deleteDisaster(this.id)\" class=\"btn btn-danger\" id=\"" . $row['disasterID'] . "\"\></input></td>";
         echo "</tr>";
     }
     echo "<tbody>";
