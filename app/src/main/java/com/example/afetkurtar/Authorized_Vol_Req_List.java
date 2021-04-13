@@ -313,6 +313,8 @@ public class Authorized_Vol_Req_List extends AppCompatActivity {
      *************************************** ASAGIDAKI KISIMLAR YONLENDIRMELERI AYARLAR
      */
     private void signOut() {
+        LogoutHandler lout = new LogoutHandler(getApplicationContext());
+        lout.updateUser();
         mGoogleSignInClient.signOut()
                 .addOnCompleteListener(this, new OnCompleteListener<Void>() {
                     public void onComplete(@NonNull Task<Void> task) {

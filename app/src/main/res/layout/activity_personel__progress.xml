@@ -17,16 +17,7 @@
 
         <include layout="@layout/activity_tool_bar"></include>
 
-        <TextView
-            android:id="@+id/Baslik"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:text="Personel Gelişme Bildirimi ve Destek"
-            android:textColor="#050505"
-            android:textSize="15sp"
-            android:textStyle="bold"
-            />
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

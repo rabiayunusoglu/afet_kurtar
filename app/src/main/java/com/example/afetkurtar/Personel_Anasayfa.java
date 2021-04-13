@@ -111,6 +111,8 @@ public class Personel_Anasayfa extends AppCompatActivity {
         redirectActivity(this,MessageActivity.class);
     }
     private void signOut() {
+        LogoutHandler lout = new LogoutHandler(getApplicationContext());
+        lout.updateUser();
         mGoogleSignInClient.signOut()
                 .addOnCompleteListener(this, new OnCompleteListener<Void>() {
                     public void onComplete(@NonNull Task<Void> task) {

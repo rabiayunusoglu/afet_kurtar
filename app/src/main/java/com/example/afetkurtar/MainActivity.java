@@ -168,14 +168,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
                             if(tmpJson.getString("userToken").equals(FirebaseInstanceId.getInstance().getToken())){
                                 // ****************************************************************************************** TEST ICIN USER TYPE AYARLAMA YERI
-                                type = "authorizedUser";
+                               // type = "authorizedUser";
 
                                // type = "personnelUser";
 
                                 // ****************************************************************************************** TEST ICIN USER TYPE AYARLAMA YERI
                                 Intent intentLogin = null;
                                 try {
-                                    if ((bundle.getString("title")).equals("Yeni Mesaj")) {
+                                    if ((bundle.getString("title")).equals("Yeni Mesaj") && type.equals("personnelUser")) {
                                         intentLogin = new Intent(MainActivity.this, Personel_Anasayfa.class);
                                         intentLogin.putExtra("title",bundle.getString("title"));
                                     }
@@ -283,6 +283,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             printLoginError();
         }
     }
+
     public void printLoginError(){
         Toast.makeText(getApplicationContext(), "Giriş Yapma Başarısız Oldu, Tekrar Deneyin", Toast.LENGTH_LONG).show();
     }
