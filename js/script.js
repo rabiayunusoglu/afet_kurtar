@@ -506,13 +506,69 @@ $(document).ready(function() {
     }
 
     var statusContents = document.getElementsByClassName("status-content");
+    var messageContents = document.getElementsByClassName("message-content");
 
-    if(statusContents.length != 0){
+    if(statusContents.length != 0 && messageContents.length != 0){
         var statusContent = statusContents[0];
+        var messageContent = messageContents[0];
+        messageContent.scrollIntoView({ behavior: 'smooth', block: 'end' });
         document.getElementById('cd-timeline').scrollIntoView({ behavior: 'smooth', block: 'end' });
-        setInterval(function() { checkNewStatuses(statusContent) }, 3000);
+        setInterval(function() { checkNewStatuses(statusContent); checkNewMessages(messageContent) }, 1000);
     }
 });
+
+function checkNewMessages(messageContent){
+
+    var teamID = messageContent.getAttribute("team-id");
+    var userID = messageContent.getAttribute("user-id");
+    var oldMessageLength = messageContent.getAttribute("message-length");
+
+    $.post("https://afetkurtar.site/api/message/search.php", JSON.stringify({ teamID: teamID}))
+        .done(function(data, status, xhr) {
+            
+            if (xhr.status == 200) {
+                var messages = data["records"];
+
+                if(messages.length != 0 && messages.length != oldMessageLength){
+                    messageContent.setAttribute('message-length', messages.length);
+                    messageContent.innerHTML = "";
+                    console.log("new messages");
+                    
+
+                    for(let i = 0; i < messages.length; i++){
+                        var t = messages[i]['messageTime'].split(/[- :]/);
+                        
+
+                        // Apply each element to the Date function
+                        var messageTime = t[3] + ':' + t[4];
+
+                        if(messages[i]['userID'] == userID){
+                            messageContent.innerHTML += '<div class="message first">'
+                            + messages[i]['messageData'] + 
+                            '<sub>'+ " " + messageTime +'</sub>' +
+                            '</div>';
+                        }
+
+                        else{
+                            messageContent.innerHTML += '<div class="message">' +
+                            '<b>'+ messages[i]['messageName'] +'</b><br>'
+                            + messages[i]['messageData'] +
+                            '<sub>'+ " " + messageTime +'</sub>' +
+                            '</div>';
+                        }
+                        
+                    }
+                }
+            }
+        })
+        .fail(function(data, xhr) {
+            //window.alert("dataf:" + data.message);
+            window.alert("Yeni mesajlar alınamadı.");
+            //window.alert("xhr:" + xhr.status);
+            //document.getElementById('personnelForm').reset();
+        });
+
+}
 
 function checkNewStatuses(statusContent){
 
@@ -526,7 +582,9 @@ function checkNewStatuses(statusContent){
                 var statuses = data["records"];
 
                 if(statuses.length != 0 && statuses.length != oldStatusLength){
+                    statusContent.setAttribute('status-length', statuses.length);
                     statusContent.innerHTML = "";
+                    statusContent.innerHTML = '<section id="cd-timeline" class="cd-container" style="width:48vw;">';
                     console.log("new status");
 
                     for(let i = 0; i < statuses.length; i++){
@@ -1144,7 +1202,7 @@ function addStatus(teamID, subpartID) {
     }))
     .done(function(data, status, xhr) {
         if (xhr.status == 201) {
-            document.location.reload();
+            //document.location.reload();
         } else {
             window.alert("Durum oluşturulurken hata oluştu.");
         }
@@ -1156,5 +1214,41 @@ function addStatus(teamID, subpartID) {
     if(statusContents.length != 0){
         document.getElementById('cd-timeline').scrollIntoView({ behavior: 'smooth', block: 'end' });
     }
+
+    document.getElementById("status-input").value = "";
+}
+
+function addMessage(teamID, userID, userName) {
+
+    var messageData = document.getElementById("message-input").value.trim();
+
+
+    if (messageData == '') {
+        return false;
+    }
+
+    $.post("https://afetkurtar.site/api/message/create.php", JSON.stringify({
+            messageData: messageData,
+            teamID: teamID,
+            userID: userID,
+            messageName: userName
+    }))
+    .done(function(data, status, xhr) {
+        if (xhr.status == 201) {
+            //document.location.reload();
+        } else {
+            window.alert("Mesaj gönderilirken hata oluştu.");
+        }
+    })
+    .fail(function(data, xhr) {
+        window.alert("Mesaj gönderilemedi.");
+    });
+    var messageContents = document.getElementsByClassName("message-content");
+    if(messageContents.length != 0){
+        var messageContent = messageContents[0];
+        messageContent.scrollIntoView({ behavior: 'smooth', block: 'end' });
+    }
+
+    document.getElementById("message-input").value = "";
 
 }

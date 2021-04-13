@@ -58,6 +58,7 @@
     $teamMembers = array();
     $volunteerTeamMembers = array();
     $statuses = array();
+    $messages = array();
 
     //The url you wish to send the POST request to
     $url = "https://afetkurtar.site/api/personnelUser/search.php";
@@ -180,8 +181,30 @@
     if (array_key_exists("records",$response)){
         $statuses = $response["records"];
     }
-    
 
+    $url = "https://afetkurtar.site/api/message/search.php";
+
+    $body = '{
+        "teamID":'.$teamID.'
+      }';
+    $ch = curl_init();
+    curl_setopt($ch, CURLOPT_URL, $url);
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+    curl_setopt($ch, CURLOPT_HTTPHEADER, array("Content-Type: application/json"));
+    curl_setopt($ch, CURLOPT_POST, 1);
+    curl_setopt($ch, CURLOPT_POSTFIELDS, $body);
+    $response = json_decode(curl_exec($ch),true);
+    if (array_key_exists("records",$response)){
+        $messages = $response["records"];
+    }
+
+    /*foreach($teamMembers as $member){
+        echo '<div id='. $member['personnelID'] .' user-name="'. $member['personnelName'] .'"></div>';
+    }
+
+    foreach($volunteerTeamMembers as $member){
+        echo '<div id='. $member['volunteerID'] .' user-name="'. $member['volunteerName'] .'"></div>';
+    }*/
 
 
 
@@ -213,7 +236,7 @@
                     echo '<div class="span9 status-content" id="content" team-id="'.$teamID.'" status-length="'.count($statuses).'" style="height: 81.97vh;">';
 
                     if (!empty($statuses)) {
-                        echo'<section id="cd-timeline" class="cd-container" style="width:50vw;">';
+                        echo'<section id="cd-timeline" class="cd-container" style="width:48vw;">';
                     }
 
                     foreach($statuses as $rowStatus)
@@ -244,7 +267,7 @@
                     echo '<div class="input-group" style="height:7vh; padding:1vh;">';
                     echo '<input id="status-input" type="text" class="form-control input-sm chat_input" style="height:5vh;" placeholder="Yeni durum oluşturun..." />';
                     echo '<span class="input-group-btn">';
-                    echo '<button class="btn btn-dark btn-sm" onclick="addStatus(' . $teamID . ', ' . $subpartID . ')" id="btn-chat" style="height:5vh;">Gönder</button>';
+                    echo '<button class="btn btn-dark btn-sm" onclick="addStatus(' . $teamID . ', ' . $subpartID . ')" id="btn-status" style="height:5vh;">Gönder</button>';
                     echo '</span>';
                     echo '</div>';
                     echo '</div>';
@@ -287,11 +310,34 @@
                 echo '<div class="tab-pane fade" id="pills-message" role="tabpanel" aria-labelledby="pills-message-tab">';
                     ///////////////////////////////////////////////////////////////////////////
                     //mesaj ekrani icerigi
-                    echo '<div class="span9" id="content" style="height: 81.97vh;">';
+                    echo '<div class="span9 message-content" id="content" team-id="'.$teamID.'" user-id="'.$_SESSION["userID"].'" message-length="'.count($messages).'" style="height: 81.97vh;">';
                     
+                    /*if (!empty($messages)) {
+                        echo'<section id="cd-timeline" class="cd-container" style="width:50vw;">';
+                    }*/
 
+                    array_multisort($messageID, SORT_ASC, $messages);
 
-                    echo '<div class="message first">
+                    foreach($messages as $message){
+                        $messageTime = date_create($message["messageTime"]);
+
+                        if($message["userID"] == $_SESSION["userID"]){
+                            echo '<div class="message first">
+                            '. $message['messageData'] .'
+                            <sub>'. date_format($messageTime, 'H:i') .'</sub>
+                            </div>';
+                        }
+
+                        else{
+                            echo '<div class="message">
+                            <b>' . $message['messageName'] . '</b><br>
+                            '. $message['messageData'] .'
+                            <sub>'. date_format($messageTime, 'H:i') .'</sub>
+                            </div>';
+                        }
+                    }
+
+                    /*echo '<div class="message first">
                     Uh, what is this guys problem, Mr. Stark? 🤔
                     <sub>07.32</sub>
                     </div>';
@@ -303,22 +349,14 @@
                     echo '<div class="message first">
                     Uh, what is this guys problem, Mr. Stark? 🤔
                     <sub>07.36</sub>
-                    </div>';
-                    
-                    
-
-
-
-
-
-
+                    </div>';*/
 
                     echo '</div>';
                     echo '<div class="panel-footer" style="background: #1A2226;box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16), 0 -3px 6px rgba(0, 0, 0, 0.23);">';
                     echo '<div class="input-group" style="height:7vh; padding:1vh;">';
-                    echo '<input id="status-input" type="text" class="form-control input-sm chat_input" style="height:5vh;" placeholder="Mesajınızı yazın..." />';
+                    echo '<input id="message-input" type="text" class="form-control input-sm chat_input" style="height:5vh;" placeholder="Mesajınızı yazın..." />';
                     echo '<span class="input-group-btn">';
-                    echo '<button class="btn btn-dark btn-sm" id="btn-chat" style="height:5vh;">Gönder</button>';
+                    echo '<button class="btn btn-dark btn-sm" id="btn-chat" onclick="addMessage(' . $teamID . ', ' . $_SESSION["userID"] . ', \'' . $_SESSION["userName"] . '\')" style="height:5vh;">Gönder</button>';
                     echo '</span>';
                     echo '</div>';
                     echo '</div>';
