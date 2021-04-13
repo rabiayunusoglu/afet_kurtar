@@ -100,6 +100,8 @@ public class Authorized_Edit_Team extends AppCompatActivity {
         ////****
         findViewById(R.id.btn_editTeam_addVolunteer).setOnClickListener(this::onClick);
         findViewById(R.id.btn_editTeam_removeVolunteer).setOnClickListener(this::onClick);
+
+        findViewById(R.id.btn_equip_details).setOnClickListener(this::onClick);
         ////****
 
         findViewById(R.id.btn_returnTo_assignTeam_fromEditTeam).setOnClickListener(this::onClick);
@@ -822,6 +824,12 @@ public class Authorized_Edit_Team extends AppCompatActivity {
                 }catch (Exception e){
                     e.getMessage();
                 }
+                break;
+            case R.id.btn_equip_details:
+                //redirectActivity(this, Authorized_Team_Equipment_Requests.class );
+                Intent intent = new Intent(this, Authorized_Team_Equipment_Requests.class);
+                intent.putExtra("Team_id",selectedTeamID);
+                startActivity(intent);
                 break;
         }
     }

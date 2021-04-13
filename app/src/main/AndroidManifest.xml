@@ -32,7 +32,9 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.AppCompat.Light.NoActionBar">
-        <activity android:name=".Authorized_Vol_Req_List"></activity>
+        <activity android:name=".Authorized_Team_Equipment_Request_Details"></activity>
+        <activity android:name=".Authorized_Team_Equipment_Requests" />
+        <activity android:name=".Authorized_Vol_Req_List" />
         <activity android:name=".Authorized_Personel_Update" />
         <activity android:name=".Authorized_Personeller" />
         <activity android:name=".Authorized_VolunteerRequest3" />

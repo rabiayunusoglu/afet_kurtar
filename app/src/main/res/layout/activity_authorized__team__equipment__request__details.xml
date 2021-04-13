@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".Notification_Details">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_gravity="center_horizontal">
+
+        <Button
+
+            android:id="@+id/Equipment_geri_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="left"
+            android:layout_weight="1"
+            android:textColor="#FFF"
+
+            android:background="#000"
+            android:text="Geri"
+>
+
+        </Button>
+        <Space
+            android:layout_width="100dp"
+            android:layout_height="8dp"
+            android:layout_weight="1" >
+        </Space>
+
+        <Button
+
+            android:id="@+id/Delete_equip_request"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="right"
+            android:layout_weight="1"
+            android:textColor="#FFF"
+            android:background="#6464"
+            android:text="Sil">
+
+        </Button>
+
+
+
+    </LinearLayout>
+
+    <Space
+        android:layout_width="0dp"
+        android:layout_height="8dp"
+        android:layout_weight="0" >
+    </Space>
+
+    <TextView
+        android:background="@drawable/notification_layout_background"
+        android:id="@+id/request_mesaj"
+        android:layout_width="match_parent"
+        android:layout_height="130dp"
+        android:scrollbars = "vertical"
+        android:text="Bilgiler Bulunamadi"
+        android:textSize="25sp"
+        android:paddingLeft="30dp"
+        android:paddingRight="30dp"
+        android:textColor="@color/black"
+        android:layout_weight="1"
+        >
+
+    </TextView>
+    <Space
+        android:layout_width="0dp"
+        android:layout_height="8dp"
+        android:layout_weight="0" >
+    </Space>
+
+
+
+
+
+</LinearLayout>
