@@ -168,7 +168,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
                             if(tmpJson.getString("userToken").equals(FirebaseInstanceId.getInstance().getToken())){
                                 // ****************************************************************************************** TEST ICIN USER TYPE AYARLAMA YERI
+
                                 //type = "authorizedUser";
+                                type = "authorizedUser";
+
 
                                // type = "personnelUser";
 
@@ -415,8 +418,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private void checkUserIsVolunteerOrPersonnel(String locationString){
         try {
             if(userInfo.getString("userType").toString().trim().equalsIgnoreCase("volunteerUser")){
+                System.out.println("MY USER TYPE : volunteerUser");
                 findUserObjectInVolunteerTable(locationString);
             }else if(userInfo.getString("userType").toString().trim().equalsIgnoreCase("personnelUser")){
+                System.out.println("MY USER TYPE : personnelUser");
                 findUserObjectInPersonnelTable(locationString);
             }
 
@@ -478,7 +483,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         try {
 
                             JSONObject personnelObject = handlePersonnelObject(response);
-                            updateUserLocationInPersonnelUserTable(personnelObject, locationString);
+                            if(personnelObject.getString("personnelID").trim().equals(userInfo.getString("userID").trim())){
+                                updateUserLocationInPersonnelUserTable(personnelObject, locationString);
+                            }
 
                         } catch (Exception e) {
                             e.printStackTrace();
@@ -501,19 +508,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             String cevap = a.getString("records");
             cevap = cevap.substring(1, cevap.length() - 1);
 
-            while (cevap.indexOf(",{") > -1) {
-                list.add(cevap.substring(0, cevap.indexOf(",{")));
-                cevap = cevap.substring(cevap.indexOf(",{") + 1);
-            }
-            list.add(cevap);
 
-            for (String x : list) {
-                try {
-                    return new JSONObject(x);
-
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
+            JSONObject tmp = new JSONObject(cevap);
+            if(tmp.getString("personnelID").trim().equals(userInfo.getString("userID").trim())){
+                return tmp;
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -582,7 +580,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         try {
 
                             JSONObject personnelObject = handleVolunteerObject(response);
-                            updateUserLocationInVolunteerUserTable(personnelObject, locationString);
+                            if(personnelObject.getString("volunteerID").trim().equals(userInfo.getString("userID").trim())){
+                                updateUserLocationInVolunteerUserTable(personnelObject, locationString);
+                            }
 
                         } catch (Exception e) {
                             e.printStackTrace();
@@ -605,20 +605,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             String cevap = a.getString("records");
             cevap = cevap.substring(1, cevap.length() - 1);
 
-            while (cevap.indexOf(",{") > -1) {
-                list.add(cevap.substring(0, cevap.indexOf(",{")));
-                cevap = cevap.substring(cevap.indexOf(",{") + 1);
+            JSONObject tmp = new JSONObject(cevap);
+            if(tmp.getString("volunteerID").trim().equals(userInfo.getString("userID").trim())){
+                return tmp;
             }
-            list.add(cevap);
 
-            for (String x : list) {
-                try {
-                    return new JSONObject(x);
-
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
         } catch (Exception e) {
             e.printStackTrace();
         }

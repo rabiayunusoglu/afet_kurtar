@@ -115,12 +115,11 @@ public class Authorized_Anasayfa extends AppCompatActivity {
         redirectActivity(this, Authorized_Personeller.class );
     }
     public void ClickAuthorizedEkipman(View view) {
-        redirectActivity(this, Authorized_Anasayfa.class );
+        redirectActivity(this, Authorized_SmartAssign_Subpart.class );
     }
 
     public void ClickAuthorizedTeam(View view) {
         redirectActivity(this, Authorized_Assign_Team.class );
     }
-
 
 }

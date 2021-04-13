@@ -36,6 +36,7 @@
         <activity android:name=".Authorized_Team_Equipment_Requests" />
         <activity android:name=".Authorized_Vol_Req_List" />
         <activity android:name=".Authorized_Personel_Update" />
+        <activity android:name=".Authorized_SmartAssign_Subpart" />
         <activity android:name=".Authorized_Personeller" />
         <activity android:name=".Authorized_VolunteerRequest3" />
         <activity android:name=".Authorized_VolunteerRequest2" />

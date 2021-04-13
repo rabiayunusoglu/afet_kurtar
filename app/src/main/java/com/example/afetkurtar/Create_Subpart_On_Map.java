@@ -63,7 +63,7 @@ public class Create_Subpart_On_Map extends AppCompatActivity implements OnMapRea
     //textVariables
     TextView textAfetId;
     EditText editAfetSubpartName;
-    EditText editAfetSubpartID;
+    //EditText editAfetSubpartID;
     EditText editAfetAddress;
     EditText editAfetLatitude;
     EditText editAfetLongitude;
@@ -94,7 +94,7 @@ public class Create_Subpart_On_Map extends AppCompatActivity implements OnMapRea
 
         textAfetId = (TextView)findViewById(R.id.afet_id);
         editAfetSubpartName = (EditText)findViewById(R.id.afet_subpart_name);
-        editAfetSubpartID = (EditText)findViewById(R.id.afet_subpart_ID);
+        //editAfetSubpartID = (EditText)findViewById(R.id.afet_subpart_ID);
         editAfetAddress = (EditText)findViewById(R.id.afet_address);
         editAfetLatitude = (EditText)findViewById(R.id.afet_latitude);
         editAfetLongitude = (EditText)findViewById(R.id.afet_longitude);
@@ -250,29 +250,32 @@ public class Create_Subpart_On_Map extends AppCompatActivity implements OnMapRea
 
         // if data is not empty get dataLatitude and dataLongitude
 
-        if(!data.equals(new JSONObject())){
+
 
             try {
-                String dataLatitude = data.getString("latitude");
-                String dataLongitude = data.getString("longitude");
+                if(data.toString().length() > 10) {
+                    System.out.println("data .toString: " + data.toString().length());
+                    String dataLatitude = data.getString("latitude");
+                    String dataLongitude = data.getString("longitude");
 
-                double doubleDataLatitude = Double.parseDouble(dataLatitude);
-                double doubleDataLongitude = Double.parseDouble(dataLongitude);
+                    double doubleDataLatitude = Double.parseDouble(dataLatitude);
+                    double doubleDataLongitude = Double.parseDouble(dataLongitude);
 
-                LatLng latLng = new LatLng(doubleDataLatitude, doubleDataLongitude);
+                    LatLng latLng = new LatLng(doubleDataLatitude, doubleDataLongitude);
 
-                ((EditText)(findViewById(R.id.afet_latitude))).setText(dataLatitude);
-                ((EditText)(findViewById(R.id.afet_longitude))).setText(dataLongitude);
+                    ((EditText) (findViewById(R.id.afet_latitude))).setText(dataLatitude);
+                    ((EditText) (findViewById(R.id.afet_longitude))).setText(dataLongitude);
 
-                Marker dataMarker = mMap.addMarker(new MarkerOptions().position(latLng));
-                mMap.setInfoWindowAdapter(new CustomInfoWindowAdapter(Create_Subpart_On_Map.this));
-                mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng,13));
+                    Marker dataMarker = mMap.addMarker(new MarkerOptions().position(latLng));
+                    mMap.setInfoWindowAdapter(new CustomInfoWindowAdapter(Create_Subpart_On_Map.this));
+                    mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 13));
 
+                }
             } catch (JSONException e) {
                 e.printStackTrace();
             }
 
-        }
+
 
     }//onMapReady end
 
@@ -316,8 +319,12 @@ public class Create_Subpart_On_Map extends AppCompatActivity implements OnMapRea
         switch (v.getId()) {
             case R.id.btn_createDisaster:
 
-                if(!data.equals(new JSONObject())){
+                try{
+                    if(data.toString().length() > 10){
                         delete(data);
+                    }
+                }catch (Exception e){
+                    e.printStackTrace();
                 }
 
                 if(!textAfetId.getText().equals("seçilmedi") && !isTextsAreEmpty() && !textAfetId.getText().equals("")){
@@ -338,7 +345,7 @@ public class Create_Subpart_On_Map extends AppCompatActivity implements OnMapRea
         try{
             textAfetId = (TextView)findViewById(R.id.afet_id);
             editAfetSubpartName = (EditText)findViewById(R.id.afet_subpart_name);
-            editAfetSubpartID = (EditText)findViewById(R.id.afet_subpart_ID);
+            //editAfetSubpartID = (EditText)findViewById(R.id.afet_subpart_ID);
             editAfetAddress = (EditText)findViewById(R.id.afet_address);
             editAfetLatitude = (EditText)findViewById(R.id.afet_latitude);
             editAfetLongitude = (EditText)findViewById(R.id.afet_longitude);
@@ -396,6 +403,7 @@ public class Create_Subpart_On_Map extends AppCompatActivity implements OnMapRea
                 });
         queue.add(jsonObjectRequest);
     }
+
     public void dataReset(){
         data = new JSONObject();
     }
@@ -427,7 +435,7 @@ public class Create_Subpart_On_Map extends AppCompatActivity implements OnMapRea
             //Dikkat!!! burada bos input kontrolu olursa diye kontrol ekle sonra
             try{
                 //disasterID = editAfetId.getText().toString();
-                subpartID = editAfetSubpartID.getText().toString();
+                //subpartID = editAfetSubpartID.getText().toString();
                 subpartName = editAfetSubpartName.getText().toString();
                 address = editAfetAddress.getText().toString();
                 latitude = Double.parseDouble(editAfetLatitude.getText().toString());
@@ -439,10 +447,11 @@ public class Create_Subpart_On_Map extends AppCompatActivity implements OnMapRea
                 
                 if (radioButtonIsOpenForVolunteers.getText().toString().equals("EVET")) {
                     isOpenForVolunteers = true;
-                    stringIsOpenForVolunteers = "evet";
+                    stringIsOpenForVolunteers = "1";
+
                 } else {
                     isOpenForVolunteers = false;
-                    stringIsOpenForVolunteers = "hayır";
+                    stringIsOpenForVolunteers = "0";
                 }
 
                 //isOpenForVolunteers = editIsOpenForVolunteers.getText().toString();
@@ -452,6 +461,7 @@ public class Create_Subpart_On_Map extends AppCompatActivity implements OnMapRea
 
             LatLng latLng = null;
             try {
+                System.out.println("stringIsOpenForVolunteers : " + stringIsOpenForVolunteers);
                 latLng = new LatLng(latitude,longitude);
                 Marker marker = mMap.addMarker(new MarkerOptions().position(latLng).title(disasterID).snippet("Afet Parçası ID : " + subpartID + "\n" +
                                 "Afet Parçası İsmi : " + subpartName + "\n" +
@@ -496,7 +506,7 @@ public class Create_Subpart_On_Map extends AppCompatActivity implements OnMapRea
         try{
             ((TextView)(findViewById(R.id.afet_id))).setText("");
             ((EditText)(findViewById(R.id.afet_subpart_name))).setText("");
-            ((EditText)(findViewById(R.id.afet_subpart_ID))).setText("");
+            //((EditText)(findViewById(R.id.afet_subpart_ID))).setText("");
             ((EditText)(findViewById(R.id.afet_address))).setText("");
             ((EditText)(findViewById(R.id.afet_latitude))).setText("");
             ((EditText)(findViewById(R.id.afet_longitude))).setText("");
@@ -518,7 +528,7 @@ public class Create_Subpart_On_Map extends AppCompatActivity implements OnMapRea
     public void sendDataToDB(){
         JSONObject obj = new JSONObject();
         try {
-            obj.put("subpartID", subpartID.toString());
+            //obj.put("subpartID", subpartID.toString());
             obj.put("disasterID", disasterID.toString());
             obj.put("address", address.toString());
             String sendLatitude = "";
@@ -534,7 +544,8 @@ public class Create_Subpart_On_Map extends AppCompatActivity implements OnMapRea
             sendRescuedPerson += rescuedPerson;
             obj.put("rescuedPerson", sendRescuedPerson);
             String sendIsOpenForVolunteers ="";
-            sendIsOpenForVolunteers += isOpenForVolunteers;
+            //sendIsOpenForVolunteers += isOpenForVolunteers;
+            sendIsOpenForVolunteers += stringIsOpenForVolunteers;
             obj.put("isOpenForVolunteers", sendIsOpenForVolunteers);
             obj.put("subpartName", subpartName.toString());
             obj.put("disasterName", disasterName.toString());

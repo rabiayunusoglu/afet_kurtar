@@ -1,11 +1,16 @@
 package com.example.afetkurtar;
 
+import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.Canvas;
+import android.graphics.drawable.Drawable;
 import android.location.Geocoder;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -16,6 +21,8 @@ import com.android.volley.toolbox.Volley;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptor;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
@@ -51,7 +58,7 @@ public class Team_Member_Locations extends AppCompatActivity implements OnMapRea
 
         //System.out.println("test : map is ready");
         //Toast.makeText(this, "map is ready", Toast.LENGTH_SHORT).show();
-        System.out.println("onMapready içinde");
+        //System.out.println("onMapready içinde");
 
         try {
             // bir şekilde team id e ulaşmamız gerekli
@@ -73,7 +80,7 @@ public class Team_Member_Locations extends AppCompatActivity implements OnMapRea
     }
 
     public void findTeamMemberLocations(String teamID){
-        System.out.println("findTeamMemberLocations içinde ");
+        //System.out.println("findTeamMemberLocations içinde ");
         /* burada team ıd ye göre tüm personnel elemanlarını bul
         bulunan elemanların konumlarını haritada marker olarak işaretle
          */
@@ -84,7 +91,7 @@ public class Team_Member_Locations extends AppCompatActivity implements OnMapRea
 
     }
     public void getLocationDataFromDB(String teamID){
-        System.out.println("getLocationDataFromDB içinde");
+        //System.out.println("getLocationDataFromDB içinde");
         JSONObject obj = new JSONObject();
         try {
             obj.put("teamID",teamID);
@@ -115,7 +122,7 @@ public class Team_Member_Locations extends AppCompatActivity implements OnMapRea
         queue.add(jsonObjectRequest);
     }
     public void handleResponseGetLocationDataFromDB(JSONObject a) {
-        System.out.println("handleResponseGetLocationDataFromDB içinde ");
+        //System.out.println("handleResponseGetLocationDataFromDB içinde ");
         //System.out.println("handleResponseGetMessageDataFromDB'e girdi");
         ArrayList<String> list = new ArrayList<String>();
         try {
@@ -133,7 +140,7 @@ public class Team_Member_Locations extends AppCompatActivity implements OnMapRea
                 try {
                     JSONObject tmp = new JSONObject(x);
                     teamMemberJsonObjectList.add(tmp);
-                    System.out.println("tmp obje içeriği : " + tmp);
+                    //System.out.println("tmp obje içeriği : " + tmp);
                     //messageJsonObjectList = getMessageListToCompareTime(messageJsonObjectList);
 
                 } catch (Exception e) {
@@ -146,7 +153,7 @@ public class Team_Member_Locations extends AppCompatActivity implements OnMapRea
     }// handle response end
 
     public void initializeTeamMemberLocationsOnMap(ArrayList<JSONObject> teamMembersList){
-        System.out.println("initializeTeamMemberLocationsOnMap içinde ");
+        //System.out.println("initializeTeamMemberLocationsOnMap içinde ");
         for(int i = 0 ; i<teamMembersList.size(); i++){
             addTeamMemberMarker(teamMembersList.get(i));
         }
@@ -162,7 +169,7 @@ public class Team_Member_Locations extends AppCompatActivity implements OnMapRea
 
             LatLng latLng = new LatLng(latitude, longitude);
             Marker memberLocationMarker = mMap.addMarker(new MarkerOptions().position(latLng)
-                    .title("Team ID: " + teamID).snippet(member.getString("personnelName").toString()));
+                    .title("Team ID: " + teamID).snippet(member.getString("personnelName").toString()).icon(bitmapDescriptorFromVector(getApplicationContext(),R.drawable.ic_teammember)));
             mMap.setInfoWindowAdapter(new CustomInfoWindowAdapter(Team_Member_Locations.this));
             markerList.add(memberLocationMarker);
 
@@ -178,4 +185,13 @@ public class Team_Member_Locations extends AppCompatActivity implements OnMapRea
             e.getMessage();
         }
     }
+    private BitmapDescriptor bitmapDescriptorFromVector(Context context, int vectorResId){
+        Drawable vectorDrawable = ContextCompat.getDrawable(context, vectorResId);
+        vectorDrawable.setBounds(0,0, vectorDrawable.getIntrinsicWidth(),vectorDrawable.getIntrinsicHeight());
+        Bitmap bitmap = Bitmap.createBitmap(vectorDrawable.getIntrinsicWidth(),vectorDrawable.getIntrinsicHeight(),Bitmap.Config.ARGB_8888);
+        Canvas canvas = new Canvas(bitmap);
+        vectorDrawable.draw(canvas);
+        return BitmapDescriptorFactory.fromBitmap(bitmap);
+    }
+
 }//class end

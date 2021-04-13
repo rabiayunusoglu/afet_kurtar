@@ -117,7 +117,7 @@ public class Disaster_Details extends AppCompatActivity implements OnMapReadyCal
         switch (v.getId()) {
             case R.id.afetolusturBTN:
                 Intent intent = new Intent(this, Create_Subpart_On_Map.class);
-                intent.putExtra("json", data.toString());
+                //intent.putExtra("json", data.toString());
                 startActivity(intent);
                 //  finish();
                 break;

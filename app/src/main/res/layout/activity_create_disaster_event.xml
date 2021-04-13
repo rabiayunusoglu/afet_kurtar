@@ -83,31 +83,7 @@
             />
     </LinearLayout>
 
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Afet Parçası ID:"
-        android:paddingLeft="16dp"
-        android:textSize="10sp">
-    </TextView>
 
-    <LinearLayout
-        android:id="@+id/AfetSubpartIDLayout"
-        android:layout_width="match_parent"
-        android:layout_height="34dp"
-        android:layout_weight="0"
-        android:paddingLeft="16dp"
-        android:paddingRight="16dp"
-        tools:ignore="MissingConstraints">
-
-        <EditText
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/afet_subpart_ID"
-            android:textSize="12dp"
-            android:layout_weight="1"
-            />
-    </LinearLayout>
 
     <TextView
         android:layout_width="match_parent"

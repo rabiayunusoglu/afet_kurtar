@@ -686,12 +686,16 @@ public class Authorized_Edit_Team extends AppCompatActivity {
             e.printStackTrace();
         }
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest
-                (Request.Method.POST, "https://afetkurtar.site/api/teamID/search.php", obj, new Response.Listener<JSONObject>() {
+                (Request.Method.POST, "https://afetkurtar.site/api/team/search.php", obj, new Response.Listener<JSONObject>() {
 
                     @Override
                     public void onResponse(JSONObject response) {
                         try {
                             //  System.out.println(response.toString());
+                            String cevap = response.getString("records");
+                            cevap = cevap.substring(1, cevap.length() - 1);
+                            response = new JSONObject(cevap);
+
                             String assignedSubpartID = response.getString("assignedSubpartID");
                             findSubpartInformation(assignedSubpartID); // after this merhod isAssignedSubpartOpenForVolunteerBoolean value is known
 
@@ -734,6 +738,9 @@ public class Authorized_Edit_Team extends AppCompatActivity {
                     public void onResponse(JSONObject response) {
                         try {
                             //  System.out.println(response.toString());
+                            String cevap = response.getString("records");
+                            cevap = cevap.substring(1, cevap.length() - 1);
+                            response = new JSONObject(cevap);
                             String isOpenForVolunteers = response.getString("isOpenForVolunteers").trim();
 
                             if(isOpenForVolunteers.equalsIgnoreCase("0")){

@@ -58,7 +58,7 @@ public class Authorized_Create_Team extends AppCompatActivity {
 
     ArrayAdapter adapter;
     ArrayList<String> personnelAvailableStringList = new ArrayList<String>();
-    ArrayList<View> viewList = new ArrayList<View>();
+    //ArrayList<View> viewList = new ArrayList<View>();
     ArrayList<JSONObject> jsonObjectList = new ArrayList<JSONObject>();
 
     @Override
@@ -84,7 +84,7 @@ public class Authorized_Create_Team extends AppCompatActivity {
             case R.id.btn_createTeam_calculateHowManyMember:
                 try{
                     resetScrollElements();
-                    viewList.clear();
+                    //viewList.clear();
                     if(isEditTextNumberOfMemberEnteredCorrectly()){
                         calculateHowManyViewAdd();
 
@@ -229,7 +229,7 @@ public class Authorized_Create_Team extends AppCompatActivity {
         JSONObject obj = new JSONObject();
         try {
             obj.put("assignedSubpartID", "0");
-            obj.put("status", "yeni guncelleme");
+            obj.put("status", " ");
             obj.put("needManPower", "0");
             obj.put("needEquipment", "0");
             //// Dikkat oluşturulan team id nerden bilinecek burada onu güncelle bir şekilde
@@ -240,7 +240,7 @@ public class Authorized_Create_Team extends AppCompatActivity {
             @Override
             public void onResponse(JSONObject response) {
 
-                System.out.println("YYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYY==" + response.toString() + "==YYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYY");
+                //System.out.println("YYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYY==" + response.toString() + "==YYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYY");
                 try {
                     createdTeamID = response.getString("id");
                 } catch (JSONException e) {
