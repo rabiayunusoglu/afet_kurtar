@@ -220,6 +220,8 @@ public class Authorized_VolunteerRequest extends AppCompatActivity  implements O
 
 
     private void signOut() {
+        LogoutHandler lout = new LogoutHandler(getApplicationContext());
+        lout.updateUser();
         mGoogleSignInClient.signOut()
                 .addOnCompleteListener(this, new OnCompleteListener<Void>() {
                     public void onComplete(@NonNull Task<Void> task) {

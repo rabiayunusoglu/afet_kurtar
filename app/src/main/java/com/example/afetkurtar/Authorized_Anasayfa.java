@@ -34,6 +34,8 @@ public class Authorized_Anasayfa extends AppCompatActivity {
     }
 
     private void signOut() {
+        LogoutHandler lout = new LogoutHandler(getApplicationContext());
+        lout.updateUser();
         mGoogleSignInClient.signOut()
                 .addOnCompleteListener(this, new OnCompleteListener<Void>() {
                     public void onComplete(@NonNull Task<Void> task) {

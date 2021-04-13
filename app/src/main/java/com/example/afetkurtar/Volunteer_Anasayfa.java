@@ -57,6 +57,8 @@ public class Volunteer_Anasayfa extends AppCompatActivity {
         redirectActivity(this,Volunteer_RegisterInfo.class);
     }
     private void signOut() {
+        LogoutHandler lout = new LogoutHandler(getApplicationContext());
+        lout.updateUser();
         mGoogleSignInClient.signOut()
                 .addOnCompleteListener(this, new OnCompleteListener<Void>() {
                     public void onComplete(@NonNull Task<Void> task) {

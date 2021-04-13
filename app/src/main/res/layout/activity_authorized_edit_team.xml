@@ -350,10 +350,21 @@
                 android:id="@+id/btn_returnTo_assignTeam_fromEditTeam">
             </Button>
             <Space
-                android:layout_width="250dp"
+                android:layout_width="150dp"
                 android:layout_height="match_parent"
                 android:layout_weight="0">
             </Space>
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:text="Takımın Ekipman istekleri"
+                android:textSize="8dp"
+                android:textColor="#FFF"
+                android:background="#6464"
+                android:layout_weight="1"
+                android:textStyle="bold"
+                android:id="@+id/btn_equip_details">
+            </Button>
         </LinearLayout>
 
     </LinearLayout>
