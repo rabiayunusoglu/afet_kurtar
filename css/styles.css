@@ -196,6 +196,12 @@ body {
     /* avoid curved divisor corner */
 }
 
+.nav.nav-tabs li {
+    border-radius: 0;
+    border-bottom: 2px solid #383B3E;
+    /* avoid curved divisor corner */
+}
+
 .vl {
     border-left: 2px solid #383B3E;
     box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16), 0 3px 6px rgba(0, 0, 0, 0.23);
@@ -207,6 +213,17 @@ body {
 }
 
 .nav-pills .nav-link {
+    background-color: #222529;
+    color: white;
+}
+
+.nav-tabs .nav-link:not(.active) {
+    font-weight: bold;
+    color: #ddd;
+}
+
+.nav-tabs .nav-link {
+    font-weight: bold;
     background-color: #222529;
     color: white;
 }
@@ -476,4 +493,25 @@ table.dataTable tbody tr {
         right: 122%;
         text-align: right;
     }
+}
+
+.message {
+    box-sizing: border-box;
+    padding: 0.5rem 1rem;
+    margin: 1rem;
+    background: #FFF;
+    border-radius: 1.125rem 1.125rem 1.125rem 0;
+    min-height: 2.25rem;
+    width: -webkit-fit-content;
+    width: -moz-fit-content;
+    width: fit-content;
+    max-width: 66%;
+    box-shadow: 0 0 2rem rgba(0, 0, 0, 0.075), 0rem 1rem 1rem -1rem rgba(0, 0, 0, 0.1);
+}
+
+.message.first {
+    margin: 1rem 1rem 1rem auto;
+    border-radius: 1.125rem 1.125rem 0 1.125rem;
+    background: #1A2226;
+    color: white;
 }

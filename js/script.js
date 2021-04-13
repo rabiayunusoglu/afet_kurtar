@@ -327,6 +327,86 @@ function setMarkersForVolunteer(map) {
     }
 }
 
+function initMapForPersonnel() {
+    var temp = document.getElementById("map").id;
+    console.log(temp);
+    var lat = parseFloat(document.getElementById("map").getAttribute("latitude"));
+    var lng = parseFloat(document.getElementById("map").getAttribute("longitude"));
+    const map = new google.maps.Map(document.getElementById("map"), {
+        zoom: 10,
+        center: { lat: lat, lng: lng },
+    });
+    //setMarkersForPersonnel(map);
+}
+
+function setMarkersForPersonnel(map) { //degisecek
+    // Adds markers to the map.
+    // Marker sizes are expressed as a Size of X,Y where the origin of the image
+    // (0,0) is located in the top left of the image.
+    // Origins, anchor positions and coordinates of the marker increase in the X
+    // direction to the right and in the Y direction down.
+    subparts = document.getElementsByName("subpart");
+
+    const image = {
+        url: "https://developers.google.com/maps/documentation/javascript/examples/full/images/beachflag.png",
+        // This marker is 20 pixels wide by 32 pixels high.
+        size: new google.maps.Size(20, 32),
+        // The origin for this image is (0, 0).
+        origin: new google.maps.Point(0, 0),
+        // The anchor for this image is the base of the flagpole at (0, 32).
+        anchor: new google.maps.Point(0, 32),
+    };
+    // Shapes define the clickable region of the icon. The type defines an HTML
+    // <area> element 'poly' which traces out a polygon as a series of X,Y points.
+    // The final coordinate closes the poly by connecting to the first coordinate.
+    const shape = {
+        coords: [1, 1, 1, 20, 18, 20, 18, 1],
+        type: "poly",
+    };
+
+    var markers = [];
+    var infowindows = [];
+    var names = [];
+    var lats = [];
+    var lngs = [];
+    var userIDs = [];
+    var currentInfoWindow = null;
+
+    for (let i = 0; i < subparts.length; i++) {
+        //console.log(subparts[i]);
+        lats[i] = parseFloat(subparts[i].getAttribute("latitude"));
+        lngs[i] = parseFloat(subparts[i].getAttribute("longitude"));
+
+        names[i] = subparts[i].getAttribute("subpart-name");
+
+        markers[i] = new google.maps.Marker({
+            position: { lat: lats[i], lng: lngs[i] },
+            map,
+            icon: image,
+            shape: shape,
+            title: names[i]
+        });
+
+        markers[i].index = i;
+
+        userIDs[i] = document.getElementById("user-info").getAttribute("user-id");
+
+        infowindows[i] = new google.maps.InfoWindow({
+            content: '<div>' + names[i] + '</div>' + '<input type="submit" onclick="joinSubpart(' + subparts[i].getAttribute("subpart-id") + "," + userIDs[i] + ')" class="btn btn-primary" id="button-' + subparts[i].id + '" value="Gönüllü İsteği Gönder"></input>'
+        });
+
+        google.maps.event.addListener(markers[i], 'click', function() {
+
+
+            if (currentInfoWindow != null) {
+                currentInfoWindow.close();
+            }
+            infowindows[this.index].open(map, markers[this.index]);
+            currentInfoWindow = infowindows[this.index];
+        });
+    }
+}
+
 function joinSubpart(subpartID, userID) {
 
     $.post("https://afetkurtar.site/api/volunteerUser/update.php", JSON.stringify({ volunteerID: userID, requestedSubpart: subpartID }))
@@ -424,7 +504,67 @@ $(document).ready(function() {
             }
         });
     }
+
+    var statusContents = document.getElementsByClassName("status-content");
+
+    if(statusContents.length != 0){
+        var statusContent = statusContents[0];
+        document.getElementById('cd-timeline').scrollIntoView({ behavior: 'smooth', block: 'end' });
+        setInterval(function() { checkNewStatuses(statusContent) }, 3000);
+    }
 });
+
+function checkNewStatuses(statusContent){
+
+    var teamID = statusContent.getAttribute("team-id");
+    var oldStatusLength = statusContent.getAttribute("status-length");
+
+    $.post("https://afetkurtar.site/api/status/search.php", JSON.stringify({ teamID: teamID}))
+        .done(function(data, status, xhr) {
+            
+            if (xhr.status == 200) {
+                var statuses = data["records"];
+
+                if(statuses.length != 0 && statuses.length != oldStatusLength){
+                    statusContent.innerHTML = "";
+                    console.log("new status");
+
+                    for(let i = 0; i < statuses.length; i++){
+                        statusContent.innerHTML += '<div class="cd-timeline-block">' +
+                        '<div class="cd-timeline-img cd-picture">' +
+                        '</div>' +
+                        '<div class="cd-timeline-content">' +
+                        '<h2>'+ statuses[i]['statusTime'] +'</h2>' +
+                        '<div class="timeline-content-info">' +
+                        '<span class="timeline-content-info-date">' +
+                        '<i class="fa fa-calendar-o" aria-hidden="true"></i>' +
+                        'Takım '+ statuses[i]['teamID'] +
+                        '</span>'+
+                        '</div>'+
+                        '<p>'+ statuses[i]['statusMessage'] +'</p>'+
+                        '</div> <!-- cd-timeline-content -->'+
+                        '</div> <!-- cd-timeline-block -->';
+                    }
+
+                    statusContent.innerHTML += '</section> <!-- cd-timeline -->'+'</div>'+
+                    '<div class="panel-footer" style="background: #1A2226;box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16), 0 -3px 6px rgba(0, 0, 0, 0.23);">';
+                    '<div class="input-group" style="height:7vh; padding:1vh;">'+
+                    '<input id="status-input" type="text" class="form-control input-sm chat_input" style="height:5vh;" placeholder="Yeni durum oluşturun..." />'+
+                    '<span class="input-group-btn">'+
+                    '<button class="btn btn-dark btn-sm" onclick="addStatus(' + teamID + ', ' + statuses[0]['subpartID'] + ')" id="btn-chat" style="height:5vh;">Gönder</button>'+
+                    '</span>'+
+                    '</div>';
+                }
+            }
+        })
+        .fail(function(data, xhr) {
+            //window.alert("dataf:" + data.message);
+            window.alert("Yeni durumlar alınamadı.");
+            //window.alert("xhr:" + xhr.status);
+            //document.getElementById('personnelForm').reset();
+        });
+
+}
 
 function updateEmergency(value) {
     $("#emergencyLevelValue").text(value);
@@ -985,5 +1125,36 @@ function removeVolunteerFromTeam(volunteerID) {
         .fail(function(data, xhr) {
             window.alert("Gönüllü kullanıcı takımdan çıkarılamadı.");
         });
+
+}
+
+function addStatus(teamID, subpartID) {
+
+    var statusMessage = document.getElementById("status-input").value.trim();
+
+
+    if (statusMessage == '') {
+        return false;
+    }
+
+    $.post("https://afetkurtar.site/api/status/create.php", JSON.stringify({
+            statusMessage: statusMessage,
+            teamID: teamID,
+            subpartID: subpartID
+    }))
+    .done(function(data, status, xhr) {
+        if (xhr.status == 201) {
+            document.location.reload();
+        } else {
+            window.alert("Durum oluşturulurken hata oluştu.");
+        }
+    })
+    .fail(function(data, xhr) {
+        window.alert("Durum oluşturulamadı.");
+    });
+    var statusContents = document.getElementsByClassName("status-content");
+    if(statusContents.length != 0){
+        document.getElementById('cd-timeline').scrollIntoView({ behavior: 'smooth', block: 'end' });
+    }
 
 }
