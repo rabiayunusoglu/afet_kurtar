@@ -17,6 +17,7 @@
         <include
             layout="@layout/activity_tool_bar">
         </include>
+        <include layout="@layout/activity_tool_personel_anasayfa"></include>
         <TextView
             android:layout_width="match_parent"
             android:layout_height="match_parent"

@@ -168,7 +168,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
                             if(tmpJson.getString("userToken").equals(FirebaseInstanceId.getInstance().getToken())){
                                 // ****************************************************************************************** TEST ICIN USER TYPE AYARLAMA YERI
-                               // type = "authorizedUser";
+                                //type = "authorizedUser";
 
                                // type = "personnelUser";
 

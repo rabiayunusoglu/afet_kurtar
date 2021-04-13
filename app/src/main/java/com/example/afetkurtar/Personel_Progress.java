@@ -186,7 +186,7 @@ public class Personel_Progress extends AppCompatActivity  {
          */
         try {
 
-                getTeamInfo(Personel_Anasayfa.PersonelInfo.getString("TeamID"));
+                getTeamInfo(Personel_Anasayfa.PersonelInfo.getString("teamID"));
 
         } catch (Exception e) {
             e.printStackTrace();

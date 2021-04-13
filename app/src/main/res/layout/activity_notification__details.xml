@@ -5,6 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
+    android:background="#BFBFBF"
     tools:context=".Notification_Details">
     <LinearLayout
         android:layout_width="match_parent"
@@ -13,14 +14,14 @@
         android:layout_gravity="center_horizontal">
 
         <Button
-            android:textColor="@color/black"
+            android:textColor="#FFF"
+            android:background="#000"
             android:id="@+id/Notification_geri_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="left"
             android:layout_weight="1"
-            android:text="Geri"
-            app:backgroundTint="#BFBFBF">
+            android:text="Geri">
 
         </Button>
         <Space
@@ -30,14 +31,15 @@
         </Space>
 
         <Button
-            android:textColor="@color/black"
+            android:textColor="#FFF"
+
+            android:background="#AC5454"
             android:id="@+id/Delete_notice"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="right"
             android:layout_weight="1"
-            android:text="Sil"
-            app:backgroundTint="#BFBFBF">
+            android:text="Sil">
 
         </Button>
         <Space
@@ -47,14 +49,14 @@
         </Space>
 
         <Button
-            android:textColor="@color/black"
+            android:textColor="#FFF"
+            android:background="#6464"
             android:id="@+id/Create_new_Disaster"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="right"
             android:layout_weight="1"
-            android:text="Yeni Afet Oluştur"
-            app:backgroundTint="#BFBFBF">
+            android:text="Yeni Afet Oluştur">
 
         </Button>
     </LinearLayout>

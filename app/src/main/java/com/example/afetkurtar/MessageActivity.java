@@ -455,10 +455,10 @@ public class MessageActivity extends AppCompatActivity {
 
     public void ClickTeamManagement(View view) {
        // Yetki = "kaptan";  //*************************************************************************** TEST AMACLI KALDIRILACAK
-       // if(Yetki.equalsIgnoreCase("kaptan"))
-       //     redirectActivity(this, Personel_Progress.class);
-       // else
-       //     Toast.makeText(getApplicationContext(), "Gerekli Yetkiye Sahip Değilsiniz", Toast.LENGTH_LONG).show();
+        if(Personel_Anasayfa.Yetki.equalsIgnoreCase("kaptan"))
+            redirectActivity(this, Personel_Progress.class);
+        else
+            Toast.makeText(getApplicationContext(), "Gerekli Yetkiye Sahip Değilsiniz", Toast.LENGTH_LONG).show();
     }
 
     public void ClickPersonelNotification(View view) {
@@ -483,7 +483,7 @@ public class MessageActivity extends AppCompatActivity {
     }
     // ANA SAYFA
     public void ClickPersonelAnasayfa(View view) {
-        redirectActivity(this, Authorized_Anasayfa.class );
+        redirectActivity(this, Personel_Anasayfa.class );
     }
 
 }// class end

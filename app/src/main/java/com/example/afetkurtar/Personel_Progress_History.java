@@ -41,8 +41,8 @@ public class Personel_Progress_History extends AppCompatActivity {
         Bundle bundle = getIntent().getExtras();
         TeamID = bundle.getString("Team_id");
         SubPartID = bundle.getString("Sub_id");
-        TeamID = "1";   // ******************************************************************* TEST AMACLI / SILINECEK
-        SubPartID = "2"; // ******************************************************************* TEST AMACLI / SILINECEK
+      //  TeamID = "1";   // ******************************************************************* TEST AMACLI / SILINECEK
+      //  SubPartID = "2"; // ******************************************************************* TEST AMACLI / SILINECEK
         TeamOrSub = true;
         getData(TeamID, TeamOrSub);
 

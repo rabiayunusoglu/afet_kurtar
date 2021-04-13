@@ -278,11 +278,11 @@ public class Personel_Information extends AppCompatActivity {
     }
 
     public void ClickPersonelInfo(View view) {
-        // redirectActivity(this, Authorized_PersonelRegister.class);
+        //redirectActivity(this, Personel_Information.class);
     }
 
     public void ClickPersonelArea(View view) {
-         redirectActivity(this, Team_Member_Locations.class);
+        redirectActivity(this, Team_Member_Locations.class);
     }
     public void ClickPersonelMessage(View view) {
         redirectActivity(this, MessageActivity.class);
@@ -295,7 +295,6 @@ public class Personel_Information extends AppCompatActivity {
     }
     // ANA SAYFA
     public void ClickPersonelAnasayfa(View view) {
-        // ZATEN BU SAYFADA OLDUGUNDAN KAPALI
-        //redirectActivity(this, Authorized_Anasayfa.class );
+        redirectActivity(this, Personel_Anasayfa.class );
     }
 }
