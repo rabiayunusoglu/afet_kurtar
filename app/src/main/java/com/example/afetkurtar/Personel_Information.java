@@ -50,65 +50,78 @@ public class Personel_Information extends AppCompatActivity {
         queue = Volley.newRequestQueue(this);
 
         ((TextView)findViewById(R.id.Team_my_role)).setText(Personel_Anasayfa.Yetki);
+
         try {
-            ((TextView)findViewById(R.id.Team_info_no)).setText(Personel_Anasayfa.PersonelInfo.getString("teamID"));
-        } catch (Exception e) {
-            e.printStackTrace();
+            ((TextView) findViewById(R.id.Team_info_no)).setText(Personel_Anasayfa.PersonelInfo.getString("teamID"));
         }
+        catch (Exception e){
+
+        }
+        try {
+            ((TextView) findViewById(R.id.Team_info_no)).setText(Personel_Anasayfa.VolunteerInfo.getString("assignedTeamID"));
+        }
+        catch (Exception e){
+
+        }
+
         setData();
 
     }
-    @Override
-    public void onBackPressed() {
-        redirectActivity(this,Personel_Anasayfa.class);
-    }
+
 
     public void setData(){
         JSONObject obj = new JSONObject();
-        String id = "0";
+        String team  ="";
+
+
         try {
-            id = Personel_Anasayfa.PersonelInfo.getString("teamID");
-            obj.put("teamID", id);
+            obj.put("teamID", Personel_Anasayfa.PersonelInfo.getString("teamID"));
+            team = Personel_Anasayfa.PersonelInfo.getString("teamID");
+        }catch (Exception e){
+        }
+        try{
+            obj.put("teamID", Personel_Anasayfa.VolunteerInfo.getString("assignedTeamID"));
+            team =  Personel_Anasayfa.VolunteerInfo.getString("assignedTeamID");
+        }catch (Exception e){
+        }
+        try {
+            if(!team.equals("0")) {
+                // ASAGISI DEGISECEK -- TEST AMACLI YAPILDI
+
+                JsonObjectRequest jsonObjectRequest = new JsonObjectRequest
+                        (Request.Method.POST, "https://afetkurtar.site/api/team/search.php", obj, new Response.Listener<JSONObject>() {
+
+                            @Override
+                            public void onResponse(JSONObject response) {
+                                try {
+                                    //  System.out.println(response.toString());
+                                    String cevap = response.getString("records");
+                                    cevap = cevap.substring(1, cevap.length() - 1);
+                                    JSONObject tmpJson = new JSONObject(cevap);
+
+                                    ((TextView) findViewById(R.id.Team_info_subpartno)).setText(tmpJson.getString("assignedSubpartID"));
+                                    ((TextView) findViewById(R.id.personel_team_status)).setText(tmpJson.getString("status"));
+                                    getSubpart(tmpJson.getString("assignedSubpartID"));
+                                    getTeamNames();
+                                } catch (Exception e) {
+                                    e.printStackTrace();
+                                }
+                            }
+                        }, new Response.ErrorListener() {
+                            @Override
+                            public void onErrorResponse(VolleyError error) {
+                                // TODO: Handle error
+                                System.out.println(error);
+                            }
+                        });
+                queue.add(jsonObjectRequest);
+
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }
-        // ASAGISI DEGISECEK -- TEST AMACLI YAPILDI
-        if(!id.equals("0")) {
-            JsonObjectRequest jsonObjectRequest = new JsonObjectRequest
-                    (Request.Method.POST, "https://afetkurtar.site/api/team/search.php", obj, new Response.Listener<JSONObject>() {
-
-                        @Override
-                        public void onResponse(JSONObject response) {
-                            try {
-                                //  System.out.println(response.toString());
-                                String cevap = response.getString("records");
-                                cevap = cevap.substring(1, cevap.length() - 1);
-                                JSONObject tmpJson = new JSONObject(cevap);
-
-                                ((TextView) findViewById(R.id.Team_info_subpartno)).setText(tmpJson.getString("assignedSubpartID"));
-                                ((TextView) findViewById(R.id.personel_team_status)).setText(tmpJson.getString("status"));
-                                getSubpart(tmpJson.getString("assignedSubpartID"));
-                                getTeamNames();
-                            } catch (Exception e) {
-                                e.printStackTrace();
-                            }
-                        }
-                    }, new Response.ErrorListener() {
-                        @Override
-                        public void onErrorResponse(VolleyError error) {
-                            // TODO: Handle error
-                            System.out.println(error);
-                        }
-                    });
-            queue.add(jsonObjectRequest);
-        }
-        else{
-            printError();
-        }
     }
-    public void printError(){
-        Toast.makeText(getApplicationContext(), "Takım Bulunamadı", Toast.LENGTH_LONG).show();
-    }
+
     public void getSubpart(String part){
         JSONObject obj = new JSONObject();
         try {
@@ -154,16 +167,55 @@ public class Personel_Information extends AppCompatActivity {
 
     public void getTeamNames(){
         JSONObject obj = new JSONObject();
-        try {
-                obj.put("teamID",Personel_Anasayfa.PersonelInfo.getString("teamID"));
 
-        } catch (JSONException e) {
-            e.printStackTrace();
+        try {
+            obj.put("teamID", Personel_Anasayfa.PersonelInfo.getString("teamID"));
+        }catch (Exception e){
         }
+        try {
+            obj.put("teamID", Personel_Anasayfa.VolunteerInfo.getString("assignedTeamID"));
+        }catch (Exception e){
+        }
+
 
         System.out.println("KAFAYI YIYECEM ULAAAAAA");
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest
                 (Request.Method.POST, "https://afetkurtar.site/api/personnelUser/search.php", obj, new Response.Listener<JSONObject>() {
+
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        try {
+                            //  System.out.println(response.toString());
+                            getTeamNamesVolunteer();
+                            addtext(response);
+                        }catch (Exception e){
+                            e.printStackTrace();
+                        }
+                    }
+                }, new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        // TODO: Handle error
+                        System.out.println(error);
+                    }
+                });
+        queue.add(jsonObjectRequest);
+    }
+
+    public void getTeamNamesVolunteer(){
+        JSONObject obj = new JSONObject();
+        try {
+            obj.put("teamID", Personel_Anasayfa.PersonelInfo.getString("teamID"));
+        }catch (Exception e){
+        }
+        try {
+            obj.put("teamID", Personel_Anasayfa.VolunteerInfo.getString("assignedTeamID"));
+        }catch (Exception e){
+        }
+
+        System.out.println("KAFAYI YIYECEM ULAAAAAA");
+        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest
+                (Request.Method.POST, "https://afetkurtar.site/api/volunteerUser/search.php", obj, new Response.Listener<JSONObject>() {
 
                     @Override
                     public void onResponse(JSONObject response) {
@@ -183,14 +235,27 @@ public class Personel_Information extends AppCompatActivity {
                 });
         queue.add(jsonObjectRequest);
     }
+
     public void addtext(JSONObject obj) {
         String cevap = "";
         ArrayList<String> list = new ArrayList<String>();
         ArrayList<String> list2 = new ArrayList<String>();
+        String id = "";
+        try {
+            id = Personel_Anasayfa.PersonelInfo.getString("teamID");
+        }catch (Exception e){
+        }
+        try {
+            id = Personel_Anasayfa.VolunteerInfo.getString("assignedTeamID");
+        }catch (Exception e){
+
+        }
+
         try {
             //    System.out.println(response.toString());
             cevap = obj.getString("records");
             cevap = cevap.substring(1,cevap.length()-1);
+
 
             while(cevap.indexOf(",{") >-1){
                 list.add(cevap.substring(0,cevap.indexOf(",{")));
@@ -198,11 +263,25 @@ public class Personel_Information extends AppCompatActivity {
             }
             list.add(cevap);
             for(int x = list.size()-1; x>=0;x--){
+
                 try {
                     JSONObject tmp = new JSONObject(list.get(x));
-                    list2.add(tmp.getString("personnelName"));
+                    if(id.equals(tmp.getString("teamID"))) {
+                        list2.add(tmp.getString("personnelName"));
+                    }
                 }catch (Exception e){
                     // e.printStackTrace();
+                }
+                try {
+                    JSONObject tmp = new JSONObject(list.get(x));
+
+                    if(id.equals(tmp.getString("assignedTeamID"))){
+                        list2.add(tmp.getString("volunteerName"));
+                        System.out.println(tmp.getString("assignedTeamID"));
+                    }
+
+                }catch (Exception e){
+
                 }
             }
         }catch (Exception e){
@@ -230,6 +309,10 @@ public class Personel_Information extends AppCompatActivity {
                         System.out.println("Cikis basarili");
                     }
                 });
+    }
+    @Override
+    public void onBackPressed() {
+        redirectActivity(this,Personel_Anasayfa.class);
     }
 
     public void ClickMenu(View view) {

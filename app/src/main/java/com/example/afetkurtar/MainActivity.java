@@ -176,7 +176,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                                 // ****************************************************************************************** TEST ICIN USER TYPE AYARLAMA YERI
 
                                 //type = "authorizedUser";
-                                type = "authorizedUser";
+                              //  type = "authorizedUser";
 
 
                                 //type = "personnelUser";

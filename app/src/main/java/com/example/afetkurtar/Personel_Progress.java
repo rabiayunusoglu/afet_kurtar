@@ -342,6 +342,7 @@ public class Personel_Progress extends AppCompatActivity  {
         JSONObject updateStatAndManpow = new JSONObject();
         try {
             updateStatAndManpow.put("teamID",TeamInfo.getString("teamID"));
+            updateStatAndManpow.put("assignedSubpartID",TeamInfo.getString("assignedSubpartID"));
             if(statusUpdated){
                 updateStatAndManpow.put("status",progresstmp);
             }

@@ -58,8 +58,8 @@ public class NotificationSender extends Activity {
                             }
                             list.add(new JSONObject(cevap));
                            // getTokensandSend(list,ID,mesaj);
-                         //   addVolunteer(list,ID,mesaj);
-                            getTokensandSend(list,ID,mesaj);
+                            addVolunteer(list,ID,mesaj);
+                          //  getTokensandSend(list,ID,mesaj);
                         }catch (Exception e){
 
                         }
@@ -74,7 +74,7 @@ public class NotificationSender extends Activity {
         queue.add(jsonObjectRequest);
 
     }
-    /*
+
     public void addVolunteer(ArrayList<JSONObject> perarr,String ID,String mesaj){
         JSONObject obj = new JSONObject();
         try {
@@ -110,14 +110,15 @@ public class NotificationSender extends Activity {
                     @Override
                     public void onErrorResponse(VolleyError error) {
                         // TODO: Handle error
+                        getTokensandSend(perarr,new ArrayList<JSONObject>(),ID,mesaj);
                         System.out.println(error);
                     }
                 });
         queue.add(jsonObjectRequest);
 
     }
-*/
-    public void getTokensandSend(ArrayList<JSONObject> perarr/*,ArrayList<JSONObject> perarr2*/,String ID,String mesaj){
+
+    public void getTokensandSend(ArrayList<JSONObject> perarr,ArrayList<JSONObject> perarr2,String ID,String mesaj){
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest
                 (Request.Method.GET, "https://afetkurtar.site/api/users/read.php", null, new Response.Listener<JSONObject>() {
 
@@ -145,14 +146,14 @@ public class NotificationSender extends Activity {
                             }
                             */
                             for(JSONObject y: list) {
-                              //  boolean check = true;
+                                boolean check = true;
                                 for (JSONObject x : perarr) {
                                     if (x.getString("personnelID").equals(y.getString("userID"))) {
                                         Strarr.add(y.getString("userToken"));
-                                 //       check=false;
+                                       check=false;
                                     }
                                 }
-                                /*
+
                                 if(check) {
                                     for (JSONObject x : perarr2) {
                                         if (x.getString("volunteerID").equals(y.getString("userID"))) {
@@ -160,7 +161,7 @@ public class NotificationSender extends Activity {
                                         }
                                     }
                                 }
-                                */
+
                             }
                             for(String str : Strarr){
                                 if(str.length()>10) {

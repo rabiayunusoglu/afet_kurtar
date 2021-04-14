@@ -32,6 +32,7 @@ public class Personel_Anasayfa extends AppCompatActivity {
     RequestQueue queue;
     Bundle bundle;
     public static JSONObject PersonelInfo = null;
+    public static JSONObject VolunteerInfo = null;
     static String Yetki = "";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -96,8 +97,58 @@ public class Personel_Anasayfa extends AppCompatActivity {
 
                             }
                             else{
-                            printError();
+                                checkAuthorityVolunteer();
                             }
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }, new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        // TODO: Handle error
+                        checkAuthorityVolunteer();
+                        System.out.println(error);
+                    }
+                });
+        queue.add(jsonObjectRequest);
+    }
+
+    public void checkAuthorityVolunteer(){
+        JSONObject obj = new JSONObject();
+        try {
+            obj.put("volunteerID", MainActivity.userInfo.getString("userID"));
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        // ASAGISI DEGISECEK -- TEST AMACLI YAPILDI
+
+        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest
+                (Request.Method.POST, "https://afetkurtar.site/api/volunteerUser/search.php", obj, new Response.Listener<JSONObject>() {
+
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        try {
+                            //  System.out.println(response.toString());
+                            String cevap = response.getString("records");
+                            cevap = cevap.substring(1, cevap.length() - 1);
+                            JSONObject tmpJson = new JSONObject(cevap);
+                            if(tmpJson.getString("volunteerID").equals(MainActivity.userInfo.getString("userID"))) {
+                                VolunteerInfo = tmpJson;
+                                Yetki = "Yok";
+                                try {
+                                    if((bundle.getString("title")).equals("Yeni Mesaj")){
+                                        messageRedirect();
+                                    }
+                                }
+                                catch (Exception e){
+
+                                }
+                            }
+                            else{
+                                printError();
+                            }
+
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
@@ -111,6 +162,7 @@ public class Personel_Anasayfa extends AppCompatActivity {
                 });
         queue.add(jsonObjectRequest);
     }
+
     public void printError(){
         Toast.makeText(getApplicationContext(), "Bir Hata İle Karşılaşıldı Lütfen Tekrar Deneyin", Toast.LENGTH_LONG).show();
     }
