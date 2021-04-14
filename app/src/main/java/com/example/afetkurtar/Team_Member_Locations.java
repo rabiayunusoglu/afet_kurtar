@@ -64,9 +64,23 @@ public class Team_Member_Locations extends AppCompatActivity implements OnMapRea
         //Toast.makeText(this, "map is ready", Toast.LENGTH_SHORT).show();
         //System.out.println("onMapready içinde");
 
+        String teamID="";
+        try {
+            teamID = Personel_Anasayfa.PersonelInfo.getString("teamID");
+        }catch (Exception e){
+        }
+        try{
+            teamID =  Personel_Anasayfa.VolunteerInfo.getString("assignedTeamID");
+        }catch (Exception e){
+        }
+
         try {
             // bir şekilde team id e ulaşmamız gerekli
-            findTeamMemberLocations(Personel_Anasayfa.PersonelInfo.getString("teamID").toString().trim());
+            findTeamMemberLocations(teamID.trim());
+
+            findVolunteerMemberLocations(teamID.trim());
+
+
             //System.out.println("Personel_Anasayfa.PersonelInfo.getString(\"teamID\").toString(): " + Personel_Anasayfa.PersonelInfo.getString("teamID").toString());
             //findTeamMemberLocations("13");
         } catch (Exception e) {
@@ -100,6 +114,88 @@ public class Team_Member_Locations extends AppCompatActivity implements OnMapRea
         //teamID = "13";
         getLocationDataFromDB(teamID);
 
+
+    }
+    private void findVolunteerMemberLocations(String teamID){
+        JSONObject obj = new JSONObject();
+        try {
+            obj.put("assignedTeamID",teamID);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest
+                (Request.Method.POST, "https://afetkurtar.site/api/volunteerUser/search.php", obj, new Response.Listener<JSONObject>() {
+
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        try {
+
+                            handleResponseForVolunteerMember(response);
+
+                        }catch (Exception e){
+                            e.printStackTrace();
+                        }
+                    }
+                }, new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        // TODO: Handle error
+                        System.out.println(error);
+                    }
+                });
+        queue.add(jsonObjectRequest);
+    }
+    private void handleResponseForVolunteerMember(JSONObject volunteerUsers){
+        ArrayList<String> list = new ArrayList<String>();
+        try {
+
+            String cevap = volunteerUsers.getString("records");
+            cevap = cevap.substring(1, cevap.length() - 1);
+
+            while (cevap.indexOf(",{") > -1) {
+                list.add(cevap.substring(0, cevap.indexOf(",{")));
+                cevap = cevap.substring(cevap.indexOf(",{") + 1);
+            }
+            list.add(cevap);
+
+            ArrayList<JSONObject> myList = new ArrayList<JSONObject>();
+
+            for (String x : list) {
+                try {
+                    JSONObject tmp = new JSONObject(x);
+                    myList.add(tmp);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+            initializeVolunteerMemberLocationsOnMap(myList);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+    private void initializeVolunteerMemberLocationsOnMap(ArrayList<JSONObject> myList){
+        for(int i = 0 ; i<myList.size(); i++){
+            addVolunteerMemberMarker(myList.get(i));
+        }
+    }
+    private void addVolunteerMemberMarker(JSONObject member){
+        System.out.println("addTeamMemberMarker içinde ");
+        try {
+            String stringLatitude = member.getString("latitude").toString();
+            String stringLongitude = member.getString("longitude").toString();
+            teamID = member.getString("assignedTeamID").toString();
+            double latitude = Double.parseDouble(stringLatitude);
+            double longitude = Double.parseDouble(stringLongitude);
+
+            LatLng latLng = new LatLng(latitude, longitude);
+            Marker memberLocationMarker = mMap.addMarker(new MarkerOptions().position(latLng)
+                    .title("Team ID: " + teamID).snippet(member.getString("volunteerName").toString()).icon(bitmapDescriptorFromVector(getApplicationContext(),R.drawable.ic_volunteerteammember)));
+            mMap.setInfoWindowAdapter(new CustomInfoWindowAdapter(Team_Member_Locations.this));
+            markerList.add(memberLocationMarker);
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
 
     }
     public void getLocationDataFromDB(String teamID){

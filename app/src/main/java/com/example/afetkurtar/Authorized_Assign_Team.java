@@ -96,9 +96,15 @@ public class Authorized_Assign_Team extends AppCompatActivity {
 
                     for (JSONObject x : jsonObjectListForTeam) {
                         try {
-                            if (x.getString("teamID").equals(((Spinner) findViewById(R.id.assignTeamSpinner)).getSelectedItem().toString())) {
+                            if (x.getString("teamID").trim().equals(((Spinner) findViewById(R.id.assignTeamSpinner)).getSelectedItem().toString().trim())) {
                                 teamID = (((Spinner) findViewById(R.id.assignTeamSpinner)).getSelectedItem().toString());
-                                calaculateSelectedTeamInformations();
+                                needManPower = x.getString("needManPower").toString();
+                                //System.out.println("NEEEED MAN POWERRRRRRRRRRRR: " + needManPower);
+                                //System.out.println("needmanpower value ? : " + needManPower);
+                                needEquipment = x.getString("needEquipment").toString();
+                                //System.out.println("needEquipment value ? : " + needEquipment);
+                                status = x.getString("status").toString();
+
                             }
                         } catch (Exception e) {
                             e.getMessage();
@@ -149,10 +155,10 @@ public class Authorized_Assign_Team extends AppCompatActivity {
     //setSubpartToSelectedSubpartID methodu sonradan silinecek
     public void setSubpartToSelectedSubpartID(){
         this.selectedSubpartID = "Personel Seçin";
-        System.out.println("selectedS id : " + selectedSubpartID);
+        //System.out.println("selectedS id : " + selectedSubpartID);
         try{
             this.selectedSubpartID = Disaster_Details.selectedSubpartID;
-            System.out.println("before set spinner selectedS id : " + selectedSubpartID);
+            //System.out.println("before set spinner selectedS id : " + selectedSubpartID);
             setSpinnerValue(selectedSubpartID,subpartSpinner);
         }catch (Exception e){
             e.getMessage();
@@ -170,23 +176,6 @@ public class Authorized_Assign_Team extends AppCompatActivity {
         return 0;
     }
 
-    public void calaculateSelectedTeamInformations(){
-        for(int i = 0; i<jsonObjectListForTeam.size(); i++){
-            if(teamStringList.get(i).equalsIgnoreCase(teamID)){
-                try {
-                    needManPower = jsonObjectListForTeam.get(i).getString("needManPower").toString();
-                    System.out.println("needmanpower value ? : " + needManPower);
-                    needEquipment = jsonObjectListForTeam.get(i).getString("needEquipment").toString();
-                    System.out.println("needEquipment value ? : " + needEquipment);
-                    status = jsonObjectListForTeam.get(i).getString("status").toString();
-                    System.out.println("status value ? : " + status);
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-            }
-        }
-
-    }
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.btn_assignTeamComplete:
@@ -572,7 +561,7 @@ public class Authorized_Assign_Team extends AppCompatActivity {
         JSONObject obj = new JSONObject();
 
         try {
-            obj.put("teamID", teamID.trim());
+            obj.put("assignedTeamID", teamID.trim());
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -642,8 +631,8 @@ public class Authorized_Assign_Team extends AppCompatActivity {
             obj.put("address", volunteerObject.getString("address"));
             obj.put("isExperienced", volunteerObject.getString("isExperienced"));
             obj.put("haveFirstAidCert", volunteerObject.getString("haveFirstAidCert"));
-            obj.put("requestedSubpart", volunteerObject.getString("requestedSubpart"));
-            obj.put("responseSubpart", volunteerObject.getString("responseSubpart"));
+            obj.put("requestedSubpart", "0");
+            obj.put("responseSubpart", "0");
             obj.put("assignedTeamID", "0"); // reset Team id
             obj.put("role", volunteerObject.getString("role"));
             obj.put("latitude", volunteerObject.getString("latitude"));

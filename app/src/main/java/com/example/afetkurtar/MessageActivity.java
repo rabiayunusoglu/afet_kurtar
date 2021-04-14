@@ -79,7 +79,7 @@ public class MessageActivity extends AppCompatActivity {
          @Override
          public void onReceive(Context context, Intent intent) {
              Bundle extras = intent.getExtras();
-             System.out.println("************************** 0000000000000000000000000000 2222222222222222222222222222222222222222");
+             //System.out.println("************************** 0000000000000000000000000000 2222222222222222222222222222222222222222");
              String state = extras.getString("extra");
 
              refreshActivity();
@@ -271,12 +271,21 @@ public class MessageActivity extends AppCompatActivity {
 
     public void getUserInfo(){
         try {
+            this.teamID = Personel_Anasayfa.PersonelInfo.getString("teamID");
             this.userID = MainActivity.userInfo.getString("userID");
             this.senderName = MainActivity.userInfo.getString("userName");
-            this.teamID = Personel_Anasayfa.PersonelInfo.getString("teamID");
 
         }catch (Exception e){
-            e.printStackTrace();
+            //e.printStackTrace();
+        }
+
+        try {
+            this.teamID = Personel_Anasayfa.VolunteerInfo.getString("assignedTeamID");
+            this.userID = MainActivity.userInfo.getString("userID");
+            this.senderName = MainActivity.userInfo.getString("userName");
+
+        }catch (Exception e){
+            //e.printStackTrace();
         }
     }
 

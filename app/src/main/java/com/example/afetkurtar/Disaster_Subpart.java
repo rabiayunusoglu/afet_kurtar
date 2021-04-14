@@ -496,21 +496,17 @@ public class Disaster_Subpart extends AppCompatActivity implements OnMapReadyCal
                 });
     }
 
-    // IHBARLAR
     public void ClickAuthorizedNotice(View view) {
         redirectActivity(this, Authorized_Notification.class);
     }
-
     // AKTIF AFET
     public void ClickAuthorizeActiveDisaster(View view) {
         redirectActivity(this, Authorized_ActiveDisasters.class);
     }
-
     // PERSONEL KAYIT
     public void ClickAuthorizedPersonelRegistration(View view) {
         redirectActivity(this, Authorized_PersonelRegister.class);
     }
-
     // GONULLU ISTEKLERI
     public void ClickAuthrizedVolunteerRequest(View view) {
         redirectActivity(this, Authorized_VolunteerRequest.class);
@@ -520,28 +516,25 @@ public class Disaster_Subpart extends AppCompatActivity implements OnMapReadyCal
     // CIKIS
     public void ClickAuthorizedExit(View view) {
         signOut();
-        redirectActivity(this, MainActivity.class);
+        redirectActivity(this, MainActivity.class );
     }
-
     public void ClickNotificationSend(View view) {
-        redirectActivity(this, Authorized_Send_Notification.class);
+        redirectActivity(this, Authorized_Send_Notification.class );
     }
 
     // ANA SAYFA
     public void ClickAuthAnasayfa(View view) {
-        // ZATEN BU SAYFADA OLDUGUNDAN KAPALI
-        redirectActivity(this, Authorized_Anasayfa.class);
-    }
 
+        redirectActivity(this, Authorized_Anasayfa.class );
+    }
     public void ClickAuthorizedPersoneller(View view) {
-        redirectActivity(this, Authorized_Personeller.class);
+        redirectActivity(this, Authorized_Personeller.class );
     }
-
-    public void ClickAuthorizedEkipman(View view) {
-        redirectActivity(this, Authorized_Anasayfa.class);
+    public void ClickAuthorizedSmartAssign(View view) {
+        redirectActivity(this, Authorized_SmartAssign_Subpart.class );
     }
 
     public void ClickAuthorizedTeam(View view) {
-        redirectActivity(this, Authorized_Anasayfa.class);
+        redirectActivity(this, Authorized_Assign_Team.class );
     }
 }

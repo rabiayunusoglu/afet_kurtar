@@ -544,6 +544,15 @@ public class DisasterCreate extends AppCompatActivity implements OnMapReadyCallb
     /*
      *************************************** ASAGIDAKI KISIMLAR YONLENDIRMELERI AYARLAR
      */
+    public static void redirectActivity(Activity activity, Class aClass) {
+        //initialize intent
+        Intent intent = new Intent(activity, aClass);
+        //Set flag
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        //Start activity
+        activity.startActivity(intent);
+
+    }
     private void signOut() {
         LogoutHandler lout = new LogoutHandler(getApplicationContext());
         lout.updateUser();
@@ -555,21 +564,17 @@ public class DisasterCreate extends AppCompatActivity implements OnMapReadyCallb
                 });
     }
 
-    // IHBARLAR
     public void ClickAuthorizedNotice(View view) {
         redirectActivity(this, Authorized_Notification.class);
     }
-
     // AKTIF AFET
     public void ClickAuthorizeActiveDisaster(View view) {
         redirectActivity(this, Authorized_ActiveDisasters.class);
     }
-
     // PERSONEL KAYIT
     public void ClickAuthorizedPersonelRegistration(View view) {
         redirectActivity(this, Authorized_PersonelRegister.class);
     }
-
     // GONULLU ISTEKLERI
     public void ClickAuthrizedVolunteerRequest(View view) {
         redirectActivity(this, Authorized_VolunteerRequest.class);
@@ -579,35 +584,25 @@ public class DisasterCreate extends AppCompatActivity implements OnMapReadyCallb
     // CIKIS
     public void ClickAuthorizedExit(View view) {
         signOut();
-        redirectActivity(this, MainActivity.class);
+        redirectActivity(this, MainActivity.class );
     }
-
     public void ClickNotificationSend(View view) {
-        redirectActivity(this, Authorized_Send_Notification.class);
+        redirectActivity(this, Authorized_Send_Notification.class );
     }
 
     // ANA SAYFA
     public void ClickAuthAnasayfa(View view) {
-        // ZATEN BU SAYFADA OLDUGUNDAN KAPALI
-        redirectActivity(this, Authorized_Anasayfa.class );
-    }
-    public static void redirectActivity(Activity activity, Class aClass) {
-        //initialize intent
-        Intent intent = new Intent(activity, aClass);
-        //Set flag
-        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        //Start activity
-        activity.startActivity(intent);
 
+        redirectActivity(this, Authorized_Anasayfa.class );
     }
     public void ClickAuthorizedPersoneller(View view) {
-        redirectActivity(this, Authorized_Anasayfa.class );
+        redirectActivity(this, Authorized_Personeller.class );
     }
-    public void ClickAuthorizedEkipman(View view) {
-        redirectActivity(this, Authorized_Anasayfa.class );
+    public void ClickAuthorizedSmartAssign(View view) {
+        redirectActivity(this, Authorized_SmartAssign_Subpart.class );
     }
 
     public void ClickAuthorizedTeam(View view) {
-        redirectActivity(this, Authorized_Anasayfa.class );
+        redirectActivity(this, Authorized_Assign_Team.class );
     }
 }

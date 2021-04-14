@@ -86,35 +86,7 @@
             />
     </LinearLayout>
 
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Gerekli ekipman sayısı:"
-        android:paddingLeft="16dp"
-        android:textColor="#000"
-        android:textStyle="bold"
 
-        android:textSize="16sp">
-    </TextView>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="34dp"
-        android:layout_weight="0"
-        android:paddingLeft="16dp"
-        android:paddingRight="16dp"
-        tools:ignore="MissingConstraints">
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/tv_team_equipment"
-            android:textSize="12dp"
-            android:textColor="#000"
-            android:background="#FFF"
-            android:layout_weight="1"
-            />
-    </LinearLayout>
 
     <TextView
         android:layout_width="match_parent"
@@ -148,34 +120,7 @@
             android:layout_height="10dp"
             android:layout_weight="0"></Space>
 
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/tv_team_available_volunteerSpinner"
-            android:text="Uygun gönüllü personeller listesi"
-            android:paddingLeft="16dp"
-            android:textColor="#000"
-            android:textStyle="bold"
-            android:textSize="16sp">
-        </TextView>
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="34dp"
-            android:layout_weight="0"
-            android:paddingLeft="16dp"
-            android:paddingRight="16dp"
-            tools:ignore="MissingConstraints">
-
-            <Spinner
-                android:id="@+id/edit_team_available_volunteerSpinner"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textColor="#000"
-                android:background="#FFF"
-                android:layout_weight="1"></Spinner>
-
-        </LinearLayout>
 
 
         <Space
@@ -212,37 +157,10 @@
             android:layout_width="match_parent"
             android:layout_height="10dp"
             android:layout_weight="0"></Space>
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Takımdaki gönüllü personellerinin listesi"
-            android:id="@+id/tv_team_volunteerMembersSpinner"
-            android:paddingLeft="16dp"
-            android:textColor="#000"
-            android:textStyle="bold"
-            android:textSize="16sp">
-        </TextView>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="34dp"
-            android:layout_weight="0"
-            android:paddingLeft="16dp"
-            android:paddingRight="16dp"
-            tools:ignore="MissingConstraints">
-
-            <Spinner
-                android:id="@+id/edit_team_volunteerMembersSpinner"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textColor="#000"
-                android:background="#FFF"
-                android:layout_weight="1"></Spinner>
-        </LinearLayout>
 
     <Space
         android:layout_width="match_parent"
-        android:layout_height="20dp"
+        android:layout_height="230dp"
         android:layout_weight="0"></Space>
 
     <LinearLayout
@@ -289,43 +207,7 @@
             android:layout_height="10dp"
             android:layout_weight="0"></Space>
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="40dp"
-            android:layout_weight="0"
-            android:paddingLeft="16dp"
-            android:paddingRight="16dp"
-            tools:ignore="MissingConstraints">
 
-            <Button
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:text="Gönüllü Ekle"
-                android:textSize="8dp"
-                android:textColor="#FFF"
-                android:background="#6464"
-                android:layout_weight="1"
-                android:textStyle="bold"
-                android:id="@+id/btn_editTeam_addVolunteer">
-            </Button>
-
-            <Space
-                android:layout_width="20dp"
-                android:layout_height="match_parent"
-                android:layout_weight="0"></Space>
-
-            <Button
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:text="Gönüllü Çıkar"
-                android:textSize="8dp"
-                android:textColor="#FFF"
-                android:background="#6464"
-                android:layout_weight="1"
-                android:textStyle="bold"
-                android:id="@+id/btn_editTeam_removeVolunteer">
-            </Button>
-        </LinearLayout>
         <Space
             android:layout_width="match_parent"
             android:layout_height="20dp">
