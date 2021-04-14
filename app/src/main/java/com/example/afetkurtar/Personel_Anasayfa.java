@@ -31,9 +31,9 @@ public class Personel_Anasayfa extends AppCompatActivity {
     GoogleSignInClient mGoogleSignInClient;
     RequestQueue queue;
     Bundle bundle;
-    public static JSONObject PersonelInfo = null;
-    public static JSONObject VolunteerInfo = null;
-    static String Yetki = "";
+    public static JSONObject PersonelInfo;
+    public static JSONObject VolunteerInfo;
+    static String Yetki;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -43,6 +43,10 @@ public class Personel_Anasayfa extends AppCompatActivity {
                 .requestEmail()
                 .build();
         mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
+
+        Yetki = "";
+        PersonelInfo = null;
+        VolunteerInfo = null;
 
         queue = Volley.newRequestQueue(this);
         try {

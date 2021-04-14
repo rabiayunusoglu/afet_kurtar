@@ -148,16 +148,24 @@ public class NotificationSender extends Activity {
                             for(JSONObject y: list) {
                                 boolean check = true;
                                 for (JSONObject x : perarr) {
-                                    if (x.getString("personnelID").equals(y.getString("userID"))) {
-                                        Strarr.add(y.getString("userToken"));
-                                       check=false;
+                                    try {
+                                        if (x.getString("personnelID").equals(y.getString("userID"))) {
+                                            Strarr.add(y.getString("userToken"));
+                                            check = false;
+                                        }
+                                    }catch (Exception e){
+
                                     }
                                 }
 
                                 if(check) {
                                     for (JSONObject x : perarr2) {
+                                        try {
                                         if (x.getString("volunteerID").equals(y.getString("userID"))) {
                                             Strarr.add(y.getString("userToken"));
+                                        }
+                                        }catch (Exception e){
+
                                         }
                                     }
                                 }
