@@ -27,7 +27,13 @@ header("Access-Control-Allow-Headers: Content-Type, Access-Control-Allow-Headers
 
 $data = json_decode(file_get_contents("php://input"),true);
 
-$subpartIDs = array_values($data["subpartIDs"]);
+$subpartIDs;
+if(is_array($data["subpartIDs"])){
+    $subpartIDs = array_values($data["subpartIDs"]);
+}
+else{
+    $subpartIDs = explode(",",rtrim(ltrim(trim($data["subpartIDs"],"\""),"["),"]"));
+}
 $numberOfPeople = $data["numberOfPeople"];
 
 

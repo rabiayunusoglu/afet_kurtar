@@ -28,7 +28,6 @@ if (session_id() == '') {
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-slider/10.0.0/css/bootstrap-slider.min.css">
     <script src="https://apis.google.com/js/platform.js" async defer></script>
     <link href="https://gitcdn.github.io/bootstrap-toggle/2.2.2/css/bootstrap-toggle.min.css" rel="stylesheet">
-    
 </head>
 
 <body>
@@ -70,6 +69,7 @@ if (session_id() == '') {
     $disasterType = "";
     $disasterBase = "";
     $disasterName = "";
+    $subparts = array();
 
     if (isset($_GET["id"])) {
         //The url you wish to send the POST request to
@@ -111,6 +111,7 @@ if (session_id() == '') {
     curl_setopt($ch, CURLOPT_POST, 1);
     curl_setopt($ch, CURLOPT_POSTFIELDS, $body);
     $response = json_decode(curl_exec($ch),true);
+    $subparts = $response["records"];
 
     foreach ($response['records'] as $row) {
         echo "<div name=\"subpart\" subpart-id=\"" . $row['subpartID']."\" subpart-name=\"" . $row['subpartName']."\" latitude=\"" . $row['latitude']."\" longitude=\"" . $row['longitude']."\"></div>";
@@ -120,7 +121,7 @@ if (session_id() == '') {
 
     echo "<div id=\"map\" style=\"width:50vw;height:93.97vh\" disaster-id=\"" . $disasterID . "\" disaster-type=\"" . $disasterType . "\" disaster-base=\"" . $disasterBase . "\" disaster-name=\"" . $disasterName . "\" latitude=\"" . $latitude . "\" longitude=\"" . $longitude . "\"></div>";
 
-    echo '<div class="container-fluid-edit-disaster" style="background-color: #383B3E;">';
+    echo '<div class="container-fluid-edit-disaster" style="background-color: #383B3E; width:11vw;">';
     echo '<div class="row-fluid-edit-disaster">';
     echo '<div class="span9" id="content">';
     echo '<div class="header-edit-disaster" style="padding-left:10px; padding-top:10px; padding-bottom:5px; padding-right:10px;">Bölge</div>';
@@ -129,7 +130,8 @@ if (session_id() == '') {
     foreach($response['records'] as $row){
         echo '<a class="nav-link" id="subpart-' . $row["subpartID"] . '-tab" subpart-id="'. $row["subpartID"] .'" data-toggle="tab" href="#subpart-' . $row["subpartID"] . '" role="tab" aria-controls="subpart-' . $row["subpartID"] . '" aria-selected="false">' . $row["subpartName"] . '</a>';
     }
-    echo '<a class="nav-link" id="subpart-add-tab" data-toggle="tab" href="#subpart-add" role="tab" aria-controls="subpart-add" aria-selected="false"> <i class="fa fa-plus my-float fa-1x">Ekle</i> </a>';
+    echo '<a class="nav-link" id="subpart-add-tab" data-toggle="tab" href="#subpart-add" role="tab" aria-controls="subpart-add" aria-selected="false"> <i class="fa fa-plus  fa-1x"></i>  Ekle</a>';
+    echo '<a class="nav-link" id="smart-assignment-tab" data-toggle="tab" href="#smart-assignment" role="tab" aria-controls="smart-assignment" aria-selected="false"> <i class="fa fa-users fa-1x" aria-hidden="true"></i>  Akıllı Atama </a>';
     echo '</div>';
 
     echo '</div>';
@@ -155,7 +157,7 @@ if (session_id() == '') {
         }
         
 
-        echo '<div class="container main-container" style="margin-left:0px;">';
+        echo '<div class="container main-container" style="margin-left:1vw; margin-top:0px; width:37vw;">';
         echo '<div class="row">';
         echo '<div class="col-lg-12 col-md-8"></div>';
         echo '<div class="col-lg-12 col-md-8 form-box">';
@@ -329,7 +331,7 @@ if (session_id() == '') {
     }
     /////
     echo '<div class="tab-pane fade" id="subpart-add" role="tabpanel" aria-labelledby="subpart-add-tab">';
-    echo '<div class="container main-container" style="margin-left:0px; margin-top:0px;">';
+    echo '<div class="container main-container" style="margin-left:1vw; margin-top:0px; width:37vw;">';
     echo '<div class="row">';
     echo '<div class="col-lg-12 col-md-8"></div>';
     echo '<div class="col-lg-12 col-md-8 form-box">';
@@ -370,7 +372,58 @@ if (session_id() == '') {
     echo '</div>';
     echo '</div>';
     echo '</div>';
-    /////
+    //////////////////////////////////////////
+    echo '<div class="tab-pane fade" id="smart-assignment" role="tabpanel" aria-labelledby="smart-assignment-tab">';
+    echo '<div class="container main-container" style="margin-left:1vw; margin-top:0px; width:37vw;">';
+    echo '<div class="row">';
+    echo '<div class="col-lg-12 col-md-8"></div>';
+    echo '<div class="col-lg-12 col-md-8 form-box">';
+    echo '<form onsubmit="return false;" id="smart-assignment-form">';
+
+    echo '<label for="assignment-table" style="font-size: 24px; font-weight:bold; color: #ECF0F5">Akıllı Atama</label>';
+
+        if(count($subparts) != 0){
+            echo '<table id="assignment-table" class="table table-dark table-striped table-bordered" style="text-align:center">
+                <tbody>';
+        }
+
+        foreach ($subparts as &$subpart) {
+            echo "<tr>";
+            echo '<td class="td-element" style="width: 80%">' . $subpart["subpartName"] . '</td>';
+            echo '<td class="td-element style="width: 20%""> <input type="checkbox" class="subpart-toggle" data-toggle="toggle" data-onstyle="success" data-offstyle="danger" subpart-id="'.$subpart["subpartID"].'" subpart-name="'.$subpart["subpartName"].'" id="subpartAssignment'.$subpart["subpartID"].'"> </td>';
+            //echo '<td class="td-element style="width: 20%""> <label class="switch"> <input type="checkbox"   id="subpartAssignment'.$row["subpartID"].'"> <span class="slider round"></span> </label> </td>';
+            echo "</tr>";
+        }
+
+        if(count($subparts) != 0){
+            echo "<tbody>";
+            echo '<thead>
+                <tr>
+                <th>Bölge Adı</th>
+                <th>İşlem</th>
+                </tr>
+                <thead>';
+            echo "</table>";
+        }
+
+
+        echo '<label for="smart-assignment-people" style="font-size: 20px; font-weight:bold; color: #ECF0F5">Kişi Sayısı</label>';
+        echo '<input type="text" class="form-control" id="smart-assignment-people" placeholder="Atanacak maksimum kişi sayısını giriniz...">';
+
+
+        echo '<input type="button" onclick="doSmartAssignment()" class="btn btn-success" id="registerBtn" style="margin-left:10px;" value="Akıllı Atama Gerçekleştir"></input>';
+
+    echo '</form>';
+    echo '</div>';
+    echo '</div>';
+    echo '</div>';    
+
+    echo '</div>';
+
+
+
+
+    //////////////////////////////////////////
     echo '</div>';
 
     echo '</ul>';
@@ -390,19 +443,22 @@ if (session_id() == '') {
         echo '});';
         echo '</script>';
 
-        // echo '<script>';
-        // echo '$(function() {';
-        // echo '$("#subpartIsOpenForVolunteers'.$row["subpartID"].'").bootstrapToggle({';
-        // echo 'on: \'Açık\',';
-        // echo 'off: \'Kapalı\'';
-        // echo '});';
-        // echo '})';
-        // echo '</script>';
+        
     }
+
+
 
     echo '<script>';
     echo 'var slider = new Slider("#emergencyLevel", {';
     echo 'tooltip: \'always\'';
+    echo '});';
+    echo '</script>';
+
+    echo '<script>';
+    echo '$(".subpart-toggle").bootstrapToggle({';
+    echo 'on: \'Açık\',';
+    echo 'off: \'Kapalı\',';
+    echo 'width: \'100%\'';
     echo '});';
     echo '</script>';
 
@@ -417,6 +473,8 @@ if (session_id() == '') {
 
     ?>
 
+    <div class="modal"><!-- Place at bottom of page --></div>
 
 </body>
 </html>
+

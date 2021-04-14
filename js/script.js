@@ -508,55 +508,61 @@ $(document).ready(function() {
     var statusContents = document.getElementsByClassName("status-content");
     var messageContents = document.getElementsByClassName("message-content");
 
-    if(statusContents.length != 0 && messageContents.length != 0){
+    if (statusContents.length != 0 && messageContents.length != 0) {
         var statusContent = statusContents[0];
         var messageContent = messageContents[0];
         messageContent.scrollIntoView({ behavior: 'smooth', block: 'end' });
         document.getElementById('cd-timeline').scrollIntoView({ behavior: 'smooth', block: 'end' });
-        setInterval(function() { checkNewStatuses(statusContent); checkNewMessages(messageContent) }, 1000);
+        setInterval(function() {
+            checkNewStatuses(statusContent);
+            checkNewMessages(messageContent)
+        }, 1000);
+    }
+
+    var selectPicker = document.getElementById("smart-assignment-subparts");
+    if (selectPicker) {
+        selectPicker.selectpicker();
     }
 });
 
-function checkNewMessages(messageContent){
+function checkNewMessages(messageContent) {
 
     var teamID = messageContent.getAttribute("team-id");
     var userID = messageContent.getAttribute("user-id");
     var oldMessageLength = messageContent.getAttribute("message-length");
 
-    $.post("https://afetkurtar.site/api/message/search.php", JSON.stringify({ teamID: teamID}))
+    $.post("https://afetkurtar.site/api/message/search.php", JSON.stringify({ teamID: teamID }))
         .done(function(data, status, xhr) {
-            
+
             if (xhr.status == 200) {
                 var messages = data["records"];
 
-                if(messages.length != 0 && messages.length != oldMessageLength){
+                if (messages.length != 0 && messages.length != oldMessageLength) {
                     messageContent.setAttribute('message-length', messages.length);
                     messageContent.innerHTML = "";
                     console.log("new messages");
-                    
 
-                    for(let i = 0; i < messages.length; i++){
+
+                    for (let i = 0; i < messages.length; i++) {
                         var t = messages[i]['messageTime'].split(/[- :]/);
-                        
+
 
                         // Apply each element to the Date function
                         var messageTime = t[3] + ':' + t[4];
 
-                        if(messages[i]['userID'] == userID){
-                            messageContent.innerHTML += '<div class="message first">'
-                            + messages[i]['messageData'] + 
-                            '<sub>'+ " " + messageTime +'</sub>' +
-                            '</div>';
+                        if (messages[i]['userID'] == userID) {
+                            messageContent.innerHTML += '<div class="message first">' +
+                                messages[i]['messageData'] +
+                                '<sub>' + " " + messageTime + '</sub>' +
+                                '</div>';
+                        } else {
+                            messageContent.innerHTML += '<div class="message">' +
+                                '<b>' + messages[i]['messageName'] + '</b><br>' +
+                                messages[i]['messageData'] +
+                                '<sub>' + " " + messageTime + '</sub>' +
+                                '</div>';
                         }
 
-                        else{
-                            messageContent.innerHTML += '<div class="message">' +
-                            '<b>'+ messages[i]['messageName'] +'</b><br>'
-                            + messages[i]['messageData'] +
-                            '<sub>'+ " " + messageTime +'</sub>' +
-                            '</div>';
-                        }
-                        
                     }
                 }
             }
@@ -570,48 +576,48 @@ function checkNewMessages(messageContent){
 
 }
 
-function checkNewStatuses(statusContent){
+function checkNewStatuses(statusContent) {
 
     var teamID = statusContent.getAttribute("team-id");
     var oldStatusLength = statusContent.getAttribute("status-length");
 
-    $.post("https://afetkurtar.site/api/status/search.php", JSON.stringify({ teamID: teamID}))
+    $.post("https://afetkurtar.site/api/status/search.php", JSON.stringify({ teamID: teamID }))
         .done(function(data, status, xhr) {
-            
+
             if (xhr.status == 200) {
                 var statuses = data["records"];
 
-                if(statuses.length != 0 && statuses.length != oldStatusLength){
+                if (statuses.length != 0 && statuses.length != oldStatusLength) {
                     statusContent.setAttribute('status-length', statuses.length);
                     statusContent.innerHTML = "";
                     statusContent.innerHTML = '<section id="cd-timeline" class="cd-container" style="width:48vw;">';
                     console.log("new status");
 
-                    for(let i = 0; i < statuses.length; i++){
+                    for (let i = 0; i < statuses.length; i++) {
                         statusContent.innerHTML += '<div class="cd-timeline-block">' +
-                        '<div class="cd-timeline-img cd-picture">' +
-                        '</div>' +
-                        '<div class="cd-timeline-content">' +
-                        '<h2>'+ statuses[i]['statusTime'] +'</h2>' +
-                        '<div class="timeline-content-info">' +
-                        '<span class="timeline-content-info-date">' +
-                        '<i class="fa fa-calendar-o" aria-hidden="true"></i>' +
-                        'Takım '+ statuses[i]['teamID'] +
-                        '</span>'+
-                        '</div>'+
-                        '<p>'+ statuses[i]['statusMessage'] +'</p>'+
-                        '</div> <!-- cd-timeline-content -->'+
-                        '</div> <!-- cd-timeline-block -->';
+                            '<div class="cd-timeline-img cd-picture">' +
+                            '</div>' +
+                            '<div class="cd-timeline-content">' +
+                            '<h2>' + statuses[i]['statusTime'] + '</h2>' +
+                            '<div class="timeline-content-info">' +
+                            '<span class="timeline-content-info-date">' +
+                            '<i class="fa fa-calendar-o" aria-hidden="true"></i>' +
+                            'Takım ' + statuses[i]['teamID'] +
+                            '</span>' +
+                            '</div>' +
+                            '<p>' + statuses[i]['statusMessage'] + '</p>' +
+                            '</div> <!-- cd-timeline-content -->' +
+                            '</div> <!-- cd-timeline-block -->';
                     }
 
-                    statusContent.innerHTML += '</section> <!-- cd-timeline -->'+'</div>'+
-                    '<div class="panel-footer" style="background: #1A2226;box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16), 0 -3px 6px rgba(0, 0, 0, 0.23);">';
-                    '<div class="input-group" style="height:7vh; padding:1vh;">'+
-                    '<input id="status-input" type="text" class="form-control input-sm chat_input" style="height:5vh;" placeholder="Yeni durum oluşturun..." />'+
-                    '<span class="input-group-btn">'+
-                    '<button class="btn btn-dark btn-sm" onclick="addStatus(' + teamID + ', ' + statuses[0]['subpartID'] + ')" id="btn-chat" style="height:5vh;">Gönder</button>'+
-                    '</span>'+
-                    '</div>';
+                    statusContent.innerHTML += '</section> <!-- cd-timeline -->' + '</div>' +
+                        '<div class="panel-footer" style="background: #1A2226;box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16), 0 -3px 6px rgba(0, 0, 0, 0.23);">';
+                    '<div class="input-group" style="height:7vh; padding:1vh;">' +
+                    '<input id="status-input" type="text" class="form-control input-sm chat_input" style="height:5vh;" placeholder="Yeni durum oluşturun..." />' +
+                    '<span class="input-group-btn">' +
+                    '<button class="btn btn-dark btn-sm" onclick="addStatus(' + teamID + ', ' + statuses[0]['subpartID'] + ')" id="btn-chat" style="height:5vh;">Gönder</button>' +
+                        '</span>' +
+                        '</div>';
                 }
             }
         })
@@ -1199,19 +1205,19 @@ function addStatus(teamID, subpartID) {
             statusMessage: statusMessage,
             teamID: teamID,
             subpartID: subpartID
-    }))
-    .done(function(data, status, xhr) {
-        if (xhr.status == 201) {
-            //document.location.reload();
-        } else {
-            window.alert("Durum oluşturulurken hata oluştu.");
-        }
-    })
-    .fail(function(data, xhr) {
-        window.alert("Durum oluşturulamadı.");
-    });
+        }))
+        .done(function(data, status, xhr) {
+            if (xhr.status == 201) {
+                //document.location.reload();
+            } else {
+                window.alert("Durum oluşturulurken hata oluştu.");
+            }
+        })
+        .fail(function(data, xhr) {
+            window.alert("Durum oluşturulamadı.");
+        });
     var statusContents = document.getElementsByClassName("status-content");
-    if(statusContents.length != 0){
+    if (statusContents.length != 0) {
         document.getElementById('cd-timeline').scrollIntoView({ behavior: 'smooth', block: 'end' });
     }
 
@@ -1232,19 +1238,19 @@ function addMessage(teamID, userID, userName) {
             teamID: teamID,
             userID: userID,
             messageName: userName
-    }))
-    .done(function(data, status, xhr) {
-        if (xhr.status == 201) {
-            //document.location.reload();
-        } else {
-            window.alert("Mesaj gönderilirken hata oluştu.");
-        }
-    })
-    .fail(function(data, xhr) {
-        window.alert("Mesaj gönderilemedi.");
-    });
+        }))
+        .done(function(data, status, xhr) {
+            if (xhr.status == 201) {
+                //document.location.reload();
+            } else {
+                window.alert("Mesaj gönderilirken hata oluştu.");
+            }
+        })
+        .fail(function(data, xhr) {
+            window.alert("Mesaj gönderilemedi.");
+        });
     var messageContents = document.getElementsByClassName("message-content");
-    if(messageContents.length != 0){
+    if (messageContents.length != 0) {
         var messageContent = messageContents[0];
         messageContent.scrollIntoView({ behavior: 'smooth', block: 'end' });
     }
@@ -1357,19 +1363,41 @@ function deleteSubpartForDisaster(subpartID) {
 
 }
 
-function deleteDisaster(disasterID){
+function deleteDisaster(disasterID) {
 
     $.post("https://afetkurtar.site/api/subpart/search.php", JSON.stringify({
             disasterID: disasterID
-    }))
-    .done(function(data, status, xhr) {
-        if (xhr.status == 200) {
-            var subparts = data["records"];
+        }))
+        .done(function(data, status, xhr) {
+            if (xhr.status == 200) {
+                var subparts = data["records"];
 
-            for(let i = 0; i < subparts.length; i++){
-                deleteSubpartForDisaster(subparts[i]["subpartID"]);
+                for (let i = 0; i < subparts.length; i++) {
+                    deleteSubpartForDisaster(subparts[i]["subpartID"]);
+                }
+
+                $.post("https://afetkurtar.site/api/disasterEvents/delete.php", JSON.stringify({
+                        disasterID: disasterID
+                    }))
+                    .done(function(data, status, xhr) {
+                        if (xhr.status == 201) {
+                            window.alert("Afet silindi.");
+                            document.location.reload();
+                        } else {
+                            window.alert("Afet silinirken hata oluştu.");
+                            //document.getElementById('personnelForm').reset();
+                        }
+                    })
+                    .fail(function(data, xhr) {
+                        //window.alert("Bölge silinirken hata oluştu. 00");
+                    });
+
+
+            } else {
+                window.alert("Afet bölgeleri bulunurken hata oluştu.");
             }
-
+        })
+        .fail(function(data, xhr) {
             $.post("https://afetkurtar.site/api/disasterEvents/delete.php", JSON.stringify({
                     disasterID: disasterID
                 }))
@@ -1385,27 +1413,105 @@ function deleteDisaster(disasterID){
                 .fail(function(data, xhr) {
                     //window.alert("Bölge silinirken hata oluştu. 00");
                 });
+        });
+}
 
-            
-        } else {
-            window.alert("Afet bölgeleri bulunurken hata oluştu.");
-        }
-    })
-    .fail(function(data, xhr) {
-        $.post("https://afetkurtar.site/api/disasterEvents/delete.php", JSON.stringify({
-                    disasterID: disasterID
-                }))
+function addPersonnelToSubpartForSmartAssignment(personnelID, subpartID) {
+
+    $.post("https://afetkurtar.site/api/team/search.php", JSON.stringify({ assignedSubpartID: subpartID }))
+        .done(function(data, status, xhr) {
+            if (xhr.status == 200) {
+                if (data.records.length != 0) {
+                    var team = data.records[0];
+                    var teamID = team.teamID;
+
+                    $.post("https://afetkurtar.site/api/personnelUser/update.php", JSON.stringify({ personnelID: personnelID, teamID: teamID }))
+                        .done(function(data, status, xhr) {
+                            if (xhr.status == 201) {}
+                        })
+                        .fail(function(data, xhr) {});
+                }
+            }
+        })
+        .fail(function(data, xhr) {
+            $.post("https://afetkurtar.site/api/team/create.php", JSON.stringify({ assignedSubpartID: subpartID }))
                 .done(function(data, status, xhr) {
-                    if (xhr.status == 201) {
-                        window.alert("Afet silindi.");
-                        document.location.reload();
-                    } else {
-                        window.alert("Afet silinirken hata oluştu.");
-                        //document.getElementById('personnelForm').reset();
-                    }
+                    var teamID = data.id;
+
+                    $.post("https://afetkurtar.site/api/personnelUser/update.php", JSON.stringify({ personnelID: personnelID, teamID: teamID }))
+                        .done(function(data, status, xhr) {
+                            if (xhr.status == 201) {}
+                        })
+                        .fail(function(data, xhr) {});
                 })
-                .fail(function(data, xhr) {
-                    //window.alert("Bölge silinirken hata oluştu. 00");
-                });
-    });
+                .fail(function(data, xhr) {});
+        });
+
+}
+
+function doSmartAssignment() {
+    var selectedSubparts = [];
+    var toggles = document.getElementsByClassName("subpart-toggle");
+
+    console.log(toggles);
+
+
+    for (let i = 0; i < toggles.length; i++) {
+        if (toggles[i].checked) {
+            selectedSubparts.push(toggles[i].getAttribute("subpart-id"));
+        }
+    }
+
+    var numberOfPeople = document.getElementById("smart-assignment-people").value.trim();
+
+    if (selectedSubparts.length == 0) {
+        window.alert("Lütfen bölge seçiniz");
+        return false;
+    }
+
+    if (isNaN(numberOfPeople) || numberOfPeople == "") {
+        alert("Atanacak kişi sayısı bilgisini kontrol ediniz.");
+        return false;
+    }
+
+    $body = $("body");
+    $body.addClass("loading");
+
+    $.post("https://afetkurtar.site/api/smartAssignment.php", JSON.stringify({
+            subpartIDs: selectedSubparts,
+            numberOfPeople: numberOfPeople
+        }))
+        .done(function(data, status, xhr) {
+            $body.removeClass("loading");
+
+            var infoString = "";
+            var assignments = data;
+
+
+            for (var key in assignments) {
+                infoString += document.getElementById("subpartAssignment" + key).getAttribute("subpart-name") + " bölgesi için önerilen kişi sayısı: " + assignments[key].length + "\n";
+                // for (let i = 0; i < assignments[key].length; i++) {
+                //     addPersonnelToSubpartForSmartAssignment(assignments[key][i]["personnelID"], assignments[key]);
+                // }
+            }
+            infoString += "\nAtamayı gerçekleştirmek istiyor musunuz?";
+            var confirmAlert = window.confirm(infoString);
+
+
+
+            if (confirmAlert) {
+                for (var key in assignments) {
+                    for (let i = 0; i < assignments[key].length; i++) {
+                        addPersonnelToSubpartForSmartAssignment(assignments[key][i]["personnelID"], assignments[key]);
+                    }
+                }
+            }
+            document.location.reload();
+
+        })
+        .fail(function(data, xhr) {
+            $body.removeClass("loading");
+            window.alert("Akıllı atama gerçekleştirilirken hata oluştu.");
+        });
+
 }
