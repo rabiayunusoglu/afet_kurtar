@@ -254,6 +254,10 @@ public class Authorized_VolunteerRequest2 extends AppCompatActivity implements O
                     }
                 });
     }
+    @Override
+    public void onBackPressed() {
+        redirectActivity(this,Authorized_Anasayfa.class);
+    }
 
     public void ClickMenu(View view) {
         //open drawer
@@ -327,8 +331,8 @@ public class Authorized_VolunteerRequest2 extends AppCompatActivity implements O
     public void ClickAuthorizedPersoneller(View view) {
         redirectActivity(this, Authorized_Anasayfa.class );
     }
-    public void ClickAuthorizedEkipman(View view) {
-        redirectActivity(this, Authorized_Anasayfa.class );
+    public void ClickAuthorizedSmartAssign(View view) {
+        redirectActivity(this, Authorized_SmartAssign_Subpart.class );
     }
 
     public void ClickAuthorizedTeam(View view) {

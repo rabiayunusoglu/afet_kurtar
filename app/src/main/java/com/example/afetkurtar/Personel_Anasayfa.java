@@ -58,6 +58,10 @@ public class Personel_Anasayfa extends AppCompatActivity {
     public void onBackPressed() {
   //      signOut();
     //    redirectActivity(this, MainActivity.class );
+        Intent intent = new Intent();
+        intent.setAction(Intent.ACTION_MAIN);
+        intent.addCategory(Intent.CATEGORY_HOME);
+        startActivity(intent);
     }
     public void checkAuthority(){
         JSONObject obj = new JSONObject();

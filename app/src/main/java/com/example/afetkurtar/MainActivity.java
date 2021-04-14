@@ -179,7 +179,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                                 type = "authorizedUser";
 
 
-                               // type = "personnelUser";
+                                //type = "personnelUser";
 
                                 // ****************************************************************************************** TEST ICIN USER TYPE AYARLAMA YERI
                                 Intent intentLogin = null;

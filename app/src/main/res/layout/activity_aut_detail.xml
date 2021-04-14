@@ -48,7 +48,6 @@
             android:layout_height="match_parent"
             android:layout_gravity="right"
             android:layout_weight="1"
-            android:onClick="ClickCreateSubpart"
             android:text="Afet Parçası Oluştur"
             android:textColor="@color/white"
             app:backgroundTint="@color/purple_500"

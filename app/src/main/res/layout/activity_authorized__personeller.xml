@@ -17,7 +17,7 @@
         android:layout_height="match_parent"
         android:orientation="vertical">
         <include
-            layout="@layout/activity_tool_per_bar"
+            layout="@layout/activity_tool_bar"
             tools:layout_editor_absoluteX="-113dp"
             tools:layout_editor_absoluteY="0dp"></include>
 

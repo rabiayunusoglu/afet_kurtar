@@ -1,5 +1,6 @@
 package com.example.afetkurtar;
 
+import android.content.Intent;
 import android.location.Geocoder;
 import android.os.Bundle;
 import android.view.View;
@@ -55,6 +56,10 @@ public class Create_Subpart_On_Map extends AppCompatActivity implements OnMapRea
     private String disasterName = "";
     private String disasterStatus;
     private int disasterEmergencyLevel;
+
+    private boolean check;
+
+    private JSONObject disasterData = new JSONObject();
 
     private static boolean isOpenForVolunteers; //dikkat burasi sonra boolean olarak degistir
 
@@ -129,7 +134,6 @@ public class Create_Subpart_On_Map extends AppCompatActivity implements OnMapRea
                             if (x.getString("disasterName").equals(((Spinner) findViewById(R.id.mainDisasterSpinner)).getSelectedItem().toString())) {
                                 disasterID = x.getString("disasterID");
                                 disasterName = x.getString("disasterName");
-
                             }
                         } catch (Exception e) {
                             e.getMessage();
@@ -151,6 +155,8 @@ public class Create_Subpart_On_Map extends AppCompatActivity implements OnMapRea
          Onceden belirtilen kordinatları almak icin asagidaki islemi ekledim
          */
 
+         check = false;
+
         try {
 
             Bundle bundle = getIntent().getExtras();
@@ -160,6 +166,16 @@ public class Create_Subpart_On_Map extends AppCompatActivity implements OnMapRea
                     data = new JSONObject(message);
                 }catch (Exception e){
                     e.getMessage();
+                    check = true;
+                }
+            }
+
+            if(check){
+                try {
+                    String message = bundle.getString("disaster_detail");
+                    disasterData = new JSONObject(message);
+                }catch (Exception e){
+                    e.printStackTrace();
                 }
             }
 
@@ -209,17 +225,39 @@ public class Create_Subpart_On_Map extends AppCompatActivity implements OnMapRea
             }
             list.add(cevap);
 
-            afetStringList.add("Afet Seçin");
+            try{
+                if(Integer.parseInt(disasterData.getString("disID").trim()) > 0){
+                    for(String x:list){
+                        System.out.println("X DEGERI : *" + x.trim() +"*");
+                        System.out.println("disasterData.getString(disName).trim() : *" + disasterData.getString("disName").trim() +"*");
 
-            for(String x:list){
-                try {
-                    JSONObject tmp = new JSONObject(x);
-                    afetStringList.add(tmp.getString("disasterName"));
-                    jsonObjectList.add(tmp);
-                }catch (Exception e){
-                    // e.printStackTrace();
+                        JSONObject tmp = new JSONObject(x);
+
+                            if(disasterData.getString("disName").trim().equals(tmp.getString("disasterName").trim())){
+
+                                afetStringList.add(tmp.getString("disasterName"));
+                                jsonObjectList.add(tmp);
+                            }
+                    }
+                }
+
+            }catch (Exception e){
+
+                e.printStackTrace();
+
+                afetStringList.add("Afet Seçin");
+
+                for(String x:list){
+                    try {
+                        JSONObject tmp = new JSONObject(x);
+                        afetStringList.add(tmp.getString("disasterName"));
+                        jsonObjectList.add(tmp);
+                    }catch (Exception e2){
+                        // e.printStackTrace();
+                    }
                 }
             }
+
 
             adapter = new ArrayAdapter<String>(getApplicationContext(),  android.R.layout.simple_spinner_dropdown_item, afetStringList);
             adapter.setDropDownViewResource( android.R.layout.simple_spinner_dropdown_item);
@@ -234,8 +272,8 @@ public class Create_Subpart_On_Map extends AppCompatActivity implements OnMapRea
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
-        System.out.println("test : map is ready");
-        Toast.makeText(this, "map is ready", Toast.LENGTH_SHORT).show();
+        //System.out.println("test : map is ready");
+        Toast.makeText(this, "Harita hazır.", Toast.LENGTH_SHORT).show();
 
         mMap.setOnMapClickListener(new GoogleMap.OnMapClickListener()
         {
@@ -570,6 +608,19 @@ public class Create_Subpart_On_Map extends AppCompatActivity implements OnMapRea
         });
         queue.add(request);
         Toast.makeText(this, "Afet parçası oluşturuldu.", Toast.LENGTH_LONG).show();
-        finish();
+        //finish();
+
+        try {
+            if(check){
+                finish();
+            }else{
+                Intent myIntent = new Intent(this, Authorized_Notification.class);
+                startActivity(myIntent);
+                finish();
+            }
+
+        }catch (Exception e){
+
+        }
     }
 }//class end

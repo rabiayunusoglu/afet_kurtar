@@ -72,6 +72,9 @@ public class Disaster_Details extends AppCompatActivity implements OnMapReadyCal
         queue = Volley.newRequestQueue(this);
         // findViewById(R.id.Create_new_Subpart).setOnClickListener(this::onClick);
         queue = Volley.newRequestQueue(this);
+
+        findViewById(R.id.afetolusturBTN).setOnClickListener(this::onClick);
+
         list2 = new ArrayList<JSONObject>();
         getData("");
         // System.out.println(data.toString());
@@ -117,7 +120,18 @@ public class Disaster_Details extends AppCompatActivity implements OnMapReadyCal
         switch (v.getId()) {
             case R.id.afetolusturBTN:
                 Intent intent = new Intent(this, Create_Subpart_On_Map.class);
-                //intent.putExtra("json", data.toString());
+                JSONObject disDetail = new JSONObject();
+                try {
+                    System.out.println("DISASTER ID NEEEEE : *" + Authorized_ActiveDisasters.disasterID + "*");
+                    System.out.println("DISASTER NAME NEEEEE : *" + Authorized_ActiveDisasters.disasterName + "*");
+                    disDetail.put("disID", Authorized_ActiveDisasters.disasterID);
+                    disDetail.put("disName", Authorized_ActiveDisasters.disasterName);
+                }catch (Exception e){
+                    System.out.println("CATH e MI GIDIYOOOOOOOOOOOOOO");
+                    e.printStackTrace();
+                }
+                System.out.println("ALLAH ICIN OL LAAAAAAAAAAAAAAAAAAN");
+                intent.putExtra("disaster_detail", disDetail.toString());
                 startActivity(intent);
                 //  finish();
                 break;

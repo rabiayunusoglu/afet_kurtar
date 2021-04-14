@@ -56,6 +56,10 @@ public class Volunteer_Anasayfa extends AppCompatActivity {
     @Override
     public void onBackPressed() {
       //  redirectActivity(this,Volunteer_Anasayfa.class);
+        Intent intent = new Intent();
+        intent.setAction(Intent.ACTION_MAIN);
+        intent.addCategory(Intent.CATEGORY_HOME);
+        startActivity(intent);
     }
 
     public void ClickRegisterInfo(){

@@ -33,6 +33,14 @@ public class Authorized_Anasayfa extends AppCompatActivity {
 
     }
 
+    @Override
+    public void onBackPressed() {
+        Intent intent = new Intent();
+        intent.setAction(Intent.ACTION_MAIN);
+        intent.addCategory(Intent.CATEGORY_HOME);
+        startActivity(intent);
+    }
+
     private void signOut() {
         LogoutHandler lout = new LogoutHandler(getApplicationContext());
         lout.updateUser();
@@ -114,7 +122,7 @@ public class Authorized_Anasayfa extends AppCompatActivity {
     public void ClickAuthorizedPersoneller(View view) {
         redirectActivity(this, Authorized_Personeller.class );
     }
-    public void ClickAuthorizedEkipman(View view) {
+    public void ClickAuthorizedSmartAssign(View view) {
         redirectActivity(this, Authorized_SmartAssign_Subpart.class );
     }
 

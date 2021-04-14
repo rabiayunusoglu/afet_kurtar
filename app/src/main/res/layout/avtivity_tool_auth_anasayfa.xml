@@ -155,7 +155,7 @@
                     android:layout_height="37dp"
                     android:onClick="ClickAuthrizedVolunteerRequest"
                     android:layout_gravity="center"
-                    android:text="          Gönüllü İstekleri"
+                    android:text="       Gönüllü İstekleri"
                     android:textColor="@color/black"
                     android:textSize="15sp"
                     android:textStyle="bold"></TextView>
@@ -219,17 +219,17 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_margin="8dp"
-                    android:onClick="ClickAuthorizedEkipman"
+                    android:onClick="ClickAuthorizedSmartAssign"
                     android:contentDescription="@string/app_name"
                     android:padding="8dp"
-                    android:src="@drawable/ekipman"></ImageView>
+                    android:src="@drawable/ic_smartselect"></ImageView>
 
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="37dp"
                     android:layout_gravity="center"
-                    android:onClick="ClickAuthorizedEkipman"
-                    android:text="            Ekipmanlar"
+                    android:onClick="ClickAuthorizedSmartAssign"
+                    android:text="          Akıllı Atama"
                     android:textColor="@color/black"
                     android:textSize="15sp"
                     android:textStyle="bold"></TextView>

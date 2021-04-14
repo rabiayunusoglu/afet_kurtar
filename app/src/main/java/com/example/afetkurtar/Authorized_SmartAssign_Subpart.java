@@ -1,5 +1,6 @@
 package com.example.afetkurtar;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -20,8 +21,10 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
+import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 
 import com.android.volley.DefaultRetryPolicy;
@@ -43,6 +46,8 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -91,6 +96,13 @@ public class Authorized_SmartAssign_Subpart extends AppCompatActivity implements
         findViewById(R.id.btn_smartAssign_calculateHowManySubpart).setOnClickListener(this::onClick);
         findViewById(R.id.btn_smart_assign_accept).setOnClickListener(this::onClick);
         findViewById(R.id.btn_smart_assign_reject).setOnClickListener(this::onClick);
+
+        drawerLayout = findViewById(R.id.authorized_aut_smart_assign_subpart_layout);
+
+        GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                .requestEmail()
+                .build();
+        mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
 
         setInvisibleEnters();
         setInvisibleAcceptReject();
@@ -793,6 +805,98 @@ public class Authorized_SmartAssign_Subpart extends AppCompatActivity implements
         Canvas canvas = new Canvas(bitmap);
         vectorDrawable.draw(canvas);
         return BitmapDescriptorFactory.fromBitmap(bitmap);
+    }
+
+    private void signOut() {
+        LogoutHandler lout = new LogoutHandler(getApplicationContext());
+        lout.updateUser();
+        mGoogleSignInClient.signOut()
+                .addOnCompleteListener(this, new OnCompleteListener<Void>() {
+                    public void onComplete(@NonNull Task<Void> task) {
+                        System.out.println("Cikis basarili");
+                    }
+                });
+    }
+    @Override
+    public void onBackPressed() {
+        redirectActivity(this,Authorized_Anasayfa.class);
+    }
+
+    public void ClickMenu(View view) {
+        //open drawer
+        openDrawer(drawerLayout);
+    }
+
+    static void openDrawer(DrawerLayout drawerLayout) {
+        //Open drawer Layout
+        drawerLayout.openDrawer(GravityCompat.START);
+    }
+
+    public void ClickLogo(View view) {
+        //Close drawer
+        closeDrawer(drawerLayout);
+    }
+
+    public static void closeDrawer(DrawerLayout drawerLayout) {
+        //Close drawer layout
+        //check condition
+        if (drawerLayout.isDrawerOpen(GravityCompat.START)) {
+            //when driver is open
+            //close drawer
+            drawerLayout.closeDrawer(GravityCompat.START);
+        }
+    }
+    public static void redirectActivity(Activity activity, Class aClass) {
+        //initialize intent
+        Intent intent = new Intent(activity, aClass);
+        //Set flag
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        //Start activity
+        activity.startActivity(intent);
+    }
+    /*
+     *************************************** ASAGIDAKI KISIMLAR YONLENDIRMELERI AYARLAR
+     */
+    // IHBARLAR
+    public void ClickAuthorizedNotice(View view) {
+        redirectActivity(this, Authorized_Notification.class);
+    }
+    // AKTIF AFET
+    public void ClickAuthorizeActiveDisaster(View view) {
+        redirectActivity(this, Authorized_ActiveDisasters.class);
+    }
+    // PERSONEL KAYIT
+    public void ClickAuthorizedPersonelRegistration(View view) {
+        redirectActivity(this, Authorized_PersonelRegister.class);
+    }
+    // GONULLU ISTEKLERI
+    public void ClickAuthrizedVolunteerRequest(View view) {
+        redirectActivity(this, Authorized_VolunteerRequest.class);
+    }
+    //MESAJ
+
+    // CIKIS
+    public void ClickAuthorizedExit(View view) {
+        signOut();
+        redirectActivity(this, MainActivity.class );
+    }
+    public void ClickNotificationSend(View view) {
+        redirectActivity(this, Authorized_Send_Notification.class );
+    }
+
+    // ANA SAYFA
+    public void ClickAuthAnasayfa(View view) {
+        redirectActivity(this, Authorized_Anasayfa.class );
+    }
+    public void ClickAuthorizedPersoneller(View view) {
+        redirectActivity(this, Authorized_Personeller.class );
+    }
+    public void ClickAuthorizedSmartAssign(View view) {
+        //redirectActivity(this, Authorized_SmartAssign_Subpart.class );
+    }
+
+    public void ClickAuthorizedTeam(View view) {
+        redirectActivity(this, Authorized_Assign_Team.class );
     }
 
 
