@@ -183,9 +183,9 @@
                     android:layout_width="match_parent"
                     android:layout_height="37dp"
                     android:layout_gravity="center"
-                    android:text="Takım Üyeleri Konumu"
+                    android:text="Takım Üyelerinin Konumu"
                     android:textColor="@color/black"
-                    android:textSize="14sp"
+                    android:textSize="13sp"
                     android:textStyle="bold"></TextView>
 
             </LinearLayout>
