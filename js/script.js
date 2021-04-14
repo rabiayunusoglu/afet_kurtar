@@ -1112,7 +1112,7 @@ function addVolunteerToSubpart(volunteerID, subpartID) {
 
 }
 
-function addPersonnelToSubpart(personnelID, subpartID, disasterID) {
+function addPersonnelToSubpart(personnelID, subpartID, disasterID, role) {
 
     $.post("https://afetkurtar.site/api/team/search.php", JSON.stringify({ assignedSubpartID: subpartID }))
         .done(function(data, status, xhr) {
@@ -1121,7 +1121,7 @@ function addPersonnelToSubpart(personnelID, subpartID, disasterID) {
                     var team = data.records[0];
                     var teamID = team.teamID;
 
-                    $.post("https://afetkurtar.site/api/personnelUser/update.php", JSON.stringify({ personnelID: personnelID, teamID: teamID }))
+                    $.post("https://afetkurtar.site/api/personnelUser/update.php", JSON.stringify({ personnelID: personnelID, teamID: teamID, personnelRole: role }))
                         .done(function(data, status, xhr) {
                             if (xhr.status == 201) {
                                 window.alert("Personel başarıyla göreve atandı.");
@@ -1140,7 +1140,7 @@ function addPersonnelToSubpart(personnelID, subpartID, disasterID) {
                 .done(function(data, status, xhr) {
                     var teamID = data.id;
 
-                    $.post("https://afetkurtar.site/api/personnelUser/update.php", JSON.stringify({ personnelID: personnelID, teamID: teamID }))
+                    $.post("https://afetkurtar.site/api/personnelUser/update.php", JSON.stringify({ personnelID: personnelID, teamID: teamID, personnelRole: role }))
                         .done(function(data, status, xhr) {
                             if (xhr.status == 201) {
                                 window.alert("Personel başarıyla göreve atandı.");

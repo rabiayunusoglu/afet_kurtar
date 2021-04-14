@@ -19,14 +19,15 @@ if (session_id() == '') {
     <meta content="width=device-width, inital-scale=1">
     <meta name="google-signin-client_id" content="984932517689-26548cubtdd33uu95vqc4t3ciq1u2os0.apps.googleusercontent.com">
     <title>Afet Kurtar</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-BmbxuPwQa2lc/FVzBcNJ7UAyJxM6wuqIj61tLrc4wSX0szH/Ev+nYRRuWlolflfl" crossorigin="anonymous">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-eOJMYsd53ii+scO/bJGFsiCZc+5NDVN2yr8+0RDqr0Ql0h+rP48ckxlpbzKgwra6" crossorigin="anonymous">    
     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.24/css/jquery.dataTables.css">
     <link rel="stylesheet" href="css/styles.css">
     <link rel="preconnect" href="https://fonts.gstatic.com">
     <link href="https://fonts.googleapis.com/css2?family=Newsreader&display=swap" rel="stylesheet">
     <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet">
     <script src="https://apis.google.com/js/platform.js" async defer></script>
-</head>
+    
 
 <body>
     <header>
@@ -83,17 +84,41 @@ if (session_id() == '') {
         echo "<td class=\"td-element\">" . $row['personnelEmail'] . "</td>";
         echo "<td class=\"td-element\">" . $row['personnelRole'] . "</td>";
 
-        echo '<td class="td-element"><input type="button" value="Ekle" onclick="addPersonnelToSubpart(this.id,'.$_GET["id"].','.$_GET["disasterID"].')" class="btn btn-primary" id="' . $row['personnelID'] . '"></input></td>';
+        echo '<td class="td-element">';
+            echo '<div class="btn-group">';
+            echo '<button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">';
+            echo 'Ekle';
+            echo '</button>';
+            echo '<div class="dropdown-menu">';
+            echo '<a class="personDropItem" id="kaptan'. $row["personnelID"] .'" personnel-id="'. $row["personnelID"] .'" role="Kaptan" href="#">Kaptan</a>';
+            echo '<a class="personDropItem" id="normal'. $row["personnelID"] .'" personnel-id="'. $row["personnelID"] .'" role="Normal" href="#">Normal</a>';
+            echo '</div>';
+            echo '</div>';
+        echo '</td>';
         echo "</tr>";
     }
+
     echo "<tbody>";
     echo "</table>";
 
     ?>
+
     <script src="https://code.jquery.com/jquery-3.5.1.min.js" integrity="sha256-9/aliU8dGd2tb6OSsuzixeV4y/faTqgFtohetphbbj0=" crossorigin="anonymous"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/js/bootstrap.bundle.min.js" integrity="sha384-b5kHyXgcpbZJO/tY9Ul7kGkf1S0CWuKcCD38l8YkeH8z8QjE0GmW1gYU5S9FOnJ0" crossorigin="anonymous"></script>
     <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.24/js/jquery.dataTables.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/js/bootstrap.bundle.min.js" integrity="sha384-JEW9xMcG8R+pH31jmWH6WWP0WintQrMb4s7ZOdauHnUtxwoG2vI5DkLtS3qm9Ekf" crossorigin="anonymous"></script>
     <script src="js/script.js"></script>
+
+
+    <?php
+        echo '<script>';
+        echo '$(".personDropItem").click(function(e) {';
+        echo 'e.preventDefault();';
+        echo 'var role = document.getElementById(e.target.id).getAttribute("role");';
+        echo 'var personnelID = document.getElementById(e.target.id).getAttribute("personnel-id");';
+        echo 'addPersonnelToSubpart(personnelID,'.$_GET["id"].','.$_GET["disasterID"].', role);';
+        echo '});';
+        echo '</script>';
+    ?>
 </body>
 
 </html>
