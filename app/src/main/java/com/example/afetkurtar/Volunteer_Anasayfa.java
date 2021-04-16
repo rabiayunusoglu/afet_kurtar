@@ -12,6 +12,12 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.Volley;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
@@ -19,13 +25,22 @@ import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.HashMap;
+import java.util.Map;
+
 
 public class Volunteer_Anasayfa extends AppCompatActivity {
     DrawerLayout drawerLayout;
     GoogleSignInClient mGoogleSignInClient;
+    RequestQueue queuecheck;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        queuecheck = Volley.newRequestQueue(this);
         setContentView(R.layout.activity_volunteer_anasayfa);
         drawerLayout = findViewById(R.id.drawer_layout);
 
@@ -36,6 +51,8 @@ public class Volunteer_Anasayfa extends AppCompatActivity {
 
 
         GoogleSignInAccount account = GoogleSignIn.getLastSignedInAccount(this);
+
+
 
         //System.out.println(account.getId());
 
@@ -49,9 +66,40 @@ public class Volunteer_Anasayfa extends AppCompatActivity {
         name.setText(account.getGivenName());
         surname.setText(account.getFamilyName());*/
 
+        try {
+            checkUser();
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
 
 
+    }
+    private void checkUser() throws JSONException {
+        String url = "https://afetkurtar.site/api/volunteerUser/search.php";
 
+        Map<String, Integer> params = new HashMap<String, Integer>();
+        params.put("volunteerID", MainActivity.userID);
+
+        JsonObjectRequest request = new JsonObjectRequest(
+                Request.Method.POST, // the request method
+                url, // the URL
+                new JSONObject(params), // the parameters for the php
+                new Response.Listener<JSONObject>() { // the response listener
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        System.out.println(response.toString());
+                    }
+                },
+                new Response.ErrorListener() { // the error listener
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        redirectToParticipateForm();
+                    }
+                });
+        queuecheck.add(request);
+    }
+    private void redirectToParticipateForm(){
+        redirectActivity(this, Volunteer_ParticipateForm.class);
     }
     @Override
     public void onBackPressed() {

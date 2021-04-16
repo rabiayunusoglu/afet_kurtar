@@ -162,11 +162,13 @@ public class Volunteer_ParticipateForm extends AppCompatActivity {
                         @Override
                         public void onResponse(JSONObject response) {
                             System.out.println(response.toString());
+                            redirectVolunteerAnasayfa();
                         }
                     }, new Response.ErrorListener() {
                         @Override
                         public void onErrorResponse(VolleyError error) {
                             System.out.println(error);
+                            makeToastMessage("Kayıt başarısız oldu. Tekrar deneyin.");
                         }
                     });
                     queue.add(request);
@@ -199,6 +201,12 @@ public class Volunteer_ParticipateForm extends AppCompatActivity {
             }
         });
 
+    }
+    public void makeToastMessage(String message){
+        Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
+    }
+    public void redirectVolunteerAnasayfa(){
+        redirectActivity(this, Volunteer_Anasayfa.class);
     }
 
     private boolean controlName() {
@@ -272,6 +280,9 @@ public class Volunteer_ParticipateForm extends AppCompatActivity {
 
     }
 
+    public void onBackPressed() {
+        Toast.makeText(getApplicationContext(), "Kullanıcı bilgileri girilmeden uygulama kullanılamaz.", Toast.LENGTH_LONG).show();
+    }
 
     public void ClickRegisterInfo() {
         redirectActivity(this, Volunteer_RegisterInfo.class);

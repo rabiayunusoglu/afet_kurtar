@@ -260,14 +260,16 @@ public class Volunteer_RegisterInfo extends AppCompatActivity {
                 new Response.ErrorListener() { // the error listener
                     @Override
                     public void onErrorResponse(VolleyError error) {
-                        redirectToCreate();
+                        //redirectToCreate();
                     }
                 });
         queuecheck.add(request);
     }
+    /*
     private void redirectToCreate(){
         redirectActivity(this, Volunteer_ParticipateForm.class);
     }
+    */
 
     private boolean controlName() {
         String name = ad.getText().toString();
