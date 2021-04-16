@@ -51,6 +51,8 @@ public class Authorized_Assign_Team extends AppCompatActivity {
     ArrayList<JSONObject> jsonObjectListForTeam = new ArrayList<JSONObject>();
     ArrayList<JSONObject> jsonObjectListForSubpart = new ArrayList<JSONObject>();
 
+    ArrayList<String> alreadyAssignedTeamSubpartIDList = new ArrayList<String>();
+
     //private ArrayList<JSONObject> teamMemberPersonnelObjectList = new ArrayList<JSONObject>();
     public static String teamID = "";
     public static String needManPower = "0";
@@ -83,7 +85,7 @@ public class Authorized_Assign_Team extends AppCompatActivity {
         teamSpinner = (Spinner) findViewById(R.id.assignTeamSpinner);
         subpartSpinner = (Spinner) findViewById(R.id.assignSubpartSpinner);
         setTeamToSpinner();
-        setSubpartToSpinner();
+        //setSubpartToSpinner();
 
         teamSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
 
@@ -216,6 +218,7 @@ public class Authorized_Assign_Team extends AppCompatActivity {
                         try {
                             //  System.out.println(response.toString());
                             handleResponseForTeamTable(response);
+                            setSubpartToSpinner();
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
@@ -248,6 +251,11 @@ public class Authorized_Assign_Team extends AppCompatActivity {
                     JSONObject tmp = new JSONObject(x);
                     teamStringList.add(tmp.getString("teamID"));
                     jsonObjectListForTeam.add(tmp);
+
+                    if(!tmp.getString("assignedSubpartID").trim().equals("0")){
+                        alreadyAssignedTeamSubpartIDList.add(tmp.getString("assignedSubpartID"));
+                    }
+
                 } catch (Exception e) {
                     // e.printStackTrace();
                 }
@@ -301,11 +309,22 @@ public class Authorized_Assign_Team extends AppCompatActivity {
             subpartStringList.add("Subpart Seçin");
             for (String x : list) {
                 try {
+                    ////////////////////////////////////////////////////
                     JSONObject tmp = new JSONObject(x);
                     subpartStringList.add(tmp.getString("subpartID"));
                     jsonObjectListForSubpart.add(tmp);
+
+
+                    ////////////////////////////////////////////////////
                 } catch (Exception e) {
                     // e.printStackTrace();
+                }
+            }
+
+            System.out.println("alreadyAssignedTeamSubpartIDList : " + alreadyAssignedTeamSubpartIDList.toString());
+            for(int i = 0; i<alreadyAssignedTeamSubpartIDList.size(); i++){
+                if(subpartStringList.indexOf(alreadyAssignedTeamSubpartIDList.get(i)) != -1){
+                    subpartStringList.remove(subpartStringList.indexOf(alreadyAssignedTeamSubpartIDList.get(i)));
                 }
             }
 
