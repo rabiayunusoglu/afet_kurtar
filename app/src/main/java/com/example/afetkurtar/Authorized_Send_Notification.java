@@ -101,7 +101,7 @@ public class Authorized_Send_Notification extends AppCompatActivity {
                                 for (JSONObject x : list) {
                                     if (!x.getString("userType").equals("authorizedUser") && x.getString("userToken").length()>5) {
                                       //  System.out.println(x.getString("userID"));
-                                        send.sendNotification(title,body,x.getString("userID"));
+                                        send.sendNotificationWithData(title,body,"","",x.getString("userToken"));
                                     }
                                 }
                                 showToast(true);
