@@ -49,7 +49,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-public class Authorized_VolunteerRequest3 extends AppCompatActivity  implements OnMapReadyCallback{
+public class Authorized_VolunteerRequest3 extends AppCompatActivity implements OnMapReadyCallback {
 
     ArrayList<String> arrayListSubpart = new ArrayList<>();
     ArrayList<String> arrayListSubpartAdres = new ArrayList<>();
@@ -67,6 +67,7 @@ public class Authorized_VolunteerRequest3 extends AppCompatActivity  implements 
 
     ArrayAdapter<String> adapterSubpart;
     Button submits;
+    static String teamID;
     public static JSONObject volInfo;
     String urlvol = "https://afetkurtar.site/api/volunteerUser/search.php";
     DrawerLayout drawerLayout;
@@ -82,6 +83,7 @@ public class Authorized_VolunteerRequest3 extends AppCompatActivity  implements 
     GoogleSignInClient mGoogleSignInClient;
     private GoogleMap mMap;
     private Geocoder geocoder;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -118,73 +120,7 @@ public class Authorized_VolunteerRequest3 extends AppCompatActivity  implements 
                 if (dataSupartName.equals("Seçilmedi")) {
                     Toast.makeText(getApplicationContext(), "Bir gönüllü seçiniz!", Toast.LENGTH_SHORT).show();
                 } else {
-                    JSONObject obj = new JSONObject();
-                    try {
-//Get current date time
-                        checkUser();
-                        //takım atamalı burda sanıırm, team de assigned subpart req ile uyuyorsa takıma ekle ama değilse yeni takım yarat ve içine adamı ekle ömere sor burayı bilmiyoourm bu kısmı
-                        System.out.println(arrayListSubpartTEAMID.toString());
-                        System.out.println(arrayListSubpartRole.toString());
-                        System.out.println(arrayListSubpart.toString());
-                        System.out.println(arrayListSubpartAdres.toString());
-                        System.out.println(arrayListSubpartAid.toString());
-                        System.out.println(arrayListSubpartEXP.toString());
-                        System.out.println(arrayListSubpartBIRTHDATE.toString());
-                        LocalDateTime now = LocalDateTime.now();
-                        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-                        String formatDateTime = now.format(formatter);
-                        DateTimeFormatter formatter1 = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-                        String formatDateTime1 = String.format(dataSupartbirthdate);
-                        obj.put("volunteerID", dataSupartID);
-                        obj.put("requestedSubpart", Authorized_VolunteerRequest2.dataSupartID);
-                        obj.put("responseSubpart", Authorized_VolunteerRequest2.dataSupartID);
-                        obj.put("volunteerName", dataSupartName.substring(0,dataSupartName.indexOf(",")));
-                        obj.put("locationTime", formatDateTime);
-                        obj.put("isExperienced", dataSupartEXP);
-                        obj.put("haveFirstAidCert", dataSupartAid);
-                        obj.put("address", dataSupartAddress);
-                        obj.put("latitude", latitude);
-                        obj.put("longitude", logtitude);
-                        obj.put("role", "belirlenmedi");
-                        obj.put("tc", "12345678912");
-                        obj.put("tel", "12345678912");
-                        obj.put("birthDate", formatDateTime1);
-
-
-                    } catch (Exception e) {
-                        Toast.makeText(getApplicationContext(), "hata", Toast.LENGTH_SHORT).show();
-                    }
-                    JsonObjectRequest request = new JsonObjectRequest(Request.Method.POST, "https://afetkurtar.site/api/volunteerUser/update.php", obj, new Response.Listener<JSONObject>() {
-                        @Override
-                        public void onResponse(JSONObject response) {
-                            //userda type değiştir, (pere id ile kayıt et)artık etmiyozpere kayıt
-                            System.out.println("YAZZZZZ++++++++++++++++++++");
-                            checkUser();
-                            updateUserTable();
-                          //  addPersonel();
-                            System.out.println(response.toString());
-                        }
-                    }, new Response.ErrorListener() {
-                        @Override
-                        public void onErrorResponse(VolleyError error) {
-                            System.out.println(arrayListSubpart.toString());
-                            System.out.println(arrayListSubpartID.toString());
-                            System.out.println(arrayListSubpartAdres.toString());
-                            System.out.println(arrayListSubpartAid.toString());
-                            System.out.println(arrayListSubpartEXP.toString());
-                            System.out.println(arrayListSubpartBIRTHDATE.toString());
-                            System.out.println(arrayListSubpartlatitude.toString());
-                            System.out.println(arrayListSubpartlongtitude.toString());
-                            System.out.println(arrayListSubpartRole.toString());
-                            System.out.println(arrayListSubpartTC.toString());
-                            System.out.println(arrayListSubpartTEAMID.toString());
-                            System.out.println(arrayListSubpartTEL.toString());
-                            Toast.makeText(getApplicationContext(), "HATA-KABUL EDİLMEDİ", Toast.LENGTH_SHORT).show();
-
-                        }
-                    });
-                    queue2.add(request);
-                    redirectActivity(Authorized_VolunteerRequest3.this, Authorized_Anasayfa.class);
+                   teamSearch();
                 }
 
             }
@@ -197,19 +133,202 @@ public class Authorized_VolunteerRequest3 extends AppCompatActivity  implements 
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.aut_subpart_Detail_map);
         mapFragment.getMapAsync((OnMapReadyCallback) Authorized_VolunteerRequest3.this);
     }
+
+    private void teamSearch() {
+        String url = "https://afetkurtar.site/api/team/search.php";
+        Map<String, Integer> params = new HashMap<String, Integer>();
+        params.put("assignedSubpartID", Authorized_VolunteerRequest2.dataSupartID);
+
+        JsonObjectRequest request = new JsonObjectRequest(
+                Request.Method.POST, // the request method
+                url, // the URL
+                new JSONObject(params), // the parameters for the php
+                new Response.Listener<JSONObject>() { // the response listener
+                    @RequiresApi(api = Build.VERSION_CODES.O)
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        //  System.out.println("response dönüyor");
+                        System.out.println(response.toString());
+
+                        JSONObject tmpJson = null;
+                        String type = "";
+                        try {
+                            String cevap = response.getString("records");
+                            cevap = cevap.substring(1, cevap.length() - 1);
+                            tmpJson = new JSONObject(cevap);
+                            teamID = tmpJson.getString("teamID");
+                            JSONObject obj = new JSONObject();
+                            try {
+//Get current date time
+                                checkUser();
+                                //takım atamalı burda sanıırm, team de assigned subpart req ile uyuyorsa takıma ekle ama değilse yeni takım yarat ve içine adamı ekle ömere sor burayı bilmiyoourm bu kısmı
+                                System.out.println(arrayListSubpartTEAMID.toString());
+                                System.out.println(arrayListSubpartRole.toString());
+                                System.out.println(arrayListSubpart.toString());
+                                System.out.println(arrayListSubpartAdres.toString());
+                                System.out.println(arrayListSubpartAid.toString());
+                                System.out.println(arrayListSubpartEXP.toString());
+                                System.out.println(arrayListSubpartBIRTHDATE.toString());
+                                LocalDateTime now = LocalDateTime.now();
+                                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+                                String formatDateTime = now.format(formatter);
+                                DateTimeFormatter formatter1 = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+                                String formatDateTime1 = String.format(dataSupartbirthdate);
+                                obj.put("volunteerID", dataSupartID);
+                                obj.put("requestedSubpart", Authorized_VolunteerRequest2.dataSupartID);
+                                obj.put("responseSubpart", Authorized_VolunteerRequest2.dataSupartID);
+                                obj.put("assignedTeamID", teamID);
+                                obj.put("volunteerName", dataSupartName.substring(0, dataSupartName.indexOf(",")));
+                                obj.put("locationTime", formatDateTime);
+                                obj.put("isExperienced", dataSupartEXP);
+                                obj.put("haveFirstAidCert", dataSupartAid);
+                                obj.put("address", dataSupartAddress);
+                                obj.put("latitude", latitude);
+                                obj.put("longitude", logtitude);
+                                obj.put("role", "Normal");
+                                obj.put("tc", dataSuparttc);
+                                obj.put("tel", dataSuparttel);
+                                obj.put("birthDate", formatDateTime1);
+
+
+                            } catch (Exception e) {
+                                Toast.makeText(getApplicationContext(), "hata", Toast.LENGTH_SHORT).show();
+                            }
+                            JsonObjectRequest request = new JsonObjectRequest(Request.Method.POST, "https://afetkurtar.site/api/volunteerUser/update.php", obj, new Response.Listener<JSONObject>() {
+                                @Override
+                                public void onResponse(JSONObject response) {
+                                    //userda type değiştir, (pere id ile kayıt et)artık etmiyozpere kayıt
+                                    System.out.println("YAZZZZZ++++++++++++++++++++");
+                                    checkUser();
+                                    updateUserTable();
+                                    //  addPersonel();
+                                    System.out.println(response.toString());
+                                }
+                            }, new Response.ErrorListener() {
+                                @Override
+                                public void onErrorResponse(VolleyError error) {
+                                    System.out.println(arrayListSubpart.toString());
+                                    System.out.println(arrayListSubpartID.toString());
+                                    System.out.println(arrayListSubpartAdres.toString());
+                                    System.out.println(arrayListSubpartAid.toString());
+                                    System.out.println(arrayListSubpartEXP.toString());
+                                    System.out.println(arrayListSubpartBIRTHDATE.toString());
+                                    System.out.println(arrayListSubpartlatitude.toString());
+                                    System.out.println(arrayListSubpartlongtitude.toString());
+                                    System.out.println(arrayListSubpartRole.toString());
+                                    System.out.println(arrayListSubpartTC.toString());
+                                    System.out.println(arrayListSubpartTEAMID.toString());
+                                    System.out.println(arrayListSubpartTEL.toString());
+                                    Toast.makeText(getApplicationContext(), "HATA-KABUL EDİLMEDİ", Toast.LENGTH_SHORT).show();
+
+                                }
+                            });
+                            queue2.add(request);
+                            redirectActivity(Authorized_VolunteerRequest3.this, Authorized_Anasayfa.class);
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+
+
+                    }
+                },
+                new Response.ErrorListener() { // the error listener
+                    @RequiresApi(api = Build.VERSION_CODES.O)
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        teamID = "0";
+                        JSONObject obj = new JSONObject();
+                        try {
+//Get current date time
+                            checkUser();
+                            //takım atamalı burda sanıırm, team de assigned subpart req ile uyuyorsa takıma ekle ama değilse yeni takım yarat ve içine adamı ekle ömere sor burayı bilmiyoourm bu kısmı
+                            teamSearch();
+                            System.out.println(arrayListSubpartTEAMID.toString());
+                            System.out.println(arrayListSubpartRole.toString());
+                            System.out.println(arrayListSubpart.toString());
+                            System.out.println(arrayListSubpartAdres.toString());
+                            System.out.println(arrayListSubpartAid.toString());
+                            System.out.println(arrayListSubpartEXP.toString());
+                            System.out.println(arrayListSubpartBIRTHDATE.toString());
+                            LocalDateTime now = LocalDateTime.now();
+                            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+                            String formatDateTime = now.format(formatter);
+                            DateTimeFormatter formatter1 = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+                            String formatDateTime1 = String.format(dataSupartbirthdate);
+                            obj.put("volunteerID", dataSupartID);
+                            obj.put("requestedSubpart", Authorized_VolunteerRequest2.dataSupartID);
+                            obj.put("responseSubpart", Authorized_VolunteerRequest2.dataSupartID);
+                            obj.put("assignedTeamID", teamID);
+                            obj.put("volunteerName", dataSupartName.substring(0, dataSupartName.indexOf(",")));
+                            obj.put("locationTime", formatDateTime);
+                            obj.put("isExperienced", dataSupartEXP);
+                            obj.put("haveFirstAidCert", dataSupartAid);
+                            obj.put("address", dataSupartAddress);
+                            obj.put("latitude", latitude);
+                            obj.put("longitude", logtitude);
+                            obj.put("role", "Normal");
+                            obj.put("tc", dataSuparttc);
+                            obj.put("tel", dataSuparttel);
+                            obj.put("birthDate", formatDateTime1);
+
+
+                        } catch (Exception e) {
+                            Toast.makeText(getApplicationContext(), "hata", Toast.LENGTH_SHORT).show();
+                        }
+                        JsonObjectRequest request = new JsonObjectRequest(Request.Method.POST, "https://afetkurtar.site/api/volunteerUser/update.php", obj, new Response.Listener<JSONObject>() {
+                            @RequiresApi(api = Build.VERSION_CODES.O)
+                            @Override
+                            public void onResponse(JSONObject response) {
+                                //userda type değiştir, (pere id ile kayıt et)artık etmiyozpere kayıt
+                                System.out.println("YAZZZZZ++++++++++++++++++++");
+                                checkUser();
+                                updateUserTable();
+                                //  addPersonel();
+                                System.out.println(response.toString());
+                            }
+                        }, new Response.ErrorListener() {
+                            @Override
+                            public void onErrorResponse(VolleyError error) {
+                                System.out.println(arrayListSubpart.toString());
+                                System.out.println(arrayListSubpartID.toString());
+                                System.out.println(arrayListSubpartAdres.toString());
+                                System.out.println(arrayListSubpartAid.toString());
+                                System.out.println(arrayListSubpartEXP.toString());
+                                System.out.println(arrayListSubpartBIRTHDATE.toString());
+                                System.out.println(arrayListSubpartlatitude.toString());
+                                System.out.println(arrayListSubpartlongtitude.toString());
+                                System.out.println(arrayListSubpartRole.toString());
+                                System.out.println(arrayListSubpartTC.toString());
+                                System.out.println(arrayListSubpartTEAMID.toString());
+                                System.out.println(arrayListSubpartTEL.toString());
+                                Toast.makeText(getApplicationContext(), "HATA-KABUL EDİLMEDİ", Toast.LENGTH_SHORT).show();
+
+                            }
+                        });
+                        queue2.add(request);
+                        redirectActivity(Authorized_VolunteerRequest3.this, Authorized_Anasayfa.class);
+                    }
+                });
+        queue.add(request);
+
+    }
+
+    private void addteam() {
+
+    }
+
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
         LatLng latLng = null;
         try {
-            latLng = new LatLng(Authorized_VolunteerRequest2.lat,Authorized_VolunteerRequest2.longt);
+            latLng = new LatLng(Authorized_VolunteerRequest2.lat, Authorized_VolunteerRequest2.longt);
             Marker marker = mMap.addMarker(new MarkerOptions().position(latLng).title(Authorized_VolunteerRequest2.dataSupartName));
             mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 10));
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
-
 
 
     private void loadSpinnerDataREquest(String url) {
@@ -328,8 +447,11 @@ public class Authorized_VolunteerRequest3 extends AppCompatActivity  implements 
                                 arrayListSubpartlongtitude.add(resultlong);
                                 subpartTC = subpartTC.substring(subpartTC.indexOf(valueTC) + valueTC.length());
                                 resultTc = (subpartTC.substring(0, subpartTC.indexOf(flag)));
+                                arrayListSubpartTC.add(resultTc);
                                 //  subpartTeamID = subpartID.substring(subpartID.indexOf("},") + 1);
-
+                                subpartTEL = subpartTEL.substring(subpartTEL.indexOf(valueTEL) + valueTEL.length());
+                                resulttel = subpartTEL.substring(0, subpartTEL.indexOf(flag));
+                                arrayListSubpartTEL.add(resulttel);
                             }
 
                         }
@@ -353,6 +475,8 @@ public class Authorized_VolunteerRequest3 extends AppCompatActivity  implements 
                                     latitude = arrayListSubpartlatitude.get(index - 1);
                                     logtitude = arrayListSubpartlongtitude.get(index - 1);
                                     dataSupartteamID = arrayListSubpartTEAMID.get(index - 1);
+                                    dataSuparttc=arrayListSubpartTC.get(index-1);
+                                    dataSuparttel=arrayListSubpartTEL.get(index-1);
                                 }
 
                             }
@@ -510,9 +634,10 @@ public class Authorized_VolunteerRequest3 extends AppCompatActivity  implements 
                     }
                 });
     }
+
     @Override
     public void onBackPressed() {
-        redirectActivity(this,Authorized_Anasayfa.class);
+        redirectActivity(this, Authorized_Anasayfa.class);
     }
 
     public void ClickMenu(View view) {
@@ -594,10 +719,10 @@ public class Authorized_VolunteerRequest3 extends AppCompatActivity  implements 
     }
 
     public void ClickAuthorizedSmartAssign(View view) {
-        redirectActivity(this, Authorized_SmartAssign_Subpart.class );
+        redirectActivity(this, Authorized_SmartAssign_Subpart.class);
     }
 
     public void ClickAuthorizedTeam(View view) {
-        redirectActivity(this, Authorized_Assign_Team.class );
+        redirectActivity(this, Authorized_Assign_Team.class);
     }
 }

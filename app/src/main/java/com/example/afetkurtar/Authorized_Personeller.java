@@ -204,7 +204,8 @@ public class Authorized_Personeller extends AppCompatActivity {
                     @Override
                     public void onErrorResponse(VolleyError error) {
                         // TODO: Handle error
-                        System.out.println(error);
+                        emergencyins ="Gönüllü Katıldı";
+                        disasterrole="Normal";
                     }
                 });
         queue5.add(jsonObjectRequest);

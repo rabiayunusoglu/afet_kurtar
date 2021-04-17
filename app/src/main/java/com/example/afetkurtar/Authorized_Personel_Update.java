@@ -92,9 +92,9 @@ public class Authorized_Personel_Update extends AppCompatActivity {
         name = findViewById(R.id.per_name);
         name.setText(Authorized_Personeller.disasterName);
         kurum = findViewById(R.id.per_kurum);
-        kurum.setText(emergencyins);
+        kurum.setText(Authorized_Personeller.emergencyins);
         rol = findViewById(R.id.per_rol);
-        rol.setText(disasterrole);
+        rol.setText(Authorized_Personeller.disasterrole);
         delete = findViewById(R.id.delete_per_Btn);
         register = findViewById(R.id.kayit_btn);
         checkVOL();
