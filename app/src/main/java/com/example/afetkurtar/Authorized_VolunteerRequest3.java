@@ -122,6 +122,7 @@ public class Authorized_VolunteerRequest3 extends AppCompatActivity  implements 
                     try {
 //Get current date time
                         checkUser();
+                        //takım atamalı burda sanıırm, team de assigned subpart req ile uyuyorsa takıma ekle ama değilse yeni takım yarat ve içine adamı ekle ömere sor burayı bilmiyoourm bu kısmı
                         System.out.println(arrayListSubpartTEAMID.toString());
                         System.out.println(arrayListSubpartRole.toString());
                         System.out.println(arrayListSubpart.toString());
