@@ -1,6 +1,7 @@
 package com.example.afetkurtar;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
@@ -8,6 +9,7 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import android.app.Activity;
 import android.content.Intent;
 import android.location.Geocoder;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
@@ -39,6 +41,8 @@ import com.google.android.gms.tasks.Task;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -101,7 +105,7 @@ public class Authorized_VolunteerRequest2 extends AppCompatActivity implements O
                     Toast.makeText(getApplicationContext(), "Bir alt parça seçiniz!", Toast.LENGTH_SHORT).show();
                 }
                 else
-                    redirectActivity(Authorized_VolunteerRequest2.this,Authorized_VolunteerRequest3.class);
+                    teamSearch();
             }
         });
 
@@ -115,7 +119,34 @@ public class Authorized_VolunteerRequest2 extends AppCompatActivity implements O
         mMap = googleMap;
     }
 
+    private void teamSearch() {
+        String url = "https://afetkurtar.site/api/team/search.php";
+        Map<String, Integer> params = new HashMap<String, Integer>();
+        params.put("assignedSubpartID", Authorized_VolunteerRequest2.dataSupartID);
 
+        JsonObjectRequest request = new JsonObjectRequest(
+                Request.Method.POST, // the request method
+                url, // the URL
+                new JSONObject(params), // the parameters for the php
+                new Response.Listener<JSONObject>() { // the response listener
+                    @RequiresApi(api = Build.VERSION_CODES.O)
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        redirectActivity(Authorized_VolunteerRequest2.this,Authorized_VolunteerRequest3.class);
+                    }
+                },
+                new Response.ErrorListener() { // the error listener
+                    @RequiresApi(api = Build.VERSION_CODES.O)
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        Toast.makeText(getApplicationContext(), "Lütfen öncelikle afet alt parçasına takım atayınız.", Toast.LENGTH_SHORT).show();
+                        redirectActivity(Authorized_VolunteerRequest2.this, Authorized_Anasayfa.class);
+
+                    }
+                });
+        queue.add(request);
+
+    }
 
     private void loadSpinnerDataSubpart(String url) {
         JSONObject obj = new JSONObject();

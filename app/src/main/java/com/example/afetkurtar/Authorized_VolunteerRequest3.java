@@ -225,6 +225,7 @@ public class Authorized_VolunteerRequest3 extends AppCompatActivity implements O
                             });
                             queue2.add(request);
                             redirectActivity(Authorized_VolunteerRequest3.this, Authorized_Anasayfa.class);
+                            Toast.makeText(getApplicationContext(), "HATA KABUL EDİLMEDİ", Toast.LENGTH_SHORT).show();
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
@@ -236,77 +237,9 @@ public class Authorized_VolunteerRequest3 extends AppCompatActivity implements O
                     @RequiresApi(api = Build.VERSION_CODES.O)
                     @Override
                     public void onErrorResponse(VolleyError error) {
-                        teamID = "0";
-                        JSONObject obj = new JSONObject();
-                        try {
-//Get current date time
-                            checkUser();
-                            //takım atamalı burda sanıırm, team de assigned subpart req ile uyuyorsa takıma ekle ama değilse yeni takım yarat ve içine adamı ekle ömere sor burayı bilmiyoourm bu kısmı
-                            teamSearch();
-                            System.out.println(arrayListSubpartTEAMID.toString());
-                            System.out.println(arrayListSubpartRole.toString());
-                            System.out.println(arrayListSubpart.toString());
-                            System.out.println(arrayListSubpartAdres.toString());
-                            System.out.println(arrayListSubpartAid.toString());
-                            System.out.println(arrayListSubpartEXP.toString());
-                            System.out.println(arrayListSubpartBIRTHDATE.toString());
-                            LocalDateTime now = LocalDateTime.now();
-                            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-                            String formatDateTime = now.format(formatter);
-                            DateTimeFormatter formatter1 = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-                            String formatDateTime1 = String.format(dataSupartbirthdate);
-                            obj.put("volunteerID", dataSupartID);
-                            obj.put("requestedSubpart", Authorized_VolunteerRequest2.dataSupartID);
-                            obj.put("responseSubpart", Authorized_VolunteerRequest2.dataSupartID);
-                            obj.put("assignedTeamID", teamID);
-                            obj.put("volunteerName", dataSupartName.substring(0, dataSupartName.indexOf(",")));
-                            obj.put("locationTime", formatDateTime);
-                            obj.put("isExperienced", dataSupartEXP);
-                            obj.put("haveFirstAidCert", dataSupartAid);
-                            obj.put("address", dataSupartAddress);
-                            obj.put("latitude", latitude);
-                            obj.put("longitude", logtitude);
-                            obj.put("role", "Normal");
-                            obj.put("tc", dataSuparttc);
-                            obj.put("tel", dataSuparttel);
-                            obj.put("birthDate", formatDateTime1);
-
-
-                        } catch (Exception e) {
-                            Toast.makeText(getApplicationContext(), "hata", Toast.LENGTH_SHORT).show();
-                        }
-                        JsonObjectRequest request = new JsonObjectRequest(Request.Method.POST, "https://afetkurtar.site/api/volunteerUser/update.php", obj, new Response.Listener<JSONObject>() {
-                            @RequiresApi(api = Build.VERSION_CODES.O)
-                            @Override
-                            public void onResponse(JSONObject response) {
-                                //userda type değiştir, (pere id ile kayıt et)artık etmiyozpere kayıt
-                                System.out.println("YAZZZZZ++++++++++++++++++++");
-                                checkUser();
-                                updateUserTable();
-                                //  addPersonel();
-                                System.out.println(response.toString());
-                            }
-                        }, new Response.ErrorListener() {
-                            @Override
-                            public void onErrorResponse(VolleyError error) {
-                                System.out.println(arrayListSubpart.toString());
-                                System.out.println(arrayListSubpartID.toString());
-                                System.out.println(arrayListSubpartAdres.toString());
-                                System.out.println(arrayListSubpartAid.toString());
-                                System.out.println(arrayListSubpartEXP.toString());
-                                System.out.println(arrayListSubpartBIRTHDATE.toString());
-                                System.out.println(arrayListSubpartlatitude.toString());
-                                System.out.println(arrayListSubpartlongtitude.toString());
-                                System.out.println(arrayListSubpartRole.toString());
-                                System.out.println(arrayListSubpartTC.toString());
-                                System.out.println(arrayListSubpartTEAMID.toString());
-                                System.out.println(arrayListSubpartTEL.toString());
-                                Toast.makeText(getApplicationContext(), "HATA-KABUL EDİLMEDİ", Toast.LENGTH_SHORT).show();
-
-                            }
-                        });
-                        queue2.add(request);
+                        Toast.makeText(getApplicationContext(), "Lütfen öncelikle afet alt parçasına takım atayınız.", Toast.LENGTH_SHORT).show();
                         redirectActivity(Authorized_VolunteerRequest3.this, Authorized_Anasayfa.class);
+
                     }
                 });
         queue.add(request);
