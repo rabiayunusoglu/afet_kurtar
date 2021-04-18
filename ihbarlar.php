@@ -53,6 +53,9 @@ if (session_id() == '') {
                         </li>
                     </ul>
                 </div>
+                <?php
+                echo '<div id="user-profile"><b>'.$_SESSION["userName"].'</b></div>';
+                ?>
                 <div id="logout"><a class="nav-link" href="/cikis.php">Çıkış Yap</a></div>
             </div>
         </nav>
@@ -122,11 +125,11 @@ if (session_id() == '') {
                 echo "<td class=\"td-element\">" . $address . "</td>";
                 echo "<td><img style=\"height: 150px;\" src=\"https://maps.googleapis.com/maps/api/staticmap?center=" . $row['latitude'] . "," . $row['longitude'] . "&zoom=12&size=200x200&key=AIzaSyCxLUKYaDqQEIIQGQGQmC0ipdS04IXRoRw\"/></td>";
                 echo "<td><img class=\"img-responsive\" style=\"height: 150px;\" src=\"" . $row['imageURL'] . "\"/></td>";
-                echo "<td class=\"td-element\"><select class=\"td-element\" id=\"disasterForNotice\">";
-                foreach($disasters['records'] as $disaster){
-                    echo "<option>" . $disaster["disasterName"] . "</option>";
-                }
-                echo "<input type=\"button\" value=\"Afet Bölgelerine Ekle\" onclick=\"addNoticeAsSubpart(this.id)\" class=\"btn btn-primary\"\></input></td>";
+                // echo "<td class=\"td-element\"><select class=\"td-element\" id=\"disasterForNotice\">";
+                // foreach($disasters['records'] as $disaster){
+                //     echo "<option>" . $disaster["disasterName"] . "</option>";
+                // }
+                echo '<td class="td-element"><input type="button" value="Sil" onclick="deleteNotice('. $row["noticeID"] .')" class="btn btn-danger"></input></td>';
                 echo "</tr>";
             }
             echo "</table>";

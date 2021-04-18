@@ -53,6 +53,9 @@ if (session_id() == '') {
                         </li>
                     </ul>
                 </div>
+                <?php
+                echo '<div id="user-profile"><b>'.$_SESSION["userName"].'</b></div>';
+                ?>
                 <div id="logout"><a class="nav-link" href="/cikis.php">Çıkış Yap</a></div>
             </div>
         </nav>
@@ -159,7 +162,7 @@ if (session_id() == '') {
                             foreach($responseStatus['records'] as $rowStatus)
                             {
                                 if ($rowStatus["subpartID"] == $rowSubpart["subpartID"]) {
-                                    echo'<section id="cd-timeline" class="cd-container" style="width:80vw;">';
+                                    echo'<section id="cd-timeline" class="cd-container" style="width:70vw;">';
                                     break;
                                 }
                             }
@@ -171,11 +174,11 @@ if (session_id() == '') {
                                     echo '<div class="cd-timeline-img cd-picture">';
                                     echo '</div>';
                                     echo '<div class="cd-timeline-content">';
-                                    echo '<h2>Takım '. $rowStatus['teamID'] .'</h2>';
+                                    echo '<h2>'. $rowStatus['statusTime'] .'</h2>';
                                     echo '<div class="timeline-content-info">';
                                     echo '<span class="timeline-content-info-date">';
-                                    echo '<i class="fa fa-calendar-o" aria-hidden="true"></i>';
-                                    echo $rowStatus['statusTime'];
+                                    echo '<i class="fa fa-calendar-o" aria-hidden="true"></i>Takım ';
+                                    echo $rowStatus['teamID'];
                                     echo '</span>';
                                     echo '</div>';
                                     echo '<p>'. $rowStatus['statusMessage'] .'</p>';

@@ -57,6 +57,9 @@ if (session_id() == '') {
                         </li>
                     </ul>
                 </div>
+                <?php
+                echo '<div id="user-profile"><b>'.$_SESSION["userName"].'</b></div>';
+                ?>
                 <div id="logout"><a class="nav-link" href="/cikis.php">Çıkış Yap</a></div>
             </div>
         </nav>
@@ -160,7 +163,7 @@ if (session_id() == '') {
         echo '<div class="container main-container" style="margin-left:1vw; margin-top:0px; width:37vw;">';
         echo '<div class="row">';
         echo '<div class="col-lg-12 col-md-8"></div>';
-        echo '<div class="col-lg-12 col-md-8 form-box">';
+        echo '<div class="col-lg-12 col-md-8 form-box" style="margin-top:30px;">';
         echo '<form onsubmit="return false;" id="editSubpartForm">';
         echo '<div class="form-group">';
         echo '<label for="subpartName'.$row["subpartID"].'" style="font-size: 20px; font-weight:bold; color: #ECF0F5">Bölge Adı</label>';
@@ -224,10 +227,12 @@ if (session_id() == '') {
         curl_setopt($ch, CURLOPT_POSTFIELDS, $body);
         $responseTeam = json_decode(curl_exec($ch),true);
         $teamID = -1;
+        $team;
 
-        if((array_key_exists("records",$responseTeam)))
+        if((array_key_exists("records",$responseTeam))){
+            $team = $responseTeam['records'][0];
             $teamID = $responseTeam['records'][0]["teamID"];
-
+        }
         $url = "https://afetkurtar.site/api/personnelUser/search.php";
 
         $body = '{
@@ -374,6 +379,13 @@ if (session_id() == '') {
             echo "</table>";
         }
 
+        if(!is_null($team)){
+            if($team["needManPower"] > 0){
+                echo '<label for="teamNeedManPower" style="font-size: 20px; font-weight:bold; color: #ECF0F5">İnsan İş Gücü İhtiyacı</label>';
+                echo '<div id="teamNeedManPower" style="font-size: 16px; margin-bottom:20px; color: #ECF0F5;">'. $team["needManPower"] .'</div>';
+            }
+        }
+
 
 
 
@@ -395,7 +407,7 @@ if (session_id() == '') {
     echo '<div class="container main-container" style="margin-left:1vw; margin-top:0px; width:37vw;">';
     echo '<div class="row">';
     echo '<div class="col-lg-12 col-md-8"></div>';
-    echo '<div class="col-lg-12 col-md-8 form-box">';
+    echo '<div class="col-lg-12 col-md-8 form-box" style="margin-top:30px;">';
     echo '<form onsubmit="return false;" id="addSubpartForm">';
     echo '<div class="form-group">';
     echo '<label for="subpartName" style="font-size: 20px; font-weight:bold; color: #ECF0F5">Bölge Adı</label>';
@@ -438,7 +450,7 @@ if (session_id() == '') {
     echo '<div class="container main-container" style="margin-left:1vw; margin-top:0px; width:37vw;">';
     echo '<div class="row">';
     echo '<div class="col-lg-12 col-md-8"></div>';
-    echo '<div class="col-lg-12 col-md-8 form-box">';
+    echo '<div class="col-lg-12 col-md-8 form-box" style="margin-top:30px;">';
     echo '<form onsubmit="return false;" id="smart-assignment-form">';
 
     echo '<label for="assignment-table" style="font-size: 24px; font-weight:bold; color: #ECF0F5">Akıllı Atama</label>';

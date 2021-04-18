@@ -53,6 +53,9 @@ if (session_id() == '') {
                         </li>
                     </ul>
                 </div>
+                <?php
+                echo '<div id="user-profile"><b>'.$_SESSION["userName"].'</b></div>';
+                ?>
                 <div id="logout"><a class="nav-link" href="/cikis.php">Çıkış Yap</a></div>
             </div>
         </nav>

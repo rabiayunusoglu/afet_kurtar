@@ -366,7 +366,7 @@ function setMarkersForPersonnel(map, teamID, userID) { //degisecek
     // (0,0) is located in the top left of the image.
     // Origins, anchor positions and coordinates of the marker increase in the X
     // direction to the right and in the Y direction down.
-    
+
 
     const image = {
         url: "https://developers.google.com/maps/documentation/javascript/examples/full/images/beachflag.png",
@@ -395,9 +395,8 @@ function setMarkersForPersonnel(map, teamID, userID) { //degisecek
                 var personnels = data["records"];
                 //console.log(personnels);
 
-                for(let i = 0; i < personnels.length; i++){
-                    if(personnels[i]["personnelID"] != userID)
-                    {
+                for (let i = 0; i < personnels.length; i++) {
+                    if (personnels[i]["personnelID"] != userID) {
                         //console.log(personnels[i]);
                         var lat = personnels[i]["latitude"];
                         var lng = personnels[i]["longitude"];
@@ -416,14 +415,14 @@ function setMarkersForPersonnel(map, teamID, userID) { //degisecek
 
                         markers[i].index = i;
 
-                
+
                         infowindows[i] = new google.maps.InfoWindow({
                             content: '<div><p style="text-align: center;">' + personnels[i]["personnelRole"] + '</p></div>' + '<div><p style="text-align: center;">' + personnels[i]["personnelName"] + '</p></div>'
                         });
-                
+
                         google.maps.event.addListener(markers[i], 'click', function() {
-                
-                
+
+
                             if (currentInfoWindow != null) {
                                 currentInfoWindow.close();
                             }
@@ -432,58 +431,57 @@ function setMarkersForPersonnel(map, teamID, userID) { //degisecek
                         });
                     }
                 }
-            }
-        })
-        .fail(function(data, xhr) {
-        });
 
-        markers = [];
-        infowindows = [];
-        currentInfoWindow = null;
+                markers = [];
+                infowindows = [];
+                currentInfoWindow = null;
 
-        $.post("https://afetkurtar.site/api/volunteerUser/search.php", JSON.stringify({ assignedTeamID: teamID }))
-        .done(function(data, status, xhr) {
-            if (xhr.status == 200) {
-                var volunteers = data["records"];
+                $.post("https://afetkurtar.site/api/volunteerUser/search.php", JSON.stringify({ assignedTeamID: teamID }))
+                    .done(function(data, status, xhr) {
+                        if (xhr.status == 200) {
+                            var volunteers = data["records"];
 
-                for(let i = 0; i < volunteers.length; i++){
-                    if(volunteers[i]["volunteerID"] != userID)
-                    {
-                        var lat = volunteers[i]["latitude"];
-                        var lng = volunteers[i]["longitude"];
-                        console.log("volunteer");
-                        console.log(lat);
+                            for (let i = 0; i < volunteers.length; i++) {
+                                if (volunteers[i]["volunteerID"] != userID) {
+                                    var lat = volunteers[i]["latitude"];
+                                    var lng = volunteers[i]["longitude"];
+                                    console.log("volunteer");
+                                    console.log(lat);
 
-                        markers[i] = new google.maps.Marker({
-                            position: { lat: parseFloat(lat), lng: parseFloat(lng) },
-                            map,
-                            icon: image,
-                            shape: shape,
-                            title: volunteers[i]["volunteerName"]
-                        });
+                                    markers[i] = new google.maps.Marker({
+                                        position: { lat: parseFloat(lat), lng: parseFloat(lng) },
+                                        map,
+                                        icon: image,
+                                        shape: shape,
+                                        title: volunteers[i]["volunteerName"]
+                                    });
 
-                        markers[i].index = i;
+                                    markers[i].index = i;
 
-                
-                        infowindows[i] = new google.maps.InfoWindow({
-                            content: '<div><p style="text-align: center;">' + volunteers[i]["role"] + '</p></div>' + '<div><p style="text-align: center;">' + volunteers[i]["volunteerName"] + '</p></div>'
-                        });
-                
-                        google.maps.event.addListener(markers[i], 'click', function() {
-                
-                
-                            if (currentInfoWindow != null) {
-                                currentInfoWindow.close();
+
+                                    infowindows[i] = new google.maps.InfoWindow({
+                                        content: '<div><p style="text-align: center;">' + volunteers[i]["role"] + '</p></div>' + '<div><p style="text-align: center;">' + volunteers[i]["volunteerName"] + '</p></div>'
+                                    });
+
+                                    google.maps.event.addListener(markers[i], 'click', function() {
+
+
+                                        if (currentInfoWindow != null) {
+                                            currentInfoWindow.close();
+                                        }
+                                        infowindows[this.index].open(map, markers[this.index]);
+                                        currentInfoWindow = infowindows[this.index];
+                                    });
+                                }
                             }
-                            infowindows[this.index].open(map, markers[this.index]);
-                            currentInfoWindow = infowindows[this.index];
-                        });
-                    }
-                }
+                        }
+                    })
+                    .fail(function(data, xhr) {});
             }
         })
-        .fail(function(data, xhr) {
-        });
+        .fail(function(data, xhr) {});
+
+
 
 }
 
@@ -950,21 +948,15 @@ function deleteSubpart(subpartID) {
                                     personnelUsers.forEach(personnelUser => {
                                         $.post("https://afetkurtar.site/api/personnelUser/update.php", JSON.stringify({ personnelID: personnelUser.personnelID, teamID: "0" }))
                                             .done(function(data, status, xhr) {
-                                                if (xhr.status == 201) {
-                                                    //window.alert("Personel bölgeden çıkarıldı.");
-                                                }
+                                                if (xhr.status == 201) {}
                                             })
-                                            .fail(function(data, xhr) {
-                                                //window.alert("Bölge silinirken hata oluştu 6.");
-                                            });
+                                            .fail(function(data, xhr) {});
                                     });
 
                                 }
                             }
                         })
-                        .fail(function(data, xhr) {
-                            window.alert("Bölge silinirken hata oluştu 7.");
-                        });
+                        .fail(function(data, xhr) {});
 
                     $.post("https://afetkurtar.site/api/volunteerUser/search.php", JSON.stringify({ assignedTeamID: teamID }))
                         .done(function(data, status, xhr) {
@@ -981,22 +973,16 @@ function deleteSubpart(subpartID) {
                                                                 //window.alert("Gönüllü bölgeden çıkarıldı.");
                                                             }
                                                         })
-                                                        .fail(function(data, xhr) {
-                                                            //window.alert("Bölge silinirken hata oluştu 3.");
-                                                        });
+                                                        .fail(function(data, xhr) {});
                                                 }
                                             })
-                                            .fail(function(data, xhr) {
-                                                //window.alert("Bölge silinirken hata oluştu 4.");
-                                            });
+                                            .fail(function(data, xhr) {});
                                     });
 
                                 }
                             }
                         })
-                        .fail(function(data, xhr) {
-                            //window.alert("Bölge silinirken hata oluştu 5.");
-                        });
+                        .fail(function(data, xhr) {});
 
                     $.post("https://afetkurtar.site/api/subpart/delete.php", JSON.stringify({ subpartID: subpartID }))
                         .done(function(data, status, xhr) {
@@ -1010,7 +996,7 @@ function deleteSubpart(subpartID) {
                             }
                         })
                         .fail(function(data, xhr) {
-                            window.alert("Bölge silinirken hata oluştu 2.");
+                            window.alert("Bölge silinirken hata oluştu.");
                         });
                 }
 
@@ -1026,12 +1012,12 @@ function deleteSubpart(subpartID) {
                         //document.location.href = "https://afetkurtar.site/editDisaster.php?id=" + disasterID;
                         document.location.reload();
                     } else {
-                        window.alert("Bölge silinirken hata oluştu. 0");
+                        window.alert("Bölge silinirken hata oluştu.");
                         //document.getElementById('personnelForm').reset();
                     }
                 })
                 .fail(function(data, xhr) {
-                    window.alert("Bölge silinirken hata oluştu. 00");
+                    window.alert("Bölge silinirken hata oluştu.");
                 });
 
         });
@@ -1367,17 +1353,13 @@ function deleteSubpartForDisaster(subpartID) {
                                                     //window.alert("Personel bölgeden çıkarıldı.");
                                                 }
                                             })
-                                            .fail(function(data, xhr) {
-                                                //window.alert("Bölge silinirken hata oluştu 6.");
-                                            });
+                                            .fail(function(data, xhr) {});
                                     });
 
                                 }
                             }
                         })
-                        .fail(function(data, xhr) {
-                            //window.alert("Bölge silinirken hata oluştu 7.");
-                        });
+                        .fail(function(data, xhr) {});
 
                     $.post("https://afetkurtar.site/api/volunteerUser/search.php", JSON.stringify({ assignedTeamID: teamID }))
                         .done(function(data, status, xhr) {
@@ -1394,37 +1376,20 @@ function deleteSubpartForDisaster(subpartID) {
                                                                 //window.alert("Gönüllü bölgeden çıkarıldı.");
                                                             }
                                                         })
-                                                        .fail(function(data, xhr) {
-                                                            //window.alert("Bölge silinirken hata oluştu 3.");
-                                                        });
+                                                        .fail(function(data, xhr) {});
                                                 }
                                             })
-                                            .fail(function(data, xhr) {
-                                                //window.alert("Bölge silinirken hata oluştu 4.");
-                                            });
+                                            .fail(function(data, xhr) {});
                                     });
 
                                 }
                             }
                         })
-                        .fail(function(data, xhr) {
-                            //window.alert("Bölge silinirken hata oluştu 5.");
-                        });
+                        .fail(function(data, xhr) {});
 
                     $.post("https://afetkurtar.site/api/subpart/delete.php", JSON.stringify({ subpartID: subpartID }))
-                        .done(function(data, status, xhr) {
-                            if (xhr.status == 201) {
-                                //window.alert("Bölge silindi.");
-                                //document.location.href = "https://afetkurtar.site/editDisaster.php?id=" + disasterID;
-                                //document.location.reload();
-                            } else {
-                                //window.alert("Bölge silinirken hata oluştu.");
-                                //document.getElementById('personnelForm').reset();
-                            }
-                        })
-                        .fail(function(data, xhr) {
-                            //window.alert("Bölge silinirken hata oluştu 2.");
-                        });
+                        .done(function(data, status, xhr) {})
+                        .fail(function(data, xhr) {});
                 }
 
             }
@@ -1433,19 +1398,8 @@ function deleteSubpartForDisaster(subpartID) {
             $.post("https://afetkurtar.site/api/subpart/delete.php", JSON.stringify({
                     subpartID: subpartID
                 }))
-                .done(function(data, status, xhr) {
-                    if (xhr.status == 201) {
-                        //window.alert("Bölge silindi.");
-                        //document.location.href = "https://afetkurtar.site/editDisaster.php?id=" + disasterID;
-                        //document.location.reload();
-                    } else {
-                        //window.alert("Bölge silinirken hata oluştu. 0");
-                        //document.getElementById('personnelForm').reset();
-                    }
-                })
-                .fail(function(data, xhr) {
-                    //window.alert("Bölge silinirken hata oluştu. 00");
-                });
+                .done(function(data, status, xhr) {})
+                .fail(function(data, xhr) {});
 
         });
 
@@ -1477,9 +1431,7 @@ function deleteDisaster(disasterID) {
                             //document.getElementById('personnelForm').reset();
                         }
                     })
-                    .fail(function(data, xhr) {
-                        //window.alert("Bölge silinirken hata oluştu. 00");
-                    });
+                    .fail(function(data, xhr) {});
 
 
             } else {
@@ -1499,9 +1451,7 @@ function deleteDisaster(disasterID) {
                         //document.getElementById('personnelForm').reset();
                     }
                 })
-                .fail(function(data, xhr) {
-                    //window.alert("Bölge silinirken hata oluştu. 00");
-                });
+                .fail(function(data, xhr) {});
         });
 }
 
@@ -1520,9 +1470,7 @@ function deletePersonnel(personnelID) {
                 //document.getElementById('personnelForm').reset();
             }
         })
-        .fail(function(data, xhr) {
-            //window.alert("Bölge silinirken hata oluştu. 00");
-        });
+        .fail(function(data, xhr) {});
 }
 
 
@@ -1542,6 +1490,25 @@ function removeEquipmentRequest(equipmentRequestID) {
         })
         .fail(function(data, xhr) {
             window.alert("Ekipman isteği silinirken hata oluştu.");
+        });
+}
+
+function deleteNotice(noticeID) {
+
+    $.post("https://afetkurtar.site/api/notice/delete.php", JSON.stringify({
+            noticeID: noticeID
+        }))
+        .done(function(data, status, xhr) {
+            if (xhr.status == 201) {
+                window.alert("İhbar silindi.");
+                document.location.reload();
+            } else {
+                window.alert("İhbar silinirken hata oluştu.");
+                //document.getElementById('personnelForm').reset();
+            }
+        })
+        .fail(function(data, xhr) {
+            window.alert("İhbar silinirken hata oluştu.");
         });
 }
 
@@ -1619,8 +1586,9 @@ function doSmartAssignment() {
             var confirmAlert = window.confirm(infoString);
 
 
-            $body.addClass("loading");
+
             if (confirmAlert) {
+                $body.addClass("loading");
                 $.post("https://afetkurtar.site/api/doAssignment.php", JSON.stringify(data))
                     .done(function(data, status, xhr) {
                         $body.removeClass("loading");

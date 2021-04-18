@@ -102,9 +102,20 @@
             }
     }
 
-    // if($teamID == 0){
-    //     // afete atanmamis
-    // }
+    if($teamID == 0){
+        echo '<div class="container main-container" >';
+        echo '<div class="row">';
+        echo '<div class="col-lg-12 col-md-8"></div>';
+        echo '<div class="col-lg-12 col-md-8 form-box">';
+        echo '<form onsubmit="return false;" id="no-team-form">';
+        echo '<label for="teamNeedManPower" style="font-size: 20px; font-weight:bold; color: #ECF0F5">Henüz Bir Arama Kurtarma Çalışmasına Atanmadınız</label>';
+        echo '<div id="teamNeedManPower" style="font-size: 16px; margin-bottom:20px; color: #ECF0F5;">Bir takıma atandığınızda bildirim ile bilgilendirileceksiniz.</div>';
+        echo '</form>';
+        echo '</div>';
+        echo '</div>';
+        echo '</div>';  
+    }
+    else{
 
 
     //The url you wish to send the POST request to
@@ -231,7 +242,7 @@
     // }
     // style="background-color: #383B3E;"
     echo '<div style="display: flex;">';
-        echo '<div id="map" style="width:50vw; height:93.97vh;" latitude='. $personnel["latitude"] .' longitude='. $personnel["longitude"] .' team-id='. $teamID .' user-id='. $personnel["personnelID"] .'></div>';
+        echo '<div id="map" style="width:50vw; height:93.97vh;" latitude='. $latitude .' longitude='. $longitude .' team-id='. $teamID .' user-id='. $personnel["personnelID"] .'></div>';
         echo '<div style="width:50vw; height:93.97vh;">';
             echo '<ul class="nav nav-tabs nav-flex" id="myTab" role="tablist" style="height:5vh;">';
                 echo '<li class="nav-item" role="presentation" style="width:33.3%; margin:0px;">';
@@ -385,7 +396,7 @@
                         echo '<label for="equipment-table" style="font-size: 20px; font-weight:bold; color: #ECF0F5">Ekipman</label>';
 
                         echo '<select name="equipmentTable" class="form-control" id="equipment-table">';
-                        foreach ($equipments as $equipment) {
+                        foreach ($equipments as &$equipment) {
                             echo '<option value="'. $equipment["equipmentID"] .'">'. $equipment["equipmentName"] .'</option>';
                         }
                         
@@ -515,7 +526,7 @@
         echo '</div>';
     echo '</div>';
 
-
+    }
     ?>
 
     <script src="https://code.jquery.com/jquery-3.5.1.min.js" integrity="sha256-9/aliU8dGd2tb6OSsuzixeV4y/faTqgFtohetphbbj0=" crossorigin="anonymous"></script>
