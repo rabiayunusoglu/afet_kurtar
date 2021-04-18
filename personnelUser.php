@@ -205,6 +205,17 @@
         $messages = $response["records"];
     }
 
+    $latitude = 0.0;
+    $longitude = 0.0;
+
+    if (array_key_exists("latitude",$personnel)){
+        $latitude = $personnel["records"];
+    }
+
+    if (array_key_exists("longitude",$personnel)){
+        $longitude = $personnel["records"];
+    }
+
     /*foreach($teamMembers as $member){
         echo '<div id='. $member['personnelID'] .' user-name="'. $member['personnelName'] .'"></div>';
     }
@@ -220,7 +231,7 @@
     // }
     // style="background-color: #383B3E;"
     echo '<div style="display: flex;">';
-        echo '<div id="map" style="width:50vw; height:93.97vh;" latitude='. $subpart["latitude"] .' longitude='. $subpart["longitude"] .'></div>';
+        echo '<div id="map" style="width:50vw; height:93.97vh;" latitude='. $personnel["latitude"] .' longitude='. $personnel["longitude"] .' team-id='. $teamID .' user-id='. $personnel["personnelID"] .'></div>';
         echo '<div style="width:50vw; height:93.97vh;">';
             echo '<ul class="nav nav-tabs nav-flex" id="myTab" role="tablist" style="height:5vh;">';
                 echo '<li class="nav-item" role="presentation" style="width:33.3%; margin:0px;">';

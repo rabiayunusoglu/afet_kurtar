@@ -347,23 +347,26 @@ function setMarkersForVolunteer(map) {
 
 function initMapForPersonnel() {
     var temp = document.getElementById("map").id;
-    console.log(temp);
+
     var lat = parseFloat(document.getElementById("map").getAttribute("latitude"));
     var lng = parseFloat(document.getElementById("map").getAttribute("longitude"));
+    var teamID = parseInt(document.getElementById("map").getAttribute("team-id"));
+    var userID = parseInt(document.getElementById("map").getAttribute("user-id"));
+
     const map = new google.maps.Map(document.getElementById("map"), {
         zoom: 10,
         center: { lat: lat, lng: lng },
     });
-    //setMarkersForPersonnel(map);
+    setMarkersForPersonnel(map, teamID, userID);
 }
 
-function setMarkersForPersonnel(map) { //degisecek
+function setMarkersForPersonnel(map, teamID, userID) { //degisecek
     // Adds markers to the map.
     // Marker sizes are expressed as a Size of X,Y where the origin of the image
     // (0,0) is located in the top left of the image.
     // Origins, anchor positions and coordinates of the marker increase in the X
     // direction to the right and in the Y direction down.
-    subparts = document.getElementsByName("subpart");
+    
 
     const image = {
         url: "https://developers.google.com/maps/documentation/javascript/examples/full/images/beachflag.png",
@@ -384,45 +387,104 @@ function setMarkersForPersonnel(map) { //degisecek
 
     var markers = [];
     var infowindows = [];
-    var names = [];
-    var lats = [];
-    var lngs = [];
-    var userIDs = [];
     var currentInfoWindow = null;
 
-    for (let i = 0; i < subparts.length; i++) {
-        //console.log(subparts[i]);
-        lats[i] = parseFloat(subparts[i].getAttribute("latitude"));
-        lngs[i] = parseFloat(subparts[i].getAttribute("longitude"));
+    $.post("https://afetkurtar.site/api/personnelUser/search.php", JSON.stringify({ teamID: teamID }))
+        .done(function(data, status, xhr) {
+            if (xhr.status == 200) {
+                var personnels = data["records"];
+                //console.log(personnels);
 
-        names[i] = subparts[i].getAttribute("subpart-name");
+                for(let i = 0; i < personnels.length; i++){
+                    if(personnels[i]["personnelID"] != userID)
+                    {
+                        //console.log(personnels[i]);
+                        var lat = personnels[i]["latitude"];
+                        var lng = personnels[i]["longitude"];
+                        //console.log(lat);
+                        //console.log(lng);
+                        console.log("personnel");
+                        console.log(lat);
 
-        markers[i] = new google.maps.Marker({
-            position: { lat: lats[i], lng: lngs[i] },
-            map,
-            icon: image,
-            shape: shape,
-            title: names[i]
-        });
+                        markers[i] = new google.maps.Marker({
+                            position: { lat: parseFloat(lat), lng: parseFloat(lng) },
+                            map,
+                            icon: image,
+                            shape: shape,
+                            title: personnels[i]["personnelName"]
+                        });
 
-        markers[i].index = i;
+                        markers[i].index = i;
 
-        userIDs[i] = document.getElementById("user-info").getAttribute("user-id");
-
-        infowindows[i] = new google.maps.InfoWindow({
-            content: '<div>' + names[i] + '</div>' + '<input type="submit" onclick="joinSubpart(' + subparts[i].getAttribute("subpart-id") + "," + userIDs[i] + ')" class="btn btn-primary" id="button-' + subparts[i].id + '" value="Gönüllü İsteği Gönder"></input>'
-        });
-
-        google.maps.event.addListener(markers[i], 'click', function() {
-
-
-            if (currentInfoWindow != null) {
-                currentInfoWindow.close();
+                
+                        infowindows[i] = new google.maps.InfoWindow({
+                            content: '<div><p style="text-align: center;">' + personnels[i]["personnelRole"] + '</p></div>' + '<div><p style="text-align: center;">' + personnels[i]["personnelName"] + '</p></div>'
+                        });
+                
+                        google.maps.event.addListener(markers[i], 'click', function() {
+                
+                
+                            if (currentInfoWindow != null) {
+                                currentInfoWindow.close();
+                            }
+                            infowindows[this.index].open(map, markers[this.index]);
+                            currentInfoWindow = infowindows[this.index];
+                        });
+                    }
+                }
             }
-            infowindows[this.index].open(map, markers[this.index]);
-            currentInfoWindow = infowindows[this.index];
+        })
+        .fail(function(data, xhr) {
         });
-    }
+
+        markers = [];
+        infowindows = [];
+        currentInfoWindow = null;
+
+        $.post("https://afetkurtar.site/api/volunteerUser/search.php", JSON.stringify({ assignedTeamID: teamID }))
+        .done(function(data, status, xhr) {
+            if (xhr.status == 200) {
+                var volunteers = data["records"];
+
+                for(let i = 0; i < volunteers.length; i++){
+                    if(volunteers[i]["volunteerID"] != userID)
+                    {
+                        var lat = volunteers[i]["latitude"];
+                        var lng = volunteers[i]["longitude"];
+                        console.log("volunteer");
+                        console.log(lat);
+
+                        markers[i] = new google.maps.Marker({
+                            position: { lat: parseFloat(lat), lng: parseFloat(lng) },
+                            map,
+                            icon: image,
+                            shape: shape,
+                            title: volunteers[i]["volunteerName"]
+                        });
+
+                        markers[i].index = i;
+
+                
+                        infowindows[i] = new google.maps.InfoWindow({
+                            content: '<div><p style="text-align: center;">' + volunteers[i]["role"] + '</p></div>' + '<div><p style="text-align: center;">' + volunteers[i]["volunteerName"] + '</p></div>'
+                        });
+                
+                        google.maps.event.addListener(markers[i], 'click', function() {
+                
+                
+                            if (currentInfoWindow != null) {
+                                currentInfoWindow.close();
+                            }
+                            infowindows[this.index].open(map, markers[this.index]);
+                            currentInfoWindow = infowindows[this.index];
+                        });
+                    }
+                }
+            }
+        })
+        .fail(function(data, xhr) {
+        });
+
 }
 
 function joinSubpart(subpartID, userID) {
