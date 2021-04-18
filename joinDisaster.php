@@ -98,7 +98,7 @@ if (session_id() == '') {
         echo "<div name=\"subpart\" subpart-id=\"" . $row['subpartID'] . "\" subpart-name=\"" . $row['subpartName'] . "\" latitude=\"" . $row['latitude'] . "\" longitude=\"" . $row['longitude'] . "\"></div>";
     }
 
-    echo "<div id=\"map\" style=\"width:100vw;height:100vh\" disaster-id=\"" . $disasterID . "\" disaster-type=\"" . $disasterType . "\" latitude=\"" . $latitude . "\" longitude=\"" . $longitude . "\"></div>";
+    echo "<div id=\"map\" style=\"width:100vw;height:93.97vh\" disaster-id=\"" . $disasterID . "\" disaster-type=\"" . $disasterType . "\" latitude=\"" . $latitude . "\" longitude=\"" . $longitude . "\"></div>";
     echo '<div id="user-info" user-id='. $_SESSION["userID"] . '></div>';
     ?>
 

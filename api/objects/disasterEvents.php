@@ -44,7 +44,7 @@ class DisasterEvents{
     $query = "INSERT INTO
                 " . $this->table_name . "
             SET
-                disasterType=:disasterType, emergencyLevel=:emergencyLevel, latitude=:latitude, longitude=:longitude, disasterDate=:disasterDate, disasterBase=:disasterBase, disasterName=:disasterName";
+                disasterType=:disasterType, emergencyLevel=:emergencyLevel, latitude=:latitude, longitude=:longitude, disasterBase=:disasterBase, disasterName=:disasterName";
  
     // prepare query
     $stmt = $this->conn->prepare($query);
@@ -54,7 +54,7 @@ class DisasterEvents{
     $this->emergencyLevel=htmlspecialchars(strip_tags($this->emergencyLevel));
     $this->latitude=htmlspecialchars(strip_tags($this->latitude));
     $this->longitude=htmlspecialchars(strip_tags($this->longitude));
-    $this->disasterDate=htmlspecialchars(strip_tags($this->disasterDate));
+    //$this->disasterDate=htmlspecialchars(strip_tags($this->disasterDate));
     $this->disasterBase=htmlspecialchars(strip_tags($this->disasterBase));
     $this->disasterName=htmlspecialchars(strip_tags($this->disasterName));
  
@@ -63,7 +63,7 @@ class DisasterEvents{
     $stmt->bindParam(":emergencyLevel", $this->emergencyLevel);
     $stmt->bindParam(":latitude", $this->latitude);
     $stmt->bindParam(":longitude", $this->longitude);
-    $stmt->bindParam(":disasterDate", $this->disasterDate);
+    //$stmt->bindParam(":disasterDate", $this->disasterDate);
     $stmt->bindParam(":disasterBase", $this->disasterBase);
     $stmt->bindParam(":disasterName", $this->disasterName);
 

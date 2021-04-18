@@ -159,6 +159,3 @@ while($assignCount < $numberOfPeople){
 echo json_encode($assignedPeople);
 
 ?>
-
-
-

@@ -86,7 +86,7 @@ if (session_id() == '') {
           curl_setopt($ch, CURLOPT_POSTFIELDS, $body);
           $response = json_decode(curl_exec($ch),true);
 
-        foreach ($response['records'] as $row) {
+        foreach ($response['records'] as &$row) {
             $disasterID = $row['disasterID'];
             $disasterType = $row['disasterType'];
             $latitude = $row['latitude'];
@@ -113,7 +113,7 @@ if (session_id() == '') {
     $response = json_decode(curl_exec($ch),true);
     $subparts = $response["records"];
 
-    foreach ($response['records'] as $row) {
+    foreach ($response['records'] as &$row) {
         echo "<div name=\"subpart\" subpart-id=\"" . $row['subpartID']."\" subpart-name=\"" . $row['subpartName']."\" latitude=\"" . $row['latitude']."\" longitude=\"" . $row['longitude']."\"></div>";
     }
 
@@ -127,7 +127,7 @@ if (session_id() == '') {
     echo '<div class="header-edit-disaster" style="padding-left:10px; padding-top:10px; padding-bottom:5px; padding-right:10px;">Bölge</div>';
 
     echo '<div class="nav flex-column nav-pills" id="v-pills-tab" role="tablist" aria-orientation="vertical">';
-    foreach($response['records'] as $row){
+    foreach($response['records'] as &$row){
         echo '<a class="nav-link" id="subpart-' . $row["subpartID"] . '-tab" subpart-id="'. $row["subpartID"] .'" data-toggle="tab" href="#subpart-' . $row["subpartID"] . '" role="tab" aria-controls="subpart-' . $row["subpartID"] . '" aria-selected="false">' . $row["subpartName"] . '</a>';
     }
     echo '<a class="nav-link" id="subpart-add-tab" data-toggle="tab" href="#subpart-add" role="tab" aria-controls="subpart-add" aria-selected="false"> <i class="fa fa-plus  fa-1x"></i>  Ekle</a>';
@@ -141,7 +141,7 @@ if (session_id() == '') {
     echo '<div class="vl"></div>';
 
     echo '<div class="tab-content" id="v-pills-tabContent" >';
-    foreach($response['records'] as $row){
+    foreach($response['records'] as &$row){
         
 
         echo '<div class="tab-pane fade" id="subpart-' . $row["subpartID"] . '" role="tabpanel" aria-labelledby="subpart-' . $row["subpartID"] . '-tab">';
@@ -225,7 +225,7 @@ if (session_id() == '') {
         $responseTeam = json_decode(curl_exec($ch),true);
         $teamID = -1;
 
-        if(count($responseTeam['records']) != 0)
+        if((array_key_exists("records",$responseTeam)))
             $teamID = $responseTeam['records'][0]["teamID"];
 
         $url = "https://afetkurtar.site/api/personnelUser/search.php";
@@ -242,7 +242,7 @@ if (session_id() == '') {
         $personnelUsers = json_decode(curl_exec($ch),true);
 
 
-        if(count($personnelUsers['records']) != 0){
+        if(array_key_exists("records",$personnelUsers)){
             echo "<table id=\"personnel-table\" class=\"table table-dark table-striped table-bordered\" style=\"text-align:center\">
                 <thead>
                 <tr>
@@ -255,7 +255,7 @@ if (session_id() == '') {
                 <tbody>";
         }
 
-        foreach ($personnelUsers['records'] as $personnel) {
+        foreach ($personnelUsers['records'] as &$personnel) {
             echo "<tr>";
             echo "<td class=\"td-element\">" . $personnel['personnelName'] . "</td>";
             echo "<td class=\"td-element\">" . $personnel['personnelEmail'] . "</td>";
@@ -264,7 +264,7 @@ if (session_id() == '') {
             echo "<td class=\"td-element\"><input type=\"button\" value=\"Çıkar\" onclick=\"removePersonnelFromTeam(" . $personnel['personnelID']. ")\" class=\"btn btn-danger\" ></input></td>";
             echo "</tr>";
         }
-        if(count($personnelUsers['records']) != 0){
+        if((array_key_exists("records",$personnelUsers))){
             echo "<tbody>";
             echo "</table>";
         }
@@ -286,7 +286,7 @@ if (session_id() == '') {
         $volunteerUsers = json_decode(curl_exec($ch),true);
 
 
-        if(count($volunteerUsers['records']) != 0){
+        if((array_key_exists("records",$volunteerUsers))){
             echo "<table id=\"personnel-table\" class=\"table table-dark table-striped table-bordered\" style=\"text-align:center\">
                 <thead>
                 <tr>
@@ -299,7 +299,7 @@ if (session_id() == '') {
                 <tbody>";
         }
 
-        foreach ($volunteerUsers['records'] as $volunteer) {
+        foreach ($volunteerUsers['records'] as &$volunteer) {
             echo "<tr>";
             echo "<td class=\"td-element\">" . $volunteer['volunteerName'] . "</td>";
             echo "<td class=\"td-element\">" . $volunteer['tel'] . "</td>";
@@ -308,7 +308,68 @@ if (session_id() == '') {
             echo "<td class=\"td-element\"><input type=\"button\" value=\"Çıkar\" onclick=\"removeVolunteerFromTeam(" . $volunteer['volunteerID']. ")\" class=\"btn btn-danger\" ></input></td>";
             echo "</tr>";
         }
-        if(count($volunteerUsers['records']) != 0){
+        if((array_key_exists("records",$volunteerUsers))){
+            echo "<tbody>";
+            echo "</table>";
+        }
+
+        $urlEquipments = "http://afetkurtar.site/api/equipment/read.php";
+
+        $optionsEquipments = ['http' => [
+            'method' => 'POST',
+            'header' => 'Content-type:application/json'
+            // 'content' => $json
+        ]];
+
+        $contextEquipments = stream_context_create($optionsEquipments);
+        $responseEquipments = json_decode(file_get_contents($urlEquipments, false, $contextEquipments), true);
+        $equipments;
+        if((array_key_exists("records",$responseEquipments))){
+            $equipments= $responseEquipments["records"];
+        }
+        
+
+
+
+        $url = "https://afetkurtar.site/api/equipmentRequest/search.php";
+
+        $body = '{
+            "teamRequestID":'.$teamID.'
+        }';
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL, $url);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+        curl_setopt($ch, CURLOPT_HTTPHEADER, array("Content-Type: application/json"));
+        curl_setopt($ch, CURLOPT_POST, 1);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, $body);
+        $equipmentRequests = json_decode(curl_exec($ch),true);
+
+
+        if((array_key_exists("records",$equipmentRequests))){
+            echo "<table id=\"personnel-table\" class=\"table table-dark table-striped table-bordered\" style=\"text-align:center\">
+                <thead>
+                <tr>
+                <th>Ekipman Adı</th>
+                <th>Miktar</th>
+                <th>İşlem</th>
+                </tr>
+                <thead>
+                <tbody>";
+        }
+        foreach ($equipmentRequests['records'] as &$equipmentRequest) {
+            $equipmentName = "";
+            foreach ($equipments as &$equipment) {
+                if($equipment["equipmentID"] == $equipmentRequest["equipmentID"]){
+                    $equipmentName = $equipment["equipmentName"];
+                }
+            }
+            echo "<tr>";
+            echo "<td class=\"td-element\">" . $equipmentName. "</td>";
+            echo "<td class=\"td-element\">" . $equipmentRequest["quantity"] . "</td>";
+            echo "<td class=\"td-element\"><input type=\"button\" value=\"Sil\" onclick=\"removeEquipmentRequest(" . $equipmentRequest['equipmentRequestID']. ")\" class=\"btn btn-danger\" ></input></td>";
+            echo "</tr>";
+        }
+        if((array_key_exists("records",$equipmentRequests))){
             echo "<tbody>";
             echo "</table>";
         }
@@ -436,7 +497,7 @@ if (session_id() == '') {
     echo '<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCxLUKYaDqQEIIQGQGQmC0ipdS04IXRoRw&callback=initMap&libraries=&v=weekly" async></script>';
     echo '<script src="https://gitcdn.github.io/bootstrap-toggle/2.2.2/js/bootstrap-toggle.min.js"></script>';
 
-    foreach($response['records'] as $row){
+    foreach($response['records'] as &$row){
         echo '<script>';
         echo 'var slider = new Slider("#emergencyLevel'.$row["subpartID"].'", {';
         echo 'tooltip: "always"';

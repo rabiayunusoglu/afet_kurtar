@@ -128,17 +128,34 @@ class Team{
     }
 
     function update(){
+        $setContent = "";
+
+        if($this->assignedSubpartID != ""){
+            $setContent .= "assignedSubpartID=:assignedSubpartID,";
+        }
+        if($this->status != ""){
+            $setContent .= "`status`=:status,";
+        }
+        if($this->needManPower != ""){
+            $setContent .= "needManPower=:needManPower,";
+        }
+        if($this->needEquipment != ""){
+            $setContent .= "needEquipment=:needEquipment,";
+        }
+
+        $setContent  = rtrim($setContent, ",");
         // update query
         $query = "UPDATE
                     " . $this->table_name . "
                 SET
-                    assignedSubpartID=:assignedSubpartID, status=:status, needManPower=:needManPower, needEquipment=:needEquipment
+                    " . $setContent . "
                 WHERE
                     teamID = :teamID";
     
         // prepare query statement
         $stmt = $this->conn->prepare($query);
     
+
         // sanitize
         $this->teamID=htmlspecialchars(strip_tags($this->teamID));
         $this->assignedSubpartID=htmlspecialchars(strip_tags($this->assignedSubpartID));
@@ -148,11 +165,24 @@ class Team{
     
      
         // bind values
+        if($this->assignedSubpartID != ""){
+            $stmt->bindParam(":assignedSubpartID", $this->assignedSubpartID);
+        }
+        if($this->status != ""){
+            $stmt->bindParam(":status", $this->status);
+        }
+        if($this->needManPower != ""){
+            $stmt->bindParam(":needManPower", $this->needManPower);
+        }
+        if($this->needEquipment != ""){
+            $stmt->bindParam(":needEquipment", $this->needEquipment);
+        }
+        
         $stmt->bindParam(":teamID", $this->teamID);
-        $stmt->bindParam(":assignedSubpartID", $this->assignedSubpartID);
-        $stmt->bindParam(":status", $this->status);
-        $stmt->bindParam(":needManPower", $this->needManPower);
-        $stmt->bindParam(":needEquipment", $this->needEquipment);
+        
+        
+        
+        
     
     
         // execute the query

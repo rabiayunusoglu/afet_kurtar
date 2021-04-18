@@ -46,13 +46,18 @@
                     <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                     </ul>
                 </div>
+                <?php
+                echo '<div id="user-profile"><b>'.$_SESSION["userName"].'</b></div>';
+                ?>
                 <div id="logout"><a class="nav-link" href="/cikis.php">Çıkış Yap</a></div>
             </div>
         </nav>
     </header>
 
     <?php
+    $personnel;
     $teamID = 0;
+    $team;
     $subpartID = 0;
     $subpart;
     $teamMembers = array();
@@ -76,6 +81,7 @@
         $response = json_decode(curl_exec($ch),true);
 
     if (array_key_exists("records",$response)){
+        $personnel = $response["records"][0];
         $teamID = $response["records"][0]["teamID"];
     }
     else{
@@ -115,6 +121,7 @@
     curl_setopt($ch, CURLOPT_POSTFIELDS, $body);
     $response = json_decode(curl_exec($ch),true);
     if (array_key_exists("records",$response)){
+        $team = $response["records"][0];
         $subpartID = $response["records"][0]["assignedSubpartID"];
 
         $url = "https://afetkurtar.site/api/subpart/search.php";
@@ -219,9 +226,11 @@
                 echo '<li class="nav-item" role="presentation" style="width:33.3%; margin:0px;">';
                     echo '<button class="nav-link flex-sm-fill text-sm-center active" style="width:100%;" id="pills-status-tab" data-bs-toggle="pill" data-bs-target="#pills-status"  data-toggle="tab" role="tab" aria-controls="pills-status" aria-selected="false">Durum</button>';
                 echo '</li>';
-                echo '<li class="nav-item" role="presentation" style="width:33.3%; margin:0px;">';
-                    echo '<button class="nav-link flex-sm-fill text-sm-center" style="width:100%;" id="pills-equipment-tab" data-bs-toggle="pill" data-bs-target="#pills-equipment" data-toggle="tab"  role="tab" aria-controls="pills-equipment" aria-selected="false">Ekipman</button>';
-                echo '</li>';
+                if($personnel["personnelRole"] == "Kaptan"){
+                    echo '<li class="nav-item" role="presentation" style="width:33.3%; margin:0px;">';
+                        echo '<button class="nav-link flex-sm-fill text-sm-center" style="width:100%;" id="pills-equipment-tab" data-bs-toggle="pill" data-bs-target="#pills-equipment" data-toggle="tab"  role="tab" aria-controls="pills-equipment" aria-selected="false">Takım Yönetimi</button>';
+                    echo '</li>';
+                }
                 echo '<li class="nav-item" role="presentation" style="width:33.3%; margin:0px;">';
                     echo '<button class="nav-link flex-sm-fill text-sm-center" style="width:100%;" id="pills-message-tab" data-bs-toggle="pill" data-bs-target="#pills-message" data-toggle="tab"  role="tab" aria-controls="pills-message" aria-selected="false">Mesajlaşma</button>';
                 echo '</li>';
@@ -284,18 +293,146 @@
 
 
 
-
+                if($personnel["personnelRole"] == "Kaptan"){
                 echo '<div class="tab-pane fade" id="pills-equipment" role="tabpanel" aria-labelledby="pills-equipment-tab">';
                     /////////////////////////////////////////////////////////////////////////
                     //ekipman ekrani icerigi
+                    echo '<div class="span9 team-management-content" id="content" team-id="'.$teamID.'" style="height: 88.97vh;">';
 
 
-                    echo '<div>ekipman ekrani</div>';
+                    echo '<div class="container main-container" style="margin-left:5vw; margin-top:0px; width:40vw;">';
+                    echo '<div class="row">';
+                    echo '<div class="col-lg-12 col-md-8"></div>';
+                    echo '<div class="col-lg-12 col-md-8 form-box" style="margin-top:30px;">';
+                    echo '<form onsubmit="return false;" id="smart-assignment-form">';
+
+
+                        
+                    $urlEquipments = "http://afetkurtar.site/api/equipment/read.php";
+
+                    $optionsEquipments = ['http' => [
+                        'method' => 'POST',
+                        'header' => 'Content-type:application/json'
+                        // 'content' => $json
+                    ]];
+
+                    $contextEquipments = stream_context_create($optionsEquipments);
+                    $responseEquipments = json_decode(file_get_contents($urlEquipments, false, $contextEquipments), true);
+                    $equipments;
+                    if((array_key_exists("records",$responseEquipments))){
+                        $equipments= $responseEquipments["records"];
+                    }
                     
-                
 
+
+
+                    $url = "https://afetkurtar.site/api/equipmentRequest/search.php";
+
+                    $body = '{
+                        "teamRequestID":'.$teamID.'
+                    }';
+                    $ch = curl_init();
+                    curl_setopt($ch, CURLOPT_URL, $url);
+                    curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+                    curl_setopt($ch, CURLOPT_HTTPHEADER, array("Content-Type: application/json"));
+                    curl_setopt($ch, CURLOPT_POST, 1);
+                    curl_setopt($ch, CURLOPT_POSTFIELDS, $body);
+                    $equipmentRequests = json_decode(curl_exec($ch),true);
+
+
+                    if((array_key_exists("records",$equipmentRequests))){
+                        echo "<table id=\"personnel-table\" class=\"table table-dark table-striped table-bordered\" style=\"text-align:center\">
+                            <thead>
+                            <tr>
+                            <th>Ekipman Adı</th>
+                            <th>Miktar</th>
+                            <th>İşlem</th>
+                            </tr>
+                            <thead>
+                            <tbody>";
+                    }
+                    foreach ($equipmentRequests['records'] as &$equipmentRequest) {
+                        $equipmentName = "";
+                        foreach ($equipments as &$equipment) {
+                            if($equipment["equipmentID"] == $equipmentRequest["equipmentID"]){
+                                $equipmentName = $equipment["equipmentName"];
+                            }
+                        }
+                        echo "<tr>";
+                        echo "<td class=\"td-element\">" . $equipmentName. "</td>";
+                        echo "<td class=\"td-element\">" . $equipmentRequest["quantity"] . "</td>";
+                        echo "<td class=\"td-element\"><input type=\"button\" value=\"Sil\" onclick=\"removeEquipmentRequest(" . $equipmentRequest['equipmentRequestID']. ")\" class=\"btn btn-danger\" ></input></td>";
+                        echo "</tr>";
+                    }
+                    if((array_key_exists("records",$equipmentRequests))){
+                        echo "<tbody>";
+                        echo "</table>";
+                    }
+
+
+                        echo '<div class="form-group">';
+                        echo '<label for="equipment-table" style="font-size: 20px; font-weight:bold; color: #ECF0F5">Ekipman</label>';
+
+                        echo '<select name="equipmentTable" class="form-control" id="equipment-table">';
+                        foreach ($equipments as $equipment) {
+                            echo '<option value="'. $equipment["equipmentID"] .'">'. $equipment["equipmentName"] .'</option>';
+                        }
+                        
+                        echo '</select>';
+                        echo '</div>';
+
+
+
+                        echo '<label for="equipment-request-quantity" style="font-size: 20px; font-weight:bold; color: #ECF0F5">Miktar</label>';
+                        echo '<input type="text" class="form-control" id="equipment-request-quantity" placeholder="Miktar giriniz...">';
+
+
+                        echo '<input type="button" onclick="addEquipmentRequest('. $teamID .')" class="btn btn-success" id="registerBtn" value="Ekipman İsteği Gönder"></input>';
+
+                    echo '</form>';
+                    echo '</div>';
+                    echo '</div>';
+                    echo '</div>';    
+                    
+
+
+                    echo '<div class="container main-container" style="margin-left:5vw; margin-top:0px; width:40vw;">';
+                    echo '<div class="row">';
+                    echo '<div class="col-lg-12 col-md-8"></div>';
+                    echo '<div class="col-lg-12 col-md-8 form-box" style="margin-top:30px;">';
+                    echo '<form onsubmit="return false;" id="team-management-form">';
+
+
+
+
+                        echo '<div class="form-group">';
+
+                        echo '<label for="manpower-request-quantity" style="font-size: 20px; font-weight:bold; color: #ECF0F5">İnsan İş Gücü İhtiyacı</label>';
+                        echo '<input type="text" class="form-control" id="manpower-request-quantity" value="'. $team["needManPower"] .'">';
+
+                        echo '<div class="form-group row">';
+                        echo '<div class="col-lg-6 col-md-4">';
+                        echo '<label for="missing-person" style="font-size: 20px; font-weight:bold; color: #ECF0F5">Kayıp İnsan Sayısı</label>';
+                        echo '<input type="text" class="form-control" id="missing-person" value="'.$subpart["missingPerson"].'">';
+                        echo '</div>';
+                        echo '<div class="col-lg-6 col-md-4">';
+                        echo '<label for="rescued-person" style="font-size: 20px; font-weight:bold; color: #ECF0F5">Kurtarılan İnsan Sayısı</label>';
+                        echo '<input type="text" class="form-control" id="rescued-person" value="'.$subpart["rescuedPerson"].'">';
+                        echo '</div>';
+                        echo '</div>';
+
+                        echo '<input type="button" onclick="editTeamManagement('. $teamID .','. $subpartID .')" class="btn btn-primary" id="registerBtn" value="Güncelle"></input>';
+
+                    echo '</form>';
+                    echo '</div>';
+                    echo '</div>';
+                    echo '</div>';    
+                
+                    echo '</div>';
                     //////////////
+                    echo '</div>';
                 echo '</div>';
+                }
 
 
 

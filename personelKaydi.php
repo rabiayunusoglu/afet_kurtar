@@ -20,9 +20,11 @@ if (session_id() == '') {
     <meta name="google-signin-client_id" content="984932517689-26548cubtdd33uu95vqc4t3ciq1u2os0.apps.googleusercontent.com">
     <title>Afet Kurtar</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-BmbxuPwQa2lc/FVzBcNJ7UAyJxM6wuqIj61tLrc4wSX0szH/Ev+nYRRuWlolflfl" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.24/css/jquery.dataTables.css">
     <link rel="stylesheet" href="css/styles.css">
     <link rel="preconnect" href="https://fonts.gstatic.com">
     <link href="https://fonts.googleapis.com/css2?family=Newsreader&display=swap" rel="stylesheet">
+    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet">
     <script src="https://apis.google.com/js/platform.js" async defer></script>
 </head>
 
@@ -40,7 +42,7 @@ if (session_id() == '') {
                             <a class="nav-link" aria-current="page" href="/authorizedUser.php">Aktif Afetler</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link active" href="/personelKaydi.php">Personel Kaydı</a>
+                            <a class="nav-link active" href="/personelKaydi.php">Personeller</a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link" href="/ihbarlar.php">İhbarlar</a>
@@ -58,35 +60,57 @@ if (session_id() == '') {
         </nav>
     </header>
 
-    <div class="container main-container">
-        <div class="row">
-            <div class="col-lg-4 col-md-2"></div>
-            <div class="col-lg-4 col-md-8 form-box">
-                <form onsubmit="return false;" id="personnelForm">
-                    <div class="form-group">
-                        <label for="personnelEmail" style="font-size: 20px; font-weight:bold; color: #ECF0F5">Personel Emaili</label>
-                        <input type="email" class="form-control" id="personnelEmail" aria-describedby="emailHelp" placeholder="Personelin email adresini giriniz...">
-                    </div>
-                    <div class="form-group">
-                        <label for="personnelUsername" style="font-size: 20px; font-weight:bold; color: #ECF0F5">Personel Adı Soyadı</label>
-                        <input type="text" class="form-control" id="personnelUsername" placeholder="Personelin adı soyadını giriniz...">
-                    </div>
-                    <div class="form-group">
-                        <label for="personnelInstitution" style="font-size: 20px; font-weight:bold; color: #ECF0F5">Personel Kurumu</label>
-                        <input type="text" class="form-control" id="personnelInstitution" placeholder="Personelin çalıştığı kurumu giriniz...">
-                    </div>
-                    <div class="form-group">
-                        <label for="personnelRole" style="font-size: 20px; font-weight:bold; color: #ECF0F5">Personel Kurumdaki Rolü</label>
-                        <input type="text" class="form-control" id="personnelRole" placeholder="Personelin kurumdaki rolünü giriniz...">
-                    </div>
-                    <input type="button" onclick="registerPersonnel()" class="btn btn-primary" id="registerBtn" value="Kaydı Gerçekleştir"></input>
-                </form>
-            </div>
-        </div>
-    </div>
+    <!-- <input type="button" id="disasterCreate" class="btn btn-primary" onclick="addDisaster()" value="Afet Oluştur"></input> -->
 
+    <?php
+
+    //The url you wish to send the POST request to
+    $url = "http://afetkurtar.site/api/personnelUser/read.php";
+
+    $options = ['http' => [
+        'method' => 'POST',
+        'header' => 'Content-type:application/json'
+        // 'content' => $json
+    ]];
+
+    $context = stream_context_create($options);
+    $response = json_decode(file_get_contents($url, false, $context), true);
+
+    echo "<table id=\"disaster-table\" class=\"table table-dark table-striped table-bordered\" style=\"text-align:center\">
+            <thead>
+            <tr>
+            <th>Personel Adı</th>
+            <th>Personel Maili</th>
+            <th>Personel Takımı</th>
+            <th>Personel Konumu</th>
+            <th>Personel Kurumu</th>
+            <th>Detay</th>
+            </tr>
+            <thead>
+            <tbody>";
+
+
+
+    foreach ($response['records'] as $row) {
+        echo "<tr>";
+        echo "<td class=\"td-element\">" . $row['personnelName'] . "</td>";
+        echo "<td class=\"td-element\">" . $row['personnelEmail'] . "</td>";
+        echo "<td class=\"td-element\">" . $row['teamID'] . "</td>";
+        echo "<td><img style=\"height: 100px;\" src=\"https://maps.googleapis.com/maps/api/staticmap?center=" . $row['latitude'] . "," . $row['longitude'] . "&zoom=12&size=200x150&key=AIzaSyCxLUKYaDqQEIIQGQGQmC0ipdS04IXRoRw\"/></td>";
+        echo "<td class=\"td-element\">" . $row['institution'] . "</td>";
+        echo "<td class=\"td-element\"></input><input type=\"button\" style=\"margin-left:20px;\" value=\"Sil\" onclick=\"deletePersonnel(this.id)\" class=\"btn btn-danger\" id=\"" . $row['personnelID'] . "\"\></input></td>";
+        echo "</tr>";
+    }
+    echo "<tbody>";
+    echo "</table>";
+
+    ?>
+    <a href="../personelKayitFormu.php" class="float">
+        <i class="fa fa-plus my-float fa-2x"></i>
+    </a>
     <script src="https://code.jquery.com/jquery-3.5.1.min.js" integrity="sha256-9/aliU8dGd2tb6OSsuzixeV4y/faTqgFtohetphbbj0=" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/js/bootstrap.bundle.min.js" integrity="sha384-b5kHyXgcpbZJO/tY9Ul7kGkf1S0CWuKcCD38l8YkeH8z8QjE0GmW1gYU5S9FOnJ0" crossorigin="anonymous"></script>
+    <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.24/js/jquery.dataTables.js"></script>
     <script src="js/script.js"></script>
 </body>
 

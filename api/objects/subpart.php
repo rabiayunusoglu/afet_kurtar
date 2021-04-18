@@ -168,11 +168,48 @@ class Subpart{
     }
 
     function update(){
+        $setContent = "";
+
+        if($this->disasterID != ""){
+            $setContent .= "disasterID=:disasterID,";
+        }
+        if($this->latitude != ""){
+            $setContent .= "latitude=:latitude,";
+        }
+        if($this->longitude != ""){
+            $setContent .= "longitude=:longitude,";
+        }
+        if($this->address != ""){
+            $setContent .= "`address`=:address,";
+        }
+        if($this->missingPerson != ""){
+            $setContent .= "missingPerson=:missingPerson,";
+        }
+        if($this->rescuedPerson != ""){
+            $setContent .= "rescuedPerson=:rescuedPerson,";
+        }
+        if($this->isOpenForVolunteers != ""){
+            $setContent .= "isOpenForVolunteers=:isOpenForVolunteers,";
+        }
+        if($this->subpartName != ""){
+            $setContent .= "subpartName=:subpartName,";
+        }
+        if($this->disasterName != ""){
+            $setContent .= "disasterName=:disasterName,";
+        }
+        if($this->status != ""){
+            $setContent .= "`status`=:status,";
+        }
+        if($this->emergencyLevel != ""){
+            $setContent .= "emergencyLevel=:emergencyLevel,";
+        }
+
+        $setContent  = rtrim($setContent, ",");
         // update query
         $query = "UPDATE
                     " . $this->table_name . "
                 SET
-                    disasterID=:disasterID, latitude=:latitude, longitude=:longitude, address=:address, missingPerson=:missingPerson, rescuedPerson=:rescuedPerson, isOpenForVolunteers=:isOpenForVolunteers, subpartName=:subpartName,disasterName=:disasterName, `status`=:status, emergencyLevel=:emergencyLevel
+                " . $setContent . "
                 WHERE
                     subpartID=:subpartID";
     
@@ -195,18 +232,40 @@ class Subpart{
     
      
         // bind values
+        if($this->disasterID != ""){
+            $stmt->bindParam(":disasterID", $this->disasterID);
+        }
+        if($this->latitude != ""){
+            $stmt->bindParam(":latitude", $this->latitude);
+        }
+        if($this->longitude != ""){
+            $stmt->bindParam(":longitude", $this->longitude);
+        }
+        if($this->address != ""){
+            $stmt->bindParam(":address", $this->address);
+        }
+        if($this->missingPerson != ""){
+            $stmt->bindParam(":missingPerson", $this->missingPerson);
+        }
+        if($this->rescuedPerson != ""){
+            $stmt->bindParam(":rescuedPerson", $this->rescuedPerson);
+        }
+        if($this->isOpenForVolunteers != ""){
+            $stmt->bindParam(":isOpenForVolunteers", $this->isOpenForVolunteers);
+        }
+        if($this->subpartName != ""){
+            $stmt->bindParam(":subpartName", $this->subpartName);
+        }
+        if($this->disasterName != ""){
+            $stmt->bindParam(":disasterName", $this->disasterName);
+        }
+        if($this->status != ""){
+            $stmt->bindParam(":status", $this->status);
+        }
+        if($this->emergencyLevel != ""){
+            $stmt->bindParam(":emergencyLevel", $this->emergencyLevel);
+        }
         $stmt->bindParam(":subpartID", $this->subpartID);
-        $stmt->bindParam(":disasterID", $this->disasterID);
-        $stmt->bindParam(":latitude", $this->latitude);
-        $stmt->bindParam(":longitude", $this->longitude);
-        $stmt->bindParam(":address", $this->address);
-        $stmt->bindParam(":missingPerson", $this->missingPerson);
-        $stmt->bindParam(":rescuedPerson", $this->rescuedPerson);
-        $stmt->bindParam(":isOpenForVolunteers", $this->isOpenForVolunteers);
-        $stmt->bindParam(":subpartName", $this->subpartName);
-        $stmt->bindParam(":disasterName", $this->disasterName);
-        $stmt->bindParam(":status", $this->status);
-        $stmt->bindParam(":emergencyLevel", $this->emergencyLevel);
     
     
         // execute the query

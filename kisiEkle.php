@@ -85,15 +85,17 @@ if (session_id() == '') {
         echo "<td class=\"td-element\">" . $row['personnelRole'] . "</td>";
 
         echo '<td class="td-element">';
-            echo '<div class="btn-group">';
-            echo '<button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">';
-            echo 'Ekle';
-            echo '</button>';
-            echo '<div class="dropdown-menu">';
-            echo '<a class="personDropItem" id="kaptan'. $row["personnelID"] .'" personnel-id="'. $row["personnelID"] .'" role="Kaptan" href="#">Kaptan</a>';
-            echo '<a class="personDropItem" id="normal'. $row["personnelID"] .'" personnel-id="'. $row["personnelID"] .'" role="Normal" href="#">Normal</a>';
-            echo '</div>';
-            echo '</div>';
+            // echo '<div class="btn-group">';
+            // echo '<button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">';
+            // echo 'Ekle';
+            // echo '</button>';
+            // echo '<div class="dropdown-menu">';
+            // echo '<a class="personDropItem" id="kaptan'. $row["personnelID"] .'" personnel-id="'. $row["personnelID"] .'" role="Kaptan" href="#">Kaptan</a>';
+            // echo '<a class="personDropItem" id="normal'. $row["personnelID"] .'" personnel-id="'. $row["personnelID"] .'" role="Normal" href="#">Normal</a>';
+            // echo '</div>';
+            // echo '</div>';
+            echo '<input type="button" value="Kaptan" onclick="addPersonnelToSubpart(' . $row['personnelID'] . ','.$_GET["id"].','.$_GET["disasterID"].', \'Kaptan\')" class="btn btn-success" id="kaptan-' . $row['personnelID'] . '"></input>';
+            echo '<input type="button" value="Normal" onclick="addPersonnelToSubpart(' . $row['personnelID'] . ','.$_GET["id"].','.$_GET["disasterID"].', \'Normal\')" class="btn btn-primary" id="normal-' . $row['personnelID'] . '" style="margin-left:20px;"></input>';
         echo '</td>';
         echo "</tr>";
     }

@@ -5,7 +5,7 @@ window.map = undefined;
 function onSignIn(googleUser) {
     // Useful data for your client-side scripts:
     var profile = googleUser.getBasicProfile();
-    console.log("Email: " + profile.getEmail());
+    //console.log("Email: " + profile.getEmail());
     var idToken = profile.id_token;
     googleUser.disconnect();
 
@@ -25,9 +25,9 @@ function onSignIn(googleUser) {
                 var userData = data.records[0];
                 $.post("https://afetkurtar.site/api/config/session.php", userData)
                     .done(function(data, status, xhr) {
-                        console.log("data: " + data + "end");
-                        console.log("status: " + status);
-                        console.log("xhr: " + xhr.status);
+                        //console.log("data: " + data + "end");
+                        //console.log("status: " + status);
+                        //console.log("xhr: " + xhr.status);
                         if (userData.userType == "authorizedUser") {
                             document.location.href = "https://afetkurtar.site/authorizedUser.php";
                         } else if (userData.userType == "personnelUser") {
@@ -41,7 +41,7 @@ function onSignIn(googleUser) {
         .fail(function(xhr) {
             console.log("xhr:" + xhr.status);
             if (xhr.status == 404) {
-                document.location.href = "https://afetkurtar.site/volunteerRegister.php";
+                document.location.href = "https://afetkurtar.site/volunteerRegister.php?email=" + profile.getEmail();
             }
         })
         .always(function(data) {
@@ -54,7 +54,7 @@ function registerPersonnel() {
 
     var email = document.getElementById("personnelEmail").value.trim();
     var username = document.getElementById("personnelUsername").value.trim();
-    var role = document.getElementById("personnelRole").value.trim();
+    var address = document.getElementById("personnelAddress").value.trim();
     var institution = document.getElementById("personnelInstitution").value.trim();
 
     if (email == '') {
@@ -63,45 +63,64 @@ function registerPersonnel() {
     } else if (username == '') {
         alert("Ad soyad boş bırakılamaz.");
         return false;
-    } else if (role == '') {
-        alert("Personel rolü boş bırakılamaz.");
-        return false;
     } else if (institution == '') {
         alert("Çalıştığı kurum boş bırakılamaz.");
         return false;
+    } else if (address == '') {
+        alert("Personel adresi boş bırakılamaz.");
+        return false;
     }
 
-
-    $.post("https://afetkurtar.site/api/users/create.php", JSON.stringify({ userType: 'personnelUser', userName: username, email: email }))
+    var encodedAddress = encodeURI(address);
+    $.get("https://maps.googleapis.com/maps/api/geocode/json?address=" + encodedAddress + "&sensor=true&key=AIzaSyCxLUKYaDqQEIIQGQGQmC0ipdS04IXRoRw")
         .done(function(data, status, xhr) {
-            //window.alert("data:" + data);
-
-            if (xhr.status == 201) {
-
-                $.post("https://afetkurtar.site/api/personnelUser/create.php",
-                        JSON.stringify({ institution: institution, personnelName: username, personnelRole: role, personnelID: data.id }))
-                    .done(function(data, status, xhr) {
-                        if (xhr.status == 201) {
-                            window.alert("Personel kaydı başarıyla gerçekleştirildi.");
-                            //document.getElementById('personnelForm').reset();
-                        } else {
-                            window.alert("Personel kaydı esnasında bir hata ile karşılaşıldı x");
-                            //document.getElementById('personnelForm').reset();
-                        }
-                    });
-
-                document.getElementById('personnelForm').reset();
-            } else {
-                window.alert("Kullanıcı kaydı esnasında bir hata ile karşılaşıldı y");
-                //document.getElementById('personnelForm').reset();
+            var latitude = 0.0;
+            var longitude = 0.0;
+            if (data["status"] == "OK") {
+                latitude = data["results"][0]["geometry"]["location"]["lat"];
+                longitude = data["results"][0]["geometry"]["location"]["lng"];
             }
-        })
-        .fail(function(data, xhr) {
-            window.alert("dataf:" + data.message);
-            //window.alert("Kullanıcı kaydı esnasında bir hata ile karşılaşıldı z");
-            window.alert("xhr:" + xhr.status);
-            //document.getElementById('personnelForm').reset();
+            $.post("https://afetkurtar.site/api/users/create.php", JSON.stringify({ userType: 'personnelUser', userName: username, email: email }))
+                .done(function(data, status, xhr) {
+                    //window.alert("data:" + data);
+
+                    if (xhr.status == 201) {
+
+                        $.post("https://afetkurtar.site/api/personnelUser/create.php",
+                                JSON.stringify({
+                                    institution: institution,
+                                    personnelName: username,
+                                    personnelRole: "Normal",
+                                    personnelID: data.id,
+                                    personnelEmail: email,
+                                    latitude: latitude,
+                                    longitude: longitude
+                                }))
+                            .done(function(data, status, xhr) {
+                                if (xhr.status == 201) {
+                                    window.alert("Personel kaydı başarıyla gerçekleştirildi.");
+                                    //document.getElementById('personnelForm').reset();
+                                } else {
+                                    window.alert("Personel kaydı esnasında bir hata ile karşılaşıldı x");
+                                    //document.getElementById('personnelForm').reset();
+                                }
+                            });
+
+                        document.getElementById('personnelForm').reset();
+                    } else {
+                        window.alert("Kullanıcı kaydı esnasında bir hata ile karşılaşıldı y");
+                        //document.getElementById('personnelForm').reset();
+                    }
+                })
+                .fail(function(data, xhr) {
+                    window.alert("dataf:" + data.message);
+                    //window.alert("Kullanıcı kaydı esnasında bir hata ile karşılaşıldı z");
+                    window.alert("xhr:" + xhr.status);
+                    //document.getElementById('personnelForm').reset();
+                });
+
         });
+
 
 
 }
@@ -146,7 +165,6 @@ function sendNotice() {
 
             $.get("https://maps.googleapis.com/maps/api/geocode/json?address=" + encodedAddress + "&sensor=true&key=AIzaSyCxLUKYaDqQEIIQGQGQmC0ipdS04IXRoRw")
                 .done(function(data, status, xhr) {
-                    alert(data);
                     var latitude = 0.0;
                     var longitude = 0.0;
                     if (data["status"] == "OK") {
@@ -312,7 +330,7 @@ function setMarkersForVolunteer(map) {
         userIDs[i] = document.getElementById("user-info").getAttribute("user-id");
 
         infowindows[i] = new google.maps.InfoWindow({
-            content: '<div>' + names[i] + '</div>' + '<input type="submit" onclick="joinSubpart(' + subparts[i].getAttribute("subpart-id") + "," + userIDs[i] + ')" class="btn btn-primary" id="button-' + subparts[i].id + '" value="Gönüllü İsteği Gönder"></input>'
+            content: '<div><h3 style="text-align: center;">' + names[i] + '</h3></div>' + '<input type="submit" onclick="joinSubpart(' + subparts[i].getAttribute("subpart-id") + "," + userIDs[i] + ')" class="btn btn-primary" id="button-' + subparts[i].id + '" value="Gönüllü İsteği Gönder"></input>'
         });
 
         google.maps.event.addListener(markers[i], 'click', function() {
@@ -508,21 +526,21 @@ $(document).ready(function() {
     var statusContents = document.getElementsByClassName("status-content");
     var messageContents = document.getElementsByClassName("message-content");
 
+
     if (statusContents.length != 0 && messageContents.length != 0) {
         var statusContent = statusContents[0];
         var messageContent = messageContents[0];
         messageContent.scrollIntoView({ behavior: 'smooth', block: 'end' });
-        document.getElementById('cd-timeline').scrollIntoView({ behavior: 'smooth', block: 'end' });
+        var timeline = document.getElementById('cd-timeline');
+        if (timeline) {
+            timeline.scrollIntoView({ behavior: 'smooth', block: 'end' });
+        }
         setInterval(function() {
             checkNewStatuses(statusContent);
             checkNewMessages(messageContent)
         }, 1000);
     }
 
-    var selectPicker = document.getElementById("smart-assignment-subparts");
-    if (selectPicker) {
-        selectPicker.selectpicker();
-    }
 });
 
 function checkNewMessages(messageContent) {
@@ -610,7 +628,7 @@ function checkNewStatuses(statusContent) {
                             '</div> <!-- cd-timeline-block -->';
                     }
 
-                    statusContent.innerHTML += '</section> <!-- cd-timeline -->' + '</div>' +
+                    statusContent.innerHTML += '</section> <!-- cd-timeline -->' +
                         '<div class="panel-footer" style="background: #1A2226;box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16), 0 -3px 6px rgba(0, 0, 0, 0.23);">';
                     '<div class="input-group" style="height:7vh; padding:1vh;">' +
                     '<input id="status-input" type="text" class="form-control input-sm chat_input" style="height:5vh;" placeholder="Yeni durum oluşturun..." />' +
@@ -701,7 +719,7 @@ $('#v-pills-tab a').on('click', function(e) {
 
 
 
-    if (map != null && e.target.id != "subpart-add-tab") {
+    if (map != null && e.target.id != "subpart-add-tab" && e.target.id != "smart-assignment-tab") {
         var id = e.target.getAttribute("subpart-id");
         var latitude = parseFloat(document.getElementById("subpartLatitude" + id).value);
         var longitude = parseFloat(document.getElementById("subpartLongitude" + id).value);
@@ -720,14 +738,25 @@ $('#v-pills-tab-subpart a').on('click', function(e) {
 })
 
 
-function registerVolunteer() {
+function registerVolunteer(email) {
 
-    var email = document.getElementById("volunteerEmail").value.trim();
+    //var email = document.getElementById("volunteerEmail").value.trim();
     var username = document.getElementById("volunteerUsername").value.trim();
     var address = document.getElementById("volunteerAddress").value.trim();
     var tc = document.getElementById("volunteerTc").value.trim();
     var tel = document.getElementById("volunteerTel").value.trim();
+    var isExperiencedObject = document.getElementById("isExperienced");
+    var haveCertObject = document.getElementById("haveCert");
     //var birthDate = document.getElementById("volunteerBirthDate").value.trim();
+
+    var isExperienced = 0;
+    if (isExperiencedObject.checked) {
+        isExperienced = 1;
+    }
+    var haveCert = 0;
+    if (haveCertObject.checked) {
+        haveCert = 1;
+    }
 
     if (email == '') {
         alert("Email adresi boş bırakılamaz.");
@@ -750,11 +779,11 @@ function registerVolunteer() {
     // }
 
 
-    $.post("https://afetkurtar.site/api/users/create.php", JSON.stringify({ userType: 'volunteerUser', userName: username, email: email }))
+    $.post("https://afetkurtar.site/api/users/create.php", JSON.stringify({ userType: 'volunteerUser', userName: username, email: email.trim() }))
         .done(function(data, status, xhr) {
             if (xhr.status == 201) {
                 $.post("https://afetkurtar.site/api/volunteerUser/create.php",
-                        JSON.stringify({ volunteerName: username, address: address, tc: tc, tel: tel, volunteerID: data.id }))
+                        JSON.stringify({ volunteerName: username, address: address, tc: tc, tel: tel, volunteerID: data.id, isExperienced: isExperienced, haveFirstAidCert: haveCert, role: "Normal" }))
                     .done(function(data, status, xhr) {
                         if (xhr.status == 201) {
                             window.alert("Kaydınız başarıyla gerçekleştirildi.");
@@ -773,9 +802,7 @@ function registerVolunteer() {
             }
         })
         .fail(function(data, xhr) {
-            window.alert("dataf:" + data.message);
-            //window.alert("Kullanıcı kaydı esnasında bir hata ile karşılaşıldı z");
-            window.alert("xhr:" + xhr.status);
+            window.alert("Kullanıcı kaydı esnasında bir hata ile karşılaşıldı.");
             //document.getElementById('personnelForm').reset();
         });
 }
@@ -788,9 +815,9 @@ function updateSubpart(id, status) {
     var subpartRescuedPerson = document.getElementById("subpartRescuedPerson" + id).value.trim();
     var isOpenForVolunteersObject = document.getElementById("subpartIsOpenForVolunteers" + id);
     var emergencyLevel = document.getElementById("emergencyLevel" + id).value;
-    var disasterID = parseFloat(document.getElementById("map").getAttribute("disaster-id"));
-    var disasterBase = parseFloat(document.getElementById("map").getAttribute("disaster-base"));
-    var disasterName = parseFloat(document.getElementById("map").getAttribute("disaster-name"));
+    var disasterID = document.getElementById("map").getAttribute("disaster-id").trim();
+    var disasterBase = document.getElementById("map").getAttribute("disaster-base").trim();
+    var disasterName = document.getElementById("map").getAttribute("disaster-name").trim();
 
     var isOpenForVolunteers = 0;
     if (isOpenForVolunteersObject.checked) {
@@ -958,9 +985,9 @@ function addSubpart() {
     var subpartMissingPerson = document.getElementById("subpartMissingPerson").value.trim();
     var isOpenForVolunteersObject = document.getElementById("subpartIsOpenForVolunteers");
     var emergencyLevel = document.getElementById("emergencyLevel").value;
-    var disasterID = parseFloat(document.getElementById("map").getAttribute("disaster-id"));
-    var disasterBase = parseFloat(document.getElementById("map").getAttribute("disaster-base"));
-    var disasterName = parseFloat(document.getElementById("map").getAttribute("disaster-name"));
+    var disasterID = document.getElementById("map").getAttribute("disaster-id").trim();
+    var disasterBase = document.getElementById("map").getAttribute("disaster-base").trim();
+    var disasterName = document.getElementById("map").getAttribute("disaster-name").trim();
 
     var isOpenForVolunteers = 0;
     if (isOpenForVolunteersObject.checked) {
@@ -1059,7 +1086,7 @@ function addVolunteerToSubpart(volunteerID, subpartID) {
                     var team = data.records[0];
                     var teamID = team.teamID;
 
-                    $.post("https://afetkurtar.site/api/volunteerUser/update.php", JSON.stringify({ volunteerID: volunteerID, responseSubpart: subpartID, assignedTeamID: teamID, requestedSubpart: "0" }))
+                    $.post("https://afetkurtar.site/api/volunteerUser/update.php", JSON.stringify({ volunteerID: volunteerID, responseSubpart: subpartID, assignedTeamID: teamID, requestedSubpart: "0", role: "Normal" }))
                         .done(function(data, status, xhr) {
                             if (xhr.status == 200) {
                                 $.post("https://afetkurtar.site/api/users/update.php", JSON.stringify({ userID: volunteerID, userType: "personnelUser" }))
@@ -1416,64 +1443,99 @@ function deleteDisaster(disasterID) {
         });
 }
 
-function addPersonnelToSubpartForSmartAssignment(personnelID, subpartID) {
 
-    $.post("https://afetkurtar.site/api/team/search.php", JSON.stringify({ assignedSubpartID: subpartID }))
+function deletePersonnel(personnelID) {
+
+    $.post("https://afetkurtar.site/api/personnelUser/delete.php", JSON.stringify({
+            personnelID: personnelID
+        }))
         .done(function(data, status, xhr) {
-            if (xhr.status == 200) {
-                if (data.records.length != 0) {
-                    var team = data.records[0];
-                    var teamID = team.teamID;
-
-                    $.post("https://afetkurtar.site/api/personnelUser/update.php", JSON.stringify({ personnelID: personnelID, teamID: teamID }))
-                        .done(function(data, status, xhr) {
-                            if (xhr.status == 201) {}
-                        })
-                        .fail(function(data, xhr) {});
-                }
+            if (xhr.status == 201) {
+                window.alert("Personel silindi.");
+                document.location.reload();
+            } else {
+                window.alert("Personel silinirken hata oluştu.");
+                //document.getElementById('personnelForm').reset();
             }
         })
         .fail(function(data, xhr) {
-            $.post("https://afetkurtar.site/api/team/create.php", JSON.stringify({ assignedSubpartID: subpartID }))
-                .done(function(data, status, xhr) {
-                    var teamID = data.id;
-
-                    $.post("https://afetkurtar.site/api/personnelUser/update.php", JSON.stringify({ personnelID: personnelID, teamID: teamID }))
-                        .done(function(data, status, xhr) {
-                            if (xhr.status == 201) {}
-                        })
-                        .fail(function(data, xhr) {});
-                })
-                .fail(function(data, xhr) {});
+            //window.alert("Bölge silinirken hata oluştu. 00");
         });
-
 }
+
+
+function removeEquipmentRequest(equipmentRequestID) {
+
+    $.post("https://afetkurtar.site/api/equipmentRequest/delete.php", JSON.stringify({
+            equipmentRequestID: equipmentRequestID
+        }))
+        .done(function(data, status, xhr) {
+            if (xhr.status == 201) {
+                window.alert("Ekipman isteği silindi.");
+                document.location.reload();
+            } else {
+                window.alert("Ekipman isteği silinirken hata oluştu.");
+                //document.getElementById('personnelForm').reset();
+            }
+        })
+        .fail(function(data, xhr) {
+            window.alert("Ekipman isteği silinirken hata oluştu.");
+        });
+}
+
+// function addPersonnelToSubpartForSmartAssignment(personnelID, subpartID) {
+
+//     $.post("https://afetkurtar.site/api/team/search.php", JSON.stringify({ assignedSubpartID: subpartID }))
+//         .done(function(data, status, xhr) {
+//             if (xhr.status == 200) {
+//                 if (data.records.length != 0) {
+//                     var team = data.records[0];
+//                     var teamID = team.teamID;
+//                     console.log("c: " + teamID);
+
+//                     $.post("https://afetkurtar.site/api/personnelUser/update.php", JSON.stringify({ personnelID: personnelID, teamID: teamID }))
+//                         .done(function(data, status, xhr) {
+//                             if (xhr.status == 201) {}
+//                         })
+//                         .fail(function(data, xhr) {});
+//                 }
+//             }
+//         })
+//         .fail(function(data, xhr) {
+//             $.post("https://afetkurtar.site/api/team/create.php", JSON.stringify({ assignedSubpartID: subpartID }))
+//                 .done(function(data, status, xhr) {
+//                     var teamID = data.id;
+//                     console.log("d: " + teamID);
+
+//                     $.post("https://afetkurtar.site/api/personnelUser/update.php", JSON.stringify({ personnelID: personnelID, teamID: teamID }))
+//                         .done(function(data, status, xhr) {
+//                             if (xhr.status == 201) {}
+//                         })
+//                         .fail(function(data, xhr) {});
+//                 })
+//                 .fail(function(data, xhr) {});
+//         });
+
+// }
 
 function doSmartAssignment() {
     var selectedSubparts = [];
     var toggles = document.getElementsByClassName("subpart-toggle");
-
-    console.log(toggles);
-
 
     for (let i = 0; i < toggles.length; i++) {
         if (toggles[i].checked) {
             selectedSubparts.push(toggles[i].getAttribute("subpart-id"));
         }
     }
-
     var numberOfPeople = document.getElementById("smart-assignment-people").value.trim();
-
     if (selectedSubparts.length == 0) {
         window.alert("Lütfen bölge seçiniz");
         return false;
     }
-
     if (isNaN(numberOfPeople) || numberOfPeople == "") {
         alert("Atanacak kişi sayısı bilgisini kontrol ediniz.");
         return false;
     }
-
     $body = $("body");
     $body.addClass("loading");
 
@@ -1490,28 +1552,97 @@ function doSmartAssignment() {
 
             for (var key in assignments) {
                 infoString += document.getElementById("subpartAssignment" + key).getAttribute("subpart-name") + " bölgesi için önerilen kişi sayısı: " + assignments[key].length + "\n";
-                // for (let i = 0; i < assignments[key].length; i++) {
-                //     addPersonnelToSubpartForSmartAssignment(assignments[key][i]["personnelID"], assignments[key]);
-                // }
             }
             infoString += "\nAtamayı gerçekleştirmek istiyor musunuz?";
             var confirmAlert = window.confirm(infoString);
 
 
-
+            $body.addClass("loading");
             if (confirmAlert) {
-                for (var key in assignments) {
-                    for (let i = 0; i < assignments[key].length; i++) {
-                        addPersonnelToSubpartForSmartAssignment(assignments[key][i]["personnelID"], assignments[key]);
-                    }
-                }
+                $.post("https://afetkurtar.site/api/doAssignment.php", JSON.stringify(data))
+                    .done(function(data, status, xhr) {
+                        $body.removeClass("loading");
+                        window.alert("Akıllı atama başarıyla gerçekleştirildi.");
+                        document.location.reload();
+                    })
+                    .fail(function(data, xhr) {
+                        window.alert("Akıllı atama gerçekleştirilirken hata oluştu.");
+                    });
             }
-            document.location.reload();
+
 
         })
         .fail(function(data, xhr) {
             $body.removeClass("loading");
             window.alert("Akıllı atama gerçekleştirilirken hata oluştu.");
+        });
+
+}
+
+function addEquipmentRequest(teamID) {
+    var equipmentID = document.getElementById("equipment-table").value;
+    var quantity = document.getElementById("equipment-request-quantity").value.trim();
+
+    if (isNaN(quantity) || quantity == "") {
+        alert("Miktar bilgisini kontrol ediniz.");
+        return false;
+    }
+
+    $.post("https://afetkurtar.site/api/equipmentRequest/create.php", JSON.stringify({
+            equipmentID: equipmentID,
+            teamRequestID: teamID,
+            quantity: quantity
+        }))
+        .done(function(data, status, xhr) {
+            window.alert("Ekipman isteği gönderildi.");
+            document.location.reload();
+        })
+        .fail(function(data, xhr) {
+            window.alert("Ekipman isteği gönderilirken hata oluştu.");
+        });
+
+}
+
+function editTeamManagement(teamID, subpartID) {
+    var needManpower = document.getElementById("manpower-request-quantity").value.trim();
+    var missingPerson = document.getElementById("missing-person").value.trim();
+    var rescuedPerson = document.getElementById("rescued-person").value.trim();
+
+    if (isNaN(needManpower) || needManpower == "") {
+        alert("İnsan iş gücü bilgisini kontrol ediniz.");
+        return false;
+    } else if (isNaN(missingPerson) || missingPerson == "") {
+        alert("Kayıp insan sayısı bilgisini kontrol ediniz.");
+        return false;
+    } else if (isNaN(rescuedPerson) || rescuedPerson == "") {
+        alert("Kurtarılan insan sayısı bilgisini kontrol ediniz.");
+        return false;
+    }
+
+    $.post("https://afetkurtar.site/api/team/update.php",
+            JSON.stringify({
+                teamID: teamID,
+                needManPower: needManpower
+            }))
+        .done(function(data, status, xhr) {
+            if (xhr.status == 201) {
+                $.post("https://afetkurtar.site/api/subpart/update.php",
+                        JSON.stringify({
+                            subpartID: subpartID,
+                            missingPerson: missingPerson,
+                            rescuedPerson: rescuedPerson,
+                        }))
+                    .done(function(data, status, xhr) {
+                        if (xhr.status == 201) {
+                            window.alert("Bilgiler gönderildi.");
+                            document.location.reload();
+                        } else {
+                            window.alert("Bilgiler gönderilirken bir hata ile karşılaşıldı.");
+                        }
+                    });
+            } else {
+                window.alert("Bilgiler gönderilirken bir hata ile karşılaşıldı.");
+            }
         });
 
 }
