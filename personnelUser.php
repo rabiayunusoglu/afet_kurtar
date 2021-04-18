@@ -220,11 +220,11 @@
     $longitude = 0.0;
 
     if (array_key_exists("latitude",$personnel)){
-        $latitude = $personnel["records"];
+        $latitude = $personnel["latitude"];
     }
 
     if (array_key_exists("longitude",$personnel)){
-        $longitude = $personnel["records"];
+        $longitude = $personnel["longitude"];
     }
 
     /*foreach($teamMembers as $member){

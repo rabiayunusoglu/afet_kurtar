@@ -42,7 +42,7 @@ if (session_id() == '') {
                             <a class="nav-link" aria-current="page" href="/authorizedUser.php">Aktif Afetler</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link active" href="/personelKaydi.php">Personeller</a>
+                            <a class="nav-link active" href="/personelKaydi.php">Personel Kaydı</a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link" href="/ihbarlar.php">İhbarlar</a>
