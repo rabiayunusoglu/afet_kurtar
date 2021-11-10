@@ -7,6 +7,5 @@ Derda Kaymak <br />
 Okan Erdoğan <br />
 Muhammed Tarık Dinçer <br />
 
-Bitirme Projesi <br/>
 Projenin mobil ve web ayağı branchlerde mevcuttur. <br/>
 Proje Tanıtımı: https://www.youtube.com/watch?v=IATTrWyf-eU
